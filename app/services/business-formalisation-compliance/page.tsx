@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -8,6 +9,7 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Button } from "@/components/Button";
 import { ComplianceRouter } from "@/components/ComplianceRouter";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
+import { images } from "@/lib/images";
 
 export const metadata: Metadata = {
   title: "Business Formalisation & Compliance",
@@ -123,6 +125,19 @@ export default function BusinessFormalisationCompliancePage() {
       <main>
         {/* Hero */}
         <section className="relative bg-navy-950 overflow-hidden pt-14 pb-28 lg:pt-20 lg:pb-36 border-b border-slate-800/80">
+          <div className="absolute right-0 top-0 w-full lg:w-3/4 h-full opacity-60 lg:opacity-75 pointer-events-none">
+            <Image
+              src={images["cross-border-boardroom"].src}
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              placeholder="blur"
+              blurDataURL={images["cross-border-boardroom"].blurDataURL}
+              className="object-cover object-center"
+            />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/90 to-navy-950/40 pointer-events-none" />
           <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-2xl lg:max-w-3xl">
@@ -297,6 +312,18 @@ export default function BusinessFormalisationCompliancePage() {
 
         {/* Procedural trust */}
         <section className="py-24 bg-navy-950 text-white relative overflow-hidden border-b border-slate-800/80">
+          <div className="absolute right-0 top-0 w-full lg:w-3/4 h-full opacity-60 lg:opacity-75 pointer-events-none">
+            <Image
+              src={images["cross-border-boardroom"].src}
+              alt=""
+              fill
+              sizes="100vw"
+              placeholder="blur"
+              blurDataURL={images["cross-border-boardroom"].blurDataURL}
+              className="object-cover object-center"
+            />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/80 to-navy-950/50 pointer-events-none" />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="max-w-3xl mb-14">
               <div className="inline-flex items-center gap-2 mb-4">
@@ -403,6 +430,18 @@ export default function BusinessFormalisationCompliancePage() {
 
         {/* Final CTA */}
         <section className="py-24 bg-navy-950 text-white relative overflow-hidden">
+          <div className="absolute right-0 top-0 w-full lg:w-3/4 h-full opacity-60 lg:opacity-75 pointer-events-none">
+            <Image
+              src={images["cross-border-boardroom"].src}
+              alt=""
+              fill
+              sizes="100vw"
+              placeholder="blur"
+              blurDataURL={images["cross-border-boardroom"].blurDataURL}
+              className="object-cover object-center"
+            />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/80 to-navy-950/50 pointer-events-none" />
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
             <div className="inline-flex items-center gap-2 mb-4">
               <span className="w-7 h-[2px] bg-teal-400 inline-block" />

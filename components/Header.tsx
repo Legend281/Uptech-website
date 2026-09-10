@@ -22,6 +22,7 @@ const services: Array<{
   title: string;
   description: string;
   href: string;
+  subItems?: Array<{ title: string; href: string }>;
 }> = [
   {
     key: "it-consulting",
@@ -36,6 +37,13 @@ const services: Array<{
     title: "Business Formalisation & Compliance",
     description: "Licensing, corporate structuring & tax standing",
     href: "/services/business-formalisation-compliance",
+    subItems: [
+      { title: "Business Formalisation — Cameroon", href: "/services/business-formalisation-compliance/cameroon" },
+      { title: "Business Formalisation — United States", href: "/services/business-formalisation-compliance/united-states" },
+      { title: "Tax Compliance for Businesses — Cameroon", href: "/services/business-formalisation-compliance/tax-compliance-businesses-cameroon" },
+      { title: "Tax Compliance for Individuals — Cameroon", href: "/services/business-formalisation-compliance/tax-compliance-individuals-cameroon" },
+      { title: "CNPS Compliance — Cameroon", href: "/services/business-formalisation-compliance/cnps-compliance-cameroon" },
+    ],
   },
   {
     key: "career-marketing",
@@ -150,41 +158,66 @@ export function Header({
                 {services.map((service) => {
                   const isActive = service.key === activeService;
                   return (
-                    <Link
-                      key={service.key}
-                      href={service.href}
-                      className={`flex items-start gap-3 p-2.5 rounded-lg transition-colors group/item ${
-                        isActive
-                          ? "bg-white/[0.06] border border-teal-500/30"
-                          : "hover:bg-white/5"
-                      }`}
-                    >
-                      <span
-                        className={`text-xs font-mono font-bold mt-0.5 px-1.5 py-0.5 rounded ${
+                    <div key={service.key}>
+                      <Link
+                        href={service.href}
+                        className={`flex items-start gap-3 p-2.5 rounded-lg transition-colors group/item ${
                           isActive
-                            ? "text-teal-400 bg-teal-500/20"
-                            : "text-teal-400 bg-teal-500/10"
+                            ? "bg-white/[0.06] border border-teal-500/30"
+                            : "hover:bg-white/5"
                         }`}
                       >
-                        {service.number}
-                      </span>
-                      <div>
                         <span
-                          className={`text-sm block transition-colors ${
+                          className={`text-xs font-mono font-bold mt-0.5 px-1.5 py-0.5 rounded ${
                             isActive
-                              ? "font-bold text-teal-300"
-                              : "font-semibold text-white group-hover/item:text-teal-400"
+                              ? "text-teal-400 bg-teal-500/20"
+                              : "text-teal-400 bg-teal-500/10"
                           }`}
                         >
-                          {service.title}
+                          {service.number}
                         </span>
-                        <span className="text-xs text-slate-400 leading-snug">
-                          {service.description}
-                        </span>
-                      </div>
-                    </Link>
+                        <div>
+                          <span
+                            className={`text-sm block transition-colors ${
+                              isActive
+                                ? "font-bold text-teal-300"
+                                : "font-semibold text-white group-hover/item:text-teal-400"
+                            }`}
+                          >
+                            {service.title}
+                          </span>
+                          <span className="text-xs text-slate-400 leading-snug">
+                            {service.description}
+                          </span>
+                        </div>
+                      </Link>
+                      {service.subItems && (
+                        <div className="ml-9 mt-0.5 mb-1 space-y-0.5 border-l border-slate-800 pl-3">
+                          {service.subItems.map((sub) => (
+                            <Link
+                              key={sub.href}
+                              href={sub.href}
+                              className="block px-2 py-1.5 rounded-md text-xs text-slate-400 hover:text-teal-400 hover:bg-white/5 transition-colors"
+                            >
+                              {sub.title}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   );
                 })}
+              </div>
+              <div className="mt-2 pt-2 border-t border-slate-800">
+                <Link
+                  href="/services"
+                  className="flex items-center justify-between px-2.5 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-teal-400 hover:bg-white/5 transition-colors"
+                >
+                  <span>View All Services</span>
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </Link>
               </div>
             </div>
           </div>
@@ -311,19 +344,41 @@ export function Header({
             </p>
             <div className="space-y-1">
               {services.map((service) => (
-                <Link
-                  key={service.key}
-                  href={service.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`block px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
-                    service.key === activeService
-                      ? "text-teal-300 bg-white/[0.06] border border-teal-500/30"
-                      : "text-white hover:bg-white/5"
-                  }`}
-                >
-                  {service.title}
-                </Link>
+                <div key={service.key}>
+                  <Link
+                    href={service.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={`block px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
+                      service.key === activeService
+                        ? "text-teal-300 bg-white/[0.06] border border-teal-500/30"
+                        : "text-white hover:bg-white/5"
+                    }`}
+                  >
+                    {service.title}
+                  </Link>
+                  {service.subItems && (
+                    <div className="ml-4 mt-0.5 mb-1 space-y-0.5 border-l border-slate-800 pl-3">
+                      {service.subItems.map((sub) => (
+                        <Link
+                          key={sub.href}
+                          href={sub.href}
+                          onClick={() => setMobileOpen(false)}
+                          className="block px-2.5 py-2 rounded-md text-xs font-medium text-slate-400 hover:text-teal-400 hover:bg-white/5 transition-colors"
+                        >
+                          {sub.title}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
+              <Link
+                href="/services"
+                onClick={() => setMobileOpen(false)}
+                className="block px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-300 hover:bg-white/5"
+              >
+                View All Services
+              </Link>
             </div>
           </div>
           <div className="flex flex-col gap-1 border-t border-slate-800/80 pt-4">

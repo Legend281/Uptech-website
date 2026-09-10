@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -10,6 +11,7 @@ import { FaqAccordion } from "@/components/FaqAccordion";
 import { ComplianceDisclaimer } from "@/components/ComplianceDisclaimer";
 import { WhatComesNext } from "@/components/WhatComesNext";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
+import { images } from "@/lib/images";
 
 export const metadata: Metadata = {
   title: "Tax Compliance for Businesses — Cameroon",
@@ -139,38 +141,74 @@ export default function TaxComplianceBusinessesCameroonPage() {
         <section className="relative bg-navy-950 overflow-hidden pt-14 pb-28 lg:pt-20 lg:pb-36 border-b border-slate-800/80">
           <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl lg:max-w-3xl">
-              <div className="inline-flex items-center gap-2 mb-6">
-                <span className="w-7 h-[2px] bg-teal-400 inline-block" />
-                <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
-                  STATUTORY TAX DESK • DGI GENERAL TAX CODE
-                </span>
-              </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] mb-6">
-                Stay ahead of your tax obligations,{" "}
-                <span className="gradient-teal-blue-text">without the stress.</span>
-              </h1>
-              <p className="text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
-                Predictable monthly DGI declarations, certified fiscal schedules, and
-                penalty-proof recordkeeping — whether you are staying compliant proactively or
-                catching up on past seasons.
-              </p>
-              <div className="flex flex-wrap items-center gap-4 mb-8">
-                <Button href="#compliance-check">Get a Compliance Check</Button>
-                <WhatsAppButton phone="237670000000" label="Chat on WhatsApp Tax Desk" />
-              </div>
-              <div className="grid grid-cols-3 gap-3 max-w-lg pt-4 border-t border-white/10">
-                <div className="p-3 bg-white/5 rounded-lg">
-                  <p className="text-xl font-bold text-teal-300">15th</p>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Monthly Filing Cut-Off</p>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
+              <div className="lg:col-span-7">
+                <div className="inline-flex items-center gap-2 mb-6">
+                  <span className="w-7 h-[2px] bg-teal-400 inline-block" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
+                    STATUTORY TAX DESK • DGI GENERAL TAX CODE
+                  </span>
                 </div>
-                <div className="p-3 bg-white/5 rounded-lg">
-                  <p className="text-xl font-bold text-teal-300">Bilingual</p>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">MINFI Support</p>
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] mb-6">
+                  Stay ahead of your tax obligations,{" "}
+                  <span className="gradient-teal-blue-text">without the stress.</span>
+                </h1>
+                <p className="text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
+                  Predictable monthly DGI declarations, certified fiscal schedules, and
+                  penalty-proof recordkeeping — whether you are staying compliant proactively or
+                  catching up on past seasons.
+                </p>
+                <div className="flex flex-wrap items-center gap-4 mb-8">
+                  <Button href="#compliance-check">Get a Compliance Check</Button>
+                  <WhatsAppButton phone="237670000000" label="Chat on WhatsApp Tax Desk" />
                 </div>
-                <div className="p-3 bg-white/5 rounded-lg">
-                  <p className="text-xl font-bold text-teal-300">Proactive</p>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Lockout Prevention</p>
+                <div className="grid grid-cols-3 gap-3 max-w-lg pt-4 border-t border-white/10">
+                  <div className="p-3 bg-white/5 rounded-lg">
+                    <p className="text-xl font-bold text-teal-300">15th</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Monthly Filing Cut-Off</p>
+                  </div>
+                  <div className="p-3 bg-white/5 rounded-lg">
+                    <p className="text-xl font-bold text-teal-300">Bilingual</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">MINFI Support</p>
+                  </div>
+                  <div className="p-3 bg-white/5 rounded-lg">
+                    <p className="text-xl font-bold text-teal-300">Proactive</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Lockout Prevention</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="lg:col-span-5">
+                <div className="relative rounded-xl overflow-hidden shadow-2xl bg-navy-800 border border-white/10">
+                  <div className="relative h-72 w-full overflow-hidden">
+                    <Image
+                      src={images["compliance-advisory"].src}
+                      alt={images["compliance-advisory"].alt}
+                      fill
+                      sizes="(min-width: 1024px) 40vw, 90vw"
+                      placeholder="blur"
+                      blurDataURL={images["compliance-advisory"].blurDataURL}
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/40 to-transparent" />
+                    <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-navy-950/85 backdrop-blur-md">
+                      <MaterialIcon name="verified" className="text-[16px] text-teal-300" />
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-teal-300">
+                        Statutory Tax Desk • DGI General Tax Code
+                      </span>
+                    </div>
+                  </div>
+                  <div className="p-5 flex flex-col gap-1.5 bg-navy-900/95">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <h3 className="text-base font-bold text-white">Corporate Fiscal Dossier</h3>
+                        <p className="text-xs text-slate-400">Cameroon General Tax Code (CGI) &amp; CEMAC Mandate</p>
+                      </div>
+                      <span className="px-2 py-1 rounded bg-teal-400/20 text-teal-300 text-[10px] font-bold uppercase tracking-wider shrink-0">
+                        Live Desk
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

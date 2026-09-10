@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
@@ -9,6 +10,7 @@ import { FaqAccordion } from "@/components/FaqAccordion";
 import { ComplianceDisclaimer } from "@/components/ComplianceDisclaimer";
 import { WhatComesNext } from "@/components/WhatComesNext";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
+import { images } from "@/lib/images";
 
 export const metadata: Metadata = {
   title: "Business Formalisation — Cameroon",
@@ -190,37 +192,79 @@ export default function BusinessFormalisationCameroonPage() {
       <main>
         {/* Hero */}
         <section className="relative bg-navy-950 overflow-hidden pt-14 pb-28 lg:pt-20 lg:pb-36 border-b border-slate-800/80">
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={images["cross-border-boardroom"].src}
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              placeholder="blur"
+              blurDataURL={images["cross-border-boardroom"].blurDataURL}
+              className="object-cover object-right opacity-35 mix-blend-luminosity scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/90 to-navy-950/40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-transparent to-navy-950/70" />
+          </div>
           <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl lg:max-w-3xl">
-              <div className="inline-flex items-center gap-2 mb-6">
-                <span className="w-7 h-[2px] bg-teal-400 inline-block" />
-                <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
-                  CAMEROON JURISDICTION • OHADA UNIFORM ACT
-                </span>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
+              <div className="lg:col-span-7">
+                <div className="inline-flex items-center gap-2 mb-6">
+                  <span className="w-7 h-[2px] bg-teal-400 inline-block" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
+                    CAMEROON JURISDICTION • OHADA UNIFORM ACT
+                  </span>
+                </div>
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] mb-6">
+                  Formalise your business in Cameroon,{" "}
+                  <span className="gradient-teal-blue-text">without the guesswork.</span>
+                </h1>
+                <p className="text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
+                  Clear, compliant corporate formation under OHADA standards. From trade name
+                  reservation and notarial statutes to RCCM court registration and Tax
+                  Identification (NIU) — executed with procedural certainty for domestic operators
+                  and diaspora founders.
+                </p>
+                <div className="flex flex-wrap items-center gap-4">
+                  <Button
+                    href="#registration-checklist"
+                    icon={
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d="M19 14l-7 7m0 0l-7-7m7 7V3" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    }
+                  >
+                    Get Registration Checklist
+                  </Button>
+                  <WhatsAppButton phone="237600000000" label="Chat on WhatsApp Legal Desk" />
+                </div>
               </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] mb-6">
-                Formalise your business in Cameroon,{" "}
-                <span className="gradient-teal-blue-text">without the guesswork.</span>
-              </h1>
-              <p className="text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
-                Clear, compliant corporate formation under OHADA standards. From trade name
-                reservation and notarial statutes to RCCM court registration and Tax
-                Identification (NIU) — executed with procedural certainty for domestic operators
-                and diaspora founders.
-              </p>
-              <div className="flex flex-wrap items-center gap-4 mb-10">
-                <Button
-                  href="#registration-checklist"
-                  icon={
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path d="M19 14l-7 7m0 0l-7-7m7 7V3" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  }
-                >
-                  Get Registration Checklist
-                </Button>
-                <WhatsAppButton phone="237600000000" label="Chat on WhatsApp Legal Desk" />
+
+              <div className="lg:col-span-5">
+                <div className="relative rounded-2xl bg-gradient-to-b from-white/15 to-white/5 p-1 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden group">
+                  <div className="relative rounded-xl overflow-hidden bg-navy-800">
+                    <Image
+                      src={images["cross-border-boardroom"].src}
+                      alt={images["cross-border-boardroom"].alt}
+                      width={images["cross-border-boardroom"].width}
+                      height={images["cross-border-boardroom"].height}
+                      sizes="(min-width: 1024px) 40vw, 90vw"
+                      placeholder="blur"
+                      blurDataURL={images["cross-border-boardroom"].blurDataURL}
+                      className="w-full h-64 object-cover object-left group-hover:scale-105 transition-transform duration-700 opacity-90"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/60 to-transparent" />
+                    <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
+                      <span className="px-3 py-1 rounded-md bg-navy-950/80 border border-teal-400/40 text-[11px] font-bold text-teal-300 uppercase tracking-wider backdrop-blur-md">
+                        Statutory Reference
+                      </span>
+                      <span className="px-2.5 py-1 rounded-md bg-white/10 text-[11px] font-mono text-white/90">
+                        OHADA Art. 313+
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -509,8 +553,19 @@ export default function BusinessFormalisationCameroonPage() {
         </section>
 
         {/* Comparison */}
-        <section className="py-24 bg-navy-950 text-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="relative py-24 bg-navy-950 text-white overflow-hidden">
+          <div className="absolute inset-0 opacity-20 mix-blend-overlay pointer-events-none">
+            <Image
+              src={images["cross-border-boardroom"].src}
+              alt=""
+              fill
+              sizes="100vw"
+              placeholder="blur"
+              blurDataURL={images["cross-border-boardroom"].blurDataURL}
+              className="object-cover"
+            />
+          </div>
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-14">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-teal-400/30 text-teal-400 text-xs font-bold tracking-wider uppercase mb-3">
                 The Strategic Comparison
@@ -640,8 +695,20 @@ export default function BusinessFormalisationCameroonPage() {
         />
 
         {/* Final CTA */}
-        <section className="py-24 bg-navy-950 text-white text-center">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="relative py-24 bg-navy-950 text-white text-center overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={images["cross-border-boardroom"].src}
+              alt=""
+              fill
+              sizes="100vw"
+              placeholder="blur"
+              blurDataURL={images["cross-border-boardroom"].blurDataURL}
+              className="object-cover opacity-25 mix-blend-luminosity scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/90 to-navy-950/80" />
+          </div>
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-teal-400/40 text-teal-400 text-xs font-bold tracking-widest uppercase mb-4">
               Begin Your Formalisation
             </div>

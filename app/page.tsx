@@ -74,9 +74,9 @@ const startingPoints = [
  * wording or copy already approved elsewhere on this page — nothing invented to
  * fill a slot (CLAUDE.md Section 6.4).
  *
- * IT Consulting & Outsourcing is deliberately absent: its page does not exist
- * yet, and a rotating CTA into a 404 is worse than three slides. Add it here
- * when that route ships.
+ * All four live service lines are represented. IT Consulting joined once its
+ * page shipped on the Development branch — it was held back while that CTA
+ * would have landed on a 404.
  */
 const promises: PromiseStatement[] = [
   {
@@ -94,6 +94,14 @@ const promises: PromiseStatement[] = [
       "Every engagement ends the same way: you hold the documents, and you know what happens next.",
     ctaLabel: "See how compliance runs",
     ctaHref: "/services/business-formalisation-compliance",
+  },
+  {
+    lead: "Technology advisory and managed support across databases, cloud migration, help desk operations, AI compliance and",
+    emphasis: "cyber security.",
+    support:
+      "Engage us for the specialised guidance, outsource the function to our professionals, or use both together.",
+    ctaLabel: "Explore IT consulting",
+    ctaHref: "/services/it-consulting-outsourcing",
   },
   {
     lead: "Individual effort only succeeds when it runs through the",

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "background": "#f9f9ff", "on-error": "#ffffff", "on-surface": "#111c2d", "tertiary-fixed-dim": "#ffb95f", "secondary": "#0050cc", "tertiary-container": "#2a1700", "surface": "#f9f9ff", "primary-container": "#0e1c2f", "error": "#ba1a1a", "on-secondary-container": "#f9f7ff", "secondary-container": "#0266ff", "on-surface-variant": "#44474c", "on-background": "#111c2d", "surface-bright": "#f9f9ff", "inverse-on-surface": "#ecf1ff", "outline": "#75777d", "primary-fixed": "#d6e3fe", "on-primary": "#ffffff", "surface-dim": "#cfdaf2", "secondary-fixed-dim": "#b3c5ff", "surface-container-lowest": "#ffffff", "on-secondary-fixed-variant": "#003fa4", "on-tertiary-fixed-variant": "#653e00", "surface-tint": "#525f75", "outline-variant": "#c5c6cd", "secondary-fixed": "#dae1ff", "on-tertiary-container": "#b87500", "surface-container-low": "#f0f3ff", "surface-container-high": "#dee8ff", "surface-variant": "#d8e3fb", "inverse-primary": "#bac7e1", "surface-container": "#e7eeff", "on-primary-fixed": "#0e1c2f", "on-secondary": "#ffffff", "error-container": "#ffdad6", "on-tertiary": "#ffffff", "tertiary-fixed": "#ffddb8", "tertiary": "#000000", "on-error-container": "#93000a", "primary-fixed-dim": "#bac7e1", "on-tertiary-fixed": "#2a1700", "on-primary-fixed-variant": "#3a475c", "on-secondary-fixed": "#001849", "surface-container-highest": "#d8e3fb", "inverse-surface": "#263143", "primary": "#000000", "on-primary-container": "#77849c" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-sm": "0.75rem", "space-4xl": "6rem", "space-lg": "1.5rem", "max-container": "1280px", "space-xl": "2rem", "space-3xl": "4rem", "space-2xl": "3rem", "gutter-mobile": "1rem", "gutter-desktop": "1.5rem", "space-2xs": "0.25rem", "space-xs": "0.5rem", "space-md": "1rem" }, "fontFamily": { "headline-lg": [ "Plus Jakarta Sans" ], "display-hero-mobile": [ "Plus Jakarta Sans" ], "headline-md": [ "Plus Jakarta Sans" ], "headline-xl": [ "Plus Jakarta Sans" ], "headline-xl-mobile": [ "Plus Jakarta Sans" ], "body-lead": [ "Inter" ], "body-sm": [ "Inter" ], "label-caps": [ "Plus Jakarta Sans" ], "display-hero": [ "Plus Jakarta Sans" ], "label-lg": [ "Plus Jakarta Sans" ], "body-base": [ "Inter" ], "headline-sm": [ "Plus Jakarta Sans" ], "headline-lg-mobile": [ "Plus Jakarta Sans" ], "label-base": [ "Plus Jakarta Sans" ] }, "fontSize": { "headline-lg": [ "32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "display-hero-mobile": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" } ], "headline-md": [ "24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" } ], "headline-xl": [ "40px", { "lineHeight": "48px", "letterSpacing": "-0.025em", "fontWeight": "700" } ], "headline-xl-mobile": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "body-lead": [ "18px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "400" } ], "body-sm": [ "14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" } ], "label-caps": [ "11px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "700" } ], "display-hero": [ "56px", { "lineHeight": "64px", "letterSpacing": "-0.03em", "fontWeight": "800" } ], "label-lg": [ "15px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" } ], "body-base": [ "16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" } ], "headline-sm": [ "20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "headline-lg-mobile": [ "24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "700" } ], "label-base": [ "13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "600" } ] } } } }</script></head><body class="bg-surface font-body-base text-body-base text-on-surface antialiased"><header class="fixed top-0 inset-x-0 z-50 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 max-w-max-container mx-auto px-gutter-desktop flex items-center justify-between gap-space-lg"><div class="flex items-center gap-space-md"><img alt="Brand logo. - Primary color: #0b192c
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-sm
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WmSYdEZYU24zV46TcDq5kGvW8N5skSAyBZ8gIDVO_K9jmzLb8sBsvXKq5mFuCJhBSpQfY6K8B_qe391zFUgpHiTN2w9B2zIhx33HdqeAu0RANxxkUOgXIyRxhgcdrZGpMk1t98dWS0qLH_dehQ9cUmvHkl2Pkn2XDfohMkYCeXRNIU0T4b1eOQ-o0s7pj6HhfH9wD97UTbu5Y9-Oa82kaJYrVMzhRpe1ibyZ3HTS3_jYBH4ha_Kdxkjxu_"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface leading-none tracking-tight">UCO</span><span class="font-label-caps text-label-caps text-secondary uppercase">Transatlantic Advisory</span></div></div><nav class="hidden lg:flex items-center gap-space-xs" data-active-classes="bg-secondary-container text-on-secondary font-label-lg rounded-lg"><a class="px-space-sm py-space-xs font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors rounded-lg" data-path="who-we-are" href="#">Who We Are</a><div class="relative group"><button class="flex items-center gap-1 px-space-sm py-space-xs font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors rounded-lg" type="button"><span>Services</span><span class="material-symbols-outlined text-[18px]">expand_more</span></button><div class="absolute left-0 top-full hidden group-hover:block group-focus-within:block pt-2 w-64"><div class="bg-surface-container-lowest rounded-xl shadow-[0_10px_25px_-5px_rgba(11,25,44,0.08)] p-space-xs flex flex-col gap-1"><a class="px-space-sm py-space-xs font-label-base text-label-base text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-colors" data-path="cross-border-corporate" href="#">Cross-Border Corporate</a><a class="px-space-sm py-space-xs font-label-base text-label-base text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-colors" data-path="managed-it-offshore" href="#">Managed IT &amp; Offshore Pods</a><a class="px-space-sm py-space-xs font-label-base text-label-base text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-colors" data-path="diaspora-advisory" href="#">Diaspora &amp; Venture Advisory</a></div></div></div><a class="px-space-sm py-space-xs font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors rounded-lg" data-path="who-we-serve" href="#">Who We Serve</a><a class="px-space-sm py-space-xs font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors rounded-lg" data-path="careers" href="#">Careers</a></nav><div class="flex items-center gap-space-md"><div class="hidden md:flex items-center bg-surface-container-low px-space-xs py-space-2xs rounded-full"><button class="px-space-xs py-0.5 rounded-full font-label-caps text-label-caps bg-surface-container-lowest text-secondary shadow-sm" type="button">EN</button><button class="px-space-xs py-0.5 rounded-full font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors" type="button">FR</button></div><a class="hidden sm:inline-flex font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="contact" href="#">Talk to us</a><a class="inline-flex items-center gap-2 px-space-lg py-space-xs bg-primary-container text-on-secondary rounded-lg font-label-lg text-label-lg hover:bg-secondary-container transition-colors shadow-sm" data-path="book-a-consultation" href="#"><span>Book a Consultation</span><span class="material-symbols-outlined text-[16px]">arrow_forward</span></a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<!-- BREADCRUMB & METADATA BAR -->
+<section class="w-full bg-primary-container text-on-surface-variant pt-4 pb-3">
+<div class="max-w-max-container mx-auto px-gutter-desktop flex flex-wrap items-center justify-between gap-4">
+<nav aria-label="Breadcrumb" class="flex items-center gap-2 font-label-base text-label-base text-outline-variant">
+<a class="hover:text-inverse-on-surface transition-colors" href="#">Home</a>
+<span class="text-outline text-xs">/</span>
+<a class="hover:text-inverse-on-surface transition-colors" href="#">Services</a>
+<span class="text-outline text-xs">/</span>
+<a class="hover:text-inverse-on-surface transition-colors" href="#">Business Formalisation &amp; Compliance</a>
+<span class="text-outline text-xs">/</span>
+<span class="text-inverse-on-surface font-semibold">Tax Compliance for Businesses — Cameroon</span>
+</nav>
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container/10 backdrop-blur-md">
+<span class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
+<span class="font-label-caps text-label-caps text-secondary-fixed uppercase tracking-wider">PILLAR 02 • SUB-SERVICE 03 / 05 • CAMEROON DGI CORPORATE TAX</span>
+</div>
+</div>
+</section>
+<!-- 1. HERO SECTION -->
+<section class="relative w-full bg-primary-container text-inverse-on-surface overflow-hidden pt-space-xl pb-space-3xl">
+<!-- Ambient cyan glow -->
+<div class="absolute -top-32 -right-24 w-96 h-96 rounded-full bg-secondary-container/15 blur-[120px] pointer-events-none"></div>
+<div class="absolute bottom-0 left-10 w-80 h-80 rounded-full bg-secondary/20 blur-[100px] pointer-events-none"></div>
+<div class="relative max-w-max-container mx-auto px-gutter-desktop grid grid-cols-1 lg:grid-cols-12 gap-space-2xl items-center">
+<!-- Left Narrative -->
+<div class="lg:col-span-7 flex flex-col gap-space-md">
+<div class="inline-flex items-center gap-2 self-start px-3 py-1 rounded-full bg-surface-container-highest/20 backdrop-blur-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary-fixed">gavel</span>
+<span class="font-label-caps text-label-caps text-secondary-fixed tracking-wide uppercase">REPUBLIC OF CAMEROON • DIRECTION GÉNÉRALE DES IMPÔTS</span>
+</div>
+<h1 class="font-display-hero text-display-hero-mobile lg:text-display-hero text-inverse-on-surface leading-tight tracking-tight">
+          Stay ahead of your tax obligations, <span class="bg-gradient-to-r from-secondary-fixed via-secondary-fixed-dim to-secondary-container bg-clip-text text-transparent">without the stress.</span>
+</h1>
+<p class="font-body-lead text-body-lead text-inverse-primary max-w-2xl">
+          Predictable monthly DGI declarations, certified fiscal schedules, and penalty-proof recordkeeping — whether you are staying compliant proactively or catching up on past seasons.
+        </p>
+<!-- CTAs -->
+<div class="flex flex-wrap items-center gap-space-md pt-2">
+<a class="inline-flex items-center gap-2 px-space-lg py-3 bg-secondary-container hover:bg-secondary text-on-secondary font-label-lg text-label-lg rounded-lg shadow-lg hover:shadow-secondary-container/30 transition-all duration-200 group" href="#compliance-check">
+<span>Get a Compliance Check</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+<a class="inline-flex items-center gap-2.5 px-space-lg py-3 bg-surface-container-highest/20 hover:bg-surface-container-highest/35 text-inverse-on-surface font-label-lg text-label-lg rounded-lg backdrop-blur-md transition-all" href="https://wa.me/237670000000" rel="noopener noreferrer" target="_blank">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+</span>
+<span>Chat on WhatsApp Tax Desk</span>
+</a>
+</div>
+<!-- Metric micro-badges -->
+<div class="grid grid-cols-3 gap-space-sm pt-4 max-w-lg">
+<div class="p-3 bg-surface-container-lowest/5 rounded-lg">
+<p class="font-headline-sm text-headline-sm text-secondary-fixed">15th</p>
+<p class="font-label-caps text-label-caps text-on-primary-container uppercase">Monthly Filing Cut-Off</p>
+</div>
+<div class="p-3 bg-surface-container-lowest/5 rounded-lg">
+<p class="font-headline-sm text-headline-sm text-secondary-fixed">100%</p>
+<p class="font-label-caps text-label-caps text-on-primary-container uppercase">Bilingual MINFI Support</p>
+</div>
+<div class="p-3 bg-surface-container-lowest/5 rounded-lg">
+<p class="font-headline-sm text-headline-sm text-secondary-fixed">Zero</p>
+<p class="font-label-caps text-label-caps text-on-primary-container uppercase">Bank Account Lockouts</p>
+</div>
+</div>
+</div>
+<!-- Right Asymmetric Dossier Card -->
+<div class="lg:col-span-5 relative">
+<div class="relative rounded-xl overflow-hidden shadow-2xl bg-surface-container-low/10 backdrop-blur-xl">
+<div class="relative h-72 w-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Senior bilingual tax counsel and chartered accountants reviewing corporate fiscal balance sheets and DGI declarations at an executive mahogany desk in an upscale high-rise office at twilight overlooking urban skyline with warm amber lamps and deep navy ambiance." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUpmJecyerq98eMxxdFnFtFzhzjWP92Tbhv1AB28RGqhHUJWGuWoRJntyRC2RuQ5-_094zarTmisZOAMllfMVsY4M14PHneFRMmyvFMgwiB4m3Xl3gEMjICEk8vmRGuouf7aZDZoR8PjDUrAOKoW8uTiA63uZl3SmlKEwTgoR6gpAu4jCgKwc25uggG0IAIv-RPnRvcHcPtFo0Ls1-w9cWyE2iBhFwga-RVMpMK7YU2J0mT5GXjPMeWg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container via-primary-container/40 to-transparent"></div>
+<div class="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/85 backdrop-blur-md">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim">verified</span>
+<span class="font-label-caps text-label-caps text-tertiary-fixed tracking-wider uppercase">STATUTORY TAX DESK • DGI General Tax Code</span>
+</div>
+</div>
+<div class="p-space-lg flex flex-col gap-space-sm bg-primary-container/95">
+<div class="flex items-start justify-between gap-2">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-inverse-on-surface">Corporate Fiscal Dossier</h3>
+<p class="font-body-sm text-body-sm text-on-primary-container">Cameroon General Tax Code (CGI) &amp; CEMAC Mandate</p>
+</div>
+<span class="px-2 py-1 rounded bg-secondary/30 text-secondary-fixed font-label-caps text-label-caps">LIVE DESK</span>
+</div>
+<p class="font-body-sm text-body-sm text-inverse-primary">
+              Bilingual Corporate Declarations: TSR, Withholding, Monthly Dipe, &amp; Annual DSF filings verified before the 15th of each month.
+            </p>
+<div class="pt-2 flex items-center justify-between text-on-primary-container font-label-base text-label-base">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-emerald-400">check_circle</span>
+                Attestation Non-Redevance (ANR)
+              </span>
+<span class="text-secondary-fixed-dim font-mono text-xs">REF: DGI-2025/UCO-TAX</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 2. DOCKED TRUST STRIP -->
+<section class="w-full bg-inverse-surface text-inverse-on-surface py-space-lg shadow-md relative z-10">
+<div class="max-w-max-container mx-auto px-gutter-desktop grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+<div class="flex items-start gap-space-md p-space-sm rounded-lg bg-surface-container-highest/10">
+<div class="w-12 h-12 rounded-lg bg-secondary/20 flex items-center justify-center text-secondary-fixed shrink-0">
+<span class="material-symbols-outlined text-[24px]">event_repeat</span>
+</div>
+<div class="flex flex-col">
+<h4 class="font-headline-sm text-headline-sm text-inverse-on-surface">Ongoing Filing Support</h4>
+<p class="font-body-sm text-body-sm text-inverse-primary mt-1">Recurring monthly, quarterly, and annual DGI filings prepared and logged with zero missed deadlines.</p>
+</div>
+</div>
+<div class="flex items-start gap-space-md p-space-sm rounded-lg bg-surface-container-highest/10">
+<div class="w-12 h-12 rounded-lg bg-secondary/20 flex items-center justify-center text-secondary-fixed shrink-0">
+<span class="material-symbols-outlined text-[24px]">policy</span>
+</div>
+<div class="flex flex-col">
+<h4 class="font-headline-sm text-headline-sm text-inverse-on-surface">Cameroon Tax Code Expertise</h4>
+<p class="font-body-sm text-body-sm text-inverse-primary mt-1">Strict adherence to General Tax Code (CGI), CEMAC directives, and bilateral tax treaty provisions.</p>
+</div>
+</div>
+<div class="flex items-start gap-space-md p-space-sm rounded-lg bg-surface-container-highest/10">
+<div class="w-12 h-12 rounded-lg bg-secondary/20 flex items-center justify-center text-secondary-fixed shrink-0">
+<span class="material-symbols-outlined text-[24px]">receipt_long</span>
+</div>
+<div class="flex flex-col">
+<h4 class="font-headline-sm text-headline-sm text-inverse-on-surface">Documented Compliance Calendar</h4>
+<p class="font-body-sm text-body-sm text-inverse-primary mt-1">Verifiable receipts, Quittance de Paiement, and official Attestation de Non-Redevance (ANR) archives.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. YOUR COMPLIANCE CALENDAR (RECURRING CADENCE VISUAL) -->
+<section class="w-full bg-surface py-space-3xl">
+<div class="max-w-max-container mx-auto px-gutter-desktop flex flex-col gap-space-2xl">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div class="max-w-2xl flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-wider">Statutory Cadence &amp; Deliverables</span>
+<h2 class="font-headline-xl text-headline-xl-mobile md:text-headline-xl text-on-surface">The Recurring Compliance Rhythm</h2>
+<p class="font-body-base text-body-base text-on-surface-variant">Tax compliance in Cameroon is not an annual scramble; it is a systematic monthly and quarterly operational hygiene that protects your legal capacity.</p>
+</div>
+<div class="p-3 bg-surface-container-high rounded-lg max-w-xs">
+<span class="font-label-caps text-label-caps text-error block">NOTE FOR ENGAGEMENT TEAMS:</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant italic">[PENDING: CONFIRM REAL CADENCE &amp; DEADLINES WITH UCO]</span>
+</div>
+</div>
+<!-- Rhythm Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-space-lg">
+<!-- Column 1: Monthly -->
+<div class="bg-surface-container-lowest rounded-xl p-space-xl shadow-md flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-md">
+<span class="px-3 py-1 rounded-full bg-secondary-container/10 text-secondary font-label-caps text-label-caps uppercase">Monthly Cycle</span>
+<span class="font-mono text-xs text-on-surface-variant font-semibold">Pre-15th Deadline</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Monthly DGI Declarations</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-lg">
+              Routine statutory filings generated, verified, and uploaded to the DGI online portal with matching payment tele-declarations.
+            </p>
+<ul class="flex flex-col gap-3 font-body-sm text-body-sm text-on-surface">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary shrink-0 mt-0.5">check_box</span>
+<span><strong>Withholding Tax (TSR):</strong> Retained service fees and cross-border remittances.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary shrink-0 mt-0.5">check_box</span>
+<span><strong>Monthly Dipe / IRPP at Source:</strong> Personal tax withheld from team payroll.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary shrink-0 mt-0.5">check_box</span>
+<span><strong>VAT / TVA Filings:</strong> Monthly turnover reconciliation (where applicable).</span>
+</li>
+</ul>
+</div>
+<div class="mt-space-lg pt-space-sm bg-surface-container-low p-3 rounded-lg">
+<span class="font-label-caps text-label-caps text-outline block">VERIFICATION ARTIFACT:</span>
+<span class="font-label-base text-label-base text-on-surface">Official Monthly Quittance de Paiement DGI</span>
+</div>
+</div>
+<!-- Column 2: Quarterly -->
+<div class="bg-surface-container-lowest rounded-xl p-space-xl shadow-md flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-md">
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-on-surface font-label-caps text-label-caps uppercase">Quarterly Review</span>
+<span class="font-mono text-xs text-on-surface-variant font-semibold">Quarter End + 15d</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Advance Instalments &amp; Audit</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-lg">
+              Periodic health assessments to prevent accumulated tax exposure, unexpected liabilities, or ledger discrepancies.
+            </p>
+<ul class="flex flex-col gap-3 font-body-sm text-body-sm text-on-surface">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary shrink-0 mt-0.5">check_box</span>
+<span><strong>Advance Corporate Tax:</strong> Calculating minimum tax / Acompte IS instalments.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary shrink-0 mt-0.5">check_box</span>
+<span><strong>Ledger vs Portal Audit:</strong> Cross-checking fiscal portal balances against bank accounts.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary shrink-0 mt-0.5">check_box</span>
+<span><strong>Quarterly Payroll Reconciliation:</strong> Ensuring social declarations match DGI data.</span>
+</li>
+</ul>
+</div>
+<div class="mt-space-lg pt-space-sm bg-surface-container-low p-3 rounded-lg">
+<span class="font-label-caps text-label-caps text-outline block">VERIFICATION ARTIFACT:</span>
+<span class="font-label-base text-label-base text-on-surface">Quarterly Standing Extract &amp; Pre-clearance</span>
+</div>
+</div>
+<!-- Column 3: Annual -->
+<div class="bg-surface-container-lowest rounded-xl p-space-xl shadow-md flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-md">
+<span class="px-3 py-1 rounded-full bg-primary-container text-inverse-on-surface font-label-caps text-label-caps uppercase">Annual Fiscal Dossier</span>
+<span class="font-mono text-xs text-secondary font-semibold">March 15th Statutory</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">DSF &amp; Full Annual Clôture</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-lg">
+              Comprehensive year-end statutory assembly, statistical statements, and corporate credential renewals.
+            </p>
+<ul class="flex flex-col gap-3 font-body-sm text-body-sm text-on-surface">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary shrink-0 mt-0.5">check_box</span>
+<span><strong>DSF (Déclaration Statistique et Fiscale):</strong> SYSCOHADA compliant year-end submission.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary shrink-0 mt-0.5">check_box</span>
+<span><strong>Patente / Business License:</strong> Statutory municipal license assessment &amp; payment.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary shrink-0 mt-0.5">check_box</span>
+<span><strong>Attestation de Non-Redevance (ANR):</strong> Essential cert for tenders, contracts &amp; banking.</span>
+</li>
+</ul>
+</div>
+<div class="mt-space-lg pt-space-sm bg-surface-container-low p-3 rounded-lg">
+<span class="font-label-caps text-label-caps text-outline block">VERIFICATION ARTIFACT:</span>
+<span class="font-label-base text-label-base text-on-surface">Official DGI Stamped DSF &amp; Active ANR Certificate</span>
+</div>
+</div>
+</div>
+<!-- Pending schedule caveat box -->
+<div class="p-space-md bg-surface-container-low rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary text-[24px]">info</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+<strong>Cadence Confirmation:</strong> Exact deadlines fluctuate based on regime classification (Réel, Simplifié, or IGC). We verify your exact registration status during initial onboarding.
+          </p>
+</div>
+<span class="font-label-caps text-label-caps text-outline shrink-0">CODE: CGI-ART-114-CMR</span>
+</div>
+</div>
+</section>
+<!-- 4. WHO THIS IS FOR — TWO PERSONAS WITH EQUAL VISUAL WEIGHT -->
+<section class="w-full bg-primary-container text-inverse-on-surface py-space-3xl">
+<div class="max-w-max-container mx-auto px-gutter-desktop flex flex-col gap-space-2xl">
+<div class="text-center max-w-3xl mx-auto flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-secondary-fixed uppercase tracking-wider">Tailored Corporate Engagements</span>
+<h2 class="font-headline-xl text-headline-xl-mobile md:text-headline-xl text-inverse-on-surface">Two Paths to Total Fiscal Peace of Mind</h2>
+<p class="font-body-base text-body-base text-inverse-primary">Whether you are newly established and looking to maintain clean ledgers from day one, or navigating back-filings, our tax desk provides clear, structured execution.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-space-xl">
+<!-- Persona 1: Newly Formalised -->
+<div class="bg-surface-container-low/10 rounded-xl p-space-xl shadow-xl flex flex-col justify-between backdrop-blur-sm">
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="w-10 h-10 rounded-lg bg-secondary/30 flex items-center justify-center text-secondary-fixed">
+<span class="material-symbols-outlined text-[20px]">verified_user</span>
+</span>
+<span class="font-label-caps text-label-caps px-3 py-1 rounded bg-secondary/20 text-secondary-fixed uppercase">Track A</span>
+</div>
+<div>
+<h3 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-inverse-on-surface">Newly Formalised &amp; Staying Ahead</h3>
+<p class="font-label-lg text-label-lg text-secondary-fixed mt-1">Proactive operational stability</p>
+</div>
+<div class="p-4 rounded-lg bg-surface-container-lowest/5">
+<span class="font-label-caps text-label-caps text-on-primary-container block mb-1">THE REALITY</span>
+<p class="font-body-base text-body-base text-inverse-primary">
+                “You just got your RCCM and NIU. Operating without a dedicated accounting department makes statutory filing deadlines easy to miss.”
+              </p>
+</div>
+<div>
+<span class="font-label-caps text-label-caps text-secondary-fixed block mb-2">OUR REASSURANCE &amp; METHOD</span>
+<p class="font-body-sm text-body-sm text-on-primary-container leading-relaxed">
+                We establish your monthly filing rhythm from day one, ensuring clean tax records that keep corporate bank accounts unlocked, vendor contracts eligible, and prevent early administrative notices from day one.
+              </p>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-2 text-xs text-inverse-primary font-mono">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-secondary-fixed">done</span>
+<span>Immediate DGI Tele-Portal Link</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-secondary-fixed">done</span>
+<span>Pre-filled Monthly Templates</span>
+</div>
+</div>
+</div>
+<div class="pt-space-lg mt-space-md">
+<a class="w-full inline-flex items-center justify-center gap-2 px-space-lg py-3 bg-secondary-container hover:bg-secondary text-on-secondary font-label-lg text-label-lg rounded-lg transition-colors" href="#compliance-check">
+<span>Initiate Proactive Schedule</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Persona 2: Catching Up on Filings -->
+<div class="bg-surface-container-low/10 rounded-xl p-space-xl shadow-xl flex flex-col justify-between backdrop-blur-sm">
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="w-10 h-10 rounded-lg bg-tertiary-container/40 flex items-center justify-center text-tertiary-fixed-dim">
+<span class="material-symbols-outlined text-[20px]">healing</span>
+</span>
+<span class="font-label-caps text-label-caps px-3 py-1 rounded bg-tertiary-container/60 text-tertiary-fixed-dim uppercase">Track B</span>
+</div>
+<div>
+<h3 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-inverse-on-surface">Catching Up on Filings</h3>
+<p class="font-label-lg text-label-lg text-tertiary-fixed-dim mt-1">Non-judgmental regularisation &amp; remediation</p>
+</div>
+<div class="p-4 rounded-lg bg-surface-container-lowest/5">
+<span class="font-label-caps text-label-caps text-on-primary-container block mb-1">THE REALITY</span>
+<p class="font-body-base text-body-base text-inverse-primary">
+                “Behind on filings? You're not alone. Operating under informal pressures, missed deadlines, or unfiled declarations can happen to any growing business.”
+              </p>
+</div>
+<div>
+<span class="font-label-caps text-label-caps text-tertiary-fixed-dim block mb-2">OUR REASSURANCE &amp; METHOD</span>
+<p class="font-body-sm text-body-sm text-on-primary-container leading-relaxed">
+                Zero judgment, 100% procedural remediation. We conduct a quiet fiscal audit, reconstruct historical ledgers, negotiate administrative standing, and bring you fully current without operational shutdowns.
+              </p>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-2 text-xs text-inverse-primary font-mono">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-tertiary-fixed-dim">done</span>
+<span>Ledger Reconstruction</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-tertiary-fixed-dim">done</span>
+<span>Discreet DGI Remediation</span>
+</div>
+</div>
+</div>
+<div class="pt-space-lg mt-space-md">
+<a class="w-full inline-flex items-center justify-center gap-2 px-space-lg py-3 bg-surface-container-highest/30 hover:bg-surface-container-highest/50 text-inverse-on-surface font-label-lg text-label-lg rounded-lg transition-colors" href="#compliance-check">
+<span>Request Confidential Regularisation</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. WHAT WE HANDLE: HANDOVER VS DELIVERABLE -->
+<section class="w-full bg-surface-container-low py-space-3xl">
+<div class="max-w-max-container mx-auto px-gutter-desktop flex flex-col gap-space-2xl">
+<div class="max-w-3xl flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-wider">Operational Division of Labour</span>
+<h2 class="font-headline-xl text-headline-xl-mobile md:text-headline-xl text-on-surface">What You Hand Over vs. What You Receive</h2>
+<p class="font-body-base text-body-base text-on-surface-variant">We turn an intimidating legal paperwork maze into a simple monthly exchange. You provide core raw transactions; we handle verification, filing, and delivery of certified receipts.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-space-xl">
+<!-- Handover -->
+<div class="bg-surface-container-lowest p-space-xl rounded-xl shadow-md flex flex-col gap-space-md">
+<div class="flex items-center gap-3">
+<span class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[22px]">upload_file</span>
+</span>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">What You Hand Over</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Provided before the 5th of each calendar month</p>
+</div>
+</div>
+<div class="space-y-4 pt-2">
+<div class="p-3 bg-surface-container-low rounded-lg flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary text-[20px] mt-0.5">description</span>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Bank Statements &amp; Cash Vouchers</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Raw transaction histories from your commercial bank or corporate mobile money channels.</p>
+</div>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary text-[20px] mt-0.5">receipt</span>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Invoices &amp; Supplier Bills</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Client billings issued during the cycle, alongside allowable business expenditure receipts.</p>
+</div>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary text-[20px] mt-0.5">group</span>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Monthly Staff Payroll Sheet</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Gross and net salary breakdowns used to calculate statutory withholding at source (Dipe).</p>
+</div>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary text-[20px] mt-0.5">history_edu</span>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Historical Filings &amp; Tax Identifiers</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Initial NIU certificate, previous year's Patente, and earlier tax receipts (if existing).</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Deliverables -->
+<div class="bg-surface-container-lowest p-space-xl rounded-xl shadow-md flex flex-col gap-space-md">
+<div class="flex items-center gap-3">
+<span class="w-10 h-10 rounded-lg bg-secondary-container/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[22px]">task_alt</span>
+</span>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">What You Receive Back</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Delivered cleanly before statutory 15th deadlines</p>
+</div>
+</div>
+<div class="space-y-4 pt-2">
+<div class="p-3 bg-surface-container-low rounded-lg flex items-start gap-3">
+<span class="material-symbols-outlined text-emerald-600 text-[20px] mt-0.5">verified</span>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Stamped DGI Declarations</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Formally lodged through the MINFI electronic portal with electronic confirmation stamps.</p>
+</div>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg flex items-start gap-3">
+<span class="material-symbols-outlined text-emerald-600 text-[20px] mt-0.5">receipt_long</span>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Quittance de Paiement Receipts</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Irrefutable state treasury payment certificates archived directly in your client drive.</p>
+</div>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg flex items-start gap-3">
+<span class="material-symbols-outlined text-emerald-600 text-[20px] mt-0.5">account_balance_wallet</span>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Tax Portal Ledger Reconciliation</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Continuous zero-balance balance sheet confirmation ensuring no ghost penalties accumulate.</p>
+</div>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg flex items-start gap-3">
+<span class="material-symbols-outlined text-emerald-600 text-[20px] mt-0.5">workspace_premium</span>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Attestation de Non-Redevance (ANR)</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Fresh corporate ANRs issued and renewed to keep you fully eligible for institutional contracts.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Dedicated Social Security cross-link callout -->
+<div class="p-space-lg bg-surface-container rounded-xl flex flex-col md:flex-row items-center justify-between gap-space-md shadow-sm">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-lg bg-secondary/15 flex items-center justify-center text-secondary shrink-0">
+<span class="material-symbols-outlined text-[24px]">diversity_3</span>
+</div>
+<div>
+<p class="font-headline-sm text-headline-sm text-on-surface">Looking for employee social security and labour compliance?</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Social insurance compliance (CNPS) and labour office registrations are managed on their own specialized desk.</p>
+</div>
+</div>
+<a class="inline-flex items-center gap-2 px-space-md py-2.5 bg-primary-container text-on-secondary rounded-lg font-label-lg text-label-lg hover:bg-secondary transition-colors shrink-0" href="#">
+<span>Explore CNPS Compliance</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</section>
+<!-- 6. THE REAL COST OF FALLING BEHIND — PENALTY RISK COMPARATOR -->
+<section class="w-full bg-primary-container text-inverse-on-surface py-space-3xl">
+<div class="max-w-max-container mx-auto px-gutter-desktop flex flex-col gap-space-2xl">
+<div class="text-center max-w-3xl mx-auto flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-secondary-fixed uppercase tracking-wider">The Cost of Inaction</span>
+<h2 class="font-headline-xl text-headline-xl-mobile md:text-headline-xl text-inverse-on-surface">Unmanaged Exposure vs. UCO Managed Cadence</h2>
+<p class="font-body-base text-body-base text-inverse-primary">In Cameroon, fiscal sanctions compound rapidly. Comparing what happens when filings lapse against our predictable retainer model.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-space-xl">
+<!-- Unmanaged Risk Panel -->
+<div class="bg-surface-container-highest/10 rounded-xl p-space-xl shadow-xl flex flex-col gap-space-md backdrop-blur-sm">
+<div class="flex items-center justify-between pb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-error text-[24px]">warning</span>
+<h3 class="font-headline-md text-headline-md text-inverse-on-surface">Unmanaged / Lapsed Filings</h3>
+</div>
+<span class="px-2.5 py-1 rounded bg-error-container text-on-error-container font-label-caps text-label-caps">HIGH RISK</span>
+</div>
+<div class="space-y-4 text-on-primary-container font-body-sm text-body-sm">
+<div class="p-3.5 bg-surface-container-lowest/5 rounded-lg">
+<p class="font-label-base text-label-base text-error-container mb-1">Late-Filing Surcharges &amp; Compounding Interest</p>
+<p class="text-inverse-primary">Monthly penalties applied automatically by DGI systems on unfiled statements. <span class="text-tertiary-fixed-dim italic">[PENDING: CONFIRM SPECIFIC DGI PENALTY % WITH UCO]</span></p>
+</div>
+<div class="p-3.5 bg-surface-container-lowest/5 rounded-lg">
+<p class="font-label-base text-label-base text-error-container mb-1">Automatic Freezing of Bank Accounts (ATD)</p>
+<p class="text-inverse-primary">Tax collectors can issue an Avis à Tiers Détenteur (ATD) directly to commercial banks, freezing operational payroll and vendor accounts overnight.</p>
+</div>
+<div class="p-3.5 bg-surface-container-lowest/5 rounded-lg">
+<p class="font-label-base text-label-base text-error-container mb-1">Tender Disqualification (Loss of ANR)</p>
+<p class="text-inverse-primary">Without an active Attestation de Non-Redevance, your enterprise cannot legally submit proposals for public tenders, state projects, or corporate enterprise bids.</p>
+</div>
+<div class="p-3.5 bg-surface-container-lowest/5 rounded-lg">
+<p class="font-label-base text-label-base text-error-container mb-1">Sudden Retroactive Audits</p>
+<p class="text-inverse-primary">Unchecked irregularities trigger comprehensive multi-year field audits (Contrôle Fiscal), consuming executive bandwidth and resulting in massive arbitrary reassessments.</p>
+</div>
+</div>
+</div>
+<!-- UCO Managed Panel -->
+<div class="bg-surface-container-highest/10 rounded-xl p-space-xl shadow-xl flex flex-col gap-space-md backdrop-blur-sm">
+<div class="flex items-center justify-between pb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-fixed text-[24px]">verified</span>
+<h3 class="font-headline-md text-headline-md text-inverse-on-surface">The UCO Managed Cadence</h3>
+</div>
+<span class="px-2.5 py-1 rounded bg-secondary-container/30 text-secondary-fixed font-label-caps text-label-caps">CONTINUOUS STATUS</span>
+</div>
+<div class="space-y-4 text-on-primary-container font-body-sm text-body-sm">
+<div class="p-3.5 bg-surface-container-lowest/5 rounded-lg">
+<p class="font-label-base text-label-base text-secondary-fixed mb-1">Predictable Flat Advisory Retainer</p>
+<p class="text-inverse-primary">Fixed monthly fee with zero hidden fees. Filings guaranteed submitted before statutory deadlines with zero administrative surcharges.</p>
+</div>
+<div class="p-3.5 bg-surface-container-lowest/5 rounded-lg">
+<p class="font-label-base text-label-base text-secondary-fixed mb-1">Protected Commercial Banking Standing</p>
+<p class="text-inverse-primary">Seamless operational continuity. Your commercial bank balances remain completely unencumbered by administrative freezes or tax agency inquiries.</p>
+</div>
+<div class="p-3.5 bg-surface-container-lowest/5 rounded-lg">
+<p class="font-label-base text-label-base text-secondary-fixed mb-1">Always-Active ANR for Commercial Growth</p>
+<p class="text-inverse-primary">Fresh non-redevance attestations maintained systematically in your cloud compliance repository, ready for high-value tenders at moments notice.</p>
+</div>
+<div class="p-3.5 bg-surface-container-lowest/5 rounded-lg">
+<p class="font-label-base text-label-base text-secondary-fixed mb-1">Bilingual Institutional Representation</p>
+<p class="text-inverse-primary">If the tax center issues requests for clarification, our certified corporate tax desk responds on your behalf with complete documentary support.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 7. ALSO MANAGING YOUR PERSONAL TAXES? -->
+<section class="w-full bg-surface py-space-2xl">
+<div class="max-w-max-container mx-auto px-gutter-desktop">
+<div class="p-space-xl rounded-xl bg-surface-container-high shadow-md flex flex-col md:flex-row items-center justify-between gap-space-lg">
+<div class="flex items-start gap-space-md max-w-2xl">
+<div class="w-12 h-12 rounded-lg bg-surface-container-lowest flex items-center justify-center text-secondary shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[24px]">person_pin</span>
+</div>
+<div>
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-wider block mb-1">EXECUTIVE TAX PLANNING</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Also managing your personal taxes as a business owner or director?</h3>
+<p class="font-body-base text-body-base text-on-surface-variant mt-2">
+              Cross-border founders, expats, and company executives face distinct personal income tax (IRPP) obligations separate from corporate legal entities. We structure your executive compensation, dividends, and residency declarations in parallel.
+            </p>
+</div>
+</div>
+<a class="inline-flex items-center gap-2 px-space-lg py-3 bg-secondary-container hover:bg-secondary text-on-secondary font-label-lg text-label-lg rounded-lg shadow transition-colors shrink-0" href="#">
+<span>Explore Personal Tax Compliance</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</section>
+<!-- 8. PRACTICAL TAX COMPLIANCE ANSWERS (FAQ ACCORDION) -->
+<section class="w-full bg-surface-container-low py-space-3xl">
+<div class="max-w-max-container mx-auto px-gutter-desktop flex flex-col gap-space-2xl">
+<div class="text-center max-w-3xl mx-auto flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-wider">Direct Answers</span>
+<h2 class="font-headline-xl text-headline-xl-mobile md:text-headline-xl text-on-surface">Practical Tax Compliance Answers</h2>
+<p class="font-body-base text-body-base text-on-surface-variant">Clear, unvarnished operational guidance on dealing with the Cameroon tax administration.</p>
+</div>
+<div class="max-w-3xl mx-auto w-full flex flex-col gap-space-sm" id="faq-accordion">
+<!-- Item 1 -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden transition-all">
+<button class="w-full p-space-lg flex items-center justify-between gap-4 text-left font-headline-sm text-headline-sm text-on-surface hover:text-secondary transition-colors" onclick="toggleFaq(this)" type="button">
+<span>What happens if I've missed previous filings or past tax years?</span>
+<span class="material-symbols-outlined text-[20px] transform transition-transform duration-200">expand_more</span>
+</button>
+<div class="hidden px-space-lg pb-space-lg font-body-base text-body-base text-on-surface-variant">
+<p>
+              Missed declarations are common, particularly for companies operating during rapid growth or informal transition phases. Rather than ignoring the issue until a formal audit or account freeze occurs, UCO performs a discreet historical reconciliation. We recalculate your statutory liabilities, assemble the back-filings, and interact directly with your attached Tax Center (Centre des Impôts) to negotiate manageable settlement structures and penalty remissions where permitted by the General Tax Code.
+            </p>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden transition-all">
+<button class="w-full p-space-lg flex items-center justify-between gap-4 text-left font-headline-sm text-headline-sm text-on-surface hover:text-secondary transition-colors" onclick="toggleFaq(this)" type="button">
+<span>Do I need to worry about back-taxes if I'm just now formalising an informal business?</span>
+<span class="material-symbols-outlined text-[20px] transform transition-transform duration-200">expand_more</span>
+</button>
+<div class="hidden px-space-lg pb-space-lg font-body-base text-body-base text-on-surface-variant">
+<p>
+              When incorporating a new entity (SARL, SAS, or registered sole proprietorship), your statutory tax existence typically commences upon registration with the RCCM and the generation of your Unique Identification Number (NIU). However, if your business has transacted through registered corporate accounts prior to formalisation, clear documentation of founding capital is crucial. We help structure your company inception so that your opening balance sheet starts on solid, uncontested ground.
+            </p>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden transition-all">
+<button class="w-full p-space-lg flex items-center justify-between gap-4 text-left font-headline-sm text-headline-sm text-on-surface hover:text-secondary transition-colors" onclick="toggleFaq(this)" type="button">
+<span>How often will our team need to provide accounting documents?</span>
+<span class="material-symbols-outlined text-[20px] transform transition-transform duration-200">expand_more</span>
+</button>
+<div class="hidden px-space-lg pb-space-lg font-body-base text-body-base text-on-surface-variant">
+<p>
+              We recommend an automated cadence where your finance or operations lead uploads bank summaries, payroll sheets, and customer invoices to your secure client folder between the 1st and 5th of each month. This gives our desk 10 full working days to review ledgers, query any missing documentation, and lodge finalized returns well ahead of the official 15th monthly cut-off.
+            </p>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden transition-all">
+<button class="w-full p-space-lg flex items-center justify-between gap-4 text-left font-headline-sm text-headline-sm text-on-surface hover:text-secondary transition-colors" onclick="toggleFaq(this)" type="button">
+<span>What is the key difference between DGI tax compliance and CNPS labour compliance?</span>
+<span class="material-symbols-outlined text-[20px] transform transition-transform duration-200">expand_more</span>
+</button>
+<div class="hidden px-space-lg pb-space-lg font-body-base text-body-base text-on-surface-variant">
+<p>
+              The Direction Générale des Impôts (DGI) falls under the Ministry of Finance and governs corporate income tax, withholding taxes (TSR), VAT/TVA, business licenses (Patente), and personal taxes at source. The Caisse Nationale de Prévoyance Sociale (CNPS) is Cameroon's national social security fund governing workplace accident insurance, pensions, and family welfare contributions. Both require monthly reporting, but they are audited and enforced by distinct state authorities. UCO provides integrated tracking across both registries.
+            </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 9. COMPLIANCE NOTICE & VERIFICATION STAMP -->
+<section class="w-full bg-surface py-space-xl">
+<div class="max-w-max-container mx-auto px-gutter-desktop">
+<div class="p-space-lg rounded-xl bg-surface-container-high flex flex-col md:flex-row items-center justify-between gap-space-lg">
+<div class="flex items-start gap-3 max-w-3xl">
+<span class="material-symbols-outlined text-outline text-[24px] mt-0.5">verified_user</span>
+<div class="flex flex-col gap-1">
+<p class="font-label-base text-label-base text-on-surface font-semibold">Statutory Reference Notice</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              This information provides procedural reference on general public tax obligations under the Cameroon General Tax Code (CGI). Statutory dues, penalties, and filing schedules are subject to Ministry of Finance (MINFI) and Direction Générale des Impôts (DGI) regulations. Formal engagement includes customized fiscal scoping prior to submission.
+            </p>
+</div>
+</div>
+<div class="flex flex-col items-start md:items-end shrink-0 pl-4">
+<span class="font-label-caps text-label-caps text-secondary uppercase font-bold">VERIFIED AUDIT STATUS</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Last reviewed: October 2024</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-1">UCO Tax &amp; Corporate Desk</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 10. CLOSING CTA BANNER -->
+<section class="relative w-full bg-primary-container text-inverse-on-surface py-space-3xl overflow-hidden" id="compliance-check">
+<!-- Ambient cyan gradient overlay -->
+<div class="absolute inset-0 bg-gradient-to-r from-secondary/15 via-transparent to-secondary-container/15 pointer-events-none"></div>
+<div class="absolute -bottom-24 -right-12 w-96 h-96 rounded-full bg-secondary-container/20 blur-[130px] pointer-events-none"></div>
+<div class="relative max-w-max-container mx-auto px-gutter-desktop flex flex-col items-center text-center gap-space-lg">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-highest/20 backdrop-blur-md">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+<span class="font-label-caps text-label-caps text-secondary-fixed uppercase tracking-wider">TAX DESK ACTIVE IN BUEA &amp; DOUALA</span>
+</div>
+<h2 class="font-display-hero text-display-hero-mobile lg:text-display-hero text-inverse-on-surface max-w-3xl leading-tight">
+        Ready to take tax anxiety off your operating table?
+      </h2>
+<p class="font-body-lead text-body-lead text-inverse-primary max-w-2xl">
+        Request a confidential compliance check or speak directly with our bilingual corporate tax desk to stabilize your standing this month.
+      </p>
+<div class="flex flex-wrap items-center justify-center gap-space-md pt-2">
+<a class="inline-flex items-center gap-2 px-space-xl py-3.5 bg-secondary-container hover:bg-secondary text-on-secondary font-label-lg text-label-lg rounded-lg shadow-xl hover:shadow-secondary-container/30 transition-all duration-200" href="#">
+<span>Get a Compliance Check</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+<a class="inline-flex items-center gap-2 px-space-lg py-3.5 bg-surface-container-highest/20 hover:bg-surface-container-highest/35 text-inverse-on-surface font-label-lg text-label-lg rounded-lg backdrop-blur-md transition-all" href="https://wa.me/237670000000" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[18px] text-emerald-400">chat</span>
+<span>Discuss via WhatsApp Tax Desk</span>
+</a>
+</div>
+<p class="font-label-caps text-label-caps text-on-primary-container uppercase tracking-wider mt-4">
+        Strict Confidentiality Guaranteed • Bilingual English &amp; French Support
+      </p>
+</div>
+</section>
+</div>
+<script>
+  function toggleFaq(button) {
+    const content = button.nextElementSibling;
+    const icon = button.querySelector('.material-symbols-outlined');
+    const isExpanded = !content.classList.contains('hidden');
+
+    // Close all FAQs in accordion
+    document.querySelectorAll('#faq-accordion > div').forEach(item => {
+      const c = item.querySelector('div:last-child');
+      const ic = item.querySelector('.material-symbols-outlined');
+      if (c && !c.classList.contains('hidden')) {
+        c.classList.add('hidden');
+      }
+      if (ic) {
+        ic.style.transform = 'rotate(0deg)';
+      }
+    });
+
+    // Toggle current
+    if (isExpanded) {
+      content.classList.add('hidden');
+      icon.style.transform = 'rotate(0deg)';
+    } else {
+      content.classList.remove('hidden');
+      icon.style.transform = 'rotate(180deg)';
+    }
+  }
+</script></main><footer class="w-full bg-primary-container text-inverse-on-surface pt-space-3xl pb-space-2xl"><div class="max-w-max-container mx-auto px-gutter-desktop flex flex-col gap-space-3xl"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-space-2xl"><div class="lg:col-span-2 flex flex-col gap-space-md"><div class="flex items-center gap-space-md"><img alt="Brand logo. - Primary color: #0b192c
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-sm
+" class="h-8 w-auto object-contain bg-surface-container-lowest p-1 rounded-lg" src="https://lh3.googleusercontent.com/aida/AEtjO1WmSYdEZYU24zV46TcDq5kGvW8N5skSAyBZ8gIDVO_K9jmzLb8sBsvXKq5mFuCJhBSpQfY6K8B_qe391zFUgpHiTN2w9B2zIhx33HdqeAu0RANxxkUOgXIyRxhgcdrZGpMk1t98dWS0qLH_dehQ9cUmvHkl2Pkn2XDfohMkYCeXRNIU0T4b1eOQ-o0s7pj6HhfH9wD97UTbu5Y9-Oa82kaJYrVMzhRpe1ibyZ3HTS3_jYBH4ha_Kdxkjxu_"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-inverse-on-surface leading-none tracking-tight">Uptech Consulting &amp; Outsourcing</span><span class="font-label-caps text-label-caps text-secondary-fixed-dim uppercase">Silicon Mountain to Texas Corridors</span></div></div><p class="font-body-sm text-body-sm text-on-primary-container max-w-sm">Bridging enterprise governance, vetted technical talent, and regulatory compliance across Central Africa and North American commercial corridors.</p><div class="flex items-center gap-space-sm mt-space-xs"><a aria-label="Corporate Network" class="w-9 h-9 rounded-lg bg-surface-container/10 flex items-center justify-center text-inverse-on-surface hover:bg-secondary-container transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">public</span></a><a aria-label="Institutional Directory" class="w-9 h-9 rounded-lg bg-surface-container/10 flex items-center justify-center text-inverse-on-surface hover:bg-secondary-container transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">business</span></a><a aria-label="Verified Communications" class="w-9 h-9 rounded-lg bg-surface-container/10 flex items-center justify-center text-inverse-on-surface hover:bg-secondary-container transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">alternate_email</span></a></div></div><div class="flex flex-col gap-space-sm"><span class="font-label-caps text-label-caps text-secondary-fixed tracking-wider uppercase">Buea Operations</span><div class="font-body-sm text-body-sm text-on-primary-container flex flex-col gap-1"><p class="font-label-base text-label-base text-inverse-on-surface">Silicon Mountain Tech Hub</p><p>Check Point Commercial District</p><p>Buea, South West Region, Cameroon</p><p class="mt-2 font-label-caps text-label-caps text-tertiary-fixed-dim">RCCM: RC/BUE/2023/B/492</p><p class="text-inverse-on-surface">+237 670 00 00 00</p></div></div><div class="flex flex-col gap-space-sm"><span class="font-label-caps text-label-caps text-secondary-fixed tracking-wider uppercase">Texas Office</span><div class="font-body-sm text-body-sm text-on-primary-container flex flex-col gap-1"><p class="font-label-base text-label-base text-inverse-on-surface">Enterprise Corridor Suite</p><p>Post Oak Boulevard, Galleria Area</p><p>Houston, TX 77056, United States</p><p class="mt-2 font-label-caps text-label-caps text-tertiary-fixed-dim">LLC TX Verified: #08049102</p><p class="text-inverse-on-surface">+1 (713) 555-0194</p></div></div><div class="flex flex-col gap-space-sm"><span class="font-label-caps text-label-caps text-secondary-fixed tracking-wider uppercase">Advisory Units</span><ul class="flex flex-col gap-2 font-body-sm text-body-sm text-on-primary-container"><li><a class="hover:text-inverse-on-surface transition-colors" data-path="cross-border-corporate" href="#">Cross-Border Structuring</a></li><li><a class="hover:text-inverse-on-surface transition-colors" data-path="managed-it-offshore" href="#">Offshore Engineering Pods</a></li><li><a class="hover:text-inverse-on-surface transition-colors" data-path="diaspora-advisory" href="#">Venture Formalization</a></li><li><a class="hover:text-inverse-on-surface transition-colors" data-path="careers" href="#">Global Talent Pipeline</a></li></ul></div></div><div class="pt-space-lg flex flex-col sm:flex-row items-center justify-between gap-space-md font-body-sm text-body-sm text-on-primary-container"><p>© 2025 Uptech Consulting &amp; Outsourcing LLC &amp; SARL. All rights reserved.</p><div class="flex items-center gap-space-lg font-label-base text-label-base"><a class="hover:text-inverse-on-surface transition-colors" data-path="privacy-policy" href="#">Privacy Policy</a><a class="hover:text-inverse-on-surface transition-colors" data-path="terms-of-engagement" href="#">Terms of Engagement</a><a class="hover:text-inverse-on-surface transition-colors" data-path="regulatory-compliance" href="#">Regulatory Disclosures</a></div></div></div></footer></body></html>

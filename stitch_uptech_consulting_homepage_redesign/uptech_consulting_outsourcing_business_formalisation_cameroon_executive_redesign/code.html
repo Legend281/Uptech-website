@@ -1,0 +1,1020 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "midnight-base": "#070e1b",
+            "midnight-card": "#0b1528",
+            "midnight-light": "#13213c",
+            "midnight-surface": "#182a4d",
+            "cyan-glow": "#38BDF8",
+            "cyan-bright": "#00D2FF",
+            "electric-blue": "#0066FF",
+            "error": "#ba1a1a",
+            "background": "#f8faff",
+            "surface": "#ffffff",
+            "surface-container-low": "#f1f5fa",
+            "surface-container": "#e8eef8",
+            "surface-container-high": "#dfe7f4",
+            "surface-container-highest": "#d2def0",
+            "on-surface": "#0c172a",
+            "on-surface-variant": "#475569",
+            "outline": "#94a3b8",
+            "outline-variant": "#cbd5e1"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "3xl": "1.5rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "space-2xs": "0.25rem",
+            "space-xs": "0.5rem",
+            "space-sm": "0.75rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2rem",
+            "space-2xl": "3rem",
+            "space-3xl": "4.5rem",
+            "space-4xl": "6rem",
+            "gutter-mobile": "1.25rem",
+            "gutter-desktop": "2rem",
+            "max-container": "1280px"
+          },
+          fontFamily: {
+            "body-base": ["Inter", "sans-serif"],
+            "headline-lg": ["Plus Jakarta Sans", "sans-serif"],
+            "headline-xl": ["Plus Jakarta Sans", "sans-serif"],
+            "display-hero": ["Plus Jakarta Sans", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#f8faff] font-body-base text-on-surface antialiased selection:bg-cyan-glow/20 selection:text-white">
+<!-- NAVIGATION HEADER -->
+<header class="fixed top-0 w-full z-50 bg-[#070e1b]/95 backdrop-blur-md border-b border-white/10 shadow-2xl">
+<div class="h-20 max-w-max-container mx-auto px-gutter-mobile md:px-gutter-desktop flex items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md shrink-0">
+<a class="flex items-center gap-space-sm group" data-path="home" href="#">
+<img alt="Brand logo" class="h-8 w-auto object-contain transition-transform group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/AEtjO1WmSYdEZYU24zV46TcDq5kGvW8N5skSAyBZ8gIDVO_K9jmzLb8sBsvXKq5mFuCJhBSpQfY6K8B_qe391zFUgpHiTN2w9B2zIhx33HdqeAu0RANxxkUOgXIyRxhgcdrZGpMk1t98dWS0qLH_dehQ9cUmvHkl2Pkn2XDfohMkYCeXRNIU0T4b1eOQ-o0s7pj6HhfH9wD97UTbu5Y9-Oa82kaJYrVMzhRpe1ibyZ3HTS3_jYBH4ha_Kdxkjxu_">
+<div class="flex flex-col">
+<span class="font-['Plus_Jakarta_Sans'] text-[20px] text-white font-extrabold tracking-tight leading-none">UCO</span>
+<span class="text-[10px] text-cyan-glow uppercase font-bold tracking-widest mt-0.5">Uptech Consulting</span>
+</div>
+</a>
+</div>
+<nav class="hidden lg:flex items-center gap-8">
+<a class="text-sm font-medium text-slate-300 hover:text-cyan-glow transition-colors" data-path="who-we-are" href="#">Who We Are</a>
+<a aria-current="page" class="text-sm font-bold text-white flex items-center gap-1 relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-cyan-glow" data-path="services" href="#">
+<span class="">Services</span>
+</a>
+<a class="text-sm font-medium text-slate-300 hover:text-cyan-glow transition-colors" data-path="who-we-serve" href="#">Who We Serve</a>
+<a class="text-sm font-medium text-slate-300 hover:text-cyan-glow transition-colors" data-path="careers" href="#">Careers</a>
+</nav>
+<div class="flex items-center gap-4 shrink-0">
+<a class="hidden sm:flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors text-sm font-medium" data-path="contact" href="#">
+<span class="material-symbols-outlined text-[18px] text-cyan-glow">call</span>
+<span class="">Talk to us</span>
+</a>
+<a class="inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-electric-blue text-white font-['Plus_Jakarta_Sans'] text-xs font-bold uppercase tracking-wider shadow-lg shadow-blue-600/30 hover:bg-blue-600 hover:shadow-cyan-glow/20 transition-all active:scale-95" data-path="book-a-consultation" href="#">
+          Book a Consultation
+        </a>
+<div class="w-8 h-8 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-slate-300 hover:text-white cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">person</span>
+</div>
+</div>
+</div>
+</header>
+<main class="w-full pt-20">
+<div class="flex flex-col w-full">
+<!-- BREADCRUMB & TAXONOMY BAR -->
+<section class="w-full bg-[#050a14] text-slate-400 border-b border-white/5">
+<div class="max-w-max-container mx-auto px-gutter-mobile md:px-gutter-desktop py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+<nav aria-label="Breadcrumb" class="flex items-center gap-2 font-medium flex-wrap">
+<a class="hover:text-cyan-glow transition-colors" data-path="home" href="#">Home</a>
+<span class="text-slate-600">/</span>
+<a class="hover:text-cyan-glow transition-colors" data-path="services" href="#">Services</a>
+<span class="text-slate-600">/</span>
+<a class="hover:text-cyan-glow transition-colors" data-path="services" href="#">Business Formalisation &amp; Compliance</a>
+<span class="text-slate-600">/</span>
+<span class="text-white font-semibold flex items-center gap-1.5">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-cyan-bright"></span>
+              Cameroon OHADA
+            </span>
+</nav>
+<div class="inline-flex items-center gap-2 self-start sm:self-auto bg-white/5 border border-white/10 px-2.5 py-1 rounded-full text-[11px] font-semibold text-cyan-glow tracking-wider uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-cyan-bright animate-pulse"></span>
+<span class="">Pillar 02 • Sub-Service 01 / 05 • RCCM &amp; OHADA Uniform Act</span>
+</div>
+</div>
+</section>
+<!-- 1. HERO SECTION WITH CINEMATIC PHOTOGRAPHIC BACKGROUND OVERLAY -->
+<section class="relative w-full bg-[#070e1b] text-white overflow-hidden py-space-3xl lg:py-space-4xl border-b border-white/10">
+<!-- Cinematic Background Photo from DataStore -->
+<div class="absolute inset-0 z-0">
+<img alt="Executive boardroom legal review" class="w-full h-full object-cover object-center lg:object-right opacity-35 mix-blend-luminosity scale-105" src="https://lh3.googleusercontent.com/aida/AEtjO1WBiPVjpvlpRjRiDUUGv-Np2qb_pB9kbxql3ULik9b6p-VRVGhSMSq3XjGIh6Fomt8obAnEdjFSIUzyRg-TH608l92NlXNYkWxUbS3GjeRJcUYIba4OdWcN6YEn6N4r8G_DpPUVAh67Cn6B3-h8k_-mag7EIe5C6jKqKWF-HSqJ-wKdowMdiCHsBDV4T7PuxKY2peqzGYp2Ts5eSUdg32Msuh7XTv_QAf3dGTcybjF035JWeJbTlAOeY09X">
+<!-- Vignette Gradient Mask -->
+<div class="absolute inset-0 bg-gradient-to-r from-[#070e1b] via-[#070e1b]/90 to-[#070e1b]/40"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-[#070e1b] via-transparent to-[#070e1b]/70"></div>
+<div class="absolute -top-32 right-10 w-96 h-96 bg-cyan-glow/15 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute bottom-0 left-10 w-80 h-80 bg-electric-blue/20 rounded-full blur-3xl pointer-events-none"></div>
+</div>
+<div class="relative z-10 max-w-max-container mx-auto px-gutter-mobile md:px-gutter-desktop">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center">
+<div class="lg:col-span-7 flex flex-col gap-6">
+<div class="inline-flex items-center gap-2.5 px-3 py-1 rounded-full bg-white/5 border border-cyan-glow/30 backdrop-blur-md self-start">
+<span class="w-2 h-2 rounded-full bg-cyan-bright shadow-[0_0_8px_#00D2FF]"></span>
+<span class="text-xs font-['Plus_Jakarta_Sans'] font-bold text-cyan-glow uppercase tracking-widest">Cameroon Jurisdiction • OHADA Uniform Act</span>
+</div>
+<h1 class="font-['Plus_Jakarta_Sans'] text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-[1.12]">
+                Formalise your business in Cameroon, <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-bright via-cyan-glow to-blue-400">without the guesswork.</span>
+</h1>
+<p class="font-body-base text-base sm:text-lg text-slate-300 font-normal leading-relaxed max-w-2xl">
+                Clear, compliant corporate formation under OHADA standards. From trade name reservation and notarial statutes to RCCM court registration and Tax Identification (NIU) — executed with procedural certainty for domestic operators and diaspora founders.
+              </p>
+<!-- Hero Actions -->
+<div class="flex flex-wrap items-center gap-4 pt-2">
+<a class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-electric-blue text-white font-['Plus_Jakarta_Sans'] text-sm font-bold uppercase tracking-wider shadow-lg shadow-blue-600/30 hover:bg-blue-600 hover:shadow-cyan-bright/20 transition-all active:scale-95" href="#registration-checklist">
+<span class="">Get Registration Checklist</span>
+<span class="material-symbols-outlined text-[18px]">arrow_downward</span>
+</a>
+<a class="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-[#25D366]/15 hover:bg-[#25D366]/25 border border-[#25D366]/40 text-white font-['Plus_Jakarta_Sans'] text-sm font-semibold transition-all backdrop-blur-sm" href="https://wa.me/237600000000" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[20px] text-[#25D366]">chat</span>
+<span class="">Chat on WhatsApp Legal Desk</span>
+</a>
+</div>
+<!-- Badges Strip -->
+<div class="flex flex-wrap items-center gap-6 pt-4 border-t border-white/10 text-xs text-slate-300 font-medium">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-cyan-bright">verified</span>
+                  Court Verified Registry (RCCM)
+                </span>
+<span class="hidden sm:inline text-white/20">•</span>
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-cyan-bright">public</span>
+                  Diaspora Consular Proxy Workflows
+                </span>
+<span class="hidden sm:inline text-white/20">•</span>
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-cyan-bright">account_balance</span>
+                  DGI Tax Matriculation (NIU)
+                </span>
+</div>
+</div>
+<!-- Hero Right Editorial Dossier Card -->
+<div class="lg:col-span-5 relative">
+<div class="relative rounded-2xl bg-gradient-to-b from-white/15 to-white/5 p-1 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden group">
+<div class="relative rounded-xl overflow-hidden bg-[#0b1528]">
+<img alt="Statutory Registry Reference" class="w-full h-64 object-cover object-center group-hover:scale-105 transition-transform duration-700 opacity-90" src="https://lh3.googleusercontent.com/aida/AEtjO1WBiPVjpvlpRjRiDUUGv-Np2qb_pB9kbxql3ULik9b6p-VRVGhSMSq3XjGIh6Fomt8obAnEdjFSIUzyRg-TH608l92NlXNYkWxUbS3GjeRJcUYIba4OdWcN6YEn6N4r8G_DpPUVAh67Cn6B3-h8k_-mag7EIe5C6jKqKWF-HSqJ-wKdowMdiCHsBDV4T7PuxKY2peqzGYp2Ts5eSUdg32Msuh7XTv_QAf3dGTcybjF035JWeJbTlAOeY09X">
+<div class="absolute inset-0 bg-gradient-to-t from-[#070e1b] via-[#070e1b]/60 to-transparent"></div>
+<div class="absolute top-4 left-4 right-4 flex items-center justify-between">
+<span class="px-3 py-1 rounded-md bg-[#070e1b]/80 border border-cyan-glow/40 text-[11px] font-bold text-cyan-bright uppercase tracking-wider backdrop-blur-md">
+                      Statutory Reference
+                    </span>
+<span class="px-2.5 py-1 rounded-md bg-white/10 text-[11px] font-mono text-white/90">
+                      OHADA Art. 313+
+                    </span>
+</div>
+<div class="p-6 relative">
+<div class="flex items-center gap-2 mb-2 text-cyan-glow">
+<span class="material-symbols-outlined text-[20px]">assured_workload</span>
+<h2 class="font-['Plus_Jakarta_Sans'] text-lg font-bold text-white">Bilingual Dossier Structuring</h2>
+</div>
+<p class="text-sm text-slate-300 leading-relaxed mb-4">
+                      Dual legal filing pipeline for both domestic operations in Cameroon and cross-border US/Diaspora entity linkage without requiring long-distance travel.
+                    </p>
+<div class="flex items-center justify-between pt-3 border-t border-white/10 text-xs text-slate-400">
+<span class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                        Commercial Registry Standard
+                      </span>
+<span class="font-mono text-cyan-bright">DGI &amp; CFCE Ready</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 2. TRUST HIGHLIGHT BAR (Break out of basic white boxes: High-contrast Slate & Cyan dock) -->
+<section class="w-full bg-[#0b1528] border-b border-white/10 py-6">
+<div class="max-w-max-container mx-auto px-gutter-mobile md:px-gutter-desktop">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="flex items-center gap-4 bg-white/[0.04] hover:bg-white/[0.07] border border-white/10 rounded-xl p-4 transition-all">
+<div class="w-12 h-12 rounded-xl bg-cyan-glow/10 border border-cyan-glow/30 flex items-center justify-center shrink-0 text-cyan-bright">
+<span class="material-symbols-outlined text-[24px]">gavel</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-['Plus_Jakarta_Sans'] text-sm font-bold text-white">OHADA &amp; RCCM Compliant</h3>
+<p class="text-xs text-slate-400 mt-0.5">Strict adherence to the Uniform Act on General Commercial Law across all 17 states.</p>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-white/[0.04] hover:bg-white/[0.07] border border-white/10 rounded-xl p-4 transition-all">
+<div class="w-12 h-12 rounded-xl bg-cyan-glow/10 border border-cyan-glow/30 flex items-center justify-center shrink-0 text-cyan-bright">
+<span class="material-symbols-outlined text-[24px]">flight_takeoff</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-['Plus_Jakarta_Sans'] text-sm font-bold text-white">Remote Diaspora Workflows</h3>
+<p class="text-xs text-slate-400 mt-0.5">Bilingual consular power-of-attorney protocols allow founders to register from abroad.</p>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-white/[0.04] hover:bg-white/[0.07] border border-white/10 rounded-xl p-4 transition-all">
+<div class="w-12 h-12 rounded-xl bg-cyan-glow/10 border border-cyan-glow/30 flex items-center justify-center shrink-0 text-cyan-bright">
+<span class="material-symbols-outlined text-[24px]">verified_user</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-['Plus_Jakarta_Sans'] text-sm font-bold text-white">Documented Step-by-Step</h3>
+<p class="text-xs text-slate-400 mt-0.5">Physical court clerk stamps, certified notarial deposit receipts, and verifiable DGI NIU attestations.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. THE OFFICIAL REGISTRATION CADENCE: ASYMMETRIC EDITORIAL LAYOUT (NOT 5 UNIFORM BOXES) -->
+<section class="w-full py-space-3xl bg-[#f8faff] text-on-surface">
+<div class="max-w-max-container mx-auto px-gutter-mobile md:px-gutter-desktop">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl">
+<!-- Left Sticky Sidebar Anchor Card -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<div class="sticky top-28 bg-[#070e1b] text-white p-7 rounded-2xl border border-white/10 shadow-xl overflow-hidden relative">
+<div class="absolute -top-16 -left-16 w-48 h-48 bg-cyan-bright/10 rounded-full blur-2xl pointer-events-none"></div>
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-cyan-glow text-xs font-['Plus_Jakarta_Sans'] font-bold tracking-wider uppercase mb-3">
+                  Statutory Roadmap
+                </div>
+<h2 class="font-['Plus_Jakarta_Sans'] text-2xl lg:text-3xl font-extrabold text-white leading-tight mb-3">
+                  The Official Registration Cadence
+                </h2>
+<p class="text-sm text-slate-300 leading-relaxed mb-6">
+                  A transparent walkthrough of the statutory milestones under Cameroon commercial law and OHADA standards, fully guided from Buea and Douala.
+                </p>
+<!-- Turnaround benchmark note -->
+<div class="bg-white/5 border border-dashed border-amber-400/40 p-4 rounded-xl mb-6">
+<div class="flex items-center justify-between gap-2 mb-1.5">
+<span class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+                      Turnaround Duration
+                    </span>
+<span class="text-[10px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded uppercase">
+                      [PENDING: Confirm with UCO]
+                    </span>
+</div>
+<p class="text-xs text-slate-300 leading-normal">
+                    Standard benchmarks generally span <strong class="text-white">2 to 4 business weeks</strong> depending on regional court chamber schedules (Buea, Douala, Yaoundé) and bank escrow clearances.
+                  </p>
+</div>
+<div class="pt-4 border-t border-white/10 flex flex-col gap-2">
+<a class="inline-flex items-center justify-between text-xs font-bold text-cyan-glow hover:text-white transition-colors group" href="#diaspora-protocol">
+<span class="">Explore Diaspora Express Track</span>
+<span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+<a class="inline-flex items-center justify-between text-xs font-bold text-slate-400 hover:text-white transition-colors group" href="#registration-checklist">
+<span class="">Inspect Required Filing Dossier</span>
+<span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_downward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Right Timeline Path (Stages 01 to 05 connected vertically) -->
+<div class="lg:col-span-8 flex flex-col pl-2 md:pl-6 relative">
+<!-- Vertical Hairline Connector -->
+<div class="absolute left-6 md:left-10 top-6 bottom-8 w-0.5 bg-gradient-to-b from-cyan-bright via-electric-blue to-slate-300 -z-0"></div>
+<!-- Step 01 -->
+<div class="relative flex items-start gap-5 pb-8 group">
+<div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#070e1b] border-2 border-cyan-bright text-cyan-bright flex items-center justify-center font-['Plus_Jakarta_Sans'] font-extrabold text-sm md:text-base shrink-0 shadow-lg shadow-cyan-500/20 z-10 group-hover:scale-105 transition-transform">
+                  01
+                </div>
+<div class="flex-1 bg-white border border-slate-200/80 rounded-2xl p-5 md:p-6 shadow-sm hover:shadow-md hover:border-cyan-glow/40 transition-all">
+<div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+<span class="text-[11px] font-bold uppercase tracking-wider text-cyan-700 bg-cyan-50 px-2.5 py-0.5 rounded-full border border-cyan-100">
+                      Phase One • Commercial Registry
+                    </span>
+<span class="text-xs font-mono text-slate-500 font-semibold">TPI / CFCE Search</span>
+</div>
+<h3 class="font-['Plus_Jakarta_Sans'] text-lg md:text-xl font-bold text-[#0c172a] mb-1.5">
+                    Name Reservation &amp; Availability Clearance
+                  </h3>
+<p class="text-sm text-slate-600 leading-relaxed mb-3">
+                    Verification and legal clearance via the Greffe du Tribunal de Première Instance and CFCE search registry to prevent duplicate conflicts or intellectual property disputes.
+                  </p>
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs font-medium text-slate-700">
+<span class="material-symbols-outlined text-emerald-600 text-[16px]">verified</span>
+<span class="">Statutory Deliverable: <strong class="text-slate-900">Attestation de Disponibilité</strong></span>
+</div>
+</div>
+</div>
+<!-- Step 02 -->
+<div class="relative flex items-start gap-5 pb-8 group">
+<div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#070e1b] border-2 border-cyan-bright text-cyan-bright flex items-center justify-center font-['Plus_Jakarta_Sans'] font-extrabold text-sm md:text-base shrink-0 shadow-lg shadow-cyan-500/20 z-10 group-hover:scale-105 transition-transform">
+                  02
+                </div>
+<div class="flex-1 bg-white border border-slate-200/80 rounded-2xl p-5 md:p-6 shadow-sm hover:shadow-md hover:border-cyan-glow/40 transition-all">
+<div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+<span class="text-[11px] font-bold uppercase tracking-wider text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-100">
+                      Phase Two • Notarial Execution
+                    </span>
+<span class="text-xs font-mono text-slate-500 font-semibold">OHADA Articles</span>
+</div>
+<h3 class="font-['Plus_Jakarta_Sans'] text-lg md:text-xl font-bold text-[#0c172a] mb-1.5">
+                    Statutes Drafting &amp; Bank Capital Escrow
+                  </h3>
+<p class="text-sm text-slate-600 leading-relaxed mb-3">
+                    Drafting notarized Articles of Association (Statuts) in strict conformity with OHADA corporate code and sworn escrow deposit of minimum share capital in an authorized commercial bank.
+                  </p>
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs font-medium text-slate-700">
+<span class="material-symbols-outlined text-emerald-600 text-[16px]">verified</span>
+<span class="">Statutory Deliverable: <strong class="text-slate-900">Notarial Declaration (DNSV) &amp; Bank Attestation</strong></span>
+</div>
+</div>
+</div>
+<!-- Step 03: Core Step Highlighted -->
+<div class="relative flex items-start gap-5 pb-8 group">
+<div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-electric-blue border-2 border-white text-white flex items-center justify-center font-['Plus_Jakarta_Sans'] font-extrabold text-sm md:text-base shrink-0 shadow-xl shadow-blue-500/40 z-10 group-hover:scale-105 transition-transform">
+                  03
+                </div>
+<div class="flex-1 bg-gradient-to-br from-blue-50/50 to-white border-2 border-electric-blue/30 rounded-2xl p-5 md:p-6 shadow-md hover:shadow-lg transition-all">
+<div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+<span class="text-[11px] font-bold uppercase tracking-wider text-electric-blue bg-blue-100 px-2.5 py-0.5 rounded-full">
+                      Core Registry Milestone
+                    </span>
+<span class="text-xs font-mono text-electric-blue font-bold">Court Filing</span>
+</div>
+<h3 class="font-['Plus_Jakarta_Sans'] text-lg md:text-xl font-extrabold text-[#0c172a] mb-1.5">
+                    Official RCCM Registration &amp; Court Deposit
+                  </h3>
+<p class="text-sm text-slate-700 leading-relaxed mb-3">
+                    Formal court deposit at the Registre du Commerce et du Crédit Mobilier. Legal birth of the corporate entity with certified court seal and national registration number.
+                  </p>
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-blue-200 text-xs font-semibold text-electric-blue shadow-sm">
+<span class="material-symbols-outlined text-electric-blue text-[18px]">verified</span>
+<span class="">Statutory Deliverable: <strong>Certified RCCM Certificate &amp; Registry Number</strong></span>
+</div>
+</div>
+</div>
+<!-- Step 04 -->
+<div class="relative flex items-start gap-5 pb-8 group">
+<div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#070e1b] border-2 border-cyan-bright text-cyan-bright flex items-center justify-center font-['Plus_Jakarta_Sans'] font-extrabold text-sm md:text-base shrink-0 shadow-lg shadow-cyan-500/20 z-10 group-hover:scale-105 transition-transform">
+                  04
+                </div>
+<div class="flex-1 bg-white border border-slate-200/80 rounded-2xl p-5 md:p-6 shadow-sm hover:shadow-md hover:border-cyan-glow/40 transition-all">
+<div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+<span class="text-[11px] font-bold uppercase tracking-wider text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-full">
+                      Tax Administration
+                    </span>
+<span class="text-xs font-mono text-slate-500 font-semibold">DGI System</span>
+</div>
+<h3 class="font-['Plus_Jakarta_Sans'] text-lg md:text-xl font-bold text-[#0c172a] mb-1.5">
+                    Tax Identification Number (NIU Matriculation)
+                  </h3>
+<p class="text-sm text-slate-600 leading-relaxed mb-3">
+                    Enrollment on the Directorate General of Taxation (DGI) fiscal platform to assign your permanent Numéro d'Identifiant Unique required for bank account activation and cross-border transactions.
+                  </p>
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs font-medium text-slate-700">
+<span class="material-symbols-outlined text-emerald-600 text-[16px]">verified</span>
+<span class="">Statutory Deliverable: <strong class="text-slate-900">Attestation d'Immatriculation Fiscale (NIU)</strong></span>
+</div>
+</div>
+</div>
+<!-- Step 05 -->
+<div class="relative flex items-start gap-5 group">
+<div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#070e1b] border-2 border-cyan-bright text-cyan-bright flex items-center justify-center font-['Plus_Jakarta_Sans'] font-extrabold text-sm md:text-base shrink-0 shadow-lg shadow-cyan-500/20 z-10 group-hover:scale-105 transition-transform">
+                  05
+                </div>
+<div class="flex-1 bg-white border border-slate-200/80 rounded-2xl p-5 md:p-6 shadow-sm hover:shadow-md hover:border-cyan-glow/40 transition-all">
+<div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+<span class="text-[11px] font-bold uppercase tracking-wider text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-full">
+                      Municipal &amp; Operational Opening
+                    </span>
+<span class="text-xs font-mono text-slate-500 font-semibold">CFCE &amp; Mairie</span>
+</div>
+<h3 class="font-['Plus_Jakarta_Sans'] text-lg md:text-xl font-bold text-[#0c172a] mb-1.5">
+                    CFCE Final Deposit &amp; Municipal Notice
+                  </h3>
+<p class="text-sm text-slate-600 leading-relaxed mb-3">
+                    Filing with the Centre de Formalités de Création d'Entreprises and municipal business tax (Patente) declaration allowing commercial opening, payroll launch, and client billing.
+                  </p>
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs font-medium text-slate-700">
+<span class="material-symbols-outlined text-emerald-600 text-[16px]">verified</span>
+<span class="">Statutory Deliverable: <strong class="text-slate-900">Avis d'Imposition &amp; Carte de Contribuable</strong></span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. STATUTORY REQUIREMENTS CHECKLIST: TWO-COLUMN EXECUTIVE DOCUMENT PANEL -->
+<section class="w-full py-space-3xl bg-[#f1f5fa] border-t border-b border-slate-200/80" id="registration-checklist">
+<div class="max-w-max-container mx-auto px-gutter-mobile md:px-gutter-desktop">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-space-2xl">
+<div>
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-100 text-cyan-900 text-xs font-['Plus_Jakarta_Sans'] font-bold tracking-wider uppercase mb-2">
+                Required Dossier Breakdown
+              </div>
+<h2 class="font-['Plus_Jakarta_Sans'] text-2xl md:text-4xl font-extrabold text-[#0c172a]">
+                Statutory Requirements Checklist
+              </h2>
+<p class="text-sm md:text-base text-slate-600 max-w-2xl mt-1">
+                Gather these verifiable elements prior to formal notary execution to eliminate administrative rejections at the Greffe or DGI.
+              </p>
+</div>
+<button class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 font-['Plus_Jakarta_Sans'] text-xs font-bold uppercase tracking-wider shadow-sm hover:bg-slate-50 hover:border-slate-400 transition-all shrink-0" onclick="window.print()">
+<span class="material-symbols-outlined text-[18px] text-electric-blue">download</span>
+<span class="">Download Printable Checklist (PDF)</span>
+</button>
+</div>
+<!-- Two-Column Executive Dossier Panel -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Left 7 Cols: Structured Tabbed Dossier Items -->
+<div class="lg:col-span-7 flex flex-col gap-6">
+<!-- Category 1: Identity -->
+<div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm">
+<div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-blue-50 text-electric-blue flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">badge</span>
+</div>
+<div>
+<h3 class="font-['Plus_Jakarta_Sans'] text-base font-bold text-[#0c172a]">1. Personal Identity Dossier</h3>
+<span class="text-xs text-slate-500">For all declared managing directors &amp; shareholders</span>
+</div>
+</div>
+<span class="text-[11px] font-mono font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded">4 Requirements</span>
+</div>
+<ul class="flex flex-col gap-3 text-sm text-slate-600">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class=""><strong>Biometric ID:</strong> Valid National Identity Card (CNI) or valid biometric passport copies for all managing directors (Gérants).</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class=""><strong>Criminal Record Clearance:</strong> Casier Judiciaire (Bulletin N°3) dated within the last 3 months, or sworn affidavit for foreign non-residents.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class=""><strong>Photographs:</strong> Two (2) recent passport-sized color photos of each declared legal representative.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class=""><strong>Civil Status:</strong> Proof of matrimonial property regime (if applicable under OHADA joint asset rules).</span>
+</li>
+</ul>
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+<span class="">Mandatory for: RCCM Court Filing &amp; Notarial Minutes</span>
+<span class="text-electric-blue font-semibold">Statutory Standard</span>
+</div>
+</div>
+<!-- Category 2: Entity & Operations -->
+<div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm">
+<div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">corporate_fare</span>
+</div>
+<div>
+<h3 class="font-['Plus_Jakarta_Sans'] text-base font-bold text-[#0c172a]">2. Entity &amp; Operational Structure</h3>
+<span class="text-xs text-slate-500">Commercial objectives and registered head office</span>
+</div>
+</div>
+<span class="text-[11px] font-mono font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded">4 Requirements</span>
+</div>
+<ul class="flex flex-col gap-3 text-sm text-slate-600">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class=""><strong>Trade Name Variants:</strong> Three (3) proposed commercial names in priority order for availability reservation at Greffe.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class=""><strong>Registered Address (Siège Social):</strong> Commercial lease agreement, property deed, or formal business domiciliation contract.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class=""><strong>Capital Allocation Table:</strong> Declared share capital structure and shareholder distribution percentage table.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class=""><strong>Commercial Purpose (Objet Social):</strong> Precision corporate activities aligned with OHADA classification codes.</span>
+</li>
+</ul>
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+<span class="">Mandatory for: Bank Escrow Clearance &amp; DGI Localization</span>
+<span class="text-indigo-600 font-semibold">Statutory Standard</span>
+</div>
+</div>
+</div>
+<!-- Right 5 Cols: Dedicated High-Contrast Midnight Navy Remote Diaspora Protocol Card -->
+<div class="lg:col-span-5 flex flex-col" id="diaspora-protocol">
+<div class="bg-[#070e1b] text-white rounded-2xl p-7 border border-white/15 shadow-2xl flex flex-col justify-between h-full relative overflow-hidden">
+<!-- Glowing cyan accent backdrop -->
+<div class="absolute -bottom-16 -right-16 w-56 h-56 bg-cyan-bright/15 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute top-0 right-0 w-32 h-32 bg-electric-blue/15 rounded-full blur-2xl pointer-events-none"></div>
+<div>
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-cyan-bright/30 text-cyan-bright text-xs font-['Plus_Jakarta_Sans'] font-bold tracking-wider uppercase mb-4">
+<span class="w-2 h-2 rounded-full bg-cyan-bright shadow-[0_0_8px_#00D2FF]"></span>
+                    3. Remote Diaspora Protocol
+                  </div>
+<h3 class="font-['Plus_Jakarta_Sans'] text-xl font-extrabold text-white mb-2">
+                    Foreign Residency &amp; Remote Proxy
+                  </h3>
+<p class="text-sm text-slate-300 mb-6 leading-relaxed">
+                    Founders residing in North America, the UK, France, or across Europe can incorporate without taking time off work or traveling to Cameroon:
+                  </p>
+<div class="space-y-4 mb-6">
+<div class="flex items-start gap-3 p-3.5 rounded-xl bg-white/5 border border-white/10">
+<span class="material-symbols-outlined text-cyan-bright text-[20px] shrink-0 mt-0.5">vpn_key</span>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-white uppercase tracking-wider">Special Power of Attorney</span>
+<p class="text-xs text-slate-300 mt-0.5 leading-relaxed">Dedicated <em>Procuration Notariée</em> drafted by UCO legally delegating signature and filing powers.</p>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3.5 rounded-xl bg-white/5 border border-white/10">
+<span class="material-symbols-outlined text-cyan-bright text-[20px] shrink-0 mt-0.5">public</span>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-white uppercase tracking-wider">Consular Attestation or Apostille</span>
+<p class="text-xs text-slate-300 mt-0.5 leading-relaxed">Executed at your nearest Cameroon Embassy/Consulate or via Hague Apostille notary in your country.</p>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3.5 rounded-xl bg-white/5 border border-white/10">
+<span class="material-symbols-outlined text-cyan-bright text-[20px] shrink-0 mt-0.5">local_shipping</span>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-white uppercase tracking-wider">Digital Dispatch + Courier</span>
+<p class="text-xs text-slate-300 mt-0.5 leading-relaxed">Immediate high-resolution digital scanning followed by registered courier dispatch of sealed original binders.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="pt-5 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+<div class="flex items-center gap-2 text-xs text-slate-300 font-medium">
+<span class="material-symbols-outlined text-cyan-bright text-[18px]">verified</span>
+<span class="">100% Remote Filing Guaranteed</span>
+</div>
+<a class="text-xs font-bold text-cyan-bright hover:underline flex items-center gap-1" href="https://wa.me/237600000000">
+<span class="">Ask Legal Desk</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Pending Fees Note: Distinctive Sleek Pill/Card -->
+<div class="mt-8 p-5 rounded-2xl bg-white border border-dashed border-amber-400/80 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+<div class="flex items-start gap-3.5">
+<div class="p-2 rounded-xl bg-amber-50 text-amber-600 border border-amber-200 shrink-0">
+<span class="material-symbols-outlined text-[24px]">receipt_long</span>
+</div>
+<div>
+<div class="flex flex-wrap items-center gap-2">
+<h4 class="font-['Plus_Jakarta_Sans'] text-sm font-bold text-slate-900">Official Registry &amp; Notarial Tariffs</h4>
+<span class="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded uppercase tracking-wider border border-amber-300">
+                    [PENDING: Confirm with UCO]
+                  </span>
+</div>
+<p class="text-xs text-slate-600 mt-1 max-w-3xl">
+                  Direct disbursements comprise RCCM court stamps, Greffe deposits, notarial statute registration dues, and regional fiscal stamp sheets. Consult your UCO desk for the official schedule without hidden markups.
+                </p>
+</div>
+</div>
+<a class="inline-flex items-center gap-1 text-xs font-bold text-electric-blue hover:text-blue-700 whitespace-nowrap bg-blue-50 px-4 py-2 rounded-lg border border-blue-100" href="https://wa.me/237600000000">
+<span class="">Request Fee Breakdown via WhatsApp</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</section>
+<!-- 5. WHO THIS IS FOR (PERSONAS): ASYMMETRIC 3-COLUMN SPLIT WITH ACCENT STRIPS -->
+<section class="w-full py-space-3xl bg-white">
+<div class="max-w-max-container mx-auto px-gutter-mobile md:px-gutter-desktop">
+<div class="max-w-2xl mb-space-2xl">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-electric-blue text-xs font-['Plus_Jakarta_Sans'] font-bold tracking-wider uppercase mb-2">
+              Tailored Guidance
+            </div>
+<h2 class="font-['Plus_Jakarta_Sans'] text-2xl md:text-4xl font-extrabold text-[#0c172a]">
+              Structured for Your Exact Stage
+            </h2>
+<p class="text-sm md:text-base text-slate-600 mt-1">
+              We align procedural execution with your legal origin, geographic presence, and commercial operational constraints.
+            </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Persona 1 -->
+<div class="bg-[#f8faff] rounded-2xl p-6 border border-slate-200/80 hover:border-cyan-glow/60 transition-all flex flex-col justify-between relative overflow-hidden group shadow-sm hover:shadow-md">
+<div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-cyan-bright to-blue-500"></div>
+<div>
+<div class="flex items-center justify-between mb-3 pt-1">
+<span class="text-xs font-['Plus_Jakarta_Sans'] font-extrabold uppercase tracking-widest text-cyan-700">Persona 01</span>
+<span class="w-8 h-8 rounded-full bg-cyan-100/60 text-cyan-800 flex items-center justify-center text-xs font-bold font-mono">01</span>
+</div>
+<h3 class="font-['Plus_Jakarta_Sans'] text-lg font-bold text-[#0c172a] mb-3">
+                  First-Time Entrepreneurs
+                </h3>
+<div class="p-3.5 rounded-xl bg-white border border-slate-200/60 mb-4">
+<span class="text-[10px] font-bold uppercase tracking-wider text-rose-600 block mb-1">Common Roadblock</span>
+<p class="text-xs text-slate-600 leading-relaxed italic">
+                    "Never created a company before. Intimidated by legal vocabulary, courthouse bureaucracy, and fear of irreversible registry mistakes."
+                  </p>
+</div>
+<div class="flex items-start gap-2.5 text-xs text-slate-700 leading-relaxed">
+<span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">task_alt</span>
+<p class="">
+<strong class="text-slate-900">The Reassurance:</strong> Comprehensive turnkey onboarding. We prepare every legal line, verify names, and walk through capital structures in plain English or French.
+                  </p>
+</div>
+</div>
+<div class="mt-6 pt-3 border-t border-slate-200/60 flex items-center justify-between text-xs text-slate-500 font-medium">
+<span class="">Recommended entity:</span>
+<span class="font-bold text-slate-800">SARL Unipersonnelle</span>
+</div>
+</div>
+<!-- Persona 2 -->
+<div class="bg-[#f8faff] rounded-2xl p-6 border border-slate-200/80 hover:border-electric-blue/60 transition-all flex flex-col justify-between relative overflow-hidden group shadow-sm hover:shadow-md">
+<div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+<div>
+<div class="flex items-center justify-between mb-3 pt-1">
+<span class="text-xs font-['Plus_Jakarta_Sans'] font-extrabold uppercase tracking-widest text-electric-blue">Persona 02</span>
+<span class="w-8 h-8 rounded-full bg-blue-100/60 text-electric-blue flex items-center justify-center text-xs font-bold font-mono">02</span>
+</div>
+<h3 class="font-['Plus_Jakarta_Sans'] text-lg font-bold text-[#0c172a] mb-3">
+                  Informally Operating Businesses
+                </h3>
+<div class="p-3.5 rounded-xl bg-white border border-slate-200/60 mb-4">
+<span class="text-[10px] font-bold uppercase tracking-wider text-rose-600 block mb-1">Common Roadblock</span>
+<p class="text-xs text-slate-600 leading-relaxed italic">
+                    "Generating revenue but operating under informal cash arrangements. Locked out of enterprise corporate tenders, bank credit, and vendor lists."
+                  </p>
+</div>
+<div class="flex items-start gap-2.5 text-xs text-slate-700 leading-relaxed">
+<span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">task_alt</span>
+<p class="">
+<strong class="text-slate-900">The Reassurance:</strong> Clean institutional transition. We regularize historical standing, establish fresh compliant bank accounts, and configure official NIU documentation.
+                  </p>
+</div>
+</div>
+<div class="mt-6 pt-3 border-t border-slate-200/60 flex items-center justify-between text-xs text-slate-500 font-medium">
+<span class="">Recommended entity:</span>
+<span class="font-bold text-slate-800">SARL Pluripersonnelle</span>
+</div>
+</div>
+<!-- Persona 3 -->
+<div class="bg-[#f8faff] rounded-2xl p-6 border border-slate-200/80 hover:border-cyan-glow/60 transition-all flex flex-col justify-between relative overflow-hidden group shadow-sm hover:shadow-md">
+<div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-cyan-bright to-emerald-500"></div>
+<div>
+<div class="flex items-center justify-between mb-3 pt-1">
+<span class="text-xs font-['Plus_Jakarta_Sans'] font-extrabold uppercase tracking-widest text-emerald-700">Persona 03</span>
+<span class="w-8 h-8 rounded-full bg-emerald-100/60 text-emerald-800 flex items-center justify-center text-xs font-bold font-mono">03</span>
+</div>
+<h3 class="font-['Plus_Jakarta_Sans'] text-lg font-bold text-[#0c172a] mb-3">
+                  Diaspora &amp; Cross-Border Founders
+                </h3>
+<div class="p-3.5 rounded-xl bg-white border border-slate-200/60 mb-4">
+<span class="text-[10px] font-bold uppercase tracking-wider text-rose-600 block mb-1">Common Roadblock</span>
+<p class="text-xs text-slate-600 leading-relaxed italic">
+                    "Based in North America or Europe with capital to deploy, but unable to take two weeks off work to stand in ministerial queues across Cameroon."
+                  </p>
+</div>
+<div class="flex items-start gap-2.5 text-xs text-slate-700 leading-relaxed">
+<span class="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">task_alt</span>
+<p class="">
+<strong class="text-slate-900">The Reassurance:</strong> 100% proxy management via certified Notarial Power of Attorney. Scanned digital updates followed by physical delivery of sealed corporate records.
+                  </p>
+</div>
+</div>
+<div class="mt-6 pt-3 border-t border-slate-200/60 flex items-center justify-between text-xs text-slate-500 font-medium">
+<span class="">Recommended entity:</span>
+<span class="font-bold text-slate-800">SARL with US Liaison Branch</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 6. HIGH-IMPACT COMPARISON SECTION: EXECUTIVE DEEP MIDNIGHT NAVY CONTAINER -->
+<section class="w-full py-space-3xl lg:py-space-4xl bg-[#070e1b] text-white relative overflow-hidden border-t border-b border-white/10">
+<!-- Subtle cinematic dark image overlay & ambient gradients -->
+<div class="absolute inset-0 opacity-20 mix-blend-overlay pointer-events-none">
+<img alt="Executive setting" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1WBiPVjpvlpRjRiDUUGv-Np2qb_pB9kbxql3ULik9b6p-VRVGhSMSq3XjGIh6Fomt8obAnEdjFSIUzyRg-TH608l92NlXNYkWxUbS3GjeRJcUYIba4OdWcN6YEn6N4r8G_DpPUVAh67Cn6B3-h8k_-mag7EIe5C6jKqKWF-HSqJ-wKdowMdiCHsBDV4T7PuxKY2peqzGYp2Ts5eSUdg32Msuh7XTv_QAf3dGTcybjF035JWeJbTlAOeY09X">
+</div>
+<div class="absolute -top-40 left-1/4 w-96 h-96 bg-cyan-bright/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-40 right-1/4 w-96 h-96 bg-electric-blue/15 rounded-full blur-3xl pointer-events-none"></div>
+<div class="relative z-10 max-w-max-container mx-auto px-gutter-mobile md:px-gutter-desktop">
+<div class="flex flex-col items-center text-center max-w-3xl mx-auto mb-space-2xl">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-cyan-glow/30 text-cyan-bright text-xs font-['Plus_Jakarta_Sans'] font-bold tracking-wider uppercase mb-3">
+              The Strategic Comparison
+            </div>
+<h2 class="font-['Plus_Jakarta_Sans'] text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-3">
+              The Cost of <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-bright to-blue-400">Doing It Alone</span>
+</h2>
+<p class="text-base text-slate-300 leading-relaxed">
+              Weighing the compounding friction of unguided public filings against an institutional, structured legal cadence.
+            </p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+<!-- Left: Unassisted / Solo Route -->
+<div class="rounded-2xl bg-white/[0.04] border border-rose-500/30 p-6 md:p-8 flex flex-col justify-between backdrop-blur-sm relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 rounded-bl-full pointer-events-none"></div>
+<div>
+<div class="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+<div>
+<span class="text-[11px] font-['Plus_Jakarta_Sans'] font-extrabold uppercase tracking-widest text-rose-400">Unassisted Route</span>
+<h3 class="font-['Plus_Jakarta_Sans'] text-xl font-bold text-white mt-0.5">Self-Filing &amp; Fragmented Assistance</h3>
+</div>
+<span class="material-symbols-outlined text-rose-400 text-[32px]">warning</span>
+</div>
+<ul class="flex flex-col gap-4 text-sm text-slate-300 mb-8">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-rose-400 text-[20px] shrink-0 mt-0.5">close</span>
+<span class=""><strong>Fragmented Agency Visits:</strong> Multiple repeated in-person queues across courts, notary offices, DGI tax centers, and municipal desks.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-rose-400 text-[20px] shrink-0 mt-0.5">close</span>
+<span class=""><strong>Statute Rejections:</strong> High risk of dossier refusal by greffiers due to non-compliant OHADA clauses or improper capital allocations.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-rose-400 text-[20px] shrink-0 mt-0.5">close</span>
+<span class=""><strong>Indefinite Delays:</strong> Stalled files stuck between ministerial chambers with zero accountability or timeline transparency.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-rose-400 text-[20px] shrink-0 mt-0.5">close</span>
+<span class=""><strong>Hidden Friction Costs:</strong> Unbudgeted transport, duplicate stamp purchases, re-translations, and lost commercial momentum.</span>
+</li>
+</ul>
+</div>
+<div class="p-3.5 rounded-xl bg-rose-950/40 border border-rose-800/40 text-xs text-rose-200 font-medium flex items-center justify-between">
+<span class="">Outcome: 8–16 weeks of stalled capital and operational vulnerability.</span>
+<span class="material-symbols-outlined text-[18px] text-rose-400">error</span>
+</div>
+</div>
+<!-- Right: Guided UCO Cadence -->
+<div class="rounded-2xl bg-gradient-to-b from-[#0b1528] to-[#070e1b] border-2 border-cyan-bright/50 p-6 md:p-8 flex flex-col justify-between shadow-2xl shadow-cyan-500/10 backdrop-blur-md relative overflow-hidden">
+<div class="absolute -top-12 -right-12 w-48 h-48 bg-cyan-bright/20 rounded-full blur-2xl pointer-events-none"></div>
+<div>
+<div class="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+<div>
+<span class="text-[11px] font-['Plus_Jakarta_Sans'] font-extrabold uppercase tracking-widest text-cyan-bright">The UCO Standard</span>
+<h3 class="font-['Plus_Jakarta_Sans'] text-xl font-bold text-white mt-0.5">Guided Procedural Cadence</h3>
+</div>
+<span class="material-symbols-outlined text-cyan-bright text-[32px]">verified</span>
+</div>
+<ul class="flex flex-col gap-4 text-sm text-slate-200 mb-8">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-cyan-bright text-[20px] shrink-0 mt-0.5">check_circle</span>
+<span class=""><strong>Single Digital Onboarding:</strong> Complete one structured checklist; our legal desks assemble and vet every statutory dossier.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-cyan-bright text-[20px] shrink-0 mt-0.5">check_circle</span>
+<span class=""><strong>Certified OHADA Statutes:</strong> Precision legal drafting vetted by experienced corporate counsel guaranteeing zero court rejections.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-cyan-bright text-[20px] shrink-0 mt-0.5">check_circle</span>
+<span class=""><strong>Predictable Milestone Auditing:</strong> Physical court receipts, verified registry numbers, and active DGI NIU tracking at each stage.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-cyan-bright text-[20px] shrink-0 mt-0.5">check_circle</span>
+<span class=""><strong>Full Diaspora Representation:</strong> Remote consular execution without leaving your desk in Texas, London, or Paris.</span>
+</li>
+</ul>
+</div>
+<div class="p-3.5 rounded-xl bg-cyan-500/10 border border-cyan-bright/40 text-xs text-cyan-glow font-medium flex items-center justify-between">
+<span class="">Outcome: Clean corporate standing ready for commercial trade &amp; banking.</span>
+<span class="material-symbols-outlined text-[18px] text-cyan-bright">check</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 7. WHAT COMES NEXT: FORWARD-MOVING HORIZONTAL SEQUENCE -->
+<section class="w-full py-space-3xl bg-[#f8faff]"><div class="max-w-max-container mx-auto px-gutter-mobile md:px-gutter-desktop"><div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start"><div class="lg:col-span-5 flex flex-col gap-6 lg:sticky lg:top-28"><div><div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-100/60 border border-cyan-bright/30 text-cyan-800 text-xs font-['Plus_Jakarta_Sans'] font-bold tracking-wider uppercase mb-3"><span class="w-1.5 h-1.5 rounded-full bg-cyan-bright animate-pulse"></span><span class="">Statutory Knowledge Base</span></div><h2 class="font-['Plus_Jakarta_Sans'] text-3xl md:text-4xl font-extrabold text-[#0c172a] leading-tight mb-3">Practical Legal &amp; Procedural Answers</h2><p class="text-sm md:text-base text-slate-600 leading-relaxed">Direct answers to statutory and administrative questions encountered during Cameroon corporate formation under OHADA standards.</p></div><div class="bg-[#0b1528] rounded-2xl p-6 border border-white/15 text-white shadow-xl relative overflow-hidden"><div class="absolute -top-12 -right-12 w-36 h-36 bg-cyan-bright/15 rounded-full blur-2xl pointer-events-none"></div><div class="relative z-10"><div class="flex items-center gap-2 mb-2 text-cyan-bright"><span class="material-symbols-outlined text-[20px]">support_agent</span><span class="text-xs font-['Plus_Jakarta_Sans'] font-bold uppercase tracking-wider">Direct Corporate Inquiry</span></div><h3 class="font-['Plus_Jakarta_Sans'] text-base font-bold text-white mb-2">Need a specific clarification on your trade structure?</h3><p class="text-xs text-slate-300 leading-relaxed mb-4">Our bilingual legal desk in Buea evaluates corporate charters, foreign notary certificates, and cross-border bank escrow requirements.</p><a href="https://wa.me/237600000000" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl bg-[#25D366] text-white font-['Plus_Jakarta_Sans'] text-xs font-bold uppercase tracking-wider shadow-lg shadow-[#25D366]/20 hover:bg-[#1EBE5D] transition-all"><span class="material-symbols-outlined text-[18px]">chat</span><span class="">Speak with Legal Desk on WhatsApp</span></a></div></div><div class="p-4 rounded-xl bg-white border border-slate-200/80 flex items-center gap-3 text-xs text-slate-600 shadow-sm"><span class="material-symbols-outlined text-electric-blue text-[20px] shrink-0">verified</span><span class="">All guidance strictly cross-referenced against OHADA Uniform Act Art. 313+</span></div></div><div class="lg:col-span-7 flex flex-col gap-4"><details class="bg-white rounded-2xl border-2 border-electric-blue/30 shadow-md p-6 group transition-all" open=""><summary class="flex items-center justify-between cursor-pointer list-none gap-4"><div class="flex items-center gap-3.5"><div class="w-9 h-9 rounded-xl bg-blue-100 text-electric-blue flex items-center justify-center font-mono text-xs font-bold shrink-0">01</div><h3 class="font-['Plus_Jakarta_Sans'] text-base md:text-lg font-bold text-[#0c172a]">Can this process be executed 100% remotely if I live in North America or Europe?</h3></div><div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 group-open:rotate-180 group-open:bg-electric-blue group-open:text-white transition-all shrink-0"><span class="material-symbols-outlined text-[18px]">expand_more</span></div></summary><div class="mt-4 pt-4 border-t border-slate-100"><div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-cyan-50 border border-cyan-100 text-[11px] font-bold text-cyan-800 uppercase tracking-wider mb-3"><span class="material-symbols-outlined text-[14px] text-cyan-bright">gavel</span><span class="">Diaspora Power of Attorney Protocol</span></div><p class="text-sm text-slate-600 leading-relaxed">Yes. Under Cameroon and OHADA notarial standards, a foreign or diaspora director may execute a dedicated Power of Attorney (<em>Procuration Spéciale</em>). When certified by a Cameroon diplomatic mission (Embassy/Consulate) or Hague Apostille notary in your jurisdiction, UCO's legal desk can physically deposit capital, execute notarial statutes, and sign registry court books on your behalf without requiring your physical presence in Cameroon.</p></div></details><details class="bg-white rounded-2xl border border-slate-200/80 hover:border-slate-300 shadow-sm p-6 group transition-all"><summary class="flex items-center justify-between cursor-pointer list-none gap-4"><div class="flex items-center gap-3.5"><div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center font-mono text-xs font-bold shrink-0">02</div><h3 class="font-['Plus_Jakarta_Sans'] text-base md:text-lg font-bold text-[#0c172a]">What happens if my preferred trade name is already taken at the commercial registry?</h3></div><div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 group-open:rotate-180 group-open:bg-electric-blue group-open:text-white transition-all shrink-0"><span class="material-symbols-outlined text-[18px]">expand_more</span></div></summary><div class="mt-4 pt-4 border-t border-slate-100"><p class="text-sm text-slate-600 leading-relaxed">To prevent administrative delays, our intake protocol requires three (3) distinct name variants in order of priority. During Phase 1, our desk conducts an immediate database search at the Greffe / CFCE. If your primary choice conflicts with an existing trademark or registered entity, we immediately pivot to your secondary approved name without halting the timeline.</p></div></details><details class="bg-white rounded-2xl border border-slate-200/80 hover:border-slate-300 shadow-sm p-6 group transition-all"><summary class="flex items-center justify-between cursor-pointer list-none gap-4"><div class="flex items-center gap-3.5"><div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center font-mono text-xs font-bold shrink-0">03</div><h3 class="font-['Plus_Jakarta_Sans'] text-base md:text-lg font-bold text-[#0c172a]">Do I need a commercial real estate lease in Cameroon, or can I use a domiciliation address?</h3></div><div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 group-open:rotate-180 group-open:bg-electric-blue group-open:text-white transition-all shrink-0"><span class="material-symbols-outlined text-[18px]">expand_more</span></div></summary><div class="mt-4 pt-4 border-t border-slate-100"><p class="text-sm text-slate-600 leading-relaxed">A verified registered address (<em>Siège Social</em>) is legally mandatory for both the RCCM court deposit and DGI tax localization certificate. While long-term physical commercial leases are standard, OHADA rules permit legal corporate domiciliation agreements (<em>Contrat de Domiciliation</em>) through authorized consulting and business center providers during your initial startup phase.</p></div></details><details class="bg-white rounded-2xl border border-slate-200/80 hover:border-slate-300 shadow-sm p-6 group transition-all"><summary class="flex items-center justify-between cursor-pointer list-none gap-4"><div class="flex items-center gap-3.5"><div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center font-mono text-xs font-bold shrink-0">04</div><h3 class="font-['Plus_Jakarta_Sans'] text-base md:text-lg font-bold text-[#0c172a]">What is the key legal difference between an Individual Business (Établissement) and a Private Limited Company (SARL)?</h3></div><div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 group-open:rotate-180 group-open:bg-electric-blue group-open:text-white transition-all shrink-0"><span class="material-symbols-outlined text-[18px]">expand_more</span></div></summary><div class="mt-4 pt-4 border-t border-slate-100"><p class="text-sm text-slate-600 leading-relaxed">An Établissement (Sole Proprietorship) does not create a distinct legal person; your personal assets remain exposed to business liabilities. A SARL (<em>Société à Responsabilité Limitée</em>) creates an autonomous corporate entity where liability is strictly restricted to contributed share capital. For transatlantic operations, cross-border contracts, and institutional partnerships, a SARL is universally recommended.</p></div></details></div></div></div></section>
+<!-- 8. CONTEXTUAL ACCORDION FAQ -->
+<section class="w-full py-space-3xl bg-[#f1f5fa] border-t border-slate-200/80">
+<div class="max-w-max-container mx-auto px-gutter-mobile md:px-gutter-desktop">
+<div class="max-w-2xl mb-space-2xl">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-200 text-slate-800 text-xs font-['Plus_Jakarta_Sans'] font-bold tracking-wider uppercase mb-2">
+              Frequently Addressed Inquiries
+            </div>
+<h2 class="font-['Plus_Jakarta_Sans'] text-2xl md:text-4xl font-extrabold text-[#0c172a]">
+              Practical Legal &amp; Procedural Answers
+            </h2>
+<p class="text-sm md:text-base text-slate-600 mt-1">
+              Direct answers to corporate questions encountered during Cameroon registration under OHADA statutes.
+            </p>
+</div>
+<div class="flex flex-col gap-3 max-w-4xl">
+<!-- Q1 -->
+<details class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm group">
+<summary class="flex items-center justify-between cursor-pointer font-['Plus_Jakarta_Sans'] text-base font-bold text-[#0c172a] list-none">
+<span class="">Can this process be executed 100% remotely if I live in North America or Europe?</span>
+<span class="material-symbols-outlined text-slate-400 group-open:rotate-180 group-open:text-electric-blue transition-all">expand_more</span>
+</summary>
+<div class="mt-4 pt-4 border-t border-slate-100 text-sm text-slate-600 leading-relaxed">
+                Yes. Under Cameroon and OHADA notarial standards, a foreign or diaspora director may execute a dedicated Power of Attorney (<em>Procuration Spéciale</em>). When certified by a Cameroon diplomatic mission (Embassy/Consulate) or Apostille notary, UCO's legal desk can physically deposit capital, execute notarial statutes, and sign registry court books on your behalf without your physical presence.
+              </div>
+</details>
+<!-- Q2 -->
+<details class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm group">
+<summary class="flex items-center justify-between cursor-pointer font-['Plus_Jakarta_Sans'] text-base font-bold text-[#0c172a] list-none">
+<span class="">What happens if my preferred trade name is already taken at the commercial registry?</span>
+<span class="material-symbols-outlined text-slate-400 group-open:rotate-180 group-open:text-electric-blue transition-all">expand_more</span>
+</summary>
+<div class="mt-4 pt-4 border-t border-slate-100 text-sm text-slate-600 leading-relaxed">
+                To prevent administrative delays, our intake protocol requires three (3) distinct name variants in order of priority. During Phase 1, our desk conducts an immediate database search at the Greffe / CFCE. If your primary choice conflicts with an existing trademark or registered entity, we immediately pivot to your secondary approved name without halting the timeline.
+              </div>
+</details>
+<!-- Q3 -->
+<details class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm group">
+<summary class="flex items-center justify-between cursor-pointer font-['Plus_Jakarta_Sans'] text-base font-bold text-[#0c172a] list-none">
+<span class="">Do I need a commercial real estate lease in Cameroon, or can I use a domiciliation address?</span>
+<span class="material-symbols-outlined text-slate-400 group-open:rotate-180 group-open:text-electric-blue transition-all">expand_more</span>
+</summary>
+<div class="mt-4 pt-4 border-t border-slate-100 text-sm text-slate-600 leading-relaxed">
+                A verified registered address (<em>Siège Social</em>) is legally mandatory for both the RCCM court deposit and DGI tax localization certificate. While long-term physical commercial leases are standard, OHADA rules permit legal corporate domiciliation agreements (<em>Contrat de Domiciliation</em>) through authorized consulting and business center providers during your initial startup phase.
+              </div>
+</details>
+<!-- Q4 -->
+<details class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm group">
+<summary class="flex items-center justify-between cursor-pointer font-['Plus_Jakarta_Sans'] text-base font-bold text-[#0c172a] list-none">
+<span class="">What is the key legal difference between an Individual Business (Établissement) and a Private Limited Company (SARL)?</span>
+<span class="material-symbols-outlined text-slate-400 group-open:rotate-180 group-open:text-electric-blue transition-all">expand_more</span>
+</summary>
+<div class="mt-4 pt-4 border-t border-slate-100 text-sm text-slate-600 leading-relaxed">
+                An Établissement (Sole Proprietorship) does not create a distinct legal person; your personal assets remain exposed to business liabilities. A SARL (<em>Société à Responsabilité Limitée</em>) creates an autonomous corporate entity where liability is strictly restricted to contributed share capital. For transatlantic operations, cross-border contracts, and institutional partnerships, a SARL is universally recommended.
+              </div>
+</details>
+</div>
+</div>
+</section>
+<!-- 9. COMPLIANCE NOTICE & LEGAL SCOPE -->
+<section class="w-full py-8 bg-white border-t border-slate-200/80">
+<div class="max-w-max-container mx-auto px-gutter-mobile md:px-gutter-desktop">
+<div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col md:flex-row items-start gap-4 shadow-sm">
+<div class="w-10 h-10 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">policy</span>
+</div>
+<div class="flex flex-col gap-1.5">
+<h4 class="font-['Plus_Jakarta_Sans'] text-xs font-bold text-slate-800 uppercase tracking-wider">Compliance Notice &amp; Legal Scope</h4>
+<p class="text-xs text-slate-600 leading-relaxed">
+                This guide provides procedural reference on corporate formalisation under OHADA Uniform Acts and prevailing Cameroon commercial legislation. Statutory fees, court stamp duty requirements, and municipal tariffs are subject to legislative modification by the Ministry of Finance (MINFI) and the Ministry of Justice. Formal engagement with UCO includes up-to-date schedule verification prior to financial deposit.
+              </p>
+<div class="flex items-center gap-2 text-xs text-slate-500 font-medium pt-1">
+<span class="inline-block w-2 h-2 rounded-full bg-cyan-bright"></span>
+<span class="">Last reviewed &amp; verified: <strong class="text-slate-700">October 2024</strong> by UCO Legal &amp; Corporate Administration Desk</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 10. SIGNATURE BOTTOM CTA: PHOTOGRAPHIC BACKGROUND WITH GLOWING CYAN ACCENTS -->
+<section class="w-full bg-[#070e1b] text-white py-space-3xl lg:py-space-4xl relative overflow-hidden border-t border-white/10">
+<!-- Background Overlay Image -->
+<div class="absolute inset-0 z-0">
+<img alt="Corporate formalisation consultation" class="w-full h-full object-cover opacity-25 mix-blend-luminosity scale-105" src="https://lh3.googleusercontent.com/aida/AEtjO1WBiPVjpvlpRjRiDUUGv-Np2qb_pB9kbxql3ULik9b6p-VRVGhSMSq3XjGIh6Fomt8obAnEdjFSIUzyRg-TH608l92NlXNYkWxUbS3GjeRJcUYIba4OdWcN6YEn6N4r8G_DpPUVAh67Cn6B3-h8k_-mag7EIe5C6jKqKWF-HSqJ-wKdowMdiCHsBDV4T7PuxKY2peqzGYp2Ts5eSUdg32Msuh7XTv_QAf3dGTcybjF035JWeJbTlAOeY09X">
+<div class="absolute inset-0 bg-gradient-to-t from-[#070e1b] via-[#070e1b]/90 to-[#070e1b]/80"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-cyan-bright/15 rounded-full blur-3xl pointer-events-none"></div>
+</div>
+<div class="relative z-10 max-w-max-container mx-auto px-gutter-mobile md:px-gutter-desktop text-center flex flex-col items-center">
+<div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-cyan-glow/40 text-cyan-bright text-xs font-['Plus_Jakarta_Sans'] font-bold tracking-widest uppercase mb-4 backdrop-blur-sm">
+            Begin Your Formalisation
+          </div>
+<h2 class="font-['Plus_Jakarta_Sans'] text-3xl md:text-5xl font-extrabold text-white max-w-3xl leading-tight mb-4">
+            Ready to establish your Cameroon <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-bright via-cyan-glow to-blue-400">corporate standing?</span>
+</h2>
+<p class="text-base md:text-lg text-slate-300 max-w-2xl mb-8 leading-relaxed">
+            Download the statutory checklist or connect immediately with our bilingual legal desk in Buea to verify your company name availability.
+          </p>
+<div class="flex flex-wrap items-center justify-center gap-4">
+<a class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-electric-blue text-white font-['Plus_Jakarta_Sans'] text-sm font-bold uppercase tracking-wider shadow-xl shadow-blue-600/30 hover:bg-blue-600 hover:shadow-cyan-bright/30 transition-all active:scale-95" href="#registration-checklist">
+<span class="material-symbols-outlined text-[18px]">checklist</span>
+<span class="">Download Pre-Registration Checklist</span>
+</a>
+<a class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#25D366] text-white font-['Plus_Jakarta_Sans'] text-sm font-bold shadow-lg shadow-[#25D366]/20 hover:bg-[#1EBE5D] transition-all" href="https://wa.me/237600000000" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+<span class="">Discuss via WhatsApp Legal Desk</span>
+</a>
+</div>
+<p class="text-xs md:text-sm text-slate-400 mt-6">
+            Questions about cross-border US/Cameroon structure? 
+            <a class="text-cyan-bright underline hover:text-white font-semibold ml-1" data-path="contact" href="#">Reach out to our Texas &amp; Buea dual-corridor specialists.</a>
+</p>
+</div>
+</section>
+</div>
+<script>
+      // Smooth scroll helper for checklist anchors
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+    </script>
+</main>
+<!-- PERSISTENT UCO GLOBAL FOOTER -->
+<footer class="w-full bg-[#070e1b] text-white border-t border-white/10">
+<div class="max-w-max-container mx-auto px-gutter-mobile md:px-gutter-desktop pt-space-3xl pb-space-2xl">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-xl">
+<div class="lg:col-span-4 flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<img alt="Brand logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WmSYdEZYU24zV46TcDq5kGvW8N5skSAyBZ8gIDVO_K9jmzLb8sBsvXKq5mFuCJhBSpQfY6K8B_qe391zFUgpHiTN2w9B2zIhx33HdqeAu0RANxxkUOgXIyRxhgcdrZGpMk1t98dWS0qLH_dehQ9cUmvHkl2Pkn2XDfohMkYCeXRNIU0T4b1eOQ-o0s7pj6HhfH9wD97UTbu5Y9-Oa82kaJYrVMzhRpe1ibyZ3HTS3_jYBH4ha_Kdxkjxu_">
+<span class="font-['Plus_Jakarta_Sans'] text-base font-bold text-white">Uptech Consulting &amp; Outsourcing</span>
+</div>
+<p class="text-xs text-slate-400 max-w-sm leading-relaxed">
+            A cross-border institutional bridge facilitating transatlantic trade, enterprise technology implementation, regulatory compliance, and high-impact outsourcing between Central Africa and North America.
+          </p>
+<div class="flex flex-col gap-1.5 text-xs text-slate-300 pt-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-cyan-bright">mail</span>
+<span class="">infos@uptechconsulting.com</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-cyan-bright">language</span>
+<span class="">uptechconsulting.com</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-cyan-bright">location_on</span>
+<span class="">Buea, Cameroon · Texas, USA</span>
+</div>
+</div>
+</div>
+<div class="lg:col-span-2 flex flex-col gap-3">
+<h4 class="font-['Plus_Jakarta_Sans'] text-xs text-white uppercase tracking-wider font-bold">Company</h4>
+<ul class="flex flex-col gap-2 text-xs text-slate-400">
+<li class=""><a class="hover:text-cyan-bright transition-colors" data-path="who-we-are" href="#">About Us</a></li>
+<li class=""><a class="hover:text-cyan-bright transition-colors" data-path="who-we-serve" href="#">Global Presence</a></li>
+<li class=""><a class="hover:text-cyan-bright transition-colors" data-path="careers" href="#">Careers &amp; Internships</a></li>
+<li class=""><a class="hover:text-cyan-bright transition-colors" data-path="compliance-notices" href="#">Compliance &amp; Ethics</a></li>
+<li class=""><a class="hover:text-cyan-bright transition-colors" data-path="insights" href="#">Press &amp; Insights</a></li>
+</ul>
+</div>
+<div class="lg:col-span-3 flex flex-col gap-3">
+<h4 class="font-['Plus_Jakarta_Sans'] text-xs text-white uppercase tracking-wider font-bold">Services</h4>
+<ul class="flex flex-col gap-2 text-xs text-slate-400">
+<li class=""><a class="hover:text-cyan-bright transition-colors" data-path="services" href="#">IT Consulting &amp; Outsourcing</a></li>
+<li class=""><a class="hover:text-cyan-bright transition-colors" data-path="services" href="#">Business Formalisation &amp; Compliance</a></li>
+<li class=""><a class="hover:text-cyan-bright transition-colors" data-path="services" href="#">Recruitment &amp; BPO</a></li>
+<li class=""><a class="hover:text-cyan-bright transition-colors" data-path="services" href="#">Career &amp; Profile Marketing</a></li>
+<li class=""><a class="hover:text-cyan-bright transition-colors" data-path="services" href="#">General Contracts &amp; Supplies</a></li>
+</ul>
+</div>
+<div class="lg:col-span-3 flex flex-col gap-3">
+<h4 class="font-['Plus_Jakarta_Sans'] text-xs text-white uppercase tracking-wider font-bold">Engage Us</h4>
+<p class="text-xs text-slate-400 leading-relaxed">
+            Schedule an exploratory session with our dual-jurisdiction legal, technical, and staffing specialists.
+          </p>
+<div class="flex flex-col gap-2 pt-1">
+<a class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-electric-blue text-white font-['Plus_Jakarta_Sans'] text-xs font-bold uppercase tracking-wider shadow-md hover:bg-blue-600 transition-all" data-path="book-a-consultation" href="#">
+              Schedule Strategy Call
+            </a>
+<a class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-white/5 border border-white/15 text-slate-300 font-['Plus_Jakarta_Sans'] text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-all" data-path="contact" href="#">
+              Direct Inquiry
+            </a>
+</div>
+</div>
+</div>
+</div>
+<div class="w-full bg-[#050a14] border-t border-white/5">
+<div class="max-w-max-container mx-auto px-gutter-mobile md:px-gutter-desktop py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+<div class="flex flex-wrap items-center gap-2">
+<p class="">© 2025 Uptech Consulting &amp; Outsourcing (UCO). All rights reserved.</p>
+<span class="">|</span>
+<p class="">Tous droits réservés (English &amp; Français)</p>
+</div>
+<div class="flex items-center gap-4">
+<a class="hover:text-slate-300 transition-colors" data-path="privacy-policy" href="#">Privacy Policy</a>
+<a class="hover:text-slate-300 transition-colors" data-path="terms-of-service" href="#">Terms of Service</a>
+<div class="flex items-center gap-2 ml-2 text-slate-400">
+<span class="material-symbols-outlined text-[16px] hover:text-white cursor-pointer">public</span>
+<span class="material-symbols-outlined text-[16px] hover:text-white cursor-pointer">share</span>
+</div>
+</div>
+</div>
+</div>
+</footer>
+
+
+</body></html>

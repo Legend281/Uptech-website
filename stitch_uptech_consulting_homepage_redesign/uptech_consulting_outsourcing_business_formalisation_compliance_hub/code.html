@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Business Formalisation &amp; Compliance — Uptech Consulting &amp; Outsourcing</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans & Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script data-purpose="tailwind-config">
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+          body: ['Inter', 'sans-serif'],
+        },
+        colors: {
+          navy: {
+            950: '#070e1b',
+            900: '#0b1528',
+            850: '#0f1d36',
+            800: '#152544',
+            700: '#1e335a',
+            600: '#2d4b80',
+          },
+          cyanAccent: '#2DD4BF',
+          blueAccent: '#2563EB',
+          uco: {
+            blue: '#0066FF',
+            'blue-hover': '#0052CC',
+            cyan: '#38BDF8',
+            green: '#25D366'
+          }
+        }
+      }
+    }
+  }
+</script>
+<style data-purpose="custom-utilities">
+  body {
+    font-family: 'Inter', sans-serif;
+    color: #1e293b;
+    background-color: #F9FAFC;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    letter-spacing: -0.025em;
+  }
+  .gradient-teal-blue {
+    background: linear-gradient(135deg, #00d2b4 0%, #0080ff 100%);
+  }
+  .gradient-teal-blue-text {
+    background: linear-gradient(135deg, #2DD4BF 0%, #38BDF8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .card-hover-shadow {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .card-hover-shadow:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px -12px rgba(7, 14, 27, 0.12), 0 6px 16px -4px rgba(0, 0, 0, 0.05);
+  }
+  .frosted-glass {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+  }
+</style>
+</head>
+<body class="bg-[#F9FAFC] text-slate-800 font-sans antialiased selection:bg-teal-500 selection:text-white">
+<!-- BEGIN: MainHeader (Exact Executive Redesign Alignment) -->
+<header class="sticky top-0 z-50 bg-navy-900/95 backdrop-blur-md border-b border-slate-800/80">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+<!-- Brand Logo -->
+<a class="flex items-center gap-3.5 group flex-shrink-0" href="#">
+<div class="w-10 h-10 rounded-xl border border-teal-400/40 p-0.5 flex items-center justify-center bg-navy-950 shadow-inner group-hover:border-teal-400 transition-colors">
+<div class="w-full h-full rounded-[10px] border border-teal-400/80 flex items-center justify-center text-teal-400">
+<svg class="w-5 h-5 transition-transform group-hover:scale-110 duration-200" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 19V5m0 0l-4 4m4-4l4 4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="text-white font-extrabold text-base tracking-wider uppercase leading-none">UPTECH</span>
+<span class="text-[9px] font-semibold text-teal-400 tracking-[0.18em] uppercase mt-1">CONSULTING &amp; OUTSOURCING</span>
+</div>
+</a>
+<!-- Center Navigation Links & Dropdowns -->
+<nav class="hidden lg:flex items-center gap-1 xl:gap-2 text-sm font-medium text-slate-300">
+<!-- 1. Who We Are Dropdown -->
+<div class="relative group py-6">
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-300 hover:text-white group-hover:text-teal-400 transition-colors text-sm font-semibold focus:outline-none">
+<span>Who We Are</span>
+<svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-teal-400 group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<div class="absolute top-[100%] left-0 w-64 bg-navy-950/95 backdrop-blur-xl border border-slate-700/80 shadow-2xl rounded-xl p-2.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform -translate-y-1 group-hover:translate-y-0">
+<a class="flex flex-col p-2.5 rounded-lg hover:bg-white/5 transition-colors group/item" href="#">
+<span class="text-sm font-semibold text-white group-hover/item:text-teal-400 transition-colors">Our Philosophy</span>
+<span class="text-xs text-slate-400 mt-0.5">Where strategy meets accountable execution</span>
+</a>
+<a class="flex flex-col p-2.5 rounded-lg hover:bg-white/5 transition-colors group/item" href="#">
+<span class="text-sm font-semibold text-white group-hover/item:text-teal-400 transition-colors">Core Values</span>
+<span class="text-xs text-slate-400 mt-0.5">Integrity, professionalism, commitment &amp; innovation</span>
+</a>
+</div>
+</div>
+<!-- 2. Services Dropdown (Active on Pillar 04) -->
+<div class="relative group py-6">
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-teal-400 font-bold group-hover:text-teal-300 transition-colors text-sm focus:outline-none bg-white/[0.04]">
+<span class="relative">
+  Services
+  <span class="absolute -bottom-1 left-0 right-0 h-0.5 bg-teal-400 rounded-full"></span>
+</span>
+<svg class="w-3.5 h-3.5 text-teal-400 group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<div class="absolute top-[100%] left-1/2 -translate-x-1/2 w-[340px] sm:w-[420px] bg-navy-950/95 backdrop-blur-xl border border-slate-700/80 shadow-2xl rounded-xl p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform -translate-y-1 group-hover:translate-y-0 divide-y divide-slate-800/60"><div class="space-y-1 pb-2"><a class="flex items-start gap-3 p-2.5 rounded-lg hover:bg-white/5 transition-colors group/item" href="#"><span class="text-teal-400 text-xs font-mono font-bold mt-0.5 bg-teal-500/10 px-1.5 py-0.5 rounded">01</span><div><span class="text-sm font-semibold text-white group-hover/item:text-teal-400 block transition-colors">IT Consulting &amp; Outsourcing</span><span class="text-xs text-slate-400 leading-snug">Managed IT, cloud migration, databases &amp; cyber security</span></div></a><a class="flex items-start gap-3 p-2.5 rounded-lg bg-white/[0.06] border border-teal-500/30 transition-colors group/item" href="#"><span class="text-teal-400 text-xs font-mono font-bold mt-0.5 bg-teal-500/20 px-1.5 py-0.5 rounded">02</span><div><span class="text-sm font-bold text-teal-300 block transition-colors">Business Formalisation &amp; Compliance</span><span class="text-xs text-slate-300 leading-snug">OHADA registration, US LLC, corporate tax &amp; CNPS</span></div></a><a class="flex items-start gap-3 p-2.5 rounded-lg hover:bg-white/5 transition-colors group/item" href="#"><span class="text-teal-400 text-xs font-mono font-bold mt-0.5 bg-teal-500/10 px-1.5 py-0.5 rounded">03</span><div><span class="text-sm font-semibold text-white group-hover/item:text-teal-400 block transition-colors">Recruitment &amp; Business Process Outsourcing</span><span class="text-xs text-slate-400 leading-snug">Staffing, payroll management &amp; back-office operations</span></div></a></div><div class="space-y-1 pt-2"><a class="flex items-start gap-3 p-2.5 rounded-lg hover:bg-white/5 transition-colors group/item" href="#"><span class="text-teal-400 text-xs font-mono font-bold mt-0.5 bg-teal-500/10 px-1.5 py-0.5 rounded">04</span><div><span class="text-sm font-semibold text-white group-hover/item:text-teal-400 block transition-colors">Career Marketing &amp; Placement</span><span class="text-xs text-slate-400 leading-snug">Executive positioning &amp; international placement</span></div></a><a class="flex items-start gap-3 p-2.5 rounded-lg hover:bg-white/5 transition-colors group/item" href="#"><span class="text-teal-400 text-xs font-mono font-bold mt-0.5 bg-teal-500/10 px-1.5 py-0.5 rounded">05</span><div><span class="text-sm font-semibold text-white group-hover/item:text-teal-400 block transition-colors">General Contracts &amp; Supplies</span><span class="text-xs text-slate-400 leading-snug">Reliable procurement and institutional supply fulfilment</span></div></a></div></div>
+</div>
+<!-- 3. Who We Serve Dropdown -->
+<div class="relative group py-6">
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-300 hover:text-white group-hover:text-teal-400 transition-colors text-sm font-semibold focus:outline-none">
+<span>Who We Serve</span>
+<svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-teal-400 group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<div class="absolute top-[100%] left-0 w-72 bg-navy-950/95 backdrop-blur-xl border border-slate-700/80 shadow-2xl rounded-xl p-2.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform -translate-y-1 group-hover:translate-y-0">
+<a class="flex items-start gap-3 p-2.5 rounded-lg hover:bg-white/5 transition-colors group/item" href="#">
+<div class="w-2 h-2 rounded-full bg-teal-400 mt-1.5 flex-shrink-0"></div>
+<div>
+<span class="text-sm font-semibold text-white group-hover/item:text-teal-400 block transition-colors">For Individuals</span>
+<span class="text-xs text-slate-400 leading-tight">Career growth, taxes &amp; personal ventures</span>
+</div>
+</a>
+<a class="flex items-start gap-3 p-2.5 rounded-lg hover:bg-white/5 transition-colors group/item" href="#">
+<div class="w-2 h-2 rounded-full bg-blue-400 mt-1.5 flex-shrink-0"></div>
+<div>
+<span class="text-sm font-semibold text-white group-hover/item:text-teal-400 block transition-colors">For Businesses &amp; Institutions</span>
+<span class="text-xs text-slate-400 leading-tight">Operations, compliance &amp; managed functions</span>
+</div>
+</a>
+</div>
+</div>
+<!-- 4. Careers Direct Link -->
+<a class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:text-teal-400 transition-colors text-sm font-semibold" href="#careers">
+  Careers
+</a>
+</nav>
+<!-- Right Navigation Actions -->
+<div class="flex items-center gap-3 sm:gap-4 flex-shrink-0">
+<a class="hidden sm:inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-200 hover:text-white px-3.5 py-2.5 rounded-lg border border-slate-700/80 hover:border-slate-500 bg-navy-950/60 transition-all" href="tel:+237000000000">
+<svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Talk to us</span>
+</a>
+<a class="gradient-teal-blue text-white text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2.5 rounded-lg hover:brightness-105 active:scale-[0.98] transition-all shadow-sm shadow-teal-950/40 flex items-center gap-2" href="#start-campaign"><span>Book a Consultation</span><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+</div>
+</div>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: Breadcrumb Bar -->
+<section class="w-full bg-[#081120] border-b border-slate-800 text-xs"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-3"><nav aria-label="Breadcrumb" class="flex items-center gap-2 text-slate-400 font-medium"><a class="hover:text-teal-400 transition-colors" href="#">Home</a><span class="text-slate-600">/</span><a class="hover:text-teal-400 transition-colors" href="#">Services</a><span class="text-slate-600">/</span><span class="text-white font-semibold">Business Formalisation &amp; Compliance</span></nav><div class="inline-flex items-center gap-2 bg-white/[0.05] border border-slate-700/60 px-3 py-1 rounded-full text-slate-300 font-mono text-[11px]"><span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span><span class="font-bold text-teal-300">PILLAR 02 / 05</span><span class="text-slate-600">•</span><span class="text-slate-400 uppercase">BILATERAL LEGAL &amp; REGULATORY COMPLIANCE</span></div></div></section>
+<!-- END: Breadcrumb Bar -->
+<main>
+<!-- BEGIN: HeroSection (Atmospheric midnight navy with IMAGE_20 background) -->
+<section class="relative bg-navy-950 overflow-hidden pt-14 pb-28 lg:pt-20 lg:pb-36 border-b border-slate-800/80" data-purpose="hero-campaign"><div class="absolute right-0 top-0 w-full lg:w-3/4 h-full opacity-60 lg:opacity-75 pointer-events-none"><img alt="Executive corporate legal compliance and business formalisation consultation scene" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6rywYcjhu-ErEMEqVdtKmh112Otmm0EA2-uf7NIkhKuatR5602llgoXT8iMcaSyldgzWkvejn1jyXQaRgRvBGyye5hnhkP77wsItFZ8m8PvGy4NG2kqiD5-ZclgkEqmlqYURx8p2TydcJbmij6WTn9aN8c2PNZImzIJby7PEGboo2xOfILnwvXhU2g7jjGbDvFCl9BnePnCkUgnlUfy7q9kcbV7M7_Sw8iZ4BoqPxppofqLwxbuWZ7w"/></div><div class="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/90 to-navy-950/40 pointer-events-none"></div><div class="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none"></div><div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="max-w-2xl lg:max-w-3xl"><div class="inline-flex items-center gap-2 mb-6"><span class="w-7 h-[2px] bg-teal-400 inline-block"></span><span class="text-xs font-bold uppercase tracking-wider text-teal-400">BUSINESS FORMALISATION &amp; COMPLIANCE</span></div><h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] mb-6">Get compliant, stay compliant — <br class="hidden sm:inline"/><span class="gradient-teal-blue-text">in Cameroon and the US.</span></h1><p class="text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">Cross-border entity formation and statutory compliance shouldn't be a maze of conflicting rules. We provide rigorous procedural roadmaps and filing execution for businesses and individuals across OHADA and US jurisdictions.</p><div class="flex flex-wrap items-center gap-4 mb-10"><a class="gradient-teal-blue text-white text-sm font-semibold px-6 py-3.5 rounded-lg hover:brightness-105 active:scale-[0.98] transition-all flex items-center gap-2 shadow-lg shadow-teal-950/60" href="#guided-router"><span>Find My Path ↓</span><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M19 14l-7 7m0 0l-7-7m7 7V3" stroke-linecap="round" stroke-linejoin="round"></path></svg></a><a class="bg-navy-900/90 border border-slate-700/80 hover:border-slate-500 text-white text-sm font-semibold px-6 py-3.5 rounded-lg transition-all flex items-center gap-2.5 backdrop-blur-sm" href="https://wa.me/237600000000" rel="noopener noreferrer" target="_blank"><span class="w-2.5 h-2.5 rounded-full bg-uco-green ring-4 ring-uco-green/20"></span><svg class="w-4 h-4 text-teal-400 fill-current" viewbox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"></path></svg><span>Chat on WhatsApp</span></a></div></div></div></section>
+<!-- END: HeroSection -->
+<!-- BEGIN: Docked Metric & Trust Bar (SCREEN_4 Alignment) -->
+<div class="relative -mt-10 lg:-mt-14 z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-purpose="operational-trust-strip"><div class="bg-navy-900/95 backdrop-blur-xl rounded-2xl shadow-[0_20px_50px_rgba(7,14,27,0.4),0_1px_3px_rgba(0,0,0,0.2)] border border-slate-800 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-800/90 overflow-hidden text-white"><div class="p-6 flex items-center gap-4 hover:bg-navy-850/60 transition-colors"><div class="w-12 h-12 rounded-xl bg-navy-950 border border-slate-700/60 text-teal-400 flex items-center justify-center flex-shrink-0 shadow-md relative overflow-hidden"><div class="absolute inset-0 bg-gradient-to-br from-teal-500/15 to-transparent"></div><span class="material-symbols-outlined text-[24px] relative z-10 text-teal-400">gavel</span></div><div><h2 class="text-sm font-bold text-white leading-snug">Dual Jurisdiction</h2><p class="text-xs text-teal-300 mt-0.5 flex items-center gap-1.5 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span>OHADA &amp; 50 US States</p><p class="text-[11px] text-slate-400 mt-1 leading-snug">Cameroon RCCM commercial registration and US LLC entity formation.</p></div></div><div class="p-6 flex items-center gap-4 hover:bg-navy-850/60 transition-colors"><div class="w-12 h-12 rounded-xl bg-navy-950 border border-slate-700/60 text-teal-400 flex items-center justify-center flex-shrink-0 shadow-md relative overflow-hidden"><div class="absolute inset-0 bg-gradient-to-br from-sky-500/15 to-transparent"></div><span class="material-symbols-outlined text-[24px] relative z-10 text-sky-400">verified</span></div><div><h2 class="text-sm font-bold text-white leading-snug">Certified Regulatory Filings</h2><p class="text-xs text-sky-300 mt-0.5 flex items-center gap-1.5 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-blueAccent"></span>Court &amp; Notarial Direct</p><p class="text-[11px] text-slate-400 mt-1 leading-snug">Articles of association, taxpayer ID (NIU), and EIN certification.</p></div></div><div class="p-6 flex items-center gap-4 hover:bg-navy-850/60 transition-colors"><div class="w-12 h-12 rounded-xl bg-navy-950 border border-slate-700/60 text-teal-400 flex items-center justify-center flex-shrink-0 shadow-md relative overflow-hidden"><div class="absolute inset-0 bg-gradient-to-br from-emerald-500/15 to-transparent"></div><span class="material-symbols-outlined text-[24px] relative z-10 text-emerald-400">shield_with_heart</span></div><div><h2 class="text-sm font-bold text-white leading-snug">Zero-Penalty Cadence</h2><p class="text-xs text-emerald-300 mt-0.5 flex items-center gap-1.5 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>Active Standing</p><p class="text-[11px] text-slate-400 mt-1 leading-snug">Proactive DGI tax calendar, CNPS social filings, and annual US reports.</p></div></div></div></div>
+<!-- END: Docked Metric & Trust Bar -->
+<!-- BEGIN: TheCampaignProcess (Asymmetrical Showcase matching SCREEN_4) -->
+<section class="py-20 bg-slate-50 border-b border-slate-200/80" data-purpose="guided-pathway-router" id="guided-router"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="max-w-3xl mb-12"><div class="inline-flex items-center gap-2 mb-3"><span class="w-7 h-[2px] bg-teal-500 inline-block"></span><span class="text-xs font-bold uppercase tracking-wider text-sky-600">INTERACTIVE PATHWAY FINDER</span></div><h2 class="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight leading-tight">Find the exact compliance pathway for your situation.</h2><p class="mt-3 text-base text-slate-600 leading-relaxed">Select your entity structure and operational jurisdiction to reveal your exact regulatory scope and mandatory deliverables in seconds.</p></div><div class="bg-white rounded-2xl border border-slate-200/90 shadow-xl p-6 sm:p-8 lg:p-10"><div class="space-y-8"><div><label class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-500 mb-3">Step 1 • Select your profile type:</label><div class="grid grid-cols-1 sm:grid-cols-2 gap-4"><button class="text-left p-5 rounded-xl border-2 border-teal-500 bg-teal-50/40 hover:bg-teal-50 transition-all flex items-start gap-4 router-profile-btn active" id="btn-profile-business" onclick="selectProfile('business')"><div class="w-10 h-10 rounded-lg bg-navy-950 text-teal-400 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[20px]">apartment</span></div><div><span class="block text-base font-bold text-navy-950 leading-snug">🏢 Business / Enterprise</span><span class="text-xs text-slate-600 leading-relaxed mt-1 block">Companies, partnerships, startups, and expanding corporate subsidiaries.</span></div></button><button class="text-left p-5 rounded-xl border-2 border-slate-200 bg-white hover:border-slate-300 transition-all flex items-start gap-4 router-profile-btn" id="btn-profile-individual" onclick="selectProfile('individual')"><div class="w-10 h-10 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[20px]">person</span></div><div><span class="block text-base font-bold text-navy-950 leading-snug">👤 Individual Professional</span><span class="text-xs text-slate-600 leading-relaxed mt-1 block">Contractors, diaspora earners, remote professionals, and sole proprietors.</span></div></button></div></div><div id="step-2-container"><label class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-500 mb-3">Step 2 • Select jurisdiction &amp; primary objective:</label><div class="flex flex-wrap gap-2.5 mb-5" id="jurisdiction-toggle-row"><button class="px-4 py-2 rounded-lg text-xs font-bold font-mono uppercase tracking-wider border-2 border-teal-500 bg-teal-50 text-teal-800 router-jur-btn active" id="btn-jur-cmr" onclick="selectJur('cmr')">🇨🇲 Cameroon (OHADA)</button><button class="px-4 py-2 rounded-lg text-xs font-bold font-mono uppercase tracking-wider border-2 border-slate-200 bg-white text-slate-700 hover:border-slate-300 router-jur-btn" id="btn-jur-us" onclick="selectJur('us')">🇺🇸 United States (50 States)</button></div><div class="flex flex-wrap gap-2" id="need-chips-row"><button class="px-3.5 py-1.5 rounded-md text-xs font-semibold bg-navy-950 text-teal-300 border border-teal-500/40 router-need-btn active" id="chip-0" onclick="selectNeed(0)">Business Formalisation (RCCM/OHADA)</button><button class="px-3.5 py-1.5 rounded-md text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 router-need-btn" id="chip-1" onclick="selectNeed(1)">Tax Compliance (DGI Monthly/Annual)</button><button class="px-3.5 py-1.5 rounded-md text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 router-need-btn" id="chip-2" onclick="selectNeed(2)">CNPS Social Security &amp; Labour</button></div></div><div class="mt-8 pt-8 border-t border-slate-200/80"><div class="bg-navy-950 rounded-2xl p-6 sm:p-8 text-white relative overflow-hidden border border-slate-800 shadow-xl"><div class="absolute right-0 top-0 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div><div class="relative z-10"><div class="flex flex-wrap items-center justify-between gap-3 mb-4"><span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-mono font-bold bg-teal-500/20 text-teal-300 border border-teal-400/40" id="result-badge"><span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>MATCHED STATUTORY PATHWAY</span><span class="text-xs font-mono text-slate-400" id="result-tag">OHADA • SARL / SA / SAS</span></div><h3 class="text-xl sm:text-2xl font-bold text-white mb-3" id="result-title">Cameroon Business Formalisation &amp; RCCM Registration</h3><p class="text-sm text-slate-300 leading-relaxed mb-6 max-w-2xl" id="result-desc">Full incorporation under OHADA Uniform Commercial Acts. We manage notarial drafting, trade registry (RCCM) certification, municipal patent clearance, and Taxpayer Identification Number (NIU) issuance.</p><div class="mb-6"><span class="text-xs font-mono uppercase tracking-wider text-teal-400 font-bold block mb-2">Mandatory Deliverables:</span><div class="flex flex-wrap gap-2" id="result-deliverables"><span class="text-xs bg-white/10 border border-white/15 px-2.5 py-1 rounded-md text-slate-200 font-medium">Notarial Articles of Association</span><span class="text-xs bg-white/10 border border-white/15 px-2.5 py-1 rounded-md text-slate-200 font-medium">RCCM Certificate of Registration</span><span class="text-xs bg-white/10 border border-white/15 px-2.5 py-1 rounded-md text-slate-200 font-medium">Taxpayer Identification Card (NIU)</span><span class="text-xs bg-white/10 border border-white/15 px-2.5 py-1 rounded-md text-slate-200 font-medium">Bank Capital Deposit Attestation</span></div></div><div class="flex flex-wrap items-center gap-4 pt-4 border-t border-slate-800/80"><a class="gradient-teal-blue text-white text-xs sm:text-sm font-semibold px-6 py-3 rounded-lg hover:brightness-105 active:scale-[0.98] transition-all flex items-center gap-2 shadow-md" href="#complete-directory" id="result-action-btn"><span>Go to this Pathway →</span></a><span class="text-xs text-slate-400 font-mono">Typical completion: 7–14 business days</span></div></div></div></div></div></div></div></section>
+<!-- END: TheCampaignProcess -->
+<!-- BEGIN: WhoThisIsFor (Editorial Asymmetric Split matching SCREEN_4) -->
+<section class="py-24 bg-white border-b border-slate-200/80" data-purpose="complete-pathways-directory" id="complete-directory"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="mb-14 max-w-3xl"><div class="inline-flex items-center gap-2 mb-3"><span class="w-7 h-[2px] bg-teal-500 inline-block"></span><span class="text-xs font-bold uppercase tracking-wider text-sky-600">COMPLETE DIRECTORY</span></div><h2 class="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight leading-tight">Explore all five formalisation &amp; compliance pathways.</h2><p class="mt-3 text-base text-slate-600 leading-relaxed">Direct access to our dedicated statutory guidance and procedural filing services across Cameroon and the United States.</p></div><div class="space-y-16"><div><div class="flex items-center gap-3 mb-6"><span class="w-2.5 h-2.5 rounded-full bg-blueAccent"></span><h3 class="text-xl font-extrabold text-navy-950">For Businesses &amp; Corporations <span class="text-sm font-normal text-slate-500 font-mono">(4 Dedicated Pathways)</span></h3></div><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div class="bg-white rounded-2xl p-7 border border-slate-200/90 shadow-sm hover:border-teal-500/40 hover:shadow-md transition-all flex flex-col justify-between group"><div class="mb-6"><div class="flex items-center justify-between mb-4"><div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold font-mono text-sm">01</div><span class="text-[11px] font-mono font-bold uppercase tracking-wider text-teal-700 bg-teal-50 border border-teal-200/70 px-2.5 py-1 rounded">🇨🇲 Cameroon • OHADA / RCCM</span></div><h4 class="text-lg font-bold text-navy-950 group-hover:text-blueAccent transition-colors mb-2">Business Formalisation — Cameroon</h4><p class="text-xs text-slate-600 leading-relaxed mb-4">Full incorporation under OHADA standards. We draft Articles of Association, coordinate notarial deposit, register with the Court Trade Registry (RCCM), and obtain your corporate Taxpayer ID (NIU).</p><div class="flex flex-wrap gap-1.5"><span class="text-[10px] font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded">SARL / SA / SAS</span><span class="text-[10px] font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded">Notarial Deed</span><span class="text-[10px] font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded">Taxpayer Card (NIU)</span></div></div><div class="pt-4 border-t border-slate-100 flex items-center justify-between"><span class="text-xs font-mono text-slate-500">7–14 business days</span><a class="text-xs font-bold text-blueAccent group-hover:text-teal-600 inline-flex items-center gap-1" href="#start-campaign"><span>Explore Pathway</span><span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span></a></div></div><div class="bg-white rounded-2xl p-7 border border-slate-200/90 shadow-sm hover:border-teal-500/40 hover:shadow-md transition-all flex flex-col justify-between group"><div class="mb-6"><div class="flex items-center justify-between mb-4"><div class="w-10 h-10 rounded-xl bg-blue-50 text-blueAccent flex items-center justify-center font-bold font-mono text-sm">02</div><span class="text-[11px] font-mono font-bold uppercase tracking-wider text-blueAccent bg-blue-50 border border-blue-200/70 px-2.5 py-1 rounded">🇺🇸 United States • 50 States</span></div><h4 class="text-lg font-bold text-navy-950 group-hover:text-blueAccent transition-colors mb-2">Business Formalisation — United States</h4><p class="text-xs text-slate-600 leading-relaxed mb-4">Formation of Delaware, Wyoming, Texas, or state-specific LLCs and C-Corps for African and international founders. Includes Registered Agent service, IRS EIN acquisition, and Operating Agreements.</p><div class="flex flex-wrap gap-1.5"><span class="text-[10px] font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded">US LLC / C-Corp</span><span class="text-[10px] font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded">IRS EIN Issuance</span><span class="text-[10px] font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded">Registered Agent</span></div></div><div class="pt-4 border-t border-slate-100 flex items-center justify-between"><span class="text-xs font-mono text-slate-500">3–7 business days</span><a class="text-xs font-bold text-blueAccent group-hover:text-teal-600 inline-flex items-center gap-1" href="#start-campaign"><span>Explore Pathway</span><span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span></a></div></div><div class="bg-white rounded-2xl p-7 border border-slate-200/90 shadow-sm hover:border-teal-500/40 hover:shadow-md transition-all flex flex-col justify-between group"><div class="mb-6"><div class="flex items-center justify-between mb-4"><div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold font-mono text-sm">03</div><span class="text-[11px] font-mono font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200/70 px-2.5 py-1 rounded">🇨🇲 Cameroon • DGI Corporate</span></div><h4 class="text-lg font-bold text-navy-950 group-hover:text-blueAccent transition-colors mb-2">Tax Compliance for Businesses — Cameroon</h4><p class="text-xs text-slate-600 leading-relaxed mb-4">Routine monthly returns filing before the 15th, Special Income Tax (TSR), Corporate Income Tax (IS), Statistical and Tax Declarations (DSF), and Attestation de Non-Redevance (ANR) clearance.</p><div class="flex flex-wrap gap-1.5"><span class="text-[10px] font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded">Monthly DGI Filings</span><span class="text-[10px] font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded">Annual DSF Audit</span><span class="text-[10px] font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded">Non-Redevance (ANR)</span></div></div><div class="pt-4 border-t border-slate-100 flex items-center justify-between"><span class="text-xs font-mono text-slate-500">Ongoing Monthly Cadence</span><a class="text-xs font-bold text-blueAccent group-hover:text-teal-600 inline-flex items-center gap-1" href="#start-campaign"><span>Explore Pathway</span><span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span></a></div></div><div class="bg-white rounded-2xl p-7 border border-slate-200/90 shadow-sm hover:border-teal-500/40 hover:shadow-md transition-all flex flex-col justify-between group"><div class="mb-6"><div class="flex items-center justify-between mb-4"><div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold font-mono text-sm">04</div><span class="text-[11px] font-mono font-bold uppercase tracking-wider text-teal-700 bg-teal-50 border border-teal-200/70 px-2.5 py-1 rounded">🇨🇲 Cameroon • CNPS &amp; Labour</span></div><h4 class="text-lg font-bold text-navy-950 group-hover:text-blueAccent transition-colors mb-2">CNPS &amp; Labour Compliance — Cameroon</h4><p class="text-xs text-slate-600 leading-relaxed mb-4">Employer social insurance registration, monthly employee declarations (DPAE), payroll withholding calculations, workplace inspection records, and CNPS Clearance Certificates (Attestation pour Soumission).</p><div class="flex flex-wrap gap-1.5"><span class="text-[10px] font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded">Employer Matricule</span><span class="text-[10px] font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded">Monthly DPAE</span><span class="text-[10px] font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded">CNPS Tender Clearance</span></div></div><div class="pt-4 border-t border-slate-100 flex items-center justify-between"><span class="text-xs font-mono text-slate-500">Routine Regulatory Cycle</span><a class="text-xs font-bold text-blueAccent group-hover:text-teal-600 inline-flex items-center gap-1" href="#start-campaign"><span>Explore Pathway</span><span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span></a></div></div></div></div><div><div class="flex items-center gap-3 mb-6"><span class="w-2.5 h-2.5 rounded-full bg-teal-400"></span><h3 class="text-xl font-extrabold text-navy-950">For Individuals &amp; Independent Professionals <span class="text-sm font-normal text-slate-500 font-mono">(1 Dedicated Pathway)</span></h3></div><div class="bg-slate-50 rounded-2xl p-7 sm:p-9 border border-slate-200/90 shadow-sm hover:border-teal-500/40 hover:shadow-md transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-8 group"><div class="max-w-3xl"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-xl bg-navy-950 text-teal-400 flex items-center justify-center font-bold font-mono text-sm">05</div><span class="text-[11px] font-mono font-bold uppercase tracking-wider text-teal-700 bg-teal-50 border border-teal-200/70 px-2.5 py-1 rounded">🇨🇲 Cameroon • Individual Tax</span></div><h4 class="text-xl font-bold text-navy-950 group-hover:text-blueAccent transition-colors mb-2">Personal Tax Compliance &amp; Declarations — Cameroon</h4><p class="text-sm text-slate-600 leading-relaxed mb-4">Statutory personal income tax declarations (IRPP), freelance and remote cross-border earnings regularisation, property income reporting, and personal Attestation de Non-Redevance issuance for visa and banking requirements.</p><div class="flex flex-wrap gap-2"><span class="text-xs font-mono bg-white border border-slate-200 text-slate-700 px-3 py-1 rounded-md">Annual IRPP Filing</span><span class="text-xs font-mono bg-white border border-slate-200 text-slate-700 px-3 py-1 rounded-md">Remote Foreign Income Regularisation</span><span class="text-xs font-mono bg-white border border-slate-200 text-slate-700 px-3 py-1 rounded-md">Individual ANR (Tax Clearance)</span></div></div><div class="shrink-0 flex flex-col items-start lg:items-end gap-3"><span class="text-xs font-mono text-slate-500">Filing deadline: Before March 15 annually</span><a class="gradient-teal-blue text-white text-xs sm:text-sm font-semibold px-6 py-3 rounded-lg hover:brightness-105 active:scale-[0.98] transition-all flex items-center gap-2 shadow-md" href="#start-campaign"><span>Explore Pathway</span><span class="material-symbols-outlined text-[16px]">arrow_forward</span></a></div></div></div></div></div></section>
+<!-- END: WhoThisIsFor -->
+<!-- BEGIN: RealResults / CaseStory (SCREEN_4 Dark Midnight Rhythm section) -->
+<section class="py-24 bg-navy-950 text-white relative overflow-hidden border-b border-slate-800/80" data-purpose="procedural-trust"><div class="absolute right-0 top-0 w-full lg:w-3/4 h-full opacity-60 lg:opacity-75 pointer-events-none"><img alt="Executive boardroom consultation" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6rywYcjhu-ErEMEqVdtKmh112Otmm0EA2-uf7NIkhKuatR5602llgoXT8iMcaSyldgzWkvejn1jyXQaRgRvBGyye5hnhkP77wsItFZ8m8PvGy4NG2kqiD5-ZclgkEqmlqYURx8p2TydcJbmij6WTn9aN8c2PNZImzIJby7PEGboo2xOfILnwvXhU2g7jjGbDvFCl9BnePnCkUgnlUfy7q9kcbV7M7_Sw8iZ4BoqPxppofqLwxbuWZ7w"/></div><div class="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/80 to-navy-950/50 pointer-events-none"></div><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10"><div class="max-w-3xl mb-14"><div class="inline-flex items-center gap-2 mb-4"><span class="w-7 h-[2px] bg-teal-400 inline-block"></span><span class="text-xs font-bold uppercase tracking-wider text-teal-400">PROCEDURAL RIGOR</span></div><h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-4">Certainty at every statutory filing milestone.</h2><p class="text-base text-slate-300 leading-relaxed">Regulatory administration requires rigorous procedural accuracy. We safeguard your corporate and personal standing by executing filings directly with primary registries, courts, and tax inspectorates.</p></div><div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-12"><div class="frosted-glass p-7 rounded-2xl hover:bg-white/[0.08] transition-colors"><div class="w-12 h-12 rounded-xl bg-teal-400/10 border border-teal-400/30 text-teal-400 flex items-center justify-center mb-5"><span class="material-symbols-outlined text-[24px]">assignment_turned_in</span></div><h3 class="text-lg font-bold text-white mb-2">Documented Step-by-Step Cadence</h3><p class="text-xs text-slate-300 leading-relaxed">No guesswork or opaque bureaucratic steps. We maintain an auditable filing trail with official court deposit receipts, tax clearance stampings, and live registration tracking.</p></div><div class="frosted-glass p-7 rounded-2xl hover:bg-white/[0.08] transition-colors"><div class="w-12 h-12 rounded-xl bg-teal-400/10 border border-teal-400/30 text-teal-400 flex items-center justify-center mb-5"><span class="material-symbols-outlined text-[24px]">public</span></div><h3 class="text-lg font-bold text-white mb-2">Dual-Jurisdiction Standing</h3><p class="text-xs text-slate-300 leading-relaxed">Grounded expertise in Cameroon (OHADA Uniform Acts, General Tax Code, CNPS Social Security Code) paired with US federal/state corporate formation across Delaware, Wyoming, and Texas.</p></div><div class="frosted-glass p-7 rounded-2xl hover:bg-white/[0.08] transition-colors"><div class="w-12 h-12 rounded-xl bg-teal-400/10 border border-teal-400/30 text-teal-400 flex items-center justify-center mb-5"><span class="material-symbols-outlined text-[24px]">shield_lock</span></div><h3 class="text-lg font-bold text-white mb-2">Active Exposure Mitigation</h3><p class="text-xs text-slate-300 leading-relaxed">Eliminates compounding penalties, back-tax assessments, unauthorised operations liabilities, and administrative bank freezes before they can compromise your business operations.</p></div></div><div class="p-6 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-md"><div class="flex items-start gap-3.5"><span class="material-symbols-outlined text-teal-400 text-[20px] shrink-0 mt-0.5">info</span><div class="text-xs text-slate-300 leading-relaxed"><span class="font-bold text-white">Regulatory Notice:</span> Uptech Consulting &amp; Outsourcing provides corporate administrative, management consulting, and statutory registration filing services. While our specialists liaise directly with certified notaries, licensed attorneys, and sworn chartered tax agents, informational content on this portal does not constitute formalized legal counsel. Requirements vary by business sector and municipal jurisdiction; verify your specific statutory filing with our advisory specialists.</div></div></div></div></section>
+<!-- END: RealResults -->
+<!-- BEGIN: FAQ Accordion (Clean and Polished like SCREEN_4) -->
+<section class="py-20 bg-slate-100/70 border-b border-slate-200/80" data-purpose="registration-checklist-lead-magnet"><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8"><div class="bg-white rounded-2xl border border-slate-200/90 shadow-xl p-8 sm:p-12"><div class="text-center max-w-2xl mx-auto mb-8"><div class="inline-flex items-center gap-2 mb-3"><span class="w-7 h-[2px] bg-teal-500 inline-block"></span><span class="text-xs font-bold uppercase tracking-wider text-sky-600">FREE PRE-FLIGHT AUDIT</span><span class="w-7 h-[2px] bg-teal-500 inline-block"></span></div><h2 class="text-2xl sm:text-3xl font-extrabold text-navy-950 tracking-tight leading-tight">Is your business registration-ready? Download the free pre-flight audit.</h2><p class="mt-3 text-sm text-slate-600 leading-relaxed">Avoid common filing rejections and statutory delays. A practical 14-point audit covering Cameroon (OHADA/RCCM) and US LLC preliminary documentation.</p></div><form class="space-y-4" onsubmit="event.preventDefault(); alert('Checklist dispatched to your inbox.');"><div class="grid grid-cols-1 sm:grid-cols-12 gap-3"><div class="sm:col-span-7"><label class="sr-only" for="checklist-email">Corporate Email Address</label><input class="w-full px-4 py-3 rounded-lg border border-slate-300 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500" id="checklist-email" placeholder="Enter your corporate email address" required="" type="email"/></div><div class="sm:col-span-5"><button class="w-full gradient-teal-blue text-white text-sm font-semibold py-3 px-4 rounded-lg hover:brightness-105 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-sm" type="submit"><span>Download Free Checklist (PDF)</span><span class="material-symbols-outlined text-[18px]">arrow_forward</span></button></div></div><div class="flex flex-wrap items-center justify-center gap-4 pt-3 text-xs text-slate-500"><span class="inline-flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-teal-600">check_circle</span> Instant download</span><span class="inline-flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-teal-600">check_circle</span> No sales calls</span><span class="inline-flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-teal-600">check_circle</span> Updated for 2025/2026 statutory guidelines</span></div></form></div></div></section>
+<!-- END: FAQ Accordion -->
+<!-- BEGIN: ExploreOtherPillars (Sleek 4-Card Matching Grid from SCREEN_4) -->
+<section class="py-20 bg-slate-50 border-t border-slate-200/80" data-purpose="pillars-navigation">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
+<div>
+<div class="inline-flex items-center gap-2 mb-2">
+<span class="w-7 h-[2px] bg-teal-500 inline-block"></span>
+<span class="text-xs font-bold uppercase tracking-wider text-sky-600">EXPLORE OTHER PILLARS</span>
+</div>
+<h2 class="text-2xl sm:text-3xl font-extrabold text-navy-950 tracking-tight">
+      Comprehensive capability across advisory and execution.
+    </h2>
+</div>
+<a class="text-xs font-bold text-blueAccent hover:text-blue-700 inline-flex items-center gap-1.5 flex-shrink-0" href="#">
+<span>View all 5 pillars</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+</div>
+<!-- Sleek 4-Pillar Row -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"><a class="p-5 rounded-xl bg-white border border-slate-200/90 shadow-sm hover:border-teal-500/40 hover:shadow-md transition-all flex flex-col justify-between group" href="#"><div><div class="w-9 h-9 rounded-lg bg-navy-950 text-teal-400 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform"><span class="material-symbols-outlined text-[18px]">terminal</span></div><span class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">Pillar 01</span><h3 class="text-sm font-bold text-navy-950 group-hover:text-blueAccent transition-colors mt-1">IT Consulting &amp; Outsourcing</h3></div><div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blueAccent group-hover:text-teal-600"><span>View details</span><span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span></div></a><a class="p-5 rounded-xl bg-white border border-slate-200/90 shadow-sm hover:border-teal-500/40 hover:shadow-md transition-all flex flex-col justify-between group" href="#"><div><div class="w-9 h-9 rounded-lg bg-navy-950 text-teal-400 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform"><span class="material-symbols-outlined text-[18px]">badge</span></div><span class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">Pillar 03</span><h3 class="text-sm font-bold text-navy-950 group-hover:text-blueAccent transition-colors mt-1">Recruitment &amp; BPO</h3></div><div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blueAccent group-hover:text-teal-600"><span>View details</span><span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span></div></a><a class="p-5 rounded-xl bg-white border border-slate-200/90 shadow-sm hover:border-teal-500/40 hover:shadow-md transition-all flex flex-col justify-between group" href="#"><div><div class="w-9 h-9 rounded-lg bg-navy-950 text-teal-400 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform"><span class="material-symbols-outlined text-[18px]">trending_up</span></div><span class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">Pillar 04</span><h3 class="text-sm font-bold text-navy-950 group-hover:text-blueAccent transition-colors mt-1">Career Marketing &amp; Placement</h3></div><div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blueAccent group-hover:text-teal-600"><span>View details</span><span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span></div></a><a class="p-5 rounded-xl bg-white border border-slate-200/90 shadow-sm hover:border-teal-500/40 hover:shadow-md transition-all flex flex-col justify-between group" href="#"><div><div class="w-9 h-9 rounded-lg bg-navy-950 text-teal-400 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform"><span class="material-symbols-outlined text-[18px]">local_shipping</span></div><span class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">Pillar 05</span><h3 class="text-sm font-bold text-navy-950 group-hover:text-blueAccent transition-colors mt-1">General Contracts &amp; Supplies</h3></div><div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blueAccent group-hover:text-teal-600"><span>View details</span><span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span></div></a></div>
+</div>
+</section>
+<!-- END: ExploreOtherPillars -->
+<!-- BEGIN: FinalCTASection (SCREEN_4 Alignment) -->
+<section class="py-24 bg-navy-950 text-white relative overflow-hidden border-b border-slate-800/80" data-purpose="conversion-cta" id="start-campaign"><div class="absolute right-0 top-0 w-full lg:w-3/4 h-full opacity-60 lg:opacity-75 pointer-events-none"><img alt="Executive business formalisation consultation scene" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6rywYcjhu-ErEMEqVdtKmh112Otmm0EA2-uf7NIkhKuatR5602llgoXT8iMcaSyldgzWkvejn1jyXQaRgRvBGyye5hnhkP77wsItFZ8m8PvGy4NG2kqiD5-ZclgkEqmlqYURx8p2TydcJbmij6WTn9aN8c2PNZImzIJby7PEGboo2xOfILnwvXhU2g7jjGbDvFCl9BnePnCkUgnlUfy7q9kcbV7M7_Sw8iZ4BoqPxppofqLwxbuWZ7w"/></div><div class="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/80 to-navy-950/50 pointer-events-none"></div><div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10"><div class="inline-flex items-center gap-2 mb-4"><span class="w-7 h-[2px] bg-teal-400 inline-block"></span><span class="text-xs font-bold uppercase tracking-wider text-teal-400">REGULATORY SCOPING</span><span class="w-7 h-[2px] bg-teal-400 inline-block"></span></div><h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight max-w-3xl mx-auto leading-tight mb-4">Ready to establish or regularise <br/><span class="gradient-teal-blue-text">your legal standing?</span></h2><p class="mt-4 text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">Book a 20-minute strategic consultation with a corporate compliance specialist to review your entity structure, statutory filings, and tax standing.</p><div class="mt-8 flex flex-wrap items-center justify-center gap-4"><a class="gradient-teal-blue text-white text-sm font-semibold px-7 py-3.5 rounded-lg hover:brightness-105 active:scale-[0.98] transition-all flex items-center gap-2 shadow-lg shadow-teal-950/60" href="#guided-router"><span>Schedule Regulatory Scoping →</span></a><a class="bg-navy-900/90 border border-slate-700/80 hover:border-slate-500 text-white text-sm font-semibold px-6 py-3.5 rounded-lg transition-all flex items-center gap-2.5 backdrop-blur-sm" href="https://wa.me/237600000000" rel="noopener noreferrer" target="_blank"><svg class="w-4 h-4 text-teal-400 fill-current" viewbox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"></path></svg><span>WhatsApp Legal Desk</span></a></div></div></section>
+<!-- END: FinalCTASection -->
+</main>
+<!-- BEGIN: GlobalFooter (SCREEN_4 Alignment) -->
+<footer class="bg-navy-950 text-slate-400 border-t border-slate-800/80 pt-16 pb-12" data-purpose="global-footer">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<!-- Top Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-14 border-b border-slate-800/80">
+<!-- Col 1: Brand & Contact -->
+<div class="lg:col-span-4 space-y-4">
+<a class="flex items-center gap-3 group" href="#">
+<div class="w-9 h-9 rounded-xl border border-teal-400/40 flex items-center justify-center bg-navy-900 text-teal-400 shadow-sm">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 19V5m0 0l-4 4m4-4l4 4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="flex flex-col">
+<span class="text-white font-extrabold text-sm tracking-wider uppercase leading-none">UPTECH</span>
+<span class="text-[8px] font-semibold text-teal-400 tracking-wider uppercase mt-1">CONSULTING &amp; OUTSOURCING</span>
+</div>
+</a>
+<p class="text-xs text-slate-400 leading-relaxed pr-6">
+    A technology-driven consulting, outsourcing and business support organisation bridging the gap between strategy and execution.
+  </p>
+<div class="space-y-2 pt-2 text-xs">
+<p class="flex items-center gap-2">
+<svg class="w-3.5 h-3.5 text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>infos@uptechconsulting.com</span>
+</p>
+<p class="flex items-center gap-2">
+<svg class="w-3.5 h-3.5 text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>uptechconsulting.com</span>
+</p>
+<p class="flex items-center gap-2">
+<svg class="w-3.5 h-3.5 text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Buea, Cameroon · Texas, USA</span>
+</p>
+</div>
+</div>
+<!-- Col 2: Company -->
+<div class="lg:col-span-2">
+<h4 class="text-xs font-bold tracking-wider uppercase text-white mb-4">COMPANY</h4>
+<ul class="space-y-2.5 text-xs">
+<li><a class="hover:text-white transition-colors" href="#">Who We Are</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Our Philosophy</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Core Values</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Careers</a></li>
+</ul>
+</div>
+<!-- Col 3: Services -->
+<div class="lg:col-span-3">
+<h4 class="text-xs font-bold tracking-wider uppercase text-white mb-4">SERVICES</h4>
+<ul class="space-y-2.5 text-xs"><li><a class="hover:text-white transition-colors" href="#">IT Consulting &amp; Outsourcing</a></li><li><a class="text-teal-400 font-semibold" href="#">Business Formalisation &amp; Compliance</a></li><li><a class="hover:text-white transition-colors" href="#">Recruitment &amp; BPO</a></li><li><a class="hover:text-white transition-colors" href="#">Career &amp; Profile Marketing</a></li><li><a class="hover:text-white transition-colors" href="#">General Contracts &amp; Supplies</a></li></ul>
+</div>
+<!-- Col 4: Engage Us -->
+<div class="lg:col-span-3">
+<h4 class="text-xs font-bold tracking-wider uppercase text-white mb-4">ENGAGE US</h4>
+<ul class="space-y-2.5 text-xs">
+<li><a class="hover:text-white transition-colors" href="#start-campaign">Book a Consultation</a></li>
+<li><a class="hover:text-white transition-colors" href="#">For Individuals</a></li>
+<li><a class="hover:text-white transition-colors" href="#">For Businesses</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Partnerships</a></li>
+</ul>
+</div>
+</div>
+<!-- Bottom Bar -->
+<div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+<p>© 2026 Uptech Consulting &amp; Outsourcing. Cameroon S.A. · USA S-Corp. All rights reserved.</p>
+<div class="flex items-center gap-6">
+<span class="text-slate-400">English &amp; Français</span>
+<div class="flex items-center gap-4 text-slate-400">
+<a aria-label="LinkedIn" class="hover:text-teal-400 transition-colors" href="#">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.738-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg>
+</a>
+<a aria-label="Facebook" class="hover:text-teal-400 transition-colors" href="#">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.667 5H18V0h-3.808C10.597 0 9 1.582 9 4.615V8z"></path></svg>
+</a>
+<a aria-label="TikTok" class="hover:text-teal-400 transition-colors" href="#">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-1.01v8.83c0 1.25-.26 2.5-.81 3.61-.92 1.83-2.6 3.19-4.57 3.69-1.04.26-2.13.3-3.19.12-2.18-.37-4.08-1.7-5.1-3.66-.54-1.04-.8-2.2-.77-3.37.03-1.67.65-3.28 1.77-4.52 1.26-1.4 3.09-2.22 4.96-2.29v4.06c-.63.07-1.25.29-1.76.69-.64.51-1.03 1.28-1.06 2.09-.03.74.25 1.48.74 2.03.54.6 1.34.93 2.13.91.85-.02 1.65-.43 2.14-1.12.33-.48.49-1.06.49-1.64V.02h-.03z"></path></svg>
+</a>
+<a aria-label="X" class="hover:text-teal-400 transition-colors" href="#">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</div>
+</footer>
+<!-- END: GlobalFooter -->
+<script>
+  function toggleFaq(btn) {
+    var content = btn.nextElementSibling;
+    var icon = btn.querySelector('.material-symbols-outlined');
+    var isHidden = content.classList.contains('hidden');
+    
+    // Close other FAQs
+    var allItems = document.querySelectorAll('#career-faq > div');
+    allItems.forEach(function(item) {
+      var itemContent = item.querySelector('div');
+      var itemIcon = item.querySelector('button .material-symbols-outlined');
+      if (itemContent && itemContent !== content) {
+        itemContent.classList.add('hidden');
+        if (itemIcon) itemIcon.style.transform = 'rotate(0deg)';
+      }
+    });
+
+    if (isHidden) {
+      content.classList.remove('hidden');
+      if (icon) icon.style.transform = 'rotate(180deg)';
+    } else {
+      content.classList.add('hidden');
+      if (icon) icon.style.transform = 'rotate(0deg)';
+    }
+  }
+</script>
+</body></html>

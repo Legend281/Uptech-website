@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+/*
+ * Canonical design tokens — see CLAUDE.md Section 3.
+ * Color palette matches the approved Stitch mockups (navy + teal/cyan
+ * accent), NOT the original DESIGN.md hex table (superseded 2026-09-09).
+ * Typography, radius, and spacing already line up with Tailwind's
+ * defaults, so only fonts + colors need declaring here.
+ */
+@theme {
+  --font-sans: var(--font-plus-jakarta-sans), "Plus Jakarta Sans", sans-serif;
+  --font-body: var(--font-inter), "Inter", sans-serif;
+
+  --color-navy-950: #070e1b;
+  --color-navy-900: #0b1528;
+  --color-navy-850: #0f1d36;
+  --color-navy-800: #152544;
+  --color-navy-700: #1e335a;
+  --color-navy-600: #2d4b80;
+
+  --color-cyan-accent: #2dd4bf;
+  --color-blue-accent: #2563eb;
+
+  --color-uco-blue: #0066ff;
+  --color-uco-blue-hover: #0052cc;
+  --color-uco-cyan: #38bdf8;
+  --color-uco-green: #25d366;
+  --color-uco-green-hover: #1ebe5d;
+}
+
+body {
+  background-color: #f9fafc;
+  color: #1e293b;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-sans);
+  letter-spacing: -0.025em;
+}
+
+/* One consistent, brand-coloured focus ring for keyboard users. Mouse users
+   never see it; `:focus-visible` only fires for keyboard/AT navigation. */
+:focus-visible {
+  outline: 2px solid #2dd4bf;
+  outline-offset: 2px;
+}
+
+/* Hover lifts, image zooms and smooth scrolling are all comfort, not meaning —
+   drop them for anyone who has asked the OS to reduce motion. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@layer utilities {
+  .gradient-teal-blue {
+    background: linear-gradient(135deg, #00d2b4 0%, #0080ff 100%);
+  }
+
+  .gradient-teal-blue-text {
+    background: linear-gradient(135deg, #2dd4bf 0%, #38bdf8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .card-hover-shadow {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .card-hover-shadow:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 20px 40px -12px rgba(7, 14, 27, 0.12),
+      0 6px 16px -4px rgba(0, 0, 0, 0.05);
+  }
+
+  .frosted-glass {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+  }
+}

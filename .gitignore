@@ -31,3 +31,6 @@ next-env.d.ts
 # throwaway browser-verification scripts
 .verify-tmp*.mjs
 .debug-tmp*.mjs
+
+# verification builds (see distDir in next.config.mjs)
+/.next-verify/

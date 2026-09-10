@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -55,29 +56,17 @@ export function Header({
   return (
     <header className="sticky top-0 z-50 bg-navy-900/95 backdrop-blur-md border-b border-slate-800/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        {/* Brand */}
-        <Link href="/" className="flex items-center gap-3.5 group flex-shrink-0">
-          <div className="w-10 h-10 rounded-xl border border-teal-400/40 p-0.5 flex items-center justify-center bg-navy-950 shadow-inner group-hover:border-teal-400 transition-colors">
-            <div className="w-full h-full rounded-[10px] border border-teal-400/80 flex items-center justify-center text-teal-400">
-              <svg
-                className="w-5 h-5 transition-transform group-hover:scale-110 duration-200"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 19V5m0 0l-4 4m4-4l4 4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-white font-extrabold text-base tracking-wider uppercase leading-none">
-              UPTECH
-            </span>
-            <span className="text-[9px] font-semibold text-teal-400 tracking-[0.18em] uppercase mt-1">
-              CONSULTING &amp; OUTSOURCING
-            </span>
-          </div>
+        {/* Brand — the supplied lockup already contains the wordmark and
+            "Consulting & Outsourcing" strapline, so no text accompanies it. */}
+        <Link href="/" className="flex flex-shrink-0 items-center">
+          <Image
+            src="/UPTECH_LOG.png"
+            alt="Uptech Consulting & Outsourcing"
+            width={572}
+            height={233}
+            priority
+            className="h-12 w-auto sm:h-14"
+          />
         </Link>
 
         {/* Center nav (desktop) */}
@@ -292,9 +281,19 @@ export function Header({
         </div>
       </div>
 
-      {/* Mobile menu panel */}
-      {mobileOpen && (
-        <div className="lg:hidden border-t border-slate-800/80 bg-navy-950/98 backdrop-blur-xl px-4 py-5 space-y-5 max-h-[calc(100vh-5rem)] overflow-y-auto">
+      {/* Mobile menu panel. Kept mounted and collapsed with a grid-rows
+          transition so it opens and closes instead of teleporting; `inert`
+          keeps the collapsed links out of the tab order. */}
+      <div
+        inert={!mobileOpen}
+        className={`grid overflow-hidden border-slate-800/80 bg-navy-950/98 backdrop-blur-xl transition-[grid-template-rows,opacity] duration-[250ms] ease-out lg:hidden ${
+          mobileOpen
+            ? "grid-rows-[1fr] border-t opacity-100"
+            : "grid-rows-[0fr] opacity-0"
+        }`}
+      >
+        <div className="min-h-0">
+          <div className="max-h-[calc(100vh-5rem)] space-y-5 overflow-y-auto px-4 py-5">
           <div>
             <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">
               Services
@@ -354,8 +353,9 @@ export function Header({
               {ctaLabel}
             </Link>
           </div>
+          </div>
         </div>
-      )}
+      </div>
     </header>
   );
 }

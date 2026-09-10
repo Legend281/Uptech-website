@@ -61,6 +61,19 @@ const securityHeaders = [
 ];
 
 const nextConfig = {
+  /*
+   * `next build` and `next dev` write incompatible output to the same folder.
+   * Running a build while a dev server is up leaves the dev bundler resolving
+   * chunks against production artifacts, which fails as
+   * "Cannot find module './331.js'" and takes the whole site down until
+   * `.next` is deleted.
+   *
+   * Defaults to `.next`, so production is unaffected. Set NEXT_DIST_DIR to
+   * verify a build without disturbing a running dev server:
+   *   NEXT_DIST_DIR=.next-verify npm run build
+   */
+  distDir: process.env.NEXT_DIST_DIR || ".next",
+
   // An unrelated package-lock.json in the user's home directory otherwise
   // makes Next.js misdetect the workspace root.
   outputFileTracingRoot: projectRoot,

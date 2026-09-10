@@ -5,12 +5,13 @@ import {
   ArrowRight,
   ArrowUpRight,
   Check,
-  ChevronRight,
+  FileCheck2,
   Heart,
   Lightbulb,
   Lock,
   PenLine,
   Plus,
+  Quote,
   Zap,
 } from "lucide-react";
 
@@ -18,6 +19,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 import { TrustStrip, type TrustStripItem } from "@/components/TrustStrip";
+import { FaqAccordion } from "@/components/FaqAccordion";
+import { BridgeSection } from "@/components/home/BridgeSection";
 import { images } from "@/lib/images";
 
 export const metadata: Metadata = {
@@ -32,30 +35,10 @@ export const metadata: Metadata = {
 const WHATSAPP = "https://wa.me/237670000000";
 
 const trustItems: TrustStripItem[] = [
-  {
-    icon: "apartment",
-    title: "Cameroon S.A.",
-    badgeText: "Buea, Cameroon",
-    badgeAccent: "teal",
-  },
-  {
-    icon: "public",
-    title: "USA S-Corp",
-    badgeText: "Texas, United States",
-    badgeAccent: "sky",
-  },
-  {
-    icon: "verified_user",
-    title: "Compliance-first",
-    badgeText: "Documented delivery",
-    badgeAccent: "emerald",
-  },
-  {
-    icon: "translate",
-    title: "Bilingual",
-    badgeText: "English & Français",
-    badgeAccent: "sky",
-  },
+  { icon: "apartment", title: "Cameroon S.A.", badgeText: "Buea, Cameroon", badgeAccent: "teal" },
+  { icon: "public", title: "USA S-Corp", badgeText: "Stafford, Texas", badgeAccent: "sky" },
+  { icon: "verified_user", title: "Compliance-first", badgeText: "Documented delivery", badgeAccent: "emerald" },
+  { icon: "translate", title: "Bilingual", badgeText: "English & Français", badgeAccent: "sky" },
 ];
 
 const startingPoints = [
@@ -84,12 +67,10 @@ const startingPoints = [
 ];
 
 /*
- * The mockup shows five pillars, two of which CLAUDE.md Section 9 says must
- * not appear anywhere in the real nav or content yet: Recruitment & BPO is
- * paused pending a leadership session, and General Contracts & Supplies has no
- * page or content in the spec at all. The mockup also labels pillar 04
- * "Career & Profile Marketing", which Section 6.1 marks as a mockup error —
- * the canonical name is "Career Marketing & Placement".
+ * The mockup shows five pillars. CLAUDE.md Section 9 bars two of them from the
+ * real nav and content: Recruitment & BPO is paused, and General Contracts &
+ * Supplies is not being pushed. The mockup also labels pillar 04 "Career &
+ * Profile Marketing", which Section 6.2 marks as a mockup error.
  */
 const pillars = [
   {
@@ -111,7 +92,7 @@ const pillars = [
     title: "Career Marketing & Placement",
     href: "/services/career-marketing-placement",
     description:
-      "Positioning, market-facing documents and structured placement support for individual professionals seeking their next role.",
+      "Positioning, market-facing documents and structured placement support for IT professionals seeking their next role.",
   },
 ];
 
@@ -133,91 +114,91 @@ const process = [
   },
 ];
 
+// Roles, not numbers — these four are parallel, not a sequence, so they get no
+// index markers and no card chrome.
 const values = [
   {
     icon: Zap,
-    label: "01 / How we behave",
+    role: "How we behave",
     title: "Integrity",
-    body: "Honest, ethical and transparent dealings. No shortcuts or opaque reporting.",
+    body: "We act honestly, ethically and transparently in all our dealings. Dishonesty, system bypasses or opaque reporting breach this outright.",
   },
   {
     icon: PenLine,
-    label: "02 / The standard we maintain",
+    role: "The standard we maintain",
     title: "Professionalism",
-    body: "Competence and accountability in every client deliverable.",
+    body: "Competence, accountability and service excellence. Every deliverable passed to a client carries the mark of professional precision.",
   },
   {
     icon: Heart,
-    label: "03 / How we serve",
+    role: "How we serve",
     title: "Commitment",
-    body: "Dedicated to real value and the best outcome for every stakeholder.",
+    body: "Dedicated to delivering value and achieving the best outcomes for our clients and stakeholders.",
   },
   {
     icon: Lightbulb,
-    label: "04 / How we improve",
+    role: "How we solve problems and improve",
     title: "Innovation",
-    body: "Technology, creativity and continuous improvement in how we work.",
+    body: "Technology, creativity and continuous improvement. We do not work blindly — we optimise our tools to build resilient operating systems.",
   },
 ];
 
-/*
- * The mockup fills this section with invented case metrics — "98.4% on-time
- * handover", "140+ cross-border files", "+68% base increase" and so on.
- * CLAUDE.md Section 6.2 rules those out explicitly, so the card *structure*
- * is ported and the numbers are left as visibly-pending slots.
- */
-const caseSlots = [
+const handover = [
+  "A written scope naming owners, deadlines and the standard being worked to",
+  "Transparent progress reporting for as long as the engagement runs",
+  "Original certificates, filings and clearances collected and handed to you",
+  "Systems and documentation your own team can keep running afterwards",
+];
+
+// Verifiable, specific, and impossible to mistake for filler — these are the
+// registries and authorities the compliance work actually runs through.
+const systems = [
+  { code: "RCCM", label: "Trade & Personal Property Credit Register" },
+  { code: "OHADA", label: "Uniform Acts on commercial companies" },
+  { code: "DGI", label: "Directorate General of Taxation" },
+  { code: "CNPS", label: "National Social Insurance Fund" },
+  { code: "IRS", label: "US federal tax administration" },
+];
+
+const faqItems = [
   {
-    kind: "Placement",
-    audience: "Executive Individual",
-    title: "Career placement engagement",
-    body: "Positioning, market-facing documents and structured employer follow-up run against agreed milestones.",
-    artifacts: ["CV & profile dossier", "Recruiter follow-up log", "Offer review"],
+    question: "How do you charge?",
+    answer:
+      "Engagements are scoped before they are quoted. We map your situation during the consultation, tell you plainly whether we are the right partner, and price the work from there. Contact us for a quote rather than a package rate.",
   },
   {
-    kind: "Compliance",
-    audience: "Business / Institution",
-    title: "Cross-border corporate structuring",
-    body: "Corporate legalisation, tax and social insurance compliance and ministerial approvals assembled into one auditable record.",
-    artifacts: ["RCCM Cameroon", "IRS EIN", "Ministry licensing"],
+    question: "Do I have to travel to register a business?",
+    answer:
+      "For a US LLC or C-Corp, no — non-US residents can form and own one without a US visa, Social Security Number or American address, though the entity itself needs a registered agent with a physical in-state address. For Cameroon formalisation, [PENDING: confirm which steps require the founder in person with Uptech Consulting].",
   },
   {
-    kind: "Managed service",
-    audience: "Business / Institution",
-    title: "Managed support & payroll operations",
-    body: "A support function staffed and governed to documented standards, with transparent reporting to the client's own team.",
-    artifacts: ["Tier-1 support desk", "Payroll operations", "Incident audit log"],
+    question: "Can you handle both the registration and the filings that follow it?",
+    answer:
+      "Yes. Formalisation, tax standing, social insurance and licensing run as one accountable process rather than separate errands — registration hands straight over to the ongoing filing calendar.",
+  },
+  {
+    question: "Is career placement only for IT roles?",
+    answer:
+      "Career Marketing & Placement sits inside the IT Consulting practice and is scoped to IT and technology roles specifically — that is where the recruiter relationships and market knowledge are. If your background sits outside IT, ask us before committing to anything.",
+  },
+  {
+    question: "Do you work in French as well as English?",
+    answer:
+      "Yes. Uptech Consulting operates bilingually in English and Français, which matters for Cameroonian regulatory work where official filings and correspondence are frequently in French.",
+  },
+  {
+    question: "How quickly can you start?",
+    answer:
+      "[PENDING: confirm current onboarding lead time with Uptech Consulting]. The first step is always a consultation, which is where scope and sequencing get set.",
   },
 ];
 
-const careerAreas = [
-  "IT & data roles",
-  "Compliance & formalisation",
-  "Recruitment & payroll",
-  "Client support & BPO",
-];
-
-function Eyebrow({
-  children,
-  tone = "light",
-}: {
-  children: React.ReactNode;
-  tone?: "light" | "dark";
-}) {
+/** Used sparingly — only where the label carries real navigational meaning. */
+function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mb-3 inline-flex items-center gap-2">
-      <span
-        className={`inline-block h-[2px] w-7 ${
-          tone === "dark" ? "bg-teal-400" : "bg-teal-500"
-        }`}
-      />
-      <span
-        className={`text-xs font-bold uppercase tracking-wider ${
-          tone === "dark" ? "text-teal-400" : "text-sky-600"
-        }`}
-      >
-        {children}
-      </span>
+    <div className="mb-4 flex items-center gap-2.5">
+      <span className="inline-block h-[2px] w-6 bg-teal-500" />
+      <span className="text-sm font-semibold text-sky-700">{children}</span>
     </div>
   );
 }
@@ -239,7 +220,7 @@ export default function HomePage() {
               sizes="100vw"
               placeholder="blur"
               blurDataURL={images["cross-border-boardroom"].blurDataURL}
-              className="object-cover object-right opacity-70 lg:opacity-80"
+              className="hero-settle object-cover object-right opacity-70 lg:opacity-80"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/70 to-navy-950/20" />
           </div>
@@ -279,7 +260,7 @@ export default function HomePage() {
                   href={WHATSAPP}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 rounded-lg border border-slate-700/80 bg-navy-950/80 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:border-slate-500"
+                  className="flex items-center gap-2.5 rounded-lg border border-slate-700/80 bg-navy-950/80 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:border-slate-500 active:scale-[0.98]"
                 >
                   <WhatsAppIcon className="h-4 w-4 text-teal-400" />
                   <span>Chat on WhatsApp</span>
@@ -320,7 +301,6 @@ export default function HomePage() {
               </div>
 
               <div className="lg:col-span-6">
-                <Eyebrow>Who we are</Eyebrow>
                 <h2 className="mb-6 text-3xl font-extrabold leading-tight tracking-tight text-navy-950 sm:text-4xl">
                   Built for the part everyone else calls
                   &ldquo;implementation&rdquo;.
@@ -336,7 +316,7 @@ export default function HomePage() {
                   people, systems and technology work together.
                 </p>
 
-                <dl className="mb-8 divide-y divide-slate-200/80 rounded-xl border border-slate-200/90 bg-slate-50/80 p-5 shadow-xs">
+                <dl className="mb-8 divide-y divide-slate-200/80 rounded-xl border border-slate-200/90 bg-slate-50/80 p-5">
                   <div className="flex flex-col gap-2 py-3.5 first:pt-1 sm:flex-row sm:items-baseline sm:gap-5">
                     <dt className="inline-flex w-fit flex-shrink-0 items-center rounded-md bg-navy-900 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-teal-400">
                       Our Vision
@@ -351,8 +331,11 @@ export default function HomePage() {
                       Our Mission
                     </dt>
                     <dd className="text-sm leading-relaxed text-slate-700">
-                      To simplify operations, strengthen capacity and enable
-                      sustainable growth.
+                      To empower businesses, institutions and individuals by
+                      delivering technology, workforce, compliance, career
+                      development and business support solutions that simplify
+                      operations, strengthen capacity and drive sustainable
+                      growth.
                     </dd>
                   </div>
                 </dl>
@@ -374,13 +357,13 @@ export default function HomePage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
               <div>
-                <Eyebrow>Where do you start?</Eyebrow>
+                <SectionLabel>Where do you start?</SectionLabel>
                 <h2 className="text-3xl font-extrabold tracking-tight text-navy-950 sm:text-4xl">
                   Different needs. One standard
                   <br className="hidden sm:inline" /> of delivery.
                 </h2>
               </div>
-              <p className="max-w-sm text-xs text-slate-500 sm:text-sm">
+              <p className="max-w-sm text-sm text-slate-500">
                 Choose the path that fits your situation. We will define the
                 right scope during consultation.
               </p>
@@ -403,7 +386,7 @@ export default function HomePage() {
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-navy-950/60 via-transparent to-transparent" />
-                    <div className="absolute bottom-4 left-4 flex items-center gap-1.5 rounded-lg border border-white/10 bg-navy-950/85 px-3.5 py-1.5 text-xs font-bold tracking-wide text-white shadow-sm backdrop-blur-md">
+                    <div className="absolute bottom-4 left-4 flex items-center gap-1.5 rounded-full border border-white/10 bg-navy-950/85 px-3.5 py-1.5 text-xs font-bold tracking-wide text-white shadow-sm backdrop-blur-md">
                       <span className={`h-2 w-2 rounded-full ${card.dot}`} />
                       {card.audience}
                     </div>
@@ -416,15 +399,9 @@ export default function HomePage() {
                       </h3>
                       <ul className="mb-8 space-y-4">
                         {card.points.map((point) => (
-                          <li
-                            key={point}
-                            className="flex items-start gap-3.5 text-sm text-slate-700"
-                          >
+                          <li key={point} className="flex items-start gap-3.5 text-sm text-slate-700">
                             <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-teal-200/70 bg-teal-50">
-                              <Check
-                                className="h-3.5 w-3.5 text-teal-600"
-                                strokeWidth={2.5}
-                              />
+                              <Check className="h-3.5 w-3.5 text-teal-600" strokeWidth={2.5} />
                             </span>
                             <span className="leading-relaxed">{point}</span>
                           </li>
@@ -451,7 +428,6 @@ export default function HomePage() {
             <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
               <div className="lg:col-span-5">
                 <div className="lg:sticky lg:top-28">
-                  <Eyebrow>What we do</Eyebrow>
                   <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-navy-950 sm:text-4xl">
                     Three pillars. Advisory, execution, or both.
                   </h2>
@@ -506,7 +482,7 @@ export default function HomePage() {
                         </p>
                         <span className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-blue-accent">
                           Discuss this service
-                          <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} />
+                          <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" strokeWidth={2} />
                         </span>
                       </div>
                     </div>
@@ -517,44 +493,72 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ---------------- How We Work ---------------- */}
-        <section className="relative overflow-hidden bg-navy-900 py-24 text-white">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#38BDF8_1px,transparent_1px)] opacity-15 [background-size:24px_24px]" />
-          <div className="pointer-events-none absolute -right-40 -top-40 h-96 w-96 rounded-full bg-teal-500/10 blur-3xl" />
+        {/* ---------------- Meet your dedicated person ---------------- */}
+        <section className="border-y border-slate-200/80 bg-navy-950 py-24 text-white">
+          <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+            <Quote className="mx-auto mb-8 h-9 w-9 text-teal-400" strokeWidth={1.5} />
+            <blockquote className="text-2xl font-extrabold leading-[1.3] tracking-tight text-white sm:text-3xl lg:text-4xl">
+              We dedicate a full-time worker to your account whose job is to make
+              sure you never miss a relevant posting, and{" "}
+              <span className="gradient-teal-blue-text">
+                follow up with recruiters until you are placed.
+              </span>
+            </blockquote>
+            <p className="mx-auto mt-8 max-w-xl text-sm leading-relaxed text-slate-400">
+              Not a shared inbox and not an automated alert. A named person
+              carries your file — the same principle that runs through every
+              compliance engagement we take on.
+            </p>
+            <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
+              <Link
+                href="/services/career-marketing-placement"
+                className="gradient-teal-blue inline-flex items-center gap-2 rounded-lg px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-teal-950/50 transition-all hover:brightness-105 active:scale-[0.98]"
+              >
+                Start your career campaign
+                <ArrowRight className="h-4 w-4" strokeWidth={2} />
+              </Link>
+            </div>
+          </div>
+        </section>
 
+        {/* ---------------- How We Work ---------------- */}
+        <section className="relative overflow-hidden bg-white py-24">
           <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:gap-16">
               <div className="lg:col-span-5">
-                <Eyebrow tone="dark">How we work</Eyebrow>
-                <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                <SectionLabel>How we work</SectionLabel>
+                <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-navy-950 sm:text-4xl">
                   Documented systems, not individual heroics.
                 </h2>
-                <p className="mb-8 text-sm leading-relaxed text-slate-300 sm:text-base">
+                <p className="mb-8 text-sm leading-relaxed text-slate-600 sm:text-base">
                   A clear operating rhythm keeps every engagement accountable.
                 </p>
                 <Link
                   href="/contact"
-                  className="gradient-teal-blue inline-flex items-center gap-2 rounded-lg px-6 py-3.5 text-sm font-semibold text-white shadow-md shadow-teal-950/50 transition-all hover:brightness-105 active:scale-[0.98]"
+                  className="gradient-teal-blue inline-flex items-center gap-2 rounded-lg px-6 py-3.5 text-sm font-semibold text-white shadow-md shadow-teal-950/30 transition-all hover:brightness-105 active:scale-[0.98]"
                 >
                   <span>Plan your engagement</span>
                   <ArrowRight className="h-4 w-4" strokeWidth={2} />
                 </Link>
               </div>
 
-              <ol className="space-y-4 lg:col-span-7">
+              {/* A genuine sequence, so it is drawn as one — a connected spine
+                  rather than three detached cards. */}
+              <ol className="relative lg:col-span-7">
+                <span
+                  aria-hidden="true"
+                  className="absolute bottom-6 left-[18px] top-6 w-px bg-gradient-to-b from-teal-400/60 via-slate-300 to-slate-200"
+                />
                 {process.map((step) => (
-                  <li
-                    key={step.number}
-                    className="flex items-start gap-5 rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm transition-colors hover:bg-white/[0.08] sm:p-7"
-                  >
-                    <span className="inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-teal-400/30 bg-teal-400/10 text-xs font-bold text-teal-400">
+                  <li key={step.number} className="relative flex gap-6 pb-10 last:pb-0">
+                    <span className="relative z-10 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-xs font-bold text-navy-900 shadow-sm">
                       {step.number}
                     </span>
-                    <div>
-                      <h3 className="mb-1.5 text-base font-bold text-white sm:text-lg">
+                    <div className="pt-1">
+                      <h3 className="mb-1.5 text-lg font-bold text-navy-950">
                         {step.title}
                       </h3>
-                      <p className="text-xs leading-relaxed text-slate-300 sm:text-sm">
+                      <p className="text-sm leading-relaxed text-slate-600">
                         {step.body}
                       </p>
                     </div>
@@ -566,214 +570,136 @@ export default function HomePage() {
         </section>
 
         {/* ---------------- What We Stand On ---------------- */}
-        <section className="border-b border-slate-200/80 bg-slate-100/70 py-24">
+        <section className="border-y border-slate-200/80 bg-slate-100/70 py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-14">
-              <Eyebrow>What we stand on</Eyebrow>
-              <h2 className="text-3xl font-extrabold tracking-tight text-navy-950 sm:text-4xl">
-                The standard holds—even when it is inconvenient.
-              </h2>
-            </div>
+            <h2 className="mb-14 max-w-2xl text-3xl font-extrabold tracking-tight text-navy-950 sm:text-4xl">
+              The standard holds—even when it is inconvenient.
+            </h2>
 
-            <div className="mb-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {values.map((value) => {
+            {/* No cards, no icon chips, no index numbers: four parallel values
+                separated by hairlines. */}
+            <div className="grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-0">
+              {values.map((value, index) => {
                 const Icon = value.icon;
                 return (
                   <div
                     key={value.title}
-                    className="card-hover-shadow rounded-2xl border border-slate-200/90 bg-white p-7"
+                    className={`lg:px-8 ${index === 0 ? "lg:pl-0" : ""} ${
+                      index > 0 ? "lg:border-l lg:border-slate-300/70" : ""
+                    } ${index === values.length - 1 ? "lg:pr-0" : ""}`}
                   >
-                    <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl border border-slate-700/60 bg-slate-900 text-teal-400 shadow-md shadow-slate-950/10">
-                      <Icon className="h-6 w-6" strokeWidth={1.8} />
-                    </div>
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                      {value.label}
-                    </span>
-                    <h3 className="mb-2 mt-2 text-lg font-bold text-navy-950">
+                    <Icon className="mb-5 h-6 w-6 text-teal-600" strokeWidth={1.6} />
+                    <p className="mb-1.5 text-xs font-medium text-slate-500">
+                      {value.role}
+                    </p>
+                    <h3 className="mb-3 text-2xl font-extrabold tracking-tight text-navy-950">
                       {value.title}
                     </h3>
-                    <p className="text-xs leading-relaxed text-slate-600 sm:text-sm">
+                    <p className="text-sm leading-relaxed text-slate-600">
                       {value.body}
                     </p>
                   </div>
                 );
               })}
             </div>
-
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-5 py-3 text-xs font-bold text-navy-950 shadow-sm transition-all hover:bg-slate-50 hover:shadow"
-            >
-              <span>Work with our team</span>
-              <ChevronRight className="h-3.5 w-3.5 text-slate-600" strokeWidth={2} />
-            </Link>
           </div>
         </section>
+
+        <BridgeSection />
 
         {/* ---------------- Real Results ---------------- */}
         <section className="bg-white py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-16 max-w-2xl">
-              <Eyebrow>Real results</Eyebrow>
+            <div className="mb-14 max-w-2xl">
               <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-navy-950 sm:text-4xl">
                 What a completed engagement looks like.
               </h2>
               <p className="text-sm leading-relaxed text-slate-600 sm:text-base">
-                Approved references and verified engagement files from across
-                Cameroon and the United States.
+                Every engagement ends the same way: you hold the documents, and
+                you know what happens next.
               </p>
             </div>
 
-            <div className="mb-10 grid grid-cols-1 gap-8 lg:grid-cols-3">
-              {caseSlots.map((slot) => (
-                <div
-                  key={slot.title}
-                  className="card-hover-shadow flex flex-col justify-between overflow-hidden rounded-2xl border border-dashed border-amber-400/80 bg-white shadow-sm"
-                >
-                  <div className="border-b border-slate-100 p-7">
-                    <div className="mb-4 flex items-center justify-between gap-2">
-                      <span className="inline-flex items-center gap-1.5 rounded-md border border-teal-200/70 bg-teal-50 px-2.5 py-1 text-[10px] font-bold uppercase text-teal-600">
-                        <span className="h-1.5 w-1.5 rounded-full bg-teal-500" />
-                        {slot.kind}
+            <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-14">
+              <div className="lg:col-span-7">
+                <h3 className="mb-6 text-lg font-bold text-navy-950">
+                  What you are holding at handover
+                </h3>
+                <ul className="space-y-5">
+                  {handover.map((item) => (
+                    <li key={item} className="flex items-start gap-4">
+                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-teal-200/70 bg-teal-50">
+                        <FileCheck2 className="h-3 w-3 text-teal-600" strokeWidth={2.4} />
                       </span>
-                      <span className="rounded border border-amber-300 bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-800">
-                        Pending
+                      <span className="text-sm leading-relaxed text-slate-700">
+                        {item}
                       </span>
-                    </div>
+                    </li>
+                  ))}
+                </ul>
 
-                    <h3 className="mb-2 text-lg font-bold leading-snug text-navy-950">
-                      {slot.title}
-                    </h3>
-                    <p className="mb-6 text-xs leading-relaxed text-slate-500">
-                      {slot.body}
-                    </p>
-
-                    <div className="mb-6 rounded-xl border border-dashed border-amber-300 bg-amber-50/60 p-4">
-                      <div className="mb-2 text-[10px] font-bold uppercase tracking-wider text-amber-700">
-                        Outcome metrics
-                      </div>
-                      <p className="text-xs leading-relaxed text-amber-800">
-                        [PENDING: real figures and an approved client reference
-                        from UCO. Nothing has been estimated to fill this
-                        space.]
-                      </p>
-                    </div>
-
-                    <div>
-                      <div className="mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                        Delivered artifacts
-                      </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {slot.artifacts.map((artifact) => (
-                          <span
-                            key={artifact}
-                            className="rounded bg-slate-100 px-2 py-1 text-[11px] font-medium text-slate-700"
-                          >
-                            {artifact}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between bg-slate-50/50 p-5">
-                    <span className="text-xs font-medium text-slate-400">
-                      {slot.audience}
-                    </span>
-                    <Link
-                      href="/contact"
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-accent transition-colors hover:text-blue-700"
-                    >
-                      <span>Request a briefing</span>
-                      <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} />
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex flex-col items-start justify-between gap-4 rounded-xl border border-slate-800 bg-navy-950 p-4 text-white sm:flex-row sm:items-center sm:p-5">
-              <div className="flex items-center gap-3">
-                <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/10 text-teal-400">
-                  <Lock className="h-4 w-4" strokeWidth={2} />
-                </span>
-                <div>
-                  <span className="block text-xs font-bold leading-snug text-white">
-                    Confidentiality &amp; Client NDA Protocol
-                  </span>
-                  <span className="text-[11px] leading-tight text-slate-400">
-                    Case identifiers are anonymised. Full engagement binders and
-                    client references are reviewed under mutual NDA during
+                <div className="mt-9 flex items-start gap-3 rounded-xl border border-slate-200/80 bg-slate-50 p-5">
+                  <Lock className="mt-0.5 h-4 w-4 shrink-0 text-slate-500" strokeWidth={1.9} />
+                  <p className="text-xs leading-relaxed text-slate-600">
+                    <span className="font-bold text-slate-900">
+                      Confidentiality.
+                    </span>{" "}
+                    Client files are not published. Named references and full
+                    engagement records are reviewed under mutual NDA during
                     consultation.
-                  </span>
+                  </p>
                 </div>
               </div>
-              <Link
-                href="/contact"
-                className="inline-flex flex-shrink-0 items-center gap-2 text-xs font-semibold text-teal-400 transition-colors hover:text-teal-300"
-              >
-                <span>Book confidential briefing</span>
-                <ChevronRight className="h-3.5 w-3.5" strokeWidth={2} />
-              </Link>
+
+              <div className="lg:col-span-5">
+                <h3 className="mb-6 text-lg font-bold text-navy-950">
+                  The systems this work runs through
+                </h3>
+                <dl className="divide-y divide-slate-200/80 border-y border-slate-200/80">
+                  {systems.map((system) => (
+                    <div key={system.code} className="flex items-baseline gap-5 py-3.5">
+                      <dt className="w-16 shrink-0 text-sm font-extrabold tracking-tight text-navy-950">
+                        {system.code}
+                      </dt>
+                      <dd className="text-xs leading-relaxed text-slate-600">
+                        {system.label}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+
+                <div className="mt-8 rounded-xl border border-dashed border-slate-300 bg-slate-50/60 p-5">
+                  <div className="mb-2 flex items-center gap-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                      Client stories
+                    </span>
+                    <span className="rounded border border-slate-300 bg-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                      Pending
+                    </span>
+                  </div>
+                  <p className="text-xs leading-relaxed text-slate-500">
+                    Named references and outcome figures go here once Uptech
+                    Consulting supplies approved client stories. Nothing has been
+                    invented to fill this space.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* ---------------- Where We Operate ---------------- */}
-        <section className="relative overflow-hidden border-t border-slate-800 bg-navy-900 py-24 text-white">
-          <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-16 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-              <div>
-                <Eyebrow tone="dark">Where we operate</Eyebrow>
-                <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                  Two jurisdictions. One accountable structure.
-                </h2>
-              </div>
-              <p className="max-w-md text-xs text-slate-300 sm:text-sm">
-                Formalised entities on both sides of the Atlantic support
-                cross-border work inside a clear corporate structure.
-              </p>
-            </div>
-
-            <div className="mb-10 grid grid-cols-1 divide-y divide-slate-800 border-y border-slate-800 py-12 md:grid-cols-2 md:divide-x md:divide-y-0">
-              <div className="pb-8 md:pb-0 md:pr-12">
-                <div className="mb-3 flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-teal-400" />
-                  <span className="text-xs text-teal-400">Buea office</span>
-                </div>
-                <h3 className="mb-2 text-2xl font-extrabold text-white">
-                  Cameroon
-                </h3>
-                <p className="text-sm text-slate-400">
-                  Uptech Consulting &amp; Outsourcing Cameroon S.A.
-                </p>
-              </div>
-              <div className="pt-8 md:pl-12 md:pt-0">
-                <div className="mb-3 flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-teal-400" />
-                  <span className="text-xs text-teal-400">Texas office</span>
-                </div>
-                <h3 className="mb-2 text-2xl font-extrabold text-white">
-                  United States
-                </h3>
-                <p className="text-sm text-slate-400">
-                  Uptech Consulting &amp; Outsourcing USA S-Corp
-                </p>
-              </div>
-            </div>
-
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-navy-950/80 px-5 py-3 text-xs font-bold text-white shadow-sm transition-all hover:border-slate-500 hover:shadow"
-            >
-              <span>Discuss a cross-border need</span>
-              <ArrowRight className="h-3.5 w-3.5 text-slate-400" strokeWidth={2} />
-            </Link>
+        {/* ---------------- FAQ ---------------- */}
+        <section className="border-y border-slate-200/80 bg-slate-100/70 py-24">
+          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+            <h2 className="mb-12 text-3xl font-extrabold tracking-tight text-navy-950 sm:text-4xl">
+              Before you book anything.
+            </h2>
+            <FaqAccordion items={faqItems} />
           </div>
         </section>
 
-        {/* ---------------- Careers at Uptech ---------------- */}
-        <section id="careers" className="scroll-mt-24 bg-slate-50 py-24">
+        {/* ---------------- Careers ---------------- */}
+        <section id="careers" className="scroll-mt-24 bg-white py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
               <div className="lg:col-span-6">
@@ -792,7 +718,6 @@ export default function HomePage() {
               </div>
 
               <div className="lg:col-span-6">
-                <Eyebrow>Careers at Uptech</Eyebrow>
                 <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-navy-950 sm:text-4xl">
                   Work where the standard is written down.
                 </h2>
@@ -801,15 +726,10 @@ export default function HomePage() {
                   commitment and innovation to client-facing work.
                 </p>
 
-                <ul className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  {careerAreas.map((area) => (
-                    <li
-                      key={area}
-                      className="flex items-center gap-3 rounded-xl border border-slate-200/70 bg-white p-3 text-sm font-medium text-slate-700 shadow-xs"
-                    >
-                      <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-teal-200/70 bg-teal-50">
-                        <Check className="h-3 w-3 text-teal-600" strokeWidth={2.5} />
-                      </span>
+                <ul className="mb-8 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2">
+                  {["IT & data roles", "Compliance & formalisation", "Recruitment & payroll", "Client support & BPO"].map((area) => (
+                    <li key={area} className="flex items-center gap-3 border-b border-slate-200/80 pb-3 text-sm font-medium text-slate-700">
+                      <Check className="h-4 w-4 shrink-0 text-teal-600" strokeWidth={2.5} />
                       <span>{area}</span>
                     </li>
                   ))}
@@ -818,14 +738,14 @@ export default function HomePage() {
                 <div className="flex flex-wrap items-center gap-4">
                   <Link
                     href="/careers"
-                    className="flex items-center gap-2 rounded-lg bg-blue-accent px-6 py-3.5 text-xs font-bold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow"
+                    className="flex items-center gap-2 rounded-lg bg-blue-accent px-6 py-3.5 text-xs font-bold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow active:scale-[0.98]"
                   >
                     <span>Send your application</span>
                     <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} />
                   </Link>
                   <a
                     href="tel:+237670000000"
-                    className="rounded-lg border border-slate-300 bg-white px-6 py-3.5 text-xs font-bold text-slate-800 shadow-xs transition-all hover:border-slate-400"
+                    className="rounded-lg border border-slate-300 bg-white px-6 py-3.5 text-xs font-bold text-slate-800 transition-all hover:border-slate-400 active:scale-[0.98]"
                   >
                     Talk to our team
                   </a>
@@ -838,26 +758,20 @@ export default function HomePage() {
         {/* ---------------- Final CTA ---------------- */}
         <section
           id="consultation"
-          className="relative scroll-mt-24 overflow-hidden bg-navy-900 py-24 text-white"
+          className="relative scroll-mt-24 overflow-hidden bg-navy-900 py-28 text-white"
         >
           <div className="absolute inset-0 opacity-20 saturate-0">
-            <Image
-              src={images["ops-center"].src}
-              alt=""
-              fill
-              sizes="100vw"
-              className="object-cover"
-            />
+            <Image src={images["ops-center"].src} alt="" fill sizes="100vw" className="object-cover" />
           </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-950/40" />
 
           <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-center">
+            <div className="flex flex-col justify-between gap-10 lg:flex-row lg:items-center">
               <div className="max-w-2xl">
-                <Eyebrow tone="dark">Next step</Eyebrow>
-                <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                <h2 className="mb-5 text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
                   One focused conversation tells us what you actually need.
                 </h2>
-                <p className="text-sm leading-relaxed text-slate-300 sm:text-base">
+                <p className="text-base leading-relaxed text-slate-300">
                   We will map your situation, tell you plainly whether we are
                   the right partner, and scope the work from there.
                 </p>
@@ -875,7 +789,7 @@ export default function HomePage() {
                   href={WHATSAPP}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2.5 rounded-lg border border-slate-700 bg-navy-950/80 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:border-slate-500"
+                  className="flex items-center justify-center gap-2.5 rounded-lg border border-slate-700 bg-navy-950/80 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:border-slate-500 active:scale-[0.98]"
                 >
                   <WhatsAppIcon className="h-4 w-4 text-teal-400" />
                   <span>WhatsApp us</span>

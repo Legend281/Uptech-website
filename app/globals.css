@@ -162,3 +162,120 @@ h6 {
     border: 1px solid rgba(255, 255, 255, 0.09);
   }
 }
+
+/* ============================================================
+   Scroll reveal
+   ============================================================
+   Elements carry `data-reveal="<effect>"` and get `data-revealed="true"`
+   the first time they enter the viewport (see components/Reveal.tsx).
+
+   The hidden state lives entirely inside `prefers-reduced-motion:
+   no-preference`, so a reader who has asked for reduced motion never has
+   content hidden from them in the first place — there is no state to
+   recover from if the observer never fires.
+
+   Only opacity and transform are animated: both are compositor-only, so
+   nothing here triggers layout on the low-end phones CLAUDE.md Section 6.9
+   treats as the real target. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal="rise"],
+  [data-reveal="fade"] {
+    opacity: 0;
+    transition:
+      opacity 650ms var(--ease-out-expo) var(--reveal-delay, 0ms),
+      transform 650ms var(--ease-out-expo) var(--reveal-delay, 0ms);
+  }
+
+  [data-reveal="rise"] {
+    transform: translateY(24px);
+  }
+
+  [data-reveal="rise"][data-revealed="true"],
+  [data-reveal="fade"][data-revealed="true"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* The container holds still; its children arrive one after another. */
+  [data-reveal="stagger"] > * {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 600ms var(--ease-out-expo),
+      transform 600ms var(--ease-out-expo);
+  }
+
+  [data-reveal="stagger"][data-revealed="true"] > * {
+    opacity: 1;
+    transform: none;
+  }
+
+  [data-reveal="stagger"] > *:nth-child(1) { transition-delay: 0ms; }
+  [data-reveal="stagger"] > *:nth-child(2) { transition-delay: 90ms; }
+  [data-reveal="stagger"] > *:nth-child(3) { transition-delay: 180ms; }
+  [data-reveal="stagger"] > *:nth-child(4) { transition-delay: 270ms; }
+  [data-reveal="stagger"] > *:nth-child(5) { transition-delay: 360ms; }
+  [data-reveal="stagger"] > *:nth-child(6) { transition-delay: 450ms; }
+  [data-reveal="stagger"] > *:nth-child(n + 7) { transition-delay: 520ms; }
+
+  /* The philosophy beam draws across before the columns beneath it rise —
+     the load arrives, then the supports take it. */
+  .beam-draw {
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 950ms var(--ease-out-expo);
+  }
+
+  [data-revealed="true"] .beam-draw {
+    transform: scaleX(1);
+  }
+
+  /* The Who We Are spine draws downward section by section, so the line
+     builds as the reader descends instead of being there all along. */
+  .spine-draw::before {
+    transform: scaleY(0);
+  }
+
+  [data-revealed="true"].spine-draw::before {
+    transform: scaleY(1);
+  }
+
+  .spine-node {
+    opacity: 0;
+    transform: scale(0.4);
+    transition:
+      opacity 300ms ease-out 520ms,
+      transform 420ms var(--ease-out-expo) 460ms;
+  }
+
+  [data-revealed="true"] .spine-node {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* A page that needs JavaScript to become visible is a broken page. */
+@media (scripting: none) {
+  [data-reveal],
+  [data-reveal="stagger"] > *,
+  .spine-node {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* The spine rule itself, drawn as a pseudo-element so it can animate. The
+   border-left it replaces could not be scaled. */
+@media (min-width: 1024px) {
+  .spine-draw::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--spine-color, #e2e8f0);
+    transform-origin: top center;
+    transition: transform 900ms var(--ease-out-expo);
+  }
+}

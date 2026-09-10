@@ -9,7 +9,10 @@ const eslintConfig = [
     // Without these, `eslint .` walks build output and the Stitch reference
     // exports and reports thousands of problems in files nobody authors.
     ignores: [
-      ".next/**",
+      // Glob, not just `.next`: NEXT_DIST_DIR (see next.config.mjs) puts
+      // verification builds in `.next-verify`, and lint reported 477 errors
+      // from that output the first time one was left on disk.
+      ".next*/**",
       "out/**",
       "build/**",
       "next-env.d.ts",

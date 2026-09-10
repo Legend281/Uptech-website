@@ -115,6 +115,17 @@ export function Header({
                   Integrity, professionalism, commitment &amp; innovation
                 </span>
               </Link>
+              <Link
+                href="/who-we-are#mission-vision"
+                className="flex flex-col p-2.5 rounded-lg hover:bg-white/5 transition-colors group/item"
+              >
+                <span className="text-sm font-semibold text-white group-hover/item:text-teal-400 transition-colors">
+                  Mission &amp; Vision
+                </span>
+                <span className="text-xs text-slate-400 mt-0.5">
+                  What we are working toward, and how
+                </span>
+              </Link>
             </div>
           </div>
 

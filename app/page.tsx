@@ -21,6 +21,8 @@ import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 import { TrustStrip, type TrustStripItem } from "@/components/TrustStrip";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { BridgeSection } from "@/components/home/BridgeSection";
+import { Reveal } from "@/components/Reveal";
+import { RotatingPromise, type PromiseStatement } from "@/components/home/RotatingPromise";
 import { images } from "@/lib/images";
 
 export const metadata: Metadata = {
@@ -56,13 +58,58 @@ const startingPoints = [
   {
     audience: "For Businesses & Institutions",
     dot: "bg-blue-400",
-    image: images["compliance-advisory"],
+    image: images["it-advisory"],
     heading: "Strengthen operations without carrying every function.",
     points: [
       "IT, cloud, database and security support",
       "Licensing, accreditation and regulatory compliance",
       "Tax, payroll and managed business processes",
     ],
+  },
+];
+
+/*
+ * The statements that rotate through the dark band mid-page. Each is anchored
+ * to a real service line, and every sentence is either Uptech Consulting's own
+ * wording or copy already approved elsewhere on this page — nothing invented to
+ * fill a slot (CLAUDE.md Section 6.4).
+ *
+ * All four live service lines are represented. IT Consulting joined once its
+ * page shipped on the Development branch — it was held back while that CTA
+ * would have landed on a 404.
+ */
+const promises: PromiseStatement[] = [
+  {
+    lead: "We dedicate a full-time worker to your account whose job is to make sure you never miss a relevant posting, and",
+    emphasis: "follow up with recruiters until you are placed.",
+    support:
+      "Not a shared inbox and not an automated alert. A named person carries your file — the same principle that runs through every compliance engagement we take on.",
+    ctaLabel: "Start your career campaign",
+    ctaHref: "/services/career-marketing-placement",
+  },
+  {
+    lead: "Business legalisation, tax and social insurance compliance, ministry licensing and accreditation,",
+    emphasis: "managed as one accountable process.",
+    support:
+      "Every engagement ends the same way: you hold the documents, and you know what happens next.",
+    ctaLabel: "See how compliance runs",
+    ctaHref: "/services/business-formalisation-compliance",
+  },
+  {
+    lead: "Technology advisory and managed support across databases, cloud migration, help desk operations, AI compliance and",
+    emphasis: "cyber security.",
+    support:
+      "Engage us for the specialised guidance, outsource the function to our professionals, or use both together.",
+    ctaLabel: "Explore IT consulting",
+    ctaHref: "/services/it-consulting-outsourcing",
+  },
+  {
+    lead: "Individual effort only succeeds when it runs through the",
+    emphasis: "repeatable, documented systems the organisation has already built.",
+    support:
+      "A stated internal expectation, not a marketing line. It is the reason your outcome does not depend on which staff member happens to be available that week.",
+    ctaLabel: "How we operate",
+    ctaHref: "/who-we-are",
   },
 ];
 
@@ -213,14 +260,17 @@ export default function HomePage() {
         <section className="relative overflow-hidden bg-navy-900 pb-24 pt-12 lg:pb-36 lg:pt-20">
           <div className="absolute inset-0 z-0">
             <Image
-              src={images["cross-border-boardroom"].src}
+              src={images["compliance-advisory"].src}
               alt=""
               fill
               priority
               sizes="100vw"
               placeholder="blur"
-              blurDataURL={images["cross-border-boardroom"].blurDataURL}
-              className="hero-settle object-cover object-right opacity-70 lg:opacity-80"
+              blurDataURL={images["compliance-advisory"].blurDataURL}
+              /* People sit right of centre, clear of the headline on the left.
+                 Mobile crops tighter onto the adviser, since a narrow slice at
+                 the desktop anchor lands on empty table. */
+              className="hero-settle object-cover object-[76%_center] opacity-70 lg:object-[70%_center] lg:opacity-80"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/70 to-navy-950/20" />
           </div>
@@ -275,17 +325,17 @@ export default function HomePage() {
         {/* ---------------- Who We Are ---------------- */}
         <section className="relative bg-white py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
+            <Reveal effect="stagger" className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
               <div className="relative lg:col-span-6">
                 <div className="relative overflow-hidden rounded-2xl border border-slate-200/90 shadow-2xl ring-1 ring-black/5">
                   <Image
-                    src={images["it-advisory"].src}
-                    alt={images["it-advisory"].alt}
-                    width={images["it-advisory"].width}
-                    height={images["it-advisory"].height}
+                    src={images["ops-center"].src}
+                    alt={images["ops-center"].alt}
+                    width={images["ops-center"].width}
+                    height={images["ops-center"].height}
                     sizes="(min-width: 1024px) 50vw, 100vw"
                     placeholder="blur"
-                    blurDataURL={images["it-advisory"].blurDataURL}
+                    blurDataURL={images["ops-center"].blurDataURL}
                     className="h-[480px] w-full object-cover object-center sm:h-[560px]"
                   />
                   <div className="absolute inset-x-4 bottom-4 rounded-xl border-l-4 border-teal-400 bg-navy-950/90 p-6 text-white shadow-xl backdrop-blur-md sm:right-auto sm:max-w-sm sm:p-7">
@@ -348,7 +398,7 @@ export default function HomePage() {
                   <ArrowRight className="h-4 w-4" strokeWidth={2} />
                 </Link>
               </div>
-            </div>
+            </Reveal>
           </div>
         </section>
 
@@ -369,7 +419,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+            <Reveal effect="stagger" className="grid grid-cols-1 gap-8 md:grid-cols-2">
               {startingPoints.map((card) => (
                 <div
                   key={card.audience}
@@ -418,7 +468,7 @@ export default function HomePage() {
                   </div>
                 </div>
               ))}
-            </div>
+            </Reveal>
           </div>
         </section>
 
@@ -456,7 +506,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="divide-y divide-slate-200/80 lg:col-span-7">
+              <Reveal effect="stagger" className="divide-y divide-slate-200/80 lg:col-span-7">
                 {pillars.map((pillar) => (
                   <Link
                     key={pillar.number}
@@ -488,7 +538,7 @@ export default function HomePage() {
                     </div>
                   </Link>
                 ))}
-              </div>
+              </Reveal>
             </div>
           </div>
         </section>
@@ -496,35 +546,16 @@ export default function HomePage() {
         {/* ---------------- Meet your dedicated person ---------------- */}
         <section className="border-y border-slate-200/80 bg-navy-950 py-24 text-white">
           <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+            {/* The mark stays put while the statements change beneath it. */}
             <Quote className="mx-auto mb-8 h-9 w-9 text-teal-400" strokeWidth={1.5} />
-            <blockquote className="text-2xl font-extrabold leading-[1.3] tracking-tight text-white sm:text-3xl lg:text-4xl">
-              We dedicate a full-time worker to your account whose job is to make
-              sure you never miss a relevant posting, and{" "}
-              <span className="gradient-teal-blue-text">
-                follow up with recruiters until you are placed.
-              </span>
-            </blockquote>
-            <p className="mx-auto mt-8 max-w-xl text-sm leading-relaxed text-slate-400">
-              Not a shared inbox and not an automated alert. A named person
-              carries your file — the same principle that runs through every
-              compliance engagement we take on.
-            </p>
-            <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
-              <Link
-                href="/services/career-marketing-placement"
-                className="gradient-teal-blue inline-flex items-center gap-2 rounded-lg px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-teal-950/50 transition-all hover:brightness-105 active:scale-[0.98]"
-              >
-                Start your career campaign
-                <ArrowRight className="h-4 w-4" strokeWidth={2} />
-              </Link>
-            </div>
+            <RotatingPromise items={promises} />
           </div>
         </section>
 
         {/* ---------------- How We Work ---------------- */}
         <section className="relative overflow-hidden bg-white py-24">
           <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:gap-16">
+            <Reveal effect="stagger" className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:gap-16">
               <div className="lg:col-span-5">
                 <SectionLabel>How we work</SectionLabel>
                 <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-navy-950 sm:text-4xl">
@@ -565,7 +596,7 @@ export default function HomePage() {
                   </li>
                 ))}
               </ol>
-            </div>
+            </Reveal>
           </div>
         </section>
 
@@ -578,7 +609,7 @@ export default function HomePage() {
 
             {/* No cards, no icon chips, no index numbers: four parallel values
                 separated by hairlines. */}
-            <div className="grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-0">
+            <Reveal effect="stagger" className="grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-0">
               {values.map((value, index) => {
                 const Icon = value.icon;
                 return (
@@ -601,7 +632,7 @@ export default function HomePage() {
                   </div>
                 );
               })}
-            </div>
+            </Reveal>
           </div>
         </section>
 
@@ -620,7 +651,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-14">
+            <Reveal effect="stagger" className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-14">
               <div className="lg:col-span-7">
                 <h3 className="mb-6 text-lg font-bold text-navy-950">
                   What you are holding at handover
@@ -684,7 +715,7 @@ export default function HomePage() {
                   </p>
                 </div>
               </div>
-            </div>
+            </Reveal>
           </div>
         </section>
 
@@ -701,7 +732,7 @@ export default function HomePage() {
         {/* ---------------- Careers ---------------- */}
         <section id="careers" className="scroll-mt-24 bg-white py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
+            <Reveal effect="stagger" className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
               <div className="lg:col-span-6">
                 <div className="relative overflow-hidden rounded-2xl border border-slate-200/90 shadow-2xl ring-1 ring-black/5">
                   <Image
@@ -751,7 +782,7 @@ export default function HomePage() {
                   </a>
                 </div>
               </div>
-            </div>
+            </Reveal>
           </div>
         </section>
 
@@ -760,10 +791,20 @@ export default function HomePage() {
           id="consultation"
           className="relative scroll-mt-24 overflow-hidden bg-navy-900 py-28 text-white"
         >
-          <div className="absolute inset-0 opacity-20 saturate-0">
-            <Image src={images["ops-center"].src} alt="" fill sizes="100vw" className="object-cover" />
+          <div className="absolute inset-0 opacity-70">
+            <Image
+              src={images["cross-border-boardroom"].src}
+              alt=""
+              fill
+              sizes="100vw"
+              placeholder="blur"
+              blurDataURL={images["cross-border-boardroom"].blurDataURL}
+              /* People sit on the right, matching the hero at the top of this
+                 page, so the headline on the left never fights a face. */
+              className="object-cover object-[72%_center] lg:object-right"
+            />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-950/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/75 to-navy-950/25" />
 
           <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col justify-between gap-10 lg:flex-row lg:items-center">

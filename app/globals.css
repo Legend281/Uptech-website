@@ -68,6 +68,70 @@ h6 {
   }
 }
 
+/* One shared easing curve for the whole site, so motion reads as one system.
+   Matches the curve already used by .card-hover-shadow. */
+@theme {
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Hero photograph settles from a slight overscale on load. Deliberately the
+   ONLY page-load motion: the headline never animates, so Largest Contentful
+   Paint is unaffected — this page is read on slow mobile connections. */
+@keyframes hero-settle {
+  from {
+    transform: scale(1.04);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.hero-settle {
+  animation: hero-settle 1200ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* The Buea–Stafford rail draws itself once, when scrolled into view. */
+.rail-draw {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rail-node {
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity 320ms ease-out 620ms,
+    transform 420ms cubic-bezier(0.16, 1, 0.3, 1) 560ms;
+}
+
+[data-revealed="true"] .rail-draw {
+  transform: scaleX(1);
+}
+
+[data-revealed="true"] .rail-node {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-settle {
+    animation: none;
+  }
+
+  /* Reduced motion gets the end state, not a broken one. */
+  .rail-draw {
+    transform: scaleX(1);
+    transition: none;
+  }
+
+  .rail-node {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 @layer utilities {
   .gradient-teal-blue {
     background: linear-gradient(135deg, #00d2b4 0%, #0080ff 100%);

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const serviceLinks = [
@@ -50,20 +51,14 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-14 border-b border-slate-800/80">
           {/* Brand & contact */}
           <div className="lg:col-span-4 space-y-4">
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-9 h-9 rounded-xl border border-teal-400/40 flex items-center justify-center bg-navy-900 text-teal-400 shadow-sm">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M12 19V5m0 0l-4 4m4-4l4 4" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-white font-extrabold text-sm tracking-wider uppercase leading-none">
-                  UPTECH
-                </span>
-                <span className="text-[8px] font-semibold text-teal-400 tracking-wider uppercase mt-1">
-                  CONSULTING &amp; OUTSOURCING
-                </span>
-              </div>
+            <Link href="/" className="inline-flex items-center">
+              <Image
+                src="/UPTECH_LOG.png"
+                alt="Uptech Consulting & Outsourcing"
+                width={572}
+                height={233}
+                className="h-16 w-auto"
+              />
             </Link>
             <p className="text-xs text-slate-400 leading-relaxed pr-6">
               A technology-driven consulting, outsourcing and business support organisation bridging the gap

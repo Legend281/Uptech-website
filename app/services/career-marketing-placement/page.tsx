@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -6,9 +7,9 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { TrustStrip } from "@/components/TrustStrip";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { PhotoPlaceholder } from "@/components/PhotoPlaceholder";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { Button } from "@/components/Button";
+import { images } from "@/lib/images";
 
 const arrowRightIcon = (
   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -192,10 +193,18 @@ export default function CareerMarketingPlacementPage() {
       <main>
         {/* Hero */}
         <section className="relative bg-navy-950 overflow-hidden pt-14 pb-28 lg:pt-20 lg:pb-36 border-b border-slate-800/80">
-          <PhotoPlaceholder
-            label="executive boardroom / career placement photography"
-            className="absolute right-0 top-0 w-full lg:w-3/4 h-full opacity-70 lg:opacity-80 pointer-events-none"
-          />
+          <div className="absolute right-0 top-0 w-full lg:w-3/4 h-full opacity-70 lg:opacity-80 pointer-events-none">
+            <Image
+              src={images["career-review"].src}
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              placeholder="blur"
+              blurDataURL={images["career-review"].blurDataURL}
+              className="object-cover object-center"
+            />
+          </div>
           <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-950/40 pointer-events-none" />
           <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -247,9 +256,15 @@ export default function CareerMarketingPlacementPage() {
                   up with recruiters until you&apos;re placed.
                 </p>
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-800/80 bg-navy-950">
-                  <PhotoPlaceholder
-                    label="career advisors with job seeker photography"
-                    className="w-full h-[360px] sm:h-[400px]"
+                  <Image
+                    src={images["dedicated-advisor"].src}
+                    alt={images["dedicated-advisor"].alt}
+                    width={images["dedicated-advisor"].width}
+                    height={images["dedicated-advisor"].height}
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    placeholder="blur"
+                    blurDataURL={images["dedicated-advisor"].blurDataURL}
+                    className="w-full h-[360px] sm:h-[400px] object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/40 to-transparent pointer-events-none" />
                   <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
@@ -389,10 +404,17 @@ export default function CareerMarketingPlacementPage() {
 
         {/* Real Results — placeholder-safe until UCO supplies a real client story */}
         <section className="py-24 bg-navy-950 text-white relative overflow-hidden border-b border-slate-800/80">
-          <PhotoPlaceholder
-            label="verified placement story photography"
-            className="absolute right-0 top-0 w-full lg:w-3/4 h-full opacity-60 lg:opacity-75 pointer-events-none"
-          />
+          <div className="absolute right-0 top-0 w-full lg:w-3/4 h-full opacity-60 lg:opacity-75 pointer-events-none">
+            <Image
+              src={images["career-review"].src}
+              alt=""
+              fill
+              sizes="100vw"
+              placeholder="blur"
+              blurDataURL={images["career-review"].blurDataURL}
+              className="object-cover object-center"
+            />
+          </div>
           <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/70 to-transparent pointer-events-none" />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="max-w-3xl">
@@ -481,10 +503,17 @@ export default function CareerMarketingPlacementPage() {
           id="start-campaign"
           className="py-24 bg-navy-950 text-white relative overflow-hidden border-b border-slate-800/80"
         >
-          <PhotoPlaceholder
-            label="executive operations photography"
-            className="absolute right-0 top-0 w-full lg:w-3/4 h-full opacity-60 lg:opacity-75 pointer-events-none"
-          />
+          <div className="absolute right-0 top-0 w-full lg:w-3/4 h-full opacity-60 lg:opacity-75 pointer-events-none">
+            <Image
+              src={images["career-review"].src}
+              alt=""
+              fill
+              sizes="100vw"
+              placeholder="blur"
+              blurDataURL={images["career-review"].blurDataURL}
+              className="object-cover object-center"
+            />
+          </div>
           <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/80 to-navy-950/50 pointer-events-none" />
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
             <div className="inline-flex items-center gap-2 mb-4">

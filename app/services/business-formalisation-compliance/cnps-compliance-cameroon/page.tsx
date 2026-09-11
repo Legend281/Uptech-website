@@ -197,7 +197,7 @@ export default function CnpsComplianceCameroonPage() {
               Ready to bring your <span className="gradient-teal-blue-text">team into compliance?</span>
             </h2>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
-              <Button href="/contact">Book a Consultation</Button>
+              <Button href="/contact?service=cnps-compliance">Book a Consultation</Button>
               <WhatsAppButton phone="237670000000" label="Chat on WhatsApp Tax Desk" />
             </div>
           </div>

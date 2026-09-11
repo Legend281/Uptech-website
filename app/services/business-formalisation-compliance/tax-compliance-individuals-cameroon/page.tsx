@@ -207,7 +207,7 @@ export default function TaxComplianceIndividualsCameroonPage() {
               Ready to get your <span className="gradient-teal-blue-text">personal taxes in order?</span>
             </h2>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
-              <Button href="/contact">Book a Consultation</Button>
+              <Button href="/contact?service=tax-compliance-individuals">Book a Consultation</Button>
               <WhatsAppButton phone="237670000000" label="Chat on WhatsApp Tax Desk" />
             </div>
           </div>

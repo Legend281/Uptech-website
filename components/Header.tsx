@@ -54,12 +54,20 @@ const services: Array<{
   },
 ];
 
+const contactServiceParam: Record<ServiceKey, string> = {
+  "it-consulting": "it-consulting",
+  "business-formalisation": "business-formalisation",
+  "career-marketing": "career-marketing",
+};
+
 export function Header({
   activeService,
   ctaLabel = "Book a Consultation",
-  ctaHref = "/contact",
+  ctaHref,
 }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const resolvedCtaHref =
+    ctaHref ?? (activeService ? `/contact?service=${contactServiceParam[activeService]}` : "/contact");
 
   return (
     <header className="sticky top-0 z-50 bg-navy-900/95 backdrop-blur-md border-b border-slate-800/80">
@@ -286,7 +294,7 @@ export function Header({
             <span>Talk to us</span>
           </a>
           <Link
-            href={ctaHref}
+            href={resolvedCtaHref}
             className="hidden sm:flex gradient-teal-blue text-white text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2.5 rounded-lg hover:brightness-105 active:scale-[0.98] transition-all shadow-sm shadow-teal-950/40 items-center gap-2"
           >
             <span>{ctaLabel}</span>
@@ -401,7 +409,7 @@ export function Header({
               Talk to us
             </a>
             <Link
-              href={ctaHref}
+              href={resolvedCtaHref}
               onClick={() => setMobileOpen(false)}
               className="gradient-teal-blue text-white text-sm font-semibold px-4 py-2.5 rounded-lg flex items-center justify-center gap-2"
             >

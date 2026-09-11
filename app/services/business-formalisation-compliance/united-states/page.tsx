@@ -218,7 +218,7 @@ export default function BusinessFormalisationUnitedStatesPage() {
               Ready to <span className="gradient-teal-blue-text">form your US entity?</span>
             </h2>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
-              <Button href="/contact">Book a Consultation</Button>
+              <Button href="/contact?service=business-formalisation-us">Book a Consultation</Button>
               <WhatsAppButton phone="237600000000" label="Chat on WhatsApp Legal Desk" />
             </div>
           </div>

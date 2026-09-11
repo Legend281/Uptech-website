@@ -530,7 +530,7 @@ export default function CareerMarketingPlacementPage() {
               background and scope your active campaign.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-              <Button href="/contact" icon={arrowRightIcon}>
+              <Button href="/contact?service=career-marketing" icon={arrowRightIcon}>
                 Start Your Career Campaign
               </Button>
               <WhatsAppButton phone="237600000000" />

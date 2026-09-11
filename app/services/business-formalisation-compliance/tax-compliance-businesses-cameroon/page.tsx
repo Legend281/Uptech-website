@@ -610,7 +610,7 @@ export default function TaxComplianceBusinessesCameroonPage() {
               to stabilize your standing this month.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
-              <Button href="/contact">Get a Compliance Check</Button>
+              <Button href="/contact?service=tax-compliance-businesses">Get a Compliance Check</Button>
               <WhatsAppButton phone="237670000000" label="Discuss via WhatsApp Tax Desk" />
             </div>
           </div>

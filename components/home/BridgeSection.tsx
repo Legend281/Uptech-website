@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowLeftRight, ArrowRight } from "lucide-react";
 import { LocalTime } from "@/components/home/LocalTime";
-import { Reveal } from "@/components/home/Reveal";
+import { Reveal } from "@/components/Reveal";
 
 const offices = [
   {
@@ -39,7 +39,10 @@ const crossings = [
 
 export function BridgeSection() {
   return (
-    <section className="relative overflow-hidden border-y border-slate-800 bg-navy-950 py-28 text-white">
+    <section
+      id="two-jurisdictions"
+      className="relative scroll-mt-24 overflow-hidden border-y border-slate-800 bg-navy-950 py-28 text-white"
+    >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(56,189,248,0.12),transparent_60%)]" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

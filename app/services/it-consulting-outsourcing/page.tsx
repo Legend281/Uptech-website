@@ -31,13 +31,31 @@ const trustStripItems = [
     badgeAccent: "sky" as const,
   },
   {
+    // The company's own stated reason for holding entities in both countries
+    // (CLAUDE.md Section 1). The mockup paired this heading with "Continuous
+    // Failover & Security Audits", which describes infrastructure, not
+    // compliance.
     icon: "verified_user",
     title: "Cross-Border Compliance",
-    badgeText: "Continuous Failover & Security Audits",
+    badgeText: "Cameroon & US Regulatory Alignment",
     badgeAccent: "emerald" as const,
   },
 ];
 
+/*
+ * Uptech Consulting's official service directory lists FIVE IT sub-services:
+ *
+ *   Database Development & Administration         -> 04 Database Management
+ *   Cloud Data Migration & Digital Transformation -> 03 Cloud Migration
+ *   Help Desk & Call Center Outsourcing           -> 02 Managed IT Support
+ *   AI Compliance & Advisory                      -> 06 AI & Compliance Advisory
+ *   System Security                               -> 05 Cybersecurity
+ *
+ * 01 "Technology Advisory" maps to none of them. It came from the mockup, not
+ * the directory. Whether it is a deliberate addition or should be cut/renamed
+ * is a team decision — do not remove or rename it without confirmation. If it
+ * goes, the "Six ways we show up" heading below must change with it.
+ */
 const capabilities = [
   {
     number: "01",
@@ -177,16 +195,22 @@ const faqItems = [
   },
 ];
 
-const otherPillars = [
+/*
+ * No pillar numbers. The mockup counted Career Marketing & Placement as
+ * "Pillar 03", but officially it is a sub-service of this practice (CLAUDE.md
+ * Section 4), and a numbering that skips the two paused pillars would imply a
+ * three-pillar company. Each card states its relationship to this page instead.
+ */
+const relatedServices = [
   {
     icon: "description",
-    number: "Pillar 02",
+    relationship: "Separate practice",
     title: "Business Formalisation & Compliance",
     href: "/services/business-formalisation-compliance",
   },
   {
     icon: "trending_up",
-    number: "Pillar 03",
+    relationship: "Part of this practice",
     title: "Career Marketing & Placement",
     href: "/services/career-marketing-placement",
   },
@@ -202,7 +226,7 @@ export default function ItConsultingOutsourcingPage() {
           { label: "Services", href: "/#services" },
           { label: "IT Consulting & Outsourcing" },
         ]}
-        tag="PILLAR 01 • MANAGED IT & INFRASTRUCTURE"
+        tag="MANAGED IT & INFRASTRUCTURE"
       />
 
       <main>
@@ -463,6 +487,10 @@ export default function ItConsultingOutsourcingPage() {
                   A clear operating rhythm keeps every technical phase accountable. No black
                   boxes, no unexpected change requests.
                 </p>
+                {/* Same destination as every other CTA on the page. There is no
+                    separate "technical assessment" intake, so the button says
+                    what it does; the assessment is step 01 once an engagement
+                    is booked. */}
                 <Button
                   href="#consultation"
                   icon={
@@ -471,7 +499,7 @@ export default function ItConsultingOutsourcingPage() {
                     </svg>
                   }
                 >
-                  Start a technical assessment
+                  Book a Consultation
                 </Button>
               </div>
 
@@ -481,7 +509,11 @@ export default function ItConsultingOutsourcingPage() {
                     key={step.number}
                     className="frosted-glass p-6 sm:p-7 rounded-xl flex items-start gap-5 hover:bg-white/[0.08] transition-colors group"
                   >
-                    <span className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-teal-400/10 border border-teal-400/30 text-xs font-mono font-bold text-teal-400 flex-shrink-0">
+                    {/* Deliberately unlike the capability index above: a filled
+                        circle with heavy sans digits reads as a sequence; the
+                        navy squares with mono digits read as a menu. */}
+                    <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-teal-400 text-sm font-extrabold tracking-tight text-navy-950 flex-shrink-0 shadow-[0_0_0_4px_rgba(45,212,191,0.18)]">
+                      <span className="sr-only">Step </span>
                       {step.number}
                     </span>
                     <div className="flex-1">
@@ -519,7 +551,7 @@ export default function ItConsultingOutsourcingPage() {
           </div>
         </section>
 
-        {/* Explore other pillars */}
+        {/* Related services */}
         <section className="py-20 bg-slate-50 border-b border-slate-200/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
@@ -534,21 +566,21 @@ export default function ItConsultingOutsourcingPage() {
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl">
-              {otherPillars.map((pillar) => (
+              {relatedServices.map((service) => (
                 <Link
-                  key={pillar.title}
-                  href={pillar.href}
+                  key={service.title}
+                  href={service.href}
                   className="p-5 rounded-xl bg-white border border-slate-200/90 shadow-sm hover:border-teal-500/40 hover:shadow-md transition-all flex flex-col justify-between group"
                 >
                   <div>
                     <div className="w-9 h-9 rounded-lg bg-navy-950 text-teal-400 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-                      <MaterialIcon name={pillar.icon} className="text-[18px]" />
+                      <MaterialIcon name={service.icon} className="text-[18px]" />
                     </div>
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
-                      {pillar.number}
+                      {service.relationship}
                     </span>
                     <h3 className="text-sm font-bold text-navy-950 group-hover:text-blue-accent transition-colors mt-1">
-                      {pillar.title}
+                      {service.title}
                     </h3>
                   </div>
                   <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blue-accent group-hover:text-teal-600">
@@ -577,7 +609,7 @@ export default function ItConsultingOutsourcingPage() {
           <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/80 to-navy-950/50 pointer-events-none" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-teal-400/40 text-teal-400 text-xs font-bold tracking-widest uppercase mb-4">
-              Start With A Technical Assessment
+              Consultation First
             </div>
             <h2 className="text-3xl md:text-5xl font-extrabold text-white max-w-3xl mx-auto leading-tight mb-4">
               Ready to fix what&apos;s actually <span className="gradient-teal-blue-text">broken or missing?</span>

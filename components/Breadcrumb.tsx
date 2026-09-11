@@ -7,7 +7,7 @@ export type BreadcrumbItem = {
 
 type BreadcrumbProps = {
   items: BreadcrumbItem[];
-  /** Right-aligned pillar/status tag, e.g. "PILLAR 04 / 05 • INDIVIDUAL CAREER ADVANCEMENT". */
+  /** Right-aligned status tag, e.g. "SUB-SERVICE 01/05 • RCCM & OHADA UNIFORM ACT". No pillar numbers — see the IT Consulting page. */
   tag?: string;
 };
 

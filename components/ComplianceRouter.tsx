@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
+import { TimelineNote } from "@/components/TimelineNote";
 
 type Profile = "business" | "individual";
 type BusinessNeed = "formalisation-cmr" | "formalisation-us" | "tax-cmr" | "cnps-cmr";
@@ -30,7 +31,7 @@ const results: Record<BusinessNeed | "individual", PathwayResult> = {
     description:
       "Full incorporation under OHADA Uniform Commercial Acts: notarial drafting, trade registry (RCCM) certification, and Taxpayer Identification Number (NIU) issuance.",
     deliverables: ["Notarial Articles of Association", "RCCM Certificate of Registration", "Taxpayer ID (NIU)"],
-    timeline: "Typical completion: [PENDING: confirm with UCO]",
+    timeline: "Typical completion: [PENDING: confirm with Uptech Consulting]",
     href: "/services/business-formalisation-compliance/cameroon",
   },
   "formalisation-us": {
@@ -39,7 +40,7 @@ const results: Record<BusinessNeed | "individual", PathwayResult> = {
     description:
       "Formation of state-specific LLCs and C-Corps for international founders, including Registered Agent service and IRS EIN acquisition.",
     deliverables: ["US LLC / C-Corp filing", "IRS EIN Issuance", "Registered Agent service"],
-    timeline: "Typical completion: [PENDING: confirm with UCO]",
+    timeline: "Typical completion: [PENDING: confirm with Uptech Consulting]",
     href: "/services/business-formalisation-compliance/united-states",
   },
   "tax-cmr": {
@@ -66,7 +67,7 @@ const results: Record<BusinessNeed | "individual", PathwayResult> = {
     description:
       "Statutory personal income tax declarations (IRPP), freelance and remote cross-border earnings regularisation, and personal Attestation de Non-Redevance issuance.",
     deliverables: ["Annual IRPP Filing", "Foreign Income Regularisation", "Individual ANR (Tax Clearance)"],
-    timeline: "Filing deadline: [PENDING: confirm with UCO]",
+    timeline: "Filing deadline: [PENDING: confirm with Uptech Consulting]",
     href: "/services/business-formalisation-compliance/tax-compliance-individuals-cameroon",
   },
 };
@@ -181,7 +182,7 @@ export function ComplianceRouter() {
                 >
                   Go to this Pathway →
                 </Link>
-                <span className="text-xs text-slate-400 font-mono">{result.timeline}</span>
+                <TimelineNote value={result.timeline} variant="dark" />
               </div>
             </div>
           </div>

@@ -8,6 +8,7 @@ import { TrustStrip } from "@/components/TrustStrip";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Button } from "@/components/Button";
 import { ComplianceRouter } from "@/components/ComplianceRouter";
+import { TimelineNote } from "@/components/TimelineNote";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { images } from "@/lib/images";
 
@@ -50,7 +51,7 @@ const businessPathways = [
     description:
       "Full incorporation under OHADA standards: Articles of Association, notarial deposit, RCCM registration, and Taxpayer ID (NIU).",
     tags: ["SARL / SA / SAS", "Notarial Deed", "Taxpayer Card (NIU)"],
-    timeline: "[PENDING: confirm with UCO]",
+    timeline: "[PENDING: confirm with Uptech Consulting]",
     href: "/services/business-formalisation-compliance/cameroon",
   },
   {
@@ -61,7 +62,7 @@ const businessPathways = [
     description:
       "Formation of Delaware, Wyoming, Texas, or state-specific LLCs and C-Corps, including Registered Agent service and IRS EIN acquisition.",
     tags: ["US LLC / C-Corp", "IRS EIN Issuance", "Registered Agent"],
-    timeline: "[PENDING: confirm with UCO]",
+    timeline: "[PENDING: confirm with Uptech Consulting]",
     href: "/services/business-formalisation-compliance/united-states",
   },
   {
@@ -94,7 +95,7 @@ const individualPathway = {
   description:
     "Statutory personal income tax declarations (IRPP), freelance and remote cross-border earnings regularisation, and personal Attestation de Non-Redevance issuance for visa and banking requirements.",
   tags: ["Annual IRPP Filing", "Foreign Income Regularisation", "Individual ANR (Tax Clearance)"],
-  timeline: "[PENDING: confirm filing deadline with UCO]",
+  timeline: "[PENDING: confirm filing deadline with Uptech Consulting]",
   href: "/services/business-formalisation-compliance/tax-compliance-individuals-cameroon",
 };
 
@@ -104,9 +105,21 @@ const accentClasses: Record<"teal" | "blue" | "emerald", { iconBg: string; iconT
   emerald: { iconBg: "bg-emerald-50", iconText: "text-emerald-600" },
 };
 
-const otherPillars = [
-  { icon: "terminal", number: "Pillar 01", title: "IT Consulting & Outsourcing", href: "/services/it-consulting-outsourcing" },
-  { icon: "trending_up", number: "Pillar 03", title: "Career Marketing & Placement", href: "/services/career-marketing-placement" },
+const relatedServices = [
+  {
+    icon: "terminal",
+    relationship: "Separate practice",
+    title: "IT Consulting & Outsourcing",
+    description: "Managed IT, cloud migration, databases and cyber security — advised, then actually run.",
+    href: "/services/it-consulting-outsourcing",
+  },
+  {
+    icon: "trending_up",
+    relationship: "Part of IT Consulting's practice",
+    title: "Career Marketing & Placement",
+    description: "A dedicated worker on your account: profile positioning, daily applications, and recruiter follow-up until you are placed.",
+    href: "/services/career-marketing-placement",
+  },
 ];
 
 export default function BusinessFormalisationCompliancePage() {
@@ -248,8 +261,8 @@ export default function BusinessFormalisationCompliancePage() {
                             ))}
                           </div>
                         </div>
-                        <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                          <span className="text-xs font-mono text-slate-500">{pathway.timeline}</span>
+                        <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                          <TimelineNote value={pathway.timeline} />
                           <Link
                             href={pathway.href}
                             className="text-xs font-bold text-blue-accent group-hover:text-teal-600 inline-flex items-center gap-1"
@@ -295,7 +308,7 @@ export default function BusinessFormalisationCompliancePage() {
                     </div>
                   </div>
                   <div className="shrink-0 flex flex-col items-start lg:items-end gap-3">
-                    <span className="text-xs font-mono text-slate-500">{individualPathway.timeline}</span>
+                    <TimelineNote value={individualPathway.timeline} />
                     <Link
                       href={individualPathway.href}
                       className="gradient-teal-blue text-white text-xs sm:text-sm font-semibold px-6 py-3 rounded-lg hover:brightness-105 active:scale-[0.98] transition-all flex items-center gap-2 shadow-md"
@@ -377,7 +390,7 @@ export default function BusinessFormalisationCompliancePage() {
                 <div className="text-xs text-slate-300 leading-relaxed">
                   <span className="font-bold text-white">Regulatory Notice:</span> This information
                   is general guidance. Requirements may change — confirm current details with your
-                  UCO consultant. Uptech Consulting &amp; Outsourcing provides corporate
+                  Uptech Consulting consultant. Uptech Consulting &amp; Outsourcing provides corporate
                   administrative, management consulting, and statutory registration filing services;
                   informational content on this portal does not constitute formalized legal counsel.
                 </div>
@@ -386,7 +399,7 @@ export default function BusinessFormalisationCompliancePage() {
           </div>
         </section>
 
-        {/* Explore other pillars */}
+        {/* Related services */}
         <section className="py-20 bg-slate-50 border-b border-slate-200/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
@@ -400,25 +413,28 @@ export default function BusinessFormalisationCompliancePage() {
                 </h2>
               </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl">
-              {otherPillars.map((pillar) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {relatedServices.map((service) => (
                 <Link
-                  key={pillar.title}
-                  href={pillar.href}
-                  className="p-5 rounded-xl bg-white border border-slate-200/90 shadow-sm hover:border-teal-500/40 hover:shadow-md transition-all flex flex-col justify-between group"
+                  key={service.title}
+                  href={service.href}
+                  className="p-6 sm:p-7 rounded-xl bg-white border border-slate-200/90 shadow-sm hover:border-teal-500/40 hover:shadow-md transition-all flex flex-col justify-between group"
                 >
                   <div>
-                    <div className="w-9 h-9 rounded-lg bg-navy-950 text-teal-400 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-                      <MaterialIcon name={pillar.icon} className="text-[18px]" />
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="w-10 h-10 rounded-lg bg-navy-950 text-teal-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+                        <MaterialIcon name={service.icon} className="text-[18px]" />
+                      </div>
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                        {service.relationship}
+                      </span>
                     </div>
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
-                      {pillar.number}
-                    </span>
-                    <h3 className="text-sm font-bold text-navy-950 group-hover:text-blue-accent transition-colors mt-1">
-                      {pillar.title}
+                    <h3 className="text-base font-bold text-navy-950 group-hover:text-blue-accent transition-colors mb-1.5">
+                      {service.title}
                     </h3>
+                    <p className="text-xs text-slate-600 leading-relaxed">{service.description}</p>
                   </div>
-                  <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blue-accent group-hover:text-teal-600">
+                  <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blue-accent group-hover:text-teal-600">
                     <span>View details</span>
                     <MaterialIcon name="arrow_forward" className="text-[16px] group-hover:translate-x-1 transition-transform" />
                   </div>

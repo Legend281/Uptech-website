@@ -14,6 +14,10 @@ type WhatsAppButtonProps = {
  * navy button + green status dot. `solid` is the literal CLAUDE.md Section 6.6
  * reading ("styled only in WhatsApp Green") and is used where the button sits
  * beside a white primary CTA and needs to hold its own.
+ *
+ * Both variants render the WhatsApp glyph in `uco-green`. The mockups drew it
+ * in teal, which is the site's general accent; WhatsApp Green is reserved for
+ * WhatsApp actions and nothing else, so the glyph must not borrow the accent.
  */
 export function WhatsAppButton({
   phone,
@@ -37,7 +41,7 @@ export function WhatsAppButton({
         <span className="w-2.5 h-2.5 rounded-full bg-uco-green ring-4 ring-uco-green/20" />
       )}
       <WhatsAppIcon
-        className={variant === "solid" ? "w-4 h-4" : "w-4 h-4 text-cyan-accent"}
+        className={variant === "solid" ? "w-4 h-4" : "w-4 h-4 text-uco-green"}
       />
       <span>{label}</span>
     </a>

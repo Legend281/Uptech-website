@@ -45,6 +45,33 @@ h6 {
   letter-spacing: -0.025em;
 }
 
+/*
+ * Replaces the CSS Google's remote stylesheet used to provide (see the
+ * self-hosting comment in app/layout.tsx). `@layer base` matters here: it's
+ * what lets every `text-[Npx]` size utility already used on <MaterialIcon>
+ * throughout the site keep winning over this rule's own font-size default —
+ * unlayered CSS beats Tailwind's `@layer utilities` regardless of source
+ * order, so without this the whole icon set would freeze at 24px.
+ */
+@layer base {
+  .material-symbols-outlined {
+    font-family: "Material Symbols Outlined Self Hosted";
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    font-feature-settings: "liga";
+    -webkit-font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
 /* One consistent, brand-coloured focus ring for keyboard users. Mouse users
    never see it; `:focus-visible` only fires for keyboard/AT navigation. */
 :focus-visible {

@@ -186,7 +186,7 @@ export default function BusinessFormalisationCameroonPage() {
           { label: "Business Formalisation & Compliance", href: "/services/business-formalisation-compliance" },
           { label: "Cameroon" },
         ]}
-        tag="SUB-SERVICE 01/05 • RCCM & OHADA UNIFORM ACT"
+        tag="SUB-SERVICE 01/04 • RCCM & OHADA UNIFORM ACT"
       />
 
       <main>

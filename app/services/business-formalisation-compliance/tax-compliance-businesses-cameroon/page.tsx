@@ -13,10 +13,19 @@ import { WhatComesNext } from "@/components/WhatComesNext";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { images } from "@/lib/images";
 
+/*
+ * Unified page: this used to be "Tax Compliance for Businesses — Cameroon"
+ * only, with a separate "Tax Compliance for Individuals — Cameroon" page.
+ * Leadership merged the two into one Tax Compliance page serving both
+ * audiences — the individuals page now redirects here (see its page.tsx).
+ * URL/folder name kept as "tax-compliance-businesses-cameroon" to avoid
+ * breaking existing links into this page; only the display copy dropped
+ * "for Businesses".
+ */
 export const metadata: Metadata = {
-  title: "Tax Compliance for Businesses — Cameroon",
+  title: "Tax Compliance — Cameroon",
   description:
-    "Predictable monthly DGI declarations, certified fiscal schedules, and penalty-proof recordkeeping for Cameroon-registered businesses.",
+    "Predictable DGI tax compliance for Cameroon — monthly corporate filings and certified fiscal schedules for businesses, and personal income tax (IRPP) declarations for individuals.",
 };
 
 const trustStripItems = [
@@ -103,7 +112,7 @@ const faqItems = [
   {
     question: "What happens if I've missed previous filings or past tax years?",
     answer:
-      "Missed declarations are common, particularly for companies operating during rapid growth or informal transition phases. UCO performs a discreet historical reconciliation: we recalculate statutory liabilities, assemble the back-filings, and interact directly with your attached Tax Center (Centre des Impôts) to negotiate manageable settlement structures and penalty remissions where permitted by the General Tax Code.",
+      "Missed declarations are common, particularly for companies operating during rapid growth or informal transition phases. Uptech Consulting performs a discreet historical reconciliation: we recalculate statutory liabilities, assemble the back-filings, and interact directly with your attached Tax Center (Centre des Impôts) to negotiate manageable settlement structures and penalty remissions where permitted by the General Tax Code.",
   },
   {
     question: "Do I need to worry about back-taxes if I'm just now formalising an informal business?",
@@ -120,6 +129,28 @@ const faqItems = [
     answer:
       "The Direction Générale des Impôts (DGI) falls under the Ministry of Finance and governs corporate income tax, withholding taxes (TSR), VAT/TVA, business licenses (Patente), and personal taxes at source. The Caisse Nationale de Prévoyance Sociale (CNPS) is Cameroon's national social security fund governing workplace insurance, pensions, and family welfare contributions. Both require monthly reporting but are enforced by distinct state authorities.",
   },
+  // The four below came from the standalone "Tax Compliance for Individuals"
+  // page when it was merged into this one — personal tax (IRPP), not
+  // corporate tax.
+  {
+    question: "Do I need to declare income I earn remotely from foreign clients?",
+    answer:
+      "Cameroon tax residents generally have personal income tax obligations on worldwide income, including remote/foreign-client earnings, though the exact treatment depends on your specific residency and income situation. [PENDING: confirm current IRPP treatment of foreign-sourced income with Uptech Consulting].",
+  },
+  {
+    question: "I don't have a registered company — do personal tax rules still apply to me?",
+    answer:
+      "Yes. Personal income tax (IRPP) applies to individuals regardless of whether they operate through a registered company. Freelancers, consultants, and independent earners are assessed as individual taxpayers.",
+  },
+  {
+    question: "When is the personal tax filing deadline?",
+    answer: "Filing deadline: before March 15 annually. [PENDING: confirm exact requirements for your specific income situation with Uptech Consulting].",
+  },
+  {
+    question: "What documents do I need for my personal tax filing?",
+    answer:
+      "A valid national ID or passport, proof of income (contracts, pay slips, or invoices for the tax year being declared), and any previous year's IRPP declaration or tax identifier, if you have one.",
+  },
 ];
 
 export default function TaxComplianceBusinessesCameroonPage() {
@@ -131,9 +162,9 @@ export default function TaxComplianceBusinessesCameroonPage() {
           { label: "Home", href: "/" },
           { label: "Services", href: "/#services" },
           { label: "Business Formalisation & Compliance", href: "/services/business-formalisation-compliance" },
-          { label: "Tax Compliance — Businesses (Cameroon)" },
+          { label: "Tax Compliance (Cameroon)" },
         ]}
-        tag="SUB-SERVICE 03/05 • CAMEROON DGI CORPORATE TAX"
+        tag="SUB-SERVICE 03/04 • CAMEROON DGI & IRPP TAX"
       />
 
       <main>
@@ -237,7 +268,7 @@ export default function TaxComplianceBusinessesCameroonPage() {
                 <span className="text-[11px] font-bold uppercase tracking-wider text-rose-600 block">
                   Note for engagement teams:
                 </span>
-                <span className="text-xs text-slate-600 italic">[PENDING: confirm real cadence &amp; deadlines with UCO]</span>
+                <span className="text-xs text-slate-600 italic">[PENDING: confirm real cadence &amp; deadlines with Uptech Consulting]</span>
               </div>
             </div>
 
@@ -291,16 +322,17 @@ export default function TaxComplianceBusinessesCameroonPage() {
         <section className="py-24 bg-navy-950 text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14">
-              <span className="text-xs font-bold uppercase tracking-wider text-teal-400">TAILORED CORPORATE ENGAGEMENTS</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-teal-400">TAILORED TAX ENGAGEMENTS</span>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-2">
-                Two Paths to Total Fiscal Peace of Mind
+                Three Paths to Total Fiscal Peace of Mind
               </h2>
               <p className="text-slate-300 mt-3">
-                Whether you are newly established and looking to maintain clean ledgers from day
-                one, or navigating back-filings, our tax desk provides clear, structured execution.
+                Whether you&apos;re newly established and looking to maintain clean corporate ledgers
+                from day one, navigating business back-filings, or managing your own personal
+                income tax, our tax desk provides clear, structured execution.
               </p>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <div className="frosted-glass rounded-2xl p-7 flex flex-col justify-between">
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between">
@@ -368,6 +400,46 @@ export default function TaxComplianceBusinessesCameroonPage() {
                 </div>
                 <Button href="#compliance-check" variant="secondary" className="mt-6 justify-center">
                   Request Confidential Regularisation
+                </Button>
+              </div>
+
+              {/* Personal tax, added when the standalone Tax Compliance for
+                  Individuals page was merged into this one. Same card
+                  treatment as the two business tracks — equal weight, not a
+                  secondary afterthought. */}
+              <div className="frosted-glass rounded-2xl p-7 flex flex-col justify-between">
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center justify-between">
+                    <div className="w-10 h-10 rounded-lg bg-sky-500/20 flex items-center justify-center text-sky-300">
+                      <MaterialIcon name="person" className="text-[20px]" />
+                    </div>
+                    <span className="text-[11px] font-bold px-3 py-1 rounded bg-sky-500/20 text-sky-300 uppercase">Track C</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">Individuals With Personal Tax Obligations</h3>
+                    <p className="text-sm text-sky-300 mt-1">Personal income tax (IRPP), not corporate</p>
+                  </div>
+                  <div className="p-4 rounded-lg bg-white/5">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">The reality</span>
+                    <p className="text-sm text-slate-200">
+                      &ldquo;I freelance, earn remotely from abroad, or have income in Cameroon while
+                      living elsewhere — I&apos;m not sure what I owe or how to file from a
+                      distance.&rdquo;
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-sky-300 block mb-2">
+                      Our reassurance &amp; method
+                    </span>
+                    <p className="text-sm text-slate-300 leading-relaxed">
+                      We assess your residency and income-source status, then file the personal
+                      declarations (IRPP) that apply — handled remotely, so you don&apos;t need to
+                      travel for a personal tax matter.
+                    </p>
+                  </div>
+                </div>
+                <Button href="#compliance-check" variant="secondary" className="mt-6 justify-center">
+                  Get My Personal Tax Checklist
                 </Button>
               </div>
             </div>
@@ -462,7 +534,7 @@ export default function TaxComplianceBusinessesCameroonPage() {
             <div className="text-center max-w-3xl mx-auto mb-14">
               <span className="text-xs font-bold uppercase tracking-wider text-teal-400">THE COST OF INACTION</span>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-2">
-                Unmanaged Exposure vs. UCO Managed Cadence
+                Unmanaged Exposure vs. the Uptech Consulting Managed Cadence
               </h2>
               <p className="text-slate-300 mt-3">
                 In Cameroon, fiscal sanctions compound rapidly. Comparing what happens when
@@ -483,7 +555,7 @@ export default function TaxComplianceBusinessesCameroonPage() {
                     <p className="text-sm font-semibold text-rose-300 mb-1">Late-Filing Surcharges &amp; Compounding Interest</p>
                     <p className="text-sm text-slate-300">
                       Monthly penalties applied automatically by DGI systems on unfiled statements.{" "}
-                      <span className="text-amber-300 italic">[PENDING: confirm specific DGI penalty % with UCO]</span>
+                      <span className="text-amber-300 italic">[PENDING: confirm specific DGI penalty % with Uptech Consulting]</span>
                     </p>
                   </div>
                   <div className="p-3.5 bg-white/5 rounded-lg">
@@ -513,7 +585,7 @@ export default function TaxComplianceBusinessesCameroonPage() {
                 <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center gap-2">
                     <MaterialIcon name="verified" className="text-teal-400 text-[24px]" />
-                    <h3 className="text-lg font-bold text-white">The UCO Managed Cadence</h3>
+                    <h3 className="text-lg font-bold text-white">The Uptech Consulting Managed Cadence</h3>
                   </div>
                   <span className="px-2.5 py-1 rounded bg-teal-500/20 text-teal-300 text-[11px] font-bold">CONTINUOUS STATUS</span>
                 </div>
@@ -540,36 +612,6 @@ export default function TaxComplianceBusinessesCameroonPage() {
           </div>
         </section>
 
-        {/* Cross-link to individual tax */}
-        <section className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="p-7 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="flex items-start gap-4 max-w-2xl">
-                <div className="w-12 h-12 rounded-lg bg-white flex items-center justify-center text-teal-600 shrink-0 shadow-sm">
-                  <MaterialIcon name="person_pin" className="text-[24px]" />
-                </div>
-                <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-sky-600">EXECUTIVE TAX PLANNING</span>
-                  <h3 className="text-lg font-bold text-navy-950 mt-1">
-                    Also managing your personal taxes as a business owner or director?
-                  </h3>
-                  <p className="text-sm text-slate-600 mt-2">
-                    Cross-border founders, expats, and company executives face distinct personal
-                    income tax (IRPP) obligations separate from corporate legal entities.
-                  </p>
-                </div>
-              </div>
-              <Link
-                href="/services/business-formalisation-compliance/tax-compliance-individuals-cameroon"
-                className="inline-flex items-center gap-2 px-5 py-3 bg-navy-950 text-white rounded-lg text-sm font-semibold hover:bg-navy-900 transition-colors shrink-0"
-              >
-                Explore Personal Tax Compliance
-                <MaterialIcon name="arrow_forward" className="text-[16px]" />
-              </Link>
-            </div>
-          </div>
-        </section>
-
         {/* FAQ */}
         <section className="py-24 bg-slate-50">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -584,7 +626,7 @@ export default function TaxComplianceBusinessesCameroonPage() {
         </section>
 
         <ComplianceDisclaimer
-          lastReviewed="[PENDING: confirm review date with UCO]"
+          lastReviewed="[PENDING: confirm review date with Uptech Consulting]"
           extraNote="Statutory dues, penalties, and filing schedules are subject to Ministry of Finance (MINFI) and Direction Générale des Impôts (DGI) regulations."
         />
 

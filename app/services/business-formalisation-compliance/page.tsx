@@ -42,11 +42,29 @@ const trustStripItems = [
   },
 ];
 
-const businessPathways = [
+/*
+ * Four real pathways, not five: Tax Compliance for Businesses and for
+ * Individuals were unified into one page (Phase 3 of the leadership
+ * adjustment round), so there's no longer a standalone individual-only
+ * pathway to group separately. Tax Compliance carries an `audience` badge
+ * instead of living in its own "For Individuals" section — it serves both,
+ * shown as one card, not miscategorised under either column.
+ */
+const pathways: Array<{
+  number: string;
+  flag: string;
+  accent: "teal" | "blue" | "emerald";
+  title: string;
+  description: string;
+  tags: string[];
+  timeline: string;
+  href: string;
+  audience?: string;
+}> = [
   {
     number: "01",
     flag: "🇨🇲 Cameroon • OHADA / RCCM",
-    accent: "teal" as const,
+    accent: "teal",
     title: "Business Formalisation — Cameroon",
     description:
       "Full incorporation under OHADA standards: Articles of Association, notarial deposit, RCCM registration, and Taxpayer ID (NIU).",
@@ -57,7 +75,7 @@ const businessPathways = [
   {
     number: "02",
     flag: "🇺🇸 United States • 50 States",
-    accent: "blue" as const,
+    accent: "blue",
     title: "Business Formalisation — United States",
     description:
       "Formation of Delaware, Wyoming, Texas, or state-specific LLCs and C-Corps, including Registered Agent service and IRS EIN acquisition.",
@@ -67,19 +85,20 @@ const businessPathways = [
   },
   {
     number: "03",
-    flag: "🇨🇲 Cameroon • DGI Corporate",
-    accent: "emerald" as const,
-    title: "Tax Compliance for Businesses — Cameroon",
+    flag: "🇨🇲 Cameroon • DGI & IRPP Tax",
+    accent: "emerald",
+    audience: "Businesses & Individuals",
+    title: "Tax Compliance — Cameroon",
     description:
-      "Monthly returns filing, Corporate Income Tax (IS), Statistical and Tax Declarations (DSF), and Attestation de Non-Redevance (ANR) clearance.",
-    tags: ["Monthly DGI Filings", "Annual DSF Filing", "Non-Redevance (ANR)"],
+      "Monthly corporate DGI filings, Corporate Income Tax (IS) and DSF for businesses — personal income tax (IRPP) declarations for individuals. One tax desk, either way.",
+    tags: ["Monthly DGI Filings", "Annual DSF Filing", "Personal IRPP Filing"],
     timeline: "Ongoing monthly cadence",
     href: "/services/business-formalisation-compliance/tax-compliance-businesses-cameroon",
   },
   {
     number: "04",
     flag: "🇨🇲 Cameroon • CNPS & Labour",
-    accent: "teal" as const,
+    accent: "teal",
     title: "CNPS Compliance — Cameroon",
     description:
       "Employer social insurance registration, monthly employee declarations (DPAE), payroll withholding, and CNPS Clearance Certificates.",
@@ -89,33 +108,27 @@ const businessPathways = [
   },
 ];
 
-const individualPathway = {
-  flag: "🇨🇲 Cameroon • Individual Tax",
-  title: "Personal Tax Compliance & Declarations — Cameroon",
-  description:
-    "Statutory personal income tax declarations (IRPP), freelance and remote cross-border earnings regularisation, and personal Attestation de Non-Redevance issuance for visa and banking requirements.",
-  tags: ["Annual IRPP Filing", "Foreign Income Regularisation", "Individual ANR (Tax Clearance)"],
-  timeline: "[PENDING: confirm filing deadline with Uptech Consulting]",
-  href: "/services/business-formalisation-compliance/tax-compliance-individuals-cameroon",
-};
-
 const accentClasses: Record<"teal" | "blue" | "emerald", { iconBg: string; iconText: string }> = {
   teal: { iconBg: "bg-teal-50", iconText: "text-teal-600" },
   blue: { iconBg: "bg-blue-50", iconText: "text-blue-accent" },
   emerald: { iconBg: "bg-emerald-50", iconText: "text-emerald-600" },
 };
 
-const relatedServices = [
+// IT Consulting & Outsourcing removed: paused by leadership decision,
+// soft-hidden sitewide (see components/Header.tsx).
+const relatedServices: Array<{
+  icon: string;
+  /** Omit once a service has no meaningful relationship to state. */
+  relationship?: string;
+  title: string;
+  description: string;
+  href: string;
+}> = [
   {
-    icon: "terminal",
-    relationship: "Separate practice",
-    title: "IT Consulting & Outsourcing",
-    description: "Managed IT, cloud migration, databases and cyber security — advised, then actually run.",
-    href: "/services/it-consulting-outsourcing",
-  },
-  {
+    // No relationship tag: Career Marketing & Placement was previously
+    // positioned as nested under IT Consulting, but that scoping was removed
+    // per leadership decision (broadened to general career placement).
     icon: "trending_up",
-    relationship: "Part of IT Consulting's practice",
     title: "Career Marketing & Placement",
     description: "A dedicated worker on your account: profile positioning, daily applications, and recruiter follow-up until you are placed.",
     href: "/services/career-marketing-placement",
@@ -219,106 +232,61 @@ export default function BusinessFormalisationCompliancePage() {
                 <span className="text-xs font-bold uppercase tracking-wider text-sky-600">COMPLETE DIRECTORY</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight leading-tight">
-                Explore all five formalisation &amp; compliance pathways.
+                Explore all four formalisation &amp; compliance pathways.
               </h2>
             </div>
 
-            <div className="space-y-16">
-              <div>
-                <div className="flex items-center gap-3 mb-6">
-                  <span className="w-2.5 h-2.5 rounded-full bg-blue-accent" />
-                  <h3 className="text-xl font-extrabold text-navy-950">
-                    For Businesses &amp; Corporations{" "}
-                    <span className="text-sm font-normal text-slate-500 font-mono">(4 Dedicated Pathways)</span>
-                  </h3>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {businessPathways.map((pathway) => {
-                    const accent = accentClasses[pathway.accent];
-                    return (
-                      <div
-                        key={pathway.number}
-                        className="bg-white rounded-2xl p-7 border border-slate-200/90 shadow-sm hover:border-teal-500/40 hover:shadow-md transition-all flex flex-col justify-between group"
-                      >
-                        <div className="mb-6">
-                          <div className="flex items-center justify-between mb-4">
-                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold font-mono text-sm ${accent.iconBg} ${accent.iconText}`}>
-                              {pathway.number}
-                            </div>
-                            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-600 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded">
-                              {pathway.flag}
-                            </span>
-                          </div>
-                          <h4 className="text-lg font-bold text-navy-950 group-hover:text-blue-accent transition-colors mb-2">
-                            {pathway.title}
-                          </h4>
-                          <p className="text-xs text-slate-600 leading-relaxed mb-4">{pathway.description}</p>
-                          <div className="flex flex-wrap gap-1.5">
-                            {pathway.tags.map((tag) => (
-                              <span key={tag} className="text-[10px] font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded">
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {pathways.map((pathway) => {
+                const accent = accentClasses[pathway.accent];
+                return (
+                  <div
+                    key={pathway.number}
+                    className="bg-white rounded-2xl p-7 border border-slate-200/90 shadow-sm hover:border-teal-500/40 hover:shadow-md transition-all flex flex-col justify-between group"
+                  >
+                    <div className="mb-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold font-mono text-sm ${accent.iconBg} ${accent.iconText}`}>
+                          {pathway.number}
                         </div>
-                        <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
-                          <TimelineNote value={pathway.timeline} />
-                          <Link
-                            href={pathway.href}
-                            className="text-xs font-bold text-blue-accent group-hover:text-teal-600 inline-flex items-center gap-1"
-                          >
-                            Explore Pathway
-                            <MaterialIcon name="arrow_forward" className="text-[16px] group-hover:translate-x-1 transition-transform" />
-                          </Link>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div>
-                <div className="flex items-center gap-3 mb-6">
-                  <span className="w-2.5 h-2.5 rounded-full bg-teal-400" />
-                  <h3 className="text-xl font-extrabold text-navy-950">
-                    For Individuals &amp; Independent Professionals{" "}
-                    <span className="text-sm font-normal text-slate-500 font-mono">(1 Dedicated Pathway)</span>
-                  </h3>
-                </div>
-                <div className="bg-slate-50 rounded-2xl p-7 sm:p-9 border border-slate-200/90 shadow-sm hover:border-teal-500/40 hover:shadow-md transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-8 group">
-                  <div className="max-w-3xl">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="w-10 h-10 rounded-xl bg-navy-950 text-teal-400 flex items-center justify-center font-bold font-mono text-sm">
-                        05
-                      </div>
-                      <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-teal-700 bg-teal-50 border border-teal-200/70 px-2.5 py-1 rounded">
-                        {individualPathway.flag}
-                      </span>
-                    </div>
-                    <h4 className="text-xl font-bold text-navy-950 group-hover:text-blue-accent transition-colors mb-2">
-                      {individualPathway.title}
-                    </h4>
-                    <p className="text-sm text-slate-600 leading-relaxed mb-4">{individualPathway.description}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {individualPathway.tags.map((tag) => (
-                        <span key={tag} className="text-xs font-mono bg-white border border-slate-200 text-slate-700 px-3 py-1 rounded-md">
-                          {tag}
+                        <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-600 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded">
+                          {pathway.flag}
                         </span>
-                      ))}
+                      </div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <h4 className="text-lg font-bold text-navy-950 group-hover:text-blue-accent transition-colors">
+                          {pathway.title}
+                        </h4>
+                        {/* Serves both audiences — a badge, not a column, so
+                            it doesn't get miscategorised under either one. */}
+                        {pathway.audience && (
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-teal-700 bg-teal-50 border border-teal-200/70 px-2 py-0.5 rounded shrink-0">
+                            {pathway.audience}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-600 leading-relaxed mb-4">{pathway.description}</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {pathway.tags.map((tag) => (
+                          <span key={tag} className="text-[10px] font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                      <TimelineNote value={pathway.timeline} />
+                      <Link
+                        href={pathway.href}
+                        className="text-xs font-bold text-blue-accent group-hover:text-teal-600 inline-flex items-center gap-1"
+                      >
+                        Explore Pathway
+                        <MaterialIcon name="arrow_forward" className="text-[16px] group-hover:translate-x-1 transition-transform" />
+                      </Link>
                     </div>
                   </div>
-                  <div className="shrink-0 flex flex-col items-start lg:items-end gap-3">
-                    <TimelineNote value={individualPathway.timeline} />
-                    <Link
-                      href={individualPathway.href}
-                      className="gradient-teal-blue text-white text-xs sm:text-sm font-semibold px-6 py-3 rounded-lg hover:brightness-105 active:scale-[0.98] transition-all flex items-center gap-2 shadow-md"
-                    >
-                      Explore Pathway
-                      <MaterialIcon name="arrow_forward" className="text-[16px]" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -413,7 +381,9 @@ export default function BusinessFormalisationCompliancePage() {
                 </h2>
               </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {/* Sized to the actual card count, not a fixed 2-column skeleton —
+                one card stretched across a wide grid looks orphaned. */}
+            <div className={`grid grid-cols-1 gap-6 ${relatedServices.length > 1 ? "sm:grid-cols-2" : "max-w-sm"}`}>
               {relatedServices.map((service) => (
                 <Link
                   key={service.title}
@@ -425,9 +395,11 @@ export default function BusinessFormalisationCompliancePage() {
                       <div className="w-10 h-10 rounded-lg bg-navy-950 text-teal-400 flex items-center justify-center group-hover:scale-105 transition-transform">
                         <MaterialIcon name={service.icon} className="text-[18px]" />
                       </div>
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
-                        {service.relationship}
-                      </span>
+                      {service.relationship && (
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                          {service.relationship}
+                        </span>
+                      )}
                     </div>
                     <h3 className="text-base font-bold text-navy-950 group-hover:text-blue-accent transition-colors mb-1.5">
                       {service.title}

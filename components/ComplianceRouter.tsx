@@ -7,6 +7,12 @@ import { TimelineNote } from "@/components/TimelineNote";
 
 type Profile = "business" | "individual";
 type BusinessNeed = "formalisation-cmr" | "formalisation-us" | "tax-cmr" | "cnps-cmr";
+// The individual branch used to resolve straight to personal tax, with no
+// path for someone wanting to register their own business — the venture
+// option and its jurisdiction choice fix that (Phase 3 of the leadership
+// adjustment round).
+type IndividualNeed = "personal-tax" | "venture";
+type VentureJurisdiction = "cmr" | "us";
 
 type PathwayResult = {
   badge: string;
@@ -24,7 +30,7 @@ const businessNeeds: Array<{ key: BusinessNeed; label: string }> = [
   { key: "cnps-cmr", label: "🇨🇲 CNPS Social Security & Labour" },
 ];
 
-const results: Record<BusinessNeed | "individual", PathwayResult> = {
+const results: Record<BusinessNeed | "personal-tax", PathwayResult> = {
   "formalisation-cmr": {
     badge: "OHADA • SARL / SA / SAS",
     title: "Business Formalisation & RCCM Registration — Cameroon",
@@ -61,22 +67,33 @@ const results: Record<BusinessNeed | "individual", PathwayResult> = {
     timeline: "Routine regulatory cycle",
     href: "/services/business-formalisation-compliance/cnps-compliance-cameroon",
   },
-  individual: {
+  "personal-tax": {
     badge: "Cameroon • Individual Tax",
     title: "Personal Tax Compliance & Declarations — Cameroon",
     description:
       "Statutory personal income tax declarations (IRPP), freelance and remote cross-border earnings regularisation, and personal Attestation de Non-Redevance issuance.",
     deliverables: ["Annual IRPP Filing", "Foreign Income Regularisation", "Individual ANR (Tax Clearance)"],
     timeline: "Filing deadline: [PENDING: confirm with Uptech Consulting]",
-    href: "/services/business-formalisation-compliance/tax-compliance-individuals-cameroon",
+    // Tax Compliance for Individuals was merged into the unified page.
+    href: "/services/business-formalisation-compliance/tax-compliance-businesses-cameroon",
   },
 };
 
 export function ComplianceRouter() {
   const [profile, setProfile] = useState<Profile>("business");
   const [need, setNeed] = useState<BusinessNeed>("formalisation-cmr");
+  const [individualNeed, setIndividualNeed] = useState<IndividualNeed>("personal-tax");
+  const [ventureJurisdiction, setVentureJurisdiction] = useState<VentureJurisdiction>("cmr");
 
-  const result = useMemo(() => (profile === "individual" ? results.individual : results[need]), [profile, need]);
+  const result = useMemo(() => {
+    if (profile === "individual") {
+      if (individualNeed === "venture") {
+        return ventureJurisdiction === "us" ? results["formalisation-us"] : results["formalisation-cmr"];
+      }
+      return results["personal-tax"];
+    }
+    return results[need];
+  }, [profile, need, individualNeed, ventureJurisdiction]);
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xl p-6 sm:p-8 lg:p-10">
@@ -144,6 +161,64 @@ export function ComplianceRouter() {
                 </button>
               ))}
             </div>
+          </div>
+        )}
+
+        {profile === "individual" && (
+          <div>
+            <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-500 mb-3">
+              Step 2 • Personal tax, or starting your own venture?
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {(
+                [
+                  { key: "personal-tax", label: "🇨🇲 Personal Tax (IRPP)" },
+                  { key: "venture", label: "🚀 Starting a Venture" },
+                ] as const
+              ).map((option) => (
+                <button
+                  key={option.key}
+                  type="button"
+                  onClick={() => setIndividualNeed(option.key)}
+                  className={`px-3.5 py-1.5 rounded-md text-xs font-semibold transition-colors ${
+                    individualNeed === option.key
+                      ? "bg-navy-950 text-teal-300 border border-teal-500/40"
+                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+
+            {individualNeed === "venture" && (
+              <div className="mt-4">
+                <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-2.5">
+                  Which jurisdiction?
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {(
+                    [
+                      { key: "cmr", label: "🇨🇲 Cameroon" },
+                      { key: "us", label: "🇺🇸 United States" },
+                    ] as const
+                  ).map((option) => (
+                    <button
+                      key={option.key}
+                      type="button"
+                      onClick={() => setVentureJurisdiction(option.key)}
+                      className={`px-3.5 py-1.5 rounded-md text-xs font-semibold transition-colors ${
+                        ventureJurisdiction === option.key
+                          ? "bg-navy-950 text-teal-300 border border-teal-500/40"
+                          : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 

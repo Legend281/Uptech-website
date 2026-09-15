@@ -100,7 +100,7 @@ const personas = [
     number: "PROFILE 01 • EARLY CAREER",
     icon: "school",
     accent: "teal",
-    title: "Recent IT graduates with qualifications but no interview calls",
+    title: "Recent graduates with qualifications but no interview calls",
     friction:
       "Sending applications into corporate portals without response; ATS filters that favor years of tenure over demonstrated skill.",
     outcome:
@@ -143,7 +143,7 @@ const faqItems = [
   {
     question: "How is this different from doing it myself or using automated AI apply tools?",
     answer:
-      "AI spam tools can trigger employer spam filters, hurting your reputation across LinkedIn and company databases. Doing it alone requires many hours of repetitive manual work each week while you're exhausted from your current routine. UCO assigns a dedicated human worker who customizes every submission, completes employer screening questionnaires accurately, and personally follows up with hiring managers.",
+      "AI spam tools can trigger employer spam filters, hurting your reputation across LinkedIn and company databases. Doing it alone requires many hours of repetitive manual work each week while you're exhausted from your current routine. Uptech Consulting assigns a dedicated human worker who customizes every submission, completes employer screening questionnaires accurately, and personally follows up with hiring managers.",
   },
   {
     question: "Do you guarantee a job?",
@@ -153,7 +153,7 @@ const faqItems = [
   {
     question: "How long does the campaign typically take from audit to first interview?",
     answer:
-      "Timelines vary by role, market, and seniority. Your account specialist will scope a realistic timeline with you at the start of your campaign rather than a one-size-fits-all number — [PENDING: confirm typical stage durations and time-to-first-screen benchmarks with UCO].",
+      "Timelines vary by role, market, and seniority. Your account specialist will scope a realistic timeline with you at the start of your campaign rather than a one-size-fits-all number — [PENDING: confirm typical stage durations and time-to-first-screen benchmarks with Uptech Consulting].",
   },
   {
     question: "Is my personal data and employment confidentiality protected?",
@@ -162,16 +162,16 @@ const faqItems = [
   },
 ];
 
+/*
+ * IT Consulting & Outsourcing removed: paused by leadership decision,
+ * soft-hidden sitewide (see components/Header.tsx). No pillar numbers on
+ * what remains — a numbering that jumped straight to "02" with no "01"
+ * visible nearby would read as broken, not organised.
+ */
 const otherPillars = [
   {
-    icon: "terminal",
-    number: "Pillar 01",
-    title: "IT Consulting & Outsourcing",
-    href: "/services/it-consulting-outsourcing",
-  },
-  {
     icon: "description",
-    number: "Pillar 02",
+    relationship: "Separate practice",
     title: "Business Formalisation & Compliance",
     href: "/services/business-formalisation-compliance",
   },
@@ -431,8 +431,8 @@ export default function CareerMarketingPlacementPage() {
                 </p>
                 <p className="text-base text-slate-300 leading-relaxed">
                   This section is reserved for a verified candidate story — their name, role, and
-                  the outcome of their campaign — once UCO confirms one for publication. We do not
-                  publish invented quotes or placement figures.
+                  the outcome of their campaign — once Uptech Consulting confirms one for
+                  publication. We do not publish invented quotes or placement figures.
                 </p>
               </div>
             </div>
@@ -470,7 +470,9 @@ export default function CareerMarketingPlacementPage() {
                 </h2>
               </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl">
+            {/* Sized to the actual card count, not a fixed 2-column skeleton —
+                one card stretched across a wide grid looks orphaned. */}
+            <div className={`grid grid-cols-1 gap-4 ${otherPillars.length > 1 ? "sm:grid-cols-2 max-w-3xl" : "max-w-sm"}`}>
               {otherPillars.map((pillar) => (
                 <Link
                   key={pillar.title}
@@ -482,7 +484,7 @@ export default function CareerMarketingPlacementPage() {
                       <MaterialIcon name={pillar.icon} className="text-[18px]" />
                     </div>
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
-                      {pillar.number}
+                      {pillar.relationship}
                     </span>
                     <h3 className="text-sm font-bold text-navy-950 group-hover:text-blue-accent transition-colors mt-1">
                       {pillar.title}

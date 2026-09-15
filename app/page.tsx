@@ -6,13 +6,9 @@ import {
   ArrowUpRight,
   Check,
   FileCheck2,
-  Heart,
-  Lightbulb,
   Lock,
-  PenLine,
   Plus,
   Quote,
-  Zap,
 } from "lucide-react";
 
 import { Header } from "@/components/Header";
@@ -74,9 +70,9 @@ const startingPoints = [
  * wording or copy already approved elsewhere on this page — nothing invented to
  * fill a slot (CLAUDE.md Section 6.4).
  *
- * All four live service lines are represented. IT Consulting joined once its
- * page shipped on the Development branch — it was held back while that CTA
- * would have landed on a 404.
+ * IT Consulting's slide was removed when leadership paused that pillar — a
+ * promotional CTA driving traffic to an unlinked page would undo the point of
+ * unlinking it. Restore the slide (see git history) if the pillar is unpaused.
  */
 const promises: PromiseStatement[] = [
   {
@@ -96,14 +92,6 @@ const promises: PromiseStatement[] = [
     ctaHref: "/services/business-formalisation-compliance",
   },
   {
-    lead: "Technology advisory and managed support across databases, cloud migration, help desk operations, AI compliance and",
-    emphasis: "cyber security.",
-    support:
-      "Engage us for the specialised guidance, outsource the function to our professionals, or use both together.",
-    ctaLabel: "Explore IT consulting",
-    ctaHref: "/services/it-consulting-outsourcing",
-  },
-  {
     lead: "Individual effort only succeeds when it runs through the",
     emphasis: "repeatable, documented systems the organisation has already built.",
     support:
@@ -116,77 +104,24 @@ const promises: PromiseStatement[] = [
 /*
  * The mockup shows five pillars. CLAUDE.md Section 9 bars two of them from the
  * real nav and content: Recruitment & BPO is paused, and General Contracts &
- * Supplies is not being pushed. The mockup also labels pillar 04 "Career &
- * Profile Marketing", which Section 6.2 marks as a mockup error.
+ * Supplies is not being pushed. IT Consulting & Outsourcing is also paused, by
+ * a later leadership decision — soft-hidden sitewide (see components/Header.tsx),
+ * not deleted. That leaves two live pillars here, not three.
  */
 const pillars = [
   {
     number: "01",
-    title: "IT Consulting & Outsourcing",
-    href: "/services/it-consulting-outsourcing",
-    description:
-      "Technology advisory and managed support across databases, cloud migration, help desk operations, AI compliance and cyber security.",
-  },
-  {
-    number: "02",
     title: "Business Formalisation & Compliance",
     href: "/services/business-formalisation-compliance",
     description:
       "Business legalisation, tax and social insurance compliance, ministry licensing and accreditation managed as one accountable process.",
   },
   {
-    number: "03",
+    number: "02",
     title: "Career Marketing & Placement",
     href: "/services/career-marketing-placement",
     description:
-      "Positioning, market-facing documents and structured placement support for IT professionals seeking their next role.",
-  },
-];
-
-const process = [
-  {
-    number: "01",
-    title: "Consultation & diagnosis",
-    body: "We listen first, then identify the real technical, regulatory or human constraint.",
-  },
-  {
-    number: "02",
-    title: "Scoped delivery plan",
-    body: "You receive a written scope with owners, deadlines and clear standards.",
-  },
-  {
-    number: "03",
-    title: "Execution & handover",
-    body: "We run the process, report transparently and hand over systems your team can sustain.",
-  },
-];
-
-// Roles, not numbers — these four are parallel, not a sequence, so they get no
-// index markers and no card chrome.
-const values = [
-  {
-    icon: Zap,
-    role: "How we behave",
-    title: "Integrity",
-    body: "We act honestly, ethically and transparently in all our dealings. Dishonesty, system bypasses or opaque reporting breach this outright.",
-  },
-  {
-    icon: PenLine,
-    role: "The standard we maintain",
-    title: "Professionalism",
-    body: "Competence, accountability and service excellence. Every deliverable passed to a client carries the mark of professional precision.",
-  },
-  {
-    icon: Heart,
-    role: "How we serve",
-    title: "Commitment",
-    body: "Dedicated to delivering value and achieving the best outcomes for our clients and stakeholders.",
-  },
-  {
-    icon: Lightbulb,
-    role: "How we solve problems and improve",
-    title: "Innovation",
-    body: "Technology, creativity and continuous improvement. We do not work blindly — we optimise our tools to build resilient operating systems.",
+      "Positioning, market-facing documents and structured placement support for professionals seeking their next role.",
   },
 ];
 
@@ -224,9 +159,9 @@ const faqItems = [
       "Yes. Formalisation, tax standing, social insurance and licensing run as one accountable process rather than separate errands — registration hands straight over to the ongoing filing calendar.",
   },
   {
-    question: "Is career placement only for IT roles?",
+    question: "Do I need a specific background for career placement?",
     answer:
-      "Career Marketing & Placement sits inside the IT Consulting practice and is scoped to IT and technology roles specifically — that is where the recruiter relationships and market knowledge are. If your background sits outside IT, ask us before committing to anything.",
+      "No. Career Marketing & Placement is open to anyone looking for their next role, not restricted to a particular field.",
   },
   {
     question: "Do you work in French as well as English?",
@@ -479,7 +414,7 @@ export default function HomePage() {
               <div className="lg:col-span-5">
                 <div className="lg:sticky lg:top-28">
                   <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-navy-950 sm:text-4xl">
-                    Three pillars. Advisory, execution, or both.
+                    Two pillars. Advisory, execution, or both.
                   </h2>
                   <p className="mb-8 text-sm leading-relaxed text-slate-600">
                     We map what you actually need before anything is
@@ -552,87 +487,30 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ---------------- How We Work ---------------- */}
-        <section className="relative overflow-hidden bg-white py-24">
-          <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <Reveal effect="stagger" className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:gap-16">
-              <div className="lg:col-span-5">
-                <SectionLabel>How we work</SectionLabel>
-                <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-navy-950 sm:text-4xl">
-                  Documented systems, not individual heroics.
-                </h2>
-                <p className="mb-8 text-sm leading-relaxed text-slate-600 sm:text-base">
-                  A clear operating rhythm keeps every engagement accountable.
-                </p>
-                <Link
-                  href="/contact"
-                  className="gradient-teal-blue inline-flex items-center gap-2 rounded-lg px-6 py-3.5 text-sm font-semibold text-white shadow-md shadow-teal-950/30 transition-all hover:brightness-105 active:scale-[0.98]"
-                >
-                  <span>Plan your engagement</span>
-                  <ArrowRight className="h-4 w-4" strokeWidth={2} />
-                </Link>
-              </div>
-
-              {/* A genuine sequence, so it is drawn as one — a connected spine
-                  rather than three detached cards. */}
-              <ol className="relative lg:col-span-7">
-                <span
-                  aria-hidden="true"
-                  className="absolute bottom-6 left-[18px] top-6 w-px bg-gradient-to-b from-teal-400/60 via-slate-300 to-slate-200"
-                />
-                {process.map((step) => (
-                  <li key={step.number} className="relative flex gap-6 pb-10 last:pb-0">
-                    <span className="relative z-10 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-xs font-bold text-navy-900 shadow-sm">
-                      {step.number}
-                    </span>
-                    <div className="pt-1">
-                      <h3 className="mb-1.5 text-lg font-bold text-navy-950">
-                        {step.title}
-                      </h3>
-                      <p className="text-sm leading-relaxed text-slate-600">
-                        {step.body}
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* ---------------- What We Stand On ---------------- */}
-        <section className="border-y border-slate-200/80 bg-slate-100/70 py-24">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <h2 className="mb-14 max-w-2xl text-3xl font-extrabold tracking-tight text-navy-950 sm:text-4xl">
-              The standard holds—even when it is inconvenient.
+        {/* ---------------- How We Work (teaser) ----------------
+            Was two full sections (a 3-step process spine, then all 4 core
+            values in full). Who We Are's Philosophy and Core Values sections
+            already cover this in full depth — this duplicated it rather than
+            teasing it. Shrunk to one paragraph + a link, not removed: the
+            homepage still needs to establish tone fast for a zero-context
+            visitor, just without re-explaining what Who We Are already owns. */}
+        <section className="border-y border-slate-200/80 bg-slate-100/70 py-16">
+          <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
+            <h2 className="mb-4 text-2xl font-extrabold leading-tight tracking-tight text-navy-950 sm:text-3xl">
+              Documented systems, not individual heroics.
             </h2>
-
-            {/* No cards, no icon chips, no index numbers: four parallel values
-                separated by hairlines. */}
-            <Reveal effect="stagger" className="grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-0">
-              {values.map((value, index) => {
-                const Icon = value.icon;
-                return (
-                  <div
-                    key={value.title}
-                    className={`lg:px-8 ${index === 0 ? "lg:pl-0" : ""} ${
-                      index > 0 ? "lg:border-l lg:border-slate-300/70" : ""
-                    } ${index === values.length - 1 ? "lg:pr-0" : ""}`}
-                  >
-                    <Icon className="mb-5 h-6 w-6 text-teal-600" strokeWidth={1.6} />
-                    <p className="mb-1.5 text-xs font-medium text-slate-500">
-                      {value.role}
-                    </p>
-                    <h3 className="mb-3 text-2xl font-extrabold tracking-tight text-navy-950">
-                      {value.title}
-                    </h3>
-                    <p className="text-sm leading-relaxed text-slate-600">
-                      {value.body}
-                    </p>
-                  </div>
-                );
-              })}
-            </Reveal>
+            <p className="mb-6 text-sm leading-relaxed text-slate-600 sm:text-base">
+              A clear operating rhythm — not individual heroics — keeps every engagement
+              accountable, built on the same four values our whole team is held to: integrity,
+              professionalism, commitment and innovation.
+            </p>
+            <Link
+              href="/who-we-are"
+              className="inline-flex items-center gap-2 text-sm font-bold text-blue-accent transition-colors hover:text-blue-700"
+            >
+              <span>Learn more about how we work</span>
+              <ArrowRight className="h-4 w-4" strokeWidth={2} />
+            </Link>
           </div>
         </section>
 

@@ -105,7 +105,7 @@ export default function BusinessFormalisationUnitedStatesPage() {
           { label: "Business Formalisation & Compliance", href: "/services/business-formalisation-compliance" },
           { label: "United States" },
         ]}
-        tag="SUB-SERVICE 02/05 • US LLC / C-CORP FORMATION"
+        tag="SUB-SERVICE 02/04 • US LLC / C-CORP FORMATION"
       />
 
       <main>

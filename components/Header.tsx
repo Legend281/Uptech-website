@@ -16,6 +16,12 @@ type HeaderProps = {
   ctaHref?: string;
 };
 
+/*
+ * IT Consulting & Outsourcing is paused by leadership decision — soft-hidden
+ * sitewide (unlinked, not deleted; the page and its code still exist at
+ * /services/it-consulting-outsourcing for when it's unpaused). Do not add it
+ * back to this array without that decision being reversed.
+ */
 const services: Array<{
   key: ServiceKey;
   number: string;
@@ -25,29 +31,24 @@ const services: Array<{
   subItems?: Array<{ title: string; href: string }>;
 }> = [
   {
-    key: "it-consulting",
-    number: "01",
-    title: "IT Consulting & Outsourcing",
-    description: "Managed IT, cloud migration, databases & cyber security",
-    href: "/services/it-consulting-outsourcing",
-  },
-  {
     key: "business-formalisation",
-    number: "02",
+    number: "01",
     title: "Business Formalisation & Compliance",
     description: "Licensing, corporate structuring & tax standing",
     href: "/services/business-formalisation-compliance",
+    // Tax Compliance for Businesses and for Individuals were merged into one
+    // unified page (leadership decision) — the individuals URL now redirects
+    // to it rather than appearing here as a second nav entry.
     subItems: [
       { title: "Business Formalisation — Cameroon", href: "/services/business-formalisation-compliance/cameroon" },
       { title: "Business Formalisation — United States", href: "/services/business-formalisation-compliance/united-states" },
-      { title: "Tax Compliance for Businesses — Cameroon", href: "/services/business-formalisation-compliance/tax-compliance-businesses-cameroon" },
-      { title: "Tax Compliance for Individuals — Cameroon", href: "/services/business-formalisation-compliance/tax-compliance-individuals-cameroon" },
+      { title: "Tax Compliance — Cameroon", href: "/services/business-formalisation-compliance/tax-compliance-businesses-cameroon" },
       { title: "CNPS Compliance — Cameroon", href: "/services/business-formalisation-compliance/cnps-compliance-cameroon" },
     ],
   },
   {
     key: "career-marketing",
-    number: "03",
+    number: "02",
     title: "Career Marketing & Placement",
     description: "Executive positioning & international placement",
     href: "/services/career-marketing-placement",

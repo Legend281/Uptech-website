@@ -12,7 +12,7 @@ type ComplianceDisclaimerProps = {
  */
 export function ComplianceDisclaimer({
   lastReviewed,
-  reviewedBy = "UCO Legal & Corporate Administration Desk",
+  reviewedBy = "Uptech Consulting Legal & Corporate Administration Desk",
   extraNote,
 }: ComplianceDisclaimerProps) {
   return (
@@ -26,7 +26,7 @@ export function ComplianceDisclaimer({
             <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Compliance Notice</h4>
             <p className="text-xs text-slate-600 leading-relaxed">
               This information is general guidance. Requirements may change — confirm current
-              details with your UCO consultant.
+              details with your Uptech Consulting consultant.
               {extraNote ? ` ${extraNote}` : ""}
             </p>
             <div className="flex items-center gap-2 text-xs text-slate-500 font-medium pt-1">

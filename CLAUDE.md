@@ -66,34 +66,34 @@ A full `DESIGN.md` file exists with the complete token set (colors, typography, 
 This site is not one template repeated with different words. There are **three distinct page templates**, because different services create different buyer fears. Using the wrong template on the wrong page is a real mistake, not a style choice.
 
 ### Template A — Advisory/Menu
-**Used for:** IT Consulting & Outsourcing (and future: Recruitment & BPO, once unpaused)
+**Used for:** IT Consulting & Outsourcing (currently **PAUSED** by leadership decision — soft-hidden sitewide, not deleted; see Section 5) (and future: Recruitment & BPO, once unpaused)
 **Buyer's fear:** "Will this be done competently?"
 **Shape:** Card grid of independent, separately-purchasable services. "What's Included" is a menu — visitor picks what they need.
 **CTA:** "Book a Consultation"
 
 ### Template B — Campaign/Sequence
 **Used for:** Career Marketing & Placement
-**Official org position:** This is technically a sub-service of IT Consulting & Outsourcing (the company's own service directory nests it there — it is the talent/staffing arm of the IT practice specifically, not a general career service). Its own materials say "helps IT people get dream jobs," "dream IT related jobs," and describe the dedicated worker following "any job posted related to your area of specialty" — this service is scoped to **IT/tech roles specifically.**
-**Build decision (recommended, pending final team confirmation):** Build this as a clean top-level page — URL `/services/career-marketing-placement`, top-level nav entry — because it is being actively marketed and prioritized as UCO's flagship current offering while IT Consulting itself sits paused. To stay honest about the real structure without making it load-bearing, include a small kicker line on the page (e.g., "Part of Uptech Consulting's IT Consulting & Outsourcing practice"). **Confirm this approach with Shaniel/leadership before treating it as final** — the alternative is nesting it properly under IT Consulting in the URL/breadcrumb (`/services/it-consulting-outsourcing/career-marketing-placement`), which is more organizationally accurate but less aligned with how it's currently being pushed to market.
+**Official org position:** This was originally built as a sub-service of IT Consulting & Outsourcing — scoped to **IT/tech roles specifically**, per the company's own materials at the time ("helps IT people get dream jobs," the dedicated worker following "any job posted related to your area of specialty"). **Leadership has since broadened this to general career placement, open to any professional background — it is no longer IT-restricted, and no longer positioned as nested under IT Consulting.** The "Part of Uptech Consulting's IT Consulting & Outsourcing practice" kicker line has been removed from the page and from every cross-link to it elsewhere on the site.
+**Build decision:** Built as a clean top-level page — URL `/services/career-marketing-placement`, top-level nav entry. This is settled, not pending — there is no nesting question left to confirm with Shaniel/leadership, since the service is no longer positioned under IT Consulting at all (which is itself currently paused — see Section 5).
 **Buyer's fear:** "Is anyone actually going to fight for me, or does this go into a void?"
 **Shape:** NOT a card grid. One continuous, sequential campaign shown as a connected path/timeline (Profile Audit → LinkedIn/Portal Setup → Daily Applications → Interview Prep → Ongoing Recruiter Follow-Up). Do NOT split "what's included" and "process" into two sections — they are the same content here.
 **CTA:** "Start Your Career Campaign" (an intake action) — NOT "Book a Consultation."
-**Personas — MUST be IT-specific, not generic job seekers:** recent IT graduates, experienced IT professionals re-entering the market, diaspora IT professionals seeking placement while relocating or based abroad.
-**Tone:** Warm, personal, relentless-on-your-behalf. Use UCO's real stated language: *"We dedicate a full-time worker to your account whose job is to make sure you never miss a relevant posting, and follow up with recruiters until you're placed."* This is a real operational fact from the company's own materials — do not paraphrase it into generic "personalized support" language.
+**Personas — general, not IT-specific:** recent graduates, experienced professionals re-entering the market, diaspora professionals seeking placement while relocating or based abroad. (Previously IT-specific — broadened per the leadership decision above.)
+**Tone:** Warm, personal, relentless-on-your-behalf. Use UCO's real stated language: *"We dedicate a full-time worker to your account whose job is to make sure you never miss a relevant posting, and follow up with recruiters until you're placed."* This is a real operational fact from the company's own materials, and still applies unchanged under the broadened scope — do not paraphrase it into generic "personalized support" language.
 
 ### Template C — Regulatory/Procedure
-**Used for:** Business Formalisation & Compliance (5 sub-pages: Business Formalisation Cameroon, Business Formalisation US, Tax Compliance for Businesses Cameroon, Tax Compliance for Individuals Cameroon, CNPS Compliance Cameroon)
+**Used for:** Business Formalisation & Compliance (4 sub-pages: Business Formalisation Cameroon, Business Formalisation US, Tax Compliance Cameroon, CNPS Compliance Cameroon)
 **Buyer's fear:** "Will this be done correctly, and will I get in legal trouble if it isn't?"
 **Shape:** Documents & Requirements checklist + step-by-step official procedure + realistic (not exact) timelines. Softer CTA sequencing: "Get the Checklist" first, "Book a Consultation" second.
 **Mandatory elements not present in Templates A/B:**
 - Visible compliance disclaimer: *"This information is general guidance. Requirements may change — confirm current details with your Uptech Consulting consultant."*
 - **"Last reviewed: [DATE]"** displayed permanently on the page (this content can go legally stale — needs a review-cadence flag in the admin dashboard)
 - A "What Comes Next" section pointing to the logical next page in the compliance sequence (e.g., Formalisation → Tax Compliance → CNPS), not a generic cross-link grid
-**Sub-audience split within Template C:** 4 of the 5 pages are business-facing (Formalisation CM/US, Tax Compliance for Businesses, CNPS); **Tax Compliance for Individuals is a different audience (personal tax)** and must NOT reuse business-facing framing or personas.
+**Sub-audience note:** Tax Compliance Cameroon was originally two separate pages — a business-facing one and a personal-tax one for individuals — built and shipped as two rows in Section 5's inventory. **Leadership merged them into one unified page serving both audiences** (its own "Who This Is For" section carries both business and individual personas, given equal visual weight, not one primary + one secondary). The old individual-only URL now redirects to the unified page. The other 3 Template C pages remain purely business-facing.
 **Public-vs-proprietary content rule (applies ONLY to Template C, but good practice everywhere):** publish official/public procedural steps and client-facing document requirements freely. NEVER publish UCO's internal negotiation tactics, specific government-office relationships, or exact fee/pricing figures — mark these `[PENDING]` if real data hasn't been supplied yet, rather than inventing plausible-looking numbers.
 
 ### The Hub Page (Business Formalisation & Compliance overview)
-Sits between the Services nav and the 5 Template C pages. Contains a **guided 2-step router** ("Business or Individual?" → "Which specific need?") that resolves to the correct sub-page — this is required infrastructure, not optional, since 5 pages cannot all hang off one nav link cleanly.
+Sits between the Services nav and the 4 Template C pages. Contains a **guided 2-step router** ("Business or Individual?" → "Which specific need?") that resolves to the correct sub-page — this is required infrastructure, not optional, since 4 pages cannot all hang off one nav link cleanly. The Individual branch is itself a further 2-way choice — "Personal tax, or starting your own venture?" — since an individual founder needs the Business Formalisation flow (Cameroon or US), not just the unified Tax Compliance page; it used to resolve straight to personal tax with no venture path at all, which was a real gap, now fixed.
 
 ---
 
@@ -102,14 +102,13 @@ Sits between the Services nav and the 5 Template C pages. Contains a **guided 2-
 | Page | Template | Status |
 |---|---|---|
 | Homepage | Special (see below) | Designed — needs "the only company" claim removed (Section 1) and any placeholder logo swapped for the real asset |
-| IT Consulting & Outsourcing | A — Advisory/Menu | Designed & coded (`code.html` exists) — ⚠️ built before re-prioritization; confirm with team whether to hold or proceed |
-| Career Marketing & Placement | B — Campaign/Sequence | **Designed — PRIORITY 1, build first.** Confirm nesting/URL decision (Section 4) with team; scope content to IT roles specifically |
-| Business Formalisation & Compliance (hub) | Router/hub | Designed |
-| Business Formalisation — Cameroon | C — Regulatory/Procedure | Designed |
-| Tax Compliance for Businesses — Cameroon | C — Regulatory/Procedure | Designed |
-| Business Formalisation — US | C — Regulatory/Procedure | Not yet designed |
-| Tax Compliance for Individuals — Cameroon | C — Regulatory/Procedure (different audience) | Not yet designed |
-| CNPS Compliance for Businesses — Cameroon | C — Regulatory/Procedure | Not yet designed |
+| IT Consulting & Outsourcing | A — Advisory/Menu | Built, then **PAUSED by leadership decision.** Soft-hidden sitewide — removed from the main nav, footer, homepage pillars, homepage rotating statements, and every cross-link section that pointed to it. The page and its code remain intact, not deleted, for whenever it's unpaused. |
+| Career Marketing & Placement | B — Campaign/Sequence | **Built and live.** Broadened to general career placement per leadership decision — no longer scoped to IT/tech roles, no longer positioned as nested under IT Consulting (see Section 4) |
+| Business Formalisation & Compliance (hub) | Router/hub | Designed & built. "Five Pathways" grid is now four — see Tax Compliance row below |
+| Business Formalisation — Cameroon | C — Regulatory/Procedure | Designed & built |
+| Tax Compliance — Cameroon (unified: businesses & individuals) | C — Regulatory/Procedure | **Built and live.** Was two separate rows in this table ("Tax Compliance for Businesses" and "Tax Compliance for Individuals") — leadership merged them into one page serving both audiences. The old individual-only URL (`.../tax-compliance-individuals-cameroon`) now redirects here; every internal link that pointed to it was updated to point here directly. |
+| Business Formalisation — US | C — Regulatory/Procedure | Designed & built |
+| CNPS Compliance for Businesses — Cameroon | C — Regulatory/Procedure | Designed & built |
 | Recruitment & BPO | A — Advisory/Menu (likely) | **PAUSED** — pending leadership's dedicated structure session. Open question for that session: should this be fully hidden from nav, or show a "coming soon" state so visitors searching for it aren't met with nothing? Do not decide this unilaterally. |
 | General Contracts and Supplies | Unclear — not yet scoped | **Confirmed as a real, official 4th service pillar** (was previously and incorrectly treated as non-existent). Not currently being pushed by Marketing & Ops. Bundle into the same future structure session as Recruitment & BPO — do not build without further direction. |
 | About | — | Not yet designed |
@@ -119,7 +118,7 @@ Sits between the Services nav and the 5 Template C pages. Contains a **guided 2-
 
 **Homepage's special role:** unlike every other page (which can go deep on one audience/topic), the homepage must work for a zero-context visitor and serve both audiences (career-seekers and businesses) simultaneously. Its success condition includes correctly routing a visitor elsewhere, not just converting on-page. Structure: Split Hero → Guided Router → Trust Strip → "Meet Your Dedicated Person" → The Bridge (visual, Buea⇄Stafford) → Services Grid → "Do the Math" comparator → Real Results (merged testimonial+outcome) → FAQ → Final CTA Band → Footer.
 
-**Build order:** Career Marketing & Placement first (explicit leadership priority), then the 5 Business Formalisation & Compliance pages + hub. Do not start Recruitment & BPO, General Contracts & Supplies, or expand IT Consulting further without explicit confirmation.
+**Build order:** Career Marketing & Placement first (explicit leadership priority), then the 4 Business Formalisation & Compliance pages + hub — all now built and live. Do not start Recruitment & BPO, General Contracts & Supplies, or expand IT Consulting further without explicit confirmation (IT Consulting is currently paused — see Section 5).
 
 ---
 
@@ -161,7 +160,8 @@ Custom-built (not a CMS product). Two department-specific access paths after log
 
 ## 9. What NOT To Do
 
-- Do not build Recruitment & BPO or General Contracts & Supplies, or restructure IT Consulting's nav placement — all are paused pending a leadership session
+- Do not build Recruitment & BPO or General Contracts & Supplies — both remain paused pending a leadership session
+- IT Consulting & Outsourcing is also paused (leadership decision, made) and has been unlinked sitewide — nav, footer, homepage, and every cross-link section (see Section 5). Do not relink it anywhere without a further leadership decision to resume it. The page and its code stay intact; only the linking changed.
 - Do not invent Cameroonian or US regulatory procedure details from general knowledge — use only what's explicitly supplied as real content; mark unknowns `[PENDING]`
 - Do not treat the three page templates as interchangeable — check which template a given service belongs to before generating its structure
 - Do not silently fill `[PENDING]` placeholders with plausible-looking fake data to make a page "look done"
@@ -171,9 +171,9 @@ Custom-built (not a CMS product). Two department-specific access paths after log
 
 ---
 
-## 10. Immediate Task
+## 10. Immediate Task (historical — the page below is now built; kept for context)
 
-Build the **Career Marketing & Placement** page (Template B) first, using the shared component library (header/nav/footer/breadcrumb/buttons) as the foundation. Reference `DESIGN.md` for exact tokens. Scope all persona/content language to IT/tech roles specifically (Section 4). Ask for real content (hero copy, trust-strip facts, FAQ questions, testimonials/pricing stance) if it hasn't been supplied yet — do not invent it.
+Build the **Career Marketing & Placement** page (Template B) first, using the shared component library (header/nav/footer/breadcrumb/buttons) as the foundation. Reference `DESIGN.md` for exact tokens. ~~Scope all persona/content language to IT/tech roles specifically (Section 4).~~ **Superseded:** leadership later broadened this to general career placement, no longer IT-restricted — see Section 4. Ask for real content (hero copy, trust-strip facts, FAQ questions, testimonials/pricing stance) if it hasn't been supplied yet — do not invent it.
 
 ---
 
@@ -192,3 +192,18 @@ A source-accuracy review against UCO's own official company documents (the "Unde
 | Logo | Placeholder/invented mark reportedly in use on built pages | Real supplied logo file required everywhere |
 
 This log exists so the team can see exactly what was fixed and verify it against the source documents themselves rather than taking it on faith — consistent with the company's own stated principle that individual work only holds up when it runs through a documented, repeatable system, not memory or assumption.
+
+### Round 2 — Leadership Adjustment (post-launch)
+
+A separate round of changes, made directly on leadership's instruction rather than a source-document review. Distinct from the table above — this reflects decisions leadership made, not drift caught against an existing source.
+
+| Issue | Was | Corrected to |
+|---|---|---|
+| IT Consulting & Outsourcing | Live, linked sitewide (nav, footer, homepage pillars, homepage rotating statements, cross-links from Career Marketing/Business Formalisation/Who We Are/Who We Serve) | **Paused by leadership decision.** Soft-hidden everywhere it was linked from; page and code left intact, not deleted |
+| Career Marketing & Placement scope | IT/tech roles specifically; nested under IT Consulting & Outsourcing ("Part of our IT Consulting practice" kicker) | Broadened to general career placement, open to any professional background; kicker removed everywhere it appeared |
+| Tax Compliance (Cameroon) | Two separate pages: one business-facing, one for individuals | Unified into one page serving both audiences (equal-weight personas); old individual-only URL redirects to it |
+| Business Formalisation & Compliance hub's guided router | Individual branch resolved straight to personal tax — no path for an individual registering their own business | Individual branch now asks "Personal tax, or starting your own venture?"; venture path offers a Cameroon/US jurisdiction choice into the Business Formalisation flow |
+| "For Businesses & Institutions" persona page (`/who-we-serve/businesses`) | Abstract 3-card grid: Operations, Compliance, Managed Functions | Rebuilt around the 4 real named services (Business Formalisation CM/US, Tax Compliance, CNPS); IT Consulting and the two paused pillars are no longer offered as selectable cards, only named plainly in the hero's disclosure note |
+| Homepage "Documented systems" + "Core Values" sections | Full treatment, duplicating Who We Are's Philosophy and Core Values sections in depth | Shrunk to one shared teaser paragraph + a "Learn more about how we work →" link to Who We Are |
+
+**Also fixed in the course of this round, incidentally (not requested, found while editing the same files):** several visible-copy "UCO" occurrences (`components/ComplianceDisclaimer.tsx`'s shared default text, and body copy on the Career Marketing and unified Tax Compliance pages) that predated this round and violated Section 6's naming rule. **Flagged but NOT fixed** (out of scope for this round — a larger, separate cleanup): the Business Formalisation Cameroon, Business Formalisation US, and CNPS Compliance pages still carry roughly 17 visible-copy "UCO" occurrences between them; worth a dedicated pass.

@@ -46,14 +46,19 @@ function SpineNode({ tone = "light" }: { tone?: "light" | "dark" }) {
 
 /*
  * The company's four official pillars, in full. The homepage lists only the
- * three that are live, because it is a marketing surface; this page is the
+ * two that are live, because it is a marketing surface; this page is the
  * organisational record, so the paused pillars are named here rather than
  * quietly omitted.
  *
  * A row without an `href` is not a link and gets no hover affordance. Only the
  * exceptions carry a status line — a working link is its own proof that a
- * service is active, so labelling all five "Active / Active / Active / Paused /
- * Paused" would be decoration rather than information.
+ * service is active, so labelling every row "Active / Active / Paused /
+ * Paused / Paused" would be decoration rather than information.
+ *
+ * IT Consulting & Outsourcing moved from the live group to the paused group
+ * when leadership paused that pillar sitewide (soft-hidden, not deleted — see
+ * components/Header.tsx). It sits first among the paused rows since it was
+ * previously live, not because it outranks the other two.
  */
 const pillars: Array<{
   name: string;
@@ -63,23 +68,23 @@ const pillars: Array<{
   status?: string;
 }> = [
   {
-    name: "IT Consulting & Outsourcing",
-    href: "/services/it-consulting-outsourcing",
-    body: "Managed IT, cloud migration, databases and cyber security — advised, then actually run.",
-  },
-  {
     name: "Business Formalisation & Compliance",
     href: "/services/business-formalisation-compliance",
     body: "Registration, corporate structuring and tax standing, in Cameroon and in the United States.",
   },
   {
+    // No kicker: broadened per leadership decision to general career
+    // placement, no longer positioned as nested under IT Consulting.
     name: "Career Marketing & Placement",
     href: "/services/career-marketing-placement",
-    kicker: "Part of our IT Consulting practice",
     body: "A dedicated worker on your account: profile positioning, daily applications, and recruiter follow-up until you are placed.",
   },
   // No description on the paused pillars. Describing the scope of something we
   // are not currently selling would be inventing it.
+  {
+    name: "IT Consulting & Outsourcing",
+    status: "Paused — not currently offered",
+  },
   {
     name: "Third-Party Recruitment & BPO",
     status: "In active development",

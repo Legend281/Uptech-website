@@ -76,12 +76,17 @@ export function WaysWeHelp({
     );
   }
 
+  // Individuals has 3 cards (a clean 3-across row); Businesses has 4 — a
+  // fixed 3-column grid would leave the 4th card alone on its own row, so
+  // the column count follows the actual item count instead.
+  const gridCols = items.length === 4 ? "md:grid-cols-2 lg:grid-cols-4" : "md:grid-cols-3";
+
   return (
     <div>
       <div
         role="group"
         aria-label="Select everything that applies to you"
-        className="grid grid-cols-1 gap-6 md:grid-cols-3"
+        className={`grid grid-cols-1 gap-6 ${gridCols}`}
       >
         {items.map((item) => {
           const isSelected = selected.includes(item.key);

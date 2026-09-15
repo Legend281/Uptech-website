@@ -15,11 +15,15 @@ export const individuals: PersonaContent = {
     eyebrow: "For Individuals",
     headline: ["Build the career.", "Keep the taxes clean.", "Start the venture."],
     lead:
-      "Three situations bring individuals to Uptech Consulting: you're an IT professional who wants the next role and someone actually working to get it; you have income to declare in Cameroon and want it done properly; or you're ready to register a business of your own. Sometimes it's all three.",
+      "Three situations bring individuals to Uptech Consulting: you want the next role and someone actually working to get it; you have income to declare in Cameroon and want it done properly; or you're ready to register a business of your own. Sometimes it's all three.",
+    // Broadened per leadership decision: Career Marketing & Placement is no
+    // longer IT-specific, so all three situations below are equally open —
+    // this note states that plainly rather than disclosing a scope exception
+    // that no longer exists.
     note:
-      "One thing to know before you go further: our career support is built for IT and tech roles specifically — a dedicated worker on your account, applying and following up with recruiters until you're placed. Personal tax and business formalisation are open to anyone.",
+      "One thing to know before you go further: all three of these are open to anyone — career growth, personal tax and business formalisation alike. Whichever brought you here, a named person takes it on, not a shared inbox.",
     situations: [
-      "IT professional looking for the next role",
+      "Looking for the next role",
       "Income to declare in Cameroon",
       "A business of your own to register",
     ],
@@ -33,10 +37,11 @@ export const individuals: PersonaContent = {
       "Each of these has its own page. Select one to go straight there — or more than one, and we'll explain what happens next.",
     items: [
       {
+        // No scope tag: broadened per leadership decision to general career
+        // placement, open to any field — not IT/tech-specific any more.
         key: "career",
         icon: "briefcase",
         title: "Career Growth",
-        scope: "IT & tech roles only",
         description:
           "A full-time worker dedicated to your account: your profile positioned, relevant postings applied to daily, interview preparation, and recruiter follow-up until you're placed.",
         href: "/services/career-marketing-placement",
@@ -48,15 +53,21 @@ export const individuals: PersonaContent = {
         scope: "Cameroon",
         description:
           "Your personal income tax declarations in Cameroon, freelance or foreign income regularised, and your individual tax clearance issued — filed correctly and on time.",
-        href: "/services/business-formalisation-compliance/tax-compliance-individuals-cameroon",
+        // Tax Compliance for Individuals was merged into the unified Tax
+        // Compliance page — points there directly rather than through the
+        // redirect.
+        href: "/services/business-formalisation-compliance/tax-compliance-businesses-cameroon",
       },
       {
-        // Links to Business Formalisation — Cameroon directly. The
-        // ComplianceRouter on the hub page types Profile as
-        // "business" | "individual" and sends every individual to personal
-        // tax, so an individual formalising their own venture is invisible to
-        // it. That inconsistency is flagged for a team decision (Shaniel) and
-        // is deliberately not changed here; this card bypasses it.
+        // Links to Business Formalisation — Cameroon directly, rather than
+        // through the hub's ComplianceRouter. That router's individual branch
+        // used to send every individual to personal tax with no venture path
+        // at all — fixed in Phase 3 of the leadership adjustment round
+        // (individual branch now asks "personal tax, or starting your own
+        // venture?" and offers a Cameroon/US jurisdiction choice). This card
+        // still bypasses the router and links straight to Cameroon, since
+        // that's the common case for an individual founder; the router is
+        // the place to go for the explicit jurisdiction choice.
         key: "venture",
         icon: "rocket",
         title: "Starting a Venture",
@@ -76,7 +87,7 @@ export const individuals: PersonaContent = {
     eyebrow: "Living abroad",
     heading: "Sorting this out from another country is exactly what the two-jurisdiction setup is for.",
     paragraphs: [
-      "A situation we're built for: you're an IT professional based in the United States or Europe. You want a stronger position in the job market where you are. You still have income that needs declaring back home. And the business you keep meaning to register in Cameroon is still just an idea. Three needs, three offices, three sets of paperwork — and nobody on the ground you can hand it all to.",
+      "A situation we're built for: you're based in the United States or Europe. You want a stronger position in the job market where you are. You still have income that needs declaring back home. And the business you keep meaning to register in Cameroon is still just an idea. Three needs, three offices, three sets of paperwork — and nobody on the ground you can hand it all to.",
       "Uptech Consulting is incorporated in both Cameroon and the United States so that one team can carry all of it: the career campaign, the personal tax file and the business registration — with a named person on your account, not a shared inbox.",
       "You don't have to know which service you need before you get in touch. Describe the situation; we'll tell you plainly what applies, what doesn't, and in what order.",
     ],
@@ -91,9 +102,9 @@ export const individuals: PersonaContent = {
 
   faq: [
     {
-      question: "Is Career Marketing & Placement only for IT professionals?",
+      question: "Do I need a specific background to use this service?",
       answer:
-        "Yes. It's the talent arm of our IT Consulting & Outsourcing practice, and the dedicated worker on your account follows postings in your area of IT specialty. If you work outside tech, we'll say so up front rather than take you on and under-deliver. Personal tax and business formalisation are open to anyone.",
+        "No. Career Growth, Personal Tax and Starting a Venture are all open to anyone — none of them require a specific professional background. Describe your situation and we'll confirm what applies.",
     },
     {
       question: "Can I register a personal business if I don't live in Cameroon?",

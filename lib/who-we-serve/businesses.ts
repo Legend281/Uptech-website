@@ -24,8 +24,10 @@ export const businesses: PersonaContent = {
       "Organisations come to Uptech Consulting for one of three reasons: the technology needs running by someone accountable, the company needs registering and keeping compliant in Cameroon or the United States, or a whole function needs taking off your hands. Usually it's the first two together.",
     // Names the paused pillars and states their status — nothing more. The
     // reason they are paused is a leadership matter and is not inferred here.
+    // IT Consulting & Outsourcing joined this list when leadership paused it
+    // sitewide (soft-hidden, not deleted — see components/Header.tsx).
     note:
-      "One thing to know before you go further: third-party recruitment, business process outsourcing, and general contracts & supplies are official parts of Uptech Consulting, but they are not on offer as standalone services right now.",
+      "One thing to know before you go further: IT Consulting & Outsourcing, third-party recruitment, business process outsourcing, and general contracts & supplies are official parts of Uptech Consulting, but they are not on offer as standalone services right now.",
     situations: [
       "Technology that needs managing",
       "A company to register or keep compliant",
@@ -34,47 +36,63 @@ export const businesses: PersonaContent = {
     image: "it-advisory",
   },
 
+  /*
+   * Rebuilt around the 4 real named services (leadership's confirmed active
+   * list), replacing the earlier abstract Operations / Compliance / Managed
+   * Functions grouping. IT Consulting and the two paused pillars are
+   * deliberately not cards here — CLAUDE.md's honesty requirement is met by
+   * naming them plainly in the hero note above, not by offering them as
+   * options a visitor can select and hit a dead end on.
+   */
   ways: {
-    eyebrow: "Three ways we help",
+    eyebrow: "Four ways we help",
     heading: "Tick what applies. One conversation scopes it.",
     intro:
-      "The first two have their own pages. Select one to go straight there — or more than one, and we'll explain what happens next.",
+      "Each of these has its own page. Select one to go straight there — or select more than one, and we'll explain what happens next.",
     items: [
       {
-        key: "operations",
-        icon: "server",
-        title: "Operations",
-        scope: "IT Consulting & Outsourcing",
+        key: "formalisation-cmr",
+        icon: "rocket",
+        title: "Business Formalisation — Cameroon",
+        scope: "Cameroon",
         description:
-          "Databases, cloud migration, help desk operations, AI compliance and cyber security — advised, and then run by our professionals for as long as you need them.",
-        href: "/services/it-consulting-outsourcing",
+          "Full incorporation under OHADA standards — Articles of Association, notarial deposit, RCCM registration, and Taxpayer ID (NIU).",
+        href: "/services/business-formalisation-compliance/cameroon",
       },
       {
-        key: "compliance",
+        key: "formalisation-us",
+        icon: "briefcase",
+        title: "Business Formalisation — United States",
+        scope: "United States",
+        description:
+          "Formation of Delaware, Wyoming, Texas, or state-specific LLCs and C-Corps, including Registered Agent service and IRS EIN acquisition.",
+        href: "/services/business-formalisation-compliance/united-states",
+      },
+      {
+        key: "tax-cmr",
+        icon: "receipt",
+        title: "Tax Compliance — Cameroon",
+        scope: "Cameroon",
+        description:
+          "Monthly corporate DGI filings, Corporate Income Tax (IS), Statistical and Tax Declarations (DSF), and Attestation de Non-Redevance (ANR) clearance.",
+        href: "/services/business-formalisation-compliance/tax-compliance-businesses-cameroon",
+      },
+      {
+        key: "cnps-cmr",
         icon: "shield-check",
-        title: "Compliance",
-        scope: "Cameroon & United States",
+        title: "CNPS Compliance — Cameroon",
+        scope: "Cameroon",
         description:
-          "Company registration, tax standing, CNPS declarations, ministry licensing and accreditation — managed as one accountable process instead of five separate errands.",
-        href: "/services/business-formalisation-compliance",
-      },
-      {
-        // Named honestly, not linked: CLAUDE.md Section 9 pauses both of these
-        // pending a leadership session. A card that exists but leads nowhere
-        // is more truthful than a card that is missing.
-        key: "managed",
-        icon: "users",
-        title: "Managed Functions",
-        scope: "Not currently offered",
-        description:
-          "Third-party recruitment, business process outsourcing, and general contracts & supplies. Real parts of the business — not on offer as standalone services yet, and we won't pretend otherwise.",
-        status: "Recruitment & BPO in active development · General Contracts & Supplies not offered standalone",
+          "Employer social insurance registration, monthly employee declarations (DPAE), payroll withholding, and CNPS Clearance Certificates.",
+        href: "/services/business-formalisation-compliance/cnps-compliance-cameroon",
       },
     ],
     multiNeedMessage:
-      "More than one applies — which is usually how it goes: the technology and the compliance tend to arrive together. One conversation covers all of it.",
+      "More than one applies — which is common: formalisation, tax and social insurance filings tend to arrive together. One conversation covers all of it.",
+    // No card here is currently hrefless, so this shouldn't trigger with
+    // today's data — kept generic in case that changes.
     noDestinationMessage:
-      "Managed functions aren't offered as a standalone service right now. A conversation is still the right next step — we'll tell you plainly what we can take on today and what we can't.",
+      "That isn't offered as a standalone service right now. A conversation is still the right next step — we'll tell you plainly what we can take on today and what we can't.",
   },
 
   story: {

@@ -97,7 +97,7 @@ export default function CnpsComplianceCameroonPage() {
           { label: "Business Formalisation & Compliance", href: "/services/business-formalisation-compliance" },
           { label: "CNPS Compliance (Cameroon)" },
         ]}
-        tag="SUB-SERVICE 04/05 • CNPS & LABOUR"
+        tag="SUB-SERVICE 04/04 • CNPS & LABOUR"
       />
 
       <main>

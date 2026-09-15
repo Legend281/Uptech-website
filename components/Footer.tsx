@@ -1,8 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 
+// IT Consulting & Outsourcing is paused by leadership decision — soft-hidden
+// sitewide, not deleted (see components/Header.tsx). Do not relist it here
+// without that decision being reversed.
 const serviceLinks = [
-  { label: "IT Consulting & Outsourcing", href: "/services/it-consulting-outsourcing" },
   { label: "Business Formalisation & Compliance", href: "/services/business-formalisation-compliance" },
   { label: "Career Marketing & Placement", href: "/services/career-marketing-placement" },
 ];

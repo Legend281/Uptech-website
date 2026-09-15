@@ -155,7 +155,7 @@ const faqItems = [
   {
     question: "Can this process be executed 100% remotely if I live in North America or Europe?",
     answer:
-      "Yes. Under Cameroon and OHADA notarial standards, a foreign or diaspora director may execute a dedicated Power of Attorney (Procuration Spéciale). When certified by a Cameroon diplomatic mission or a Hague Apostille notary in your jurisdiction, UCO's legal desk can deposit capital, execute notarial statutes, and sign registry court books on your behalf.",
+      "Yes. Under Cameroon and OHADA notarial standards, a foreign or diaspora director may execute a dedicated Power of Attorney (Procuration Spéciale). When certified by a Cameroon diplomatic mission or a Hague Apostille notary in your jurisdiction, Uptech Consulting's legal desk can deposit capital, execute notarial statutes, and sign registry court books on your behalf.",
   },
   {
     question: "What happens if my preferred trade name is already taken at the commercial registry?",
@@ -295,7 +295,7 @@ export default function BusinessFormalisationCameroonPage() {
                         Turnaround Duration
                       </span>
                       <span className="text-[10px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded uppercase">
-                        [PENDING: confirm with UCO]
+                        [PENDING: confirm with Uptech Consulting]
                       </span>
                     </div>
                     <p className="text-xs text-slate-300 leading-normal">
@@ -436,7 +436,7 @@ export default function BusinessFormalisationCameroonPage() {
                         <div>
                           <span className="text-xs font-bold text-white uppercase tracking-wider">Special Power of Attorney</span>
                           <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
-                            A dedicated Procuration Notariée drafted by UCO delegating signature and filing powers.
+                            A dedicated Procuration Notariée drafted by Uptech Consulting delegating signature and filing powers.
                           </p>
                         </div>
                       </div>
@@ -484,13 +484,13 @@ export default function BusinessFormalisationCameroonPage() {
                   <div className="flex flex-wrap items-center gap-2">
                     <h4 className="text-sm font-bold text-slate-900">Official Registry &amp; Notarial Tariffs</h4>
                     <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded uppercase tracking-wider border border-amber-300">
-                      [PENDING: confirm with UCO]
+                      [PENDING: confirm with Uptech Consulting]
                     </span>
                   </div>
                   <p className="text-xs text-slate-600 mt-1 max-w-3xl">
                     Direct disbursements comprise RCCM court stamps, Greffe deposits, notarial
-                    statute registration dues, and regional fiscal stamp sheets. Consult your UCO
-                    desk for the official schedule.
+                    statute registration dues, and regional fiscal stamp sheets. Consult your
+                    Uptech Consulting desk for the official schedule.
                   </p>
                 </div>
               </div>
@@ -624,7 +624,7 @@ export default function BusinessFormalisationCameroonPage() {
                 <div>
                   <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
                     <div>
-                      <span className="text-[11px] font-extrabold uppercase tracking-widest text-teal-400">The UCO Standard</span>
+                      <span className="text-[11px] font-extrabold uppercase tracking-widest text-teal-400">The Uptech Consulting Standard</span>
                       <h3 className="text-xl font-bold text-white mt-0.5">Guided Procedural Cadence</h3>
                     </div>
                     <MaterialIcon name="verified" className="text-teal-400 text-[32px]" />
@@ -683,7 +683,7 @@ export default function BusinessFormalisationCameroonPage() {
         </section>
 
         <ComplianceDisclaimer
-          lastReviewed="[PENDING: confirm review date with UCO]"
+          lastReviewed="[PENDING: confirm review date with Uptech Consulting]"
           extraNote="Statutory fees, court stamp duty requirements, and municipal tariffs are subject to legislative modification by MINFI and the Ministry of Justice."
         />
 

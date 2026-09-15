@@ -6,19 +6,26 @@ type WhatComesNextProps = {
   description: string;
   href: string;
   linkLabel: string;
+  /**
+   * Default "WHAT COMES NEXT" fits every sibling page, where this card
+   * really does point to the next step in a sequence. Override it on a page
+   * where the card points sideways instead (e.g. CNPS Compliance — the last
+   * stop in its own track — linking to the separate US formation pathway).
+   */
+  eyebrow?: string;
 };
 
 /**
  * Mandatory Template C element per CLAUDE.md Section 4: points to the next
  * page in the compliance sequence — not a generic cross-link grid.
  */
-export function WhatComesNext({ title, description, href, linkLabel }: WhatComesNextProps) {
+export function WhatComesNext({ title, description, href, linkLabel, eyebrow = "WHAT COMES NEXT" }: WhatComesNextProps) {
   return (
     <section className="py-16 bg-slate-50 border-t border-slate-200/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="inline-flex items-center gap-2 mb-3">
           <span className="w-7 h-[2px] bg-teal-500 inline-block" />
-          <span className="text-xs font-bold uppercase tracking-wider text-sky-600">WHAT COMES NEXT</span>
+          <span className="text-xs font-bold uppercase tracking-wider text-sky-600">{eyebrow}</span>
         </div>
         <Link
           href={href}

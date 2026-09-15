@@ -65,7 +65,7 @@ const steps = [
   {
     number: "05",
     title: "Ongoing State & Federal Compliance",
-    description: "[PENDING: confirm current annual report, franchise tax, and federal reporting obligations with UCO — these change periodically at the state and federal level].",
+    description: "[PENDING: confirm current annual report, franchise tax, and federal reporting obligations with Uptech Consulting — these change periodically at the state and federal level].",
   },
 ];
 
@@ -73,7 +73,7 @@ const documents = [
   { strong: "Founder identification:", text: "Valid passport copy for each proposed owner/director." },
   { strong: "Proposed company name(s):", text: "In priority order, for availability search with the state." },
   { strong: "Business purpose:", text: "A short description of what the entity will do." },
-  { strong: "Registered agent decision:", text: "Confirmation you want UCO to act as or arrange your registered agent." },
+  { strong: "Registered agent decision:", text: "Confirmation you want Uptech Consulting to act as or arrange your registered agent." },
 ];
 
 const faqItems = [
@@ -85,12 +85,12 @@ const faqItems = [
   {
     question: "Which state should I choose?",
     answer:
-      "It depends on your business goals, where your customers/investors are, and cost tolerance for annual fees. Delaware, Wyoming, and Texas are common choices for international founders. [PENDING: UCO's specific state-recommendation guidance for different founder profiles].",
+      "It depends on your business goals, where your customers/investors are, and cost tolerance for annual fees. Delaware, Wyoming, and Texas are common choices for international founders. [PENDING: Uptech Consulting's specific state-recommendation guidance for different founder profiles].",
   },
   {
     question: "Can I open a US bank account remotely?",
     answer:
-      "Many banks and fintech platforms now support remote account opening for US entities with an EIN, though requirements vary by provider and can change. [PENDING: confirm UCO's current banking-partner recommendations].",
+      "Many banks and fintech platforms now support remote account opening for US entities with an EIN, though requirements vary by provider and can change. [PENDING: confirm Uptech Consulting's current banking-partner recommendations].",
   },
 ];
 
@@ -146,7 +146,7 @@ export default function BusinessFormalisationUnitedStatesPage() {
               </h2>
               <div className="mt-4 inline-flex items-center gap-2 bg-amber-50 border border-dashed border-amber-300 px-3 py-1.5 rounded-lg text-xs text-amber-800">
                 <MaterialIcon name="schedule" className="text-[16px]" />
-                Turnaround timeline: [PENDING: confirm with UCO]
+                Turnaround timeline: [PENDING: confirm with Uptech Consulting]
               </div>
             </div>
             <div className="space-y-4">
@@ -183,12 +183,12 @@ export default function BusinessFormalisationUnitedStatesPage() {
             </ul>
             <div className="mt-6 p-5 rounded-2xl bg-white border border-dashed border-amber-400/80 shadow-sm">
               <div className="flex items-center gap-2 mb-1">
-                <h4 className="text-sm font-bold text-slate-900">State Filing Fees &amp; UCO Service Fees</h4>
+                <h4 className="text-sm font-bold text-slate-900">State Filing Fees &amp; Uptech Consulting Service Fees</h4>
                 <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded uppercase tracking-wider border border-amber-300">
-                  [PENDING: confirm with UCO]
+                  [PENDING: confirm with Uptech Consulting]
                 </span>
               </div>
-              <p className="text-xs text-slate-600">State filing fees vary by state and change periodically; confirm current figures with your UCO desk.</p>
+              <p className="text-xs text-slate-600">State filing fees vary by state and change periodically; confirm current figures with your Uptech Consulting desk.</p>
             </div>
           </div>
         </section>
@@ -203,11 +203,11 @@ export default function BusinessFormalisationUnitedStatesPage() {
           </div>
         </section>
 
-        <ComplianceDisclaimer lastReviewed="[PENDING: confirm review date with UCO]" />
+        <ComplianceDisclaimer lastReviewed="[PENDING: confirm review date with Uptech Consulting]" />
 
         <WhatComesNext
           title="Explore the full compliance directory"
-          description="US formation runs independently of the Cameroon compliance track. See every formalisation and tax pathway UCO supports on both sides."
+          description="US formation runs independently of the Cameroon compliance track. See every formalisation and tax pathway Uptech Consulting supports on both sides."
           href="/services/business-formalisation-compliance"
           linkLabel="View all pathways"
         />

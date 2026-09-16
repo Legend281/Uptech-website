@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { TrustStrip } from "@/components/TrustStrip";
+import { Button } from "@/components/Button";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { OpenPositions, type JobPosting } from "@/components/OpenPositions";
 import { Reveal } from "@/components/Reveal";
@@ -177,6 +178,11 @@ export default function CareersPage() {
         {/* Hero */}
         <section className="relative bg-navy-950 overflow-hidden pt-14 pb-28 lg:pt-20 lg:pb-36 border-b border-slate-800/80">
           <div className="absolute inset-0 z-0">
+            {/* Was opacity-30 + mix-blend-luminosity — same washed-out
+                pattern fixed elsewhere on the site. Centered text over a
+                full-bleed photo, same grounded-gradient treatment as the
+                Contact hero fix: full-color, unblended image, darkest at
+                the bottom where the CTA/trust strip sit. */}
             <Image
               src={images["it-advisory"].src}
               alt=""
@@ -185,10 +191,9 @@ export default function CareersPage() {
               sizes="100vw"
               placeholder="blur"
               blurDataURL={images["it-advisory"].blurDataURL}
-              className="object-cover object-center opacity-30 mix-blend-luminosity"
+              className="object-cover object-center scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/90 to-navy-950/40" />
-            <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-transparent to-navy-950/70" />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/55 to-navy-950/55" />
           </div>
           <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
           <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -343,6 +348,40 @@ export default function CareersPage() {
               </h2>
             </div>
             <FaqAccordion items={faqItems} />
+          </div>
+        </section>
+
+        {/* Final CTA — this page had no closing band at all before this
+            pass; it just trailed off after the FAQ straight into the
+            footer. Added to match the pattern every other main page on the
+            site ends on. */}
+        <section className="relative py-24 bg-navy-950 text-white text-center overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            {/* dedicated-advisor is a naturally bright, window-lit photo —
+                needs a stronger overlay than the darker/dusk images used
+                for this same treatment elsewhere, or the heading sits on a
+                too-light patch. */}
+            <Image
+              src={images["dedicated-advisor"].src}
+              alt=""
+              fill
+              sizes="100vw"
+              placeholder="blur"
+              blurDataURL={images["dedicated-advisor"].blurDataURL}
+              className="object-cover object-center scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950/92 via-navy-950/68 to-navy-950/68" />
+          </div>
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white max-w-2xl mx-auto leading-tight mb-4">
+              Ready to build something <span className="gradient-teal-blue-text">real?</span>
+            </h2>
+            <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto leading-relaxed mb-8">
+              Browse open roles, or send us your CV if nothing&apos;s listed for what you do yet.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <Button href="#open-positions">View Open Positions</Button>
+            </div>
           </div>
         </section>
       </main>

@@ -110,6 +110,14 @@ export default async function ContactPage({
         {/* Hero */}
         <section className="relative bg-navy-950 overflow-hidden pt-14 pb-28 lg:pt-20 lg:pb-36 border-b border-slate-800/80">
           <div className="absolute inset-0 z-0">
+            {/* Was opacity-30 + mix-blend-luminosity — reduced this to a
+                barely-visible navy smudge, same washed-out pattern already
+                fixed elsewhere on the site. This hero is centered text over
+                a full-bleed photo (not a split layout), so the fix is a
+                grounded gradient rather than the left-to-right one used on
+                split-layout heroes: full-color, unblended image, darkest at
+                the bottom where the CTA buttons/trust strip sit, still
+                clearly visible as a photo everywhere else. */}
             <Image
               src={images["dedicated-advisor"].src}
               alt=""
@@ -118,10 +126,9 @@ export default async function ContactPage({
               sizes="100vw"
               placeholder="blur"
               blurDataURL={images["dedicated-advisor"].blurDataURL}
-              className="object-cover object-[75%_center] opacity-30 mix-blend-luminosity"
+              className="object-cover object-[75%_center] scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/90 to-navy-950/40" />
-            <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-transparent to-navy-950/70" />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/55 to-navy-950/55" />
           </div>
           <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
           <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

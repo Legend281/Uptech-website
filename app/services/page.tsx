@@ -226,9 +226,21 @@ export default function ServicesHubPage() {
           </div>
         </section>
 
-        {/* Final CTA */}
-        <section className="py-24 bg-navy-950 text-white text-center">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Final CTA — had no background image at all until this pass. */}
+        <section className="relative py-24 bg-navy-950 text-white text-center overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={images["cross-border-boardroom"].src}
+              alt=""
+              fill
+              sizes="100vw"
+              placeholder="blur"
+              blurDataURL={images["cross-border-boardroom"].blurDataURL}
+              className="object-cover object-center scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/55 to-navy-950/55" />
+          </div>
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white max-w-2xl mx-auto leading-tight mb-4">
               Not sure which service <span className="gradient-teal-blue-text">you need?</span>
             </h2>

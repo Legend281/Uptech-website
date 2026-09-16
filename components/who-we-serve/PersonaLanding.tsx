@@ -205,11 +205,19 @@ export function PersonaLanding({ content }: { content: PersonaContent }) {
         </section>
 
         {/* ---------------- Final CTA ---------------- */}
+        {/* Was opacity-20 + saturate-0 on the image itself — on top of the
+            gradient below, that reduced the photo to an almost imperceptible
+            navy smudge (same washed-out pattern fixed elsewhere on the
+            site). This section is used by both persona pages, so the fix
+            applies to both at once. Left-aligned text over a wide photo is
+            the same shape as the homepage/services heroes that already get
+            this right: full-color, unblended image plus the existing
+            left-to-right gradient is enough on its own for contrast. */}
         <section className="relative overflow-hidden bg-navy-900 py-20 text-white sm:py-24">
-          <div className="absolute inset-0 opacity-20 saturate-0">
-            <Image src={images["ops-center"].src} alt="" fill sizes="100vw" className="object-cover" />
+          <div className="absolute inset-0">
+            <Image src={images["ops-center"].src} alt="" fill sizes="100vw" className="object-cover scale-105" />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-950/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-950/35" />
 
           <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-center lg:gap-12">

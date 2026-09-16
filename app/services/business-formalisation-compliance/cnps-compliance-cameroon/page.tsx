@@ -7,6 +7,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { TrustStrip } from "@/components/TrustStrip";
 import { Button } from "@/components/Button";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { ComplianceDisclaimer } from "@/components/ComplianceDisclaimer";
 import { WhatComesNext } from "@/components/WhatComesNext";
@@ -193,102 +194,63 @@ export default function CnpsComplianceCameroonPage() {
         {/* Hero */}
         <section className="relative bg-navy-950 overflow-hidden pt-14 pb-28 lg:pt-20 lg:pb-36 border-b border-slate-800/80">
           <div className="absolute inset-0 z-0">
-            <Image
-              src={images["compliance-advisory"].src}
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              placeholder="blur"
-              blurDataURL={images["compliance-advisory"].blurDataURL}
-              className="object-cover object-right scale-105"
+            {/* Full-bleed rotating background + centered text (management
+                request: hero backgrounds cycle automatically). Was a
+                two-column split — left-aligned text plus a separate framed
+                "Employer Compliance Dossier" image card on the right —
+                consolidated to match the single centered-hero pattern used
+                sitewide. */}
+            <HeroImageCarousel
+              keys={["compliance-advisory", "dedicated-advisor"]}
+              imageClassName="object-cover object-center scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-950/20" />
-            <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-transparent to-navy-950/60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/65 to-navy-950/50" />
           </div>
           <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
-              <div className="lg:col-span-7">
-                <div className="inline-flex items-center gap-2 mb-6">
-                  <span className="w-7 h-[2px] bg-teal-400 inline-block" />
-                  {/* FLAG FOR TEAM: "LABOUR" mismatch, see the code comment
-                      on the Breadcrumb `tag` prop above — same badge text
-                      appears here. */}
-                  <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
-                    CAMEROON • CNPS &amp; LABOUR COMPLIANCE
-                  </span>
-                </div>
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] mb-6">
-                  Keep your team&apos;s social security compliant,{" "}
-                  <span className="gradient-teal-blue-text">without the paperwork maze.</span>
-                </h1>
-                {/* ESCALATED, NOT CODE-FIXED: see the matching comment on
-                    the trust strip's DPAE item above — "monthly" dropped
-                    from "employee declarations" here since that claim is
-                    the one in question; "payroll withholding" right after
-                    it correctly keeps its own monthly claim (confirmed
-                    accurate by the Compliance Cycle section's own "Monthly
-                    Payroll Withholding & Filing" step). Still needs a real
-                    team answer on DPAE's actual frequency. */}
-                <p className="text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
-                  Employer registration, employee declarations, payroll withholding, and CNPS
-                  clearance certificates — kept current as your team grows.
-                </p>
-                <div className="flex flex-wrap items-center gap-4 mb-8">
-                  <Button href="#checklist">Get CNPS Checklist</Button>
-                  <WhatsAppButton phone="237678597593" label="Chat on WhatsApp CNPS Desk" />
-                </div>
-                <div className="grid grid-cols-3 gap-3 max-w-lg pt-4 border-t border-white/10">
-                  <div className="p-3 bg-white/5 rounded-lg">
-                    <p className="text-xl font-bold text-teal-300">Day 1</p>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Employer Registration</p>
-                  </div>
-                  <div className="p-3 bg-white/5 rounded-lg">
-                    <p className="text-xl font-bold text-teal-300">Bilingual</p>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">CNPS Desk Support</p>
-                  </div>
-                  <div className="p-3 bg-white/5 rounded-lg">
-                    <p className="text-xl font-bold text-teal-300">Tender-Ready</p>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Clearance Maintained</p>
-                  </div>
-                </div>
+            <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
+              <div className="inline-flex items-center justify-center gap-2 mb-6">
+                <span className="w-7 h-[2px] bg-teal-400 inline-block" />
+                {/* FLAG FOR TEAM: "LABOUR" mismatch, see the code comment
+                    on the Breadcrumb `tag` prop above — same badge text
+                    appears here. */}
+                <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
+                  CAMEROON • CNPS &amp; LABOUR COMPLIANCE
+                </span>
+                <span className="w-7 h-[2px] bg-teal-400 inline-block" />
               </div>
-
-              <div className="lg:col-span-5">
-                <div className="relative rounded-2xl bg-gradient-to-b from-white/15 to-white/5 p-1 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden group">
-                  <div className="relative rounded-xl overflow-hidden bg-navy-800">
-                    <Image
-                      src={images["dedicated-advisor"].src}
-                      alt={images["dedicated-advisor"].alt}
-                      width={images["dedicated-advisor"].width}
-                      height={images["dedicated-advisor"].height}
-                      sizes="(min-width: 1024px) 40vw, 90vw"
-                      placeholder="blur"
-                      blurDataURL={images["dedicated-advisor"].blurDataURL}
-                      className="w-full h-72 object-cover object-top group-hover:scale-105 transition-transform duration-700 opacity-90"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/50 to-transparent" />
-                    <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
-                      <span className="px-3 py-1 rounded-md bg-navy-950/80 border border-teal-400/40 text-[11px] font-bold text-teal-300 uppercase tracking-wider backdrop-blur-md">
-                        Social Insurance Desk
-                      </span>
-                      <span className="px-2.5 py-1 rounded-md bg-white/10 text-[11px] font-mono text-white/90">
-                        CNPS Cameroon
-                      </span>
-                    </div>
-                  </div>
-                  <div className="p-5 flex flex-col gap-1.5">
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <h3 className="text-base font-bold text-white">Employer Compliance Dossier</h3>
-                        <p className="text-xs text-slate-400">Caisse Nationale de Prévoyance Sociale</p>
-                      </div>
-                      <span className="px-2 py-1 rounded bg-teal-400/20 text-teal-300 text-[10px] font-bold uppercase tracking-wider shrink-0">
-                        Live Desk
-                      </span>
-                    </div>
-                  </div>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] mb-6">
+                Keep your team&apos;s social security compliant,{" "}
+                <span className="gradient-teal-blue-text">without the paperwork maze.</span>
+              </h1>
+              {/* ESCALATED, NOT CODE-FIXED: see the matching comment on
+                  the trust strip's DPAE item above — "monthly" dropped
+                  from "employee declarations" here since that claim is
+                  the one in question; "payroll withholding" right after
+                  it correctly keeps its own monthly claim (confirmed
+                  accurate by the Compliance Cycle section's own "Monthly
+                  Payroll Withholding & Filing" step). Still needs a real
+                  team answer on DPAE's actual frequency. */}
+              <p className="mx-auto text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
+                Employer registration, employee declarations, payroll withholding, and CNPS
+                clearance certificates — kept current as your team grows.
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
+                <Button href="#checklist">Get CNPS Checklist</Button>
+                <WhatsAppButton phone="237678597593" label="Chat on WhatsApp CNPS Desk" />
+              </div>
+              <div className="grid grid-cols-3 gap-3 max-w-lg mx-auto pt-4 border-t border-white/10">
+                <div className="p-3 bg-white/5 rounded-lg">
+                  <p className="text-xl font-bold text-teal-300">Day 1</p>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Employer Registration</p>
+                </div>
+                <div className="p-3 bg-white/5 rounded-lg">
+                  <p className="text-xl font-bold text-teal-300">Bilingual</p>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">CNPS Desk Support</p>
+                </div>
+                <div className="p-3 bg-white/5 rounded-lg">
+                  <p className="text-xl font-bold text-teal-300">Tender-Ready</p>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Clearance Maintained</p>
                 </div>
               </div>
             </div>

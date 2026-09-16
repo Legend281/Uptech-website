@@ -27,7 +27,7 @@ export const individuals: PersonaContent = {
       "Income to declare in Cameroon",
       "A business of your own to register",
     ],
-    image: "career-review",
+    images: ["career-review", "dedicated-advisor"],
   },
 
   ways: {

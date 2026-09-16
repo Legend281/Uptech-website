@@ -35,7 +35,8 @@ export type PersonaContent = {
     /** A scope disclosure that must be read before the cards, not after. */
     note: string;
     situations: string[];
-    image: ImageKey;
+    /** Rotates automatically (management request: hero backgrounds cycle). */
+    images: ImageKey[];
   };
   ways: {
     eyebrow: string;

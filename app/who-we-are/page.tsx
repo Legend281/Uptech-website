@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { TeamGrid, type TeamMember } from "@/components/TeamGrid";
 import { Reveal } from "@/components/Reveal";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
@@ -204,45 +205,35 @@ export default function WhoWeArePage() {
         {/* Given a real minimum height so it owns the first screen instead of
             ending halfway down it. */}
         <section className="relative flex min-h-[560px] items-center overflow-hidden bg-navy-900 py-16 lg:min-h-[76vh] lg:py-24">
-          {/* Someone actually doing the work, which is what this page argues
-              the company is built around. Anchored right and heavily dimmed so
-              it carries weight without competing with the headline. */}
+          {/* Rotating background (management request: hero backgrounds
+              cycle automatically). */}
           <div className="absolute inset-0 z-0">
-            <Image
-              src={images["ops-center"].src}
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              placeholder="blur"
-              blurDataURL={images["ops-center"].blurDataURL}
-              /* A narrow viewport cropped to `object-right` lands on empty dark
-                 background, so mobile is pulled back onto the subject. */
-              className="object-cover object-[72%_center] opacity-70 lg:object-right lg:opacity-80"
+            <HeroImageCarousel
+              keys={["ops-center", "compliance-advisory"]}
+              imageClassName="object-cover object-center scale-105"
             />
-            {/* Graded so the photograph reads clearly on the right while the
-                left stays dark enough to hold the headline at AA contrast. */}
-            <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/70 to-navy-950/20" />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/65 to-navy-950/50" />
           </div>
 
           {/* DESIGN.md: deep slate overlays carry a faint technical grid. Kept
-              very low here so it textures the dark left side without veiling
-              the photograph. */}
+              very low here so it textures the section without veiling the
+              photograph. */}
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:64px_64px]"
           />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_0%,rgba(45,212,191,0.12),transparent_60%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(45,212,191,0.12),transparent_60%)]" />
 
           <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl lg:max-w-3xl">
+            <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
               {/* Same eyebrow / three-line headline / subhead rhythm as the
                   homepage hero, so the two read as one site. */}
-              <div className="mb-6 inline-flex items-center gap-2">
+              <div className="mb-6 inline-flex items-center justify-center gap-2">
                 <span className="inline-block h-[2px] w-7 bg-teal-400" />
                 <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
                   Who We Are
                 </span>
+                <span className="inline-block h-[2px] w-7 bg-teal-400" />
               </div>
 
               <h1 className="mb-7 text-4xl font-extrabold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-[68px] xl:leading-[1.08]">
@@ -253,7 +244,7 @@ export default function WhoWeArePage() {
                 <span className="text-sky-400">execution.</span>
               </h1>
 
-              <p className="mb-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
+              <p className="mx-auto mb-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
                 Many people know what they want to achieve. Very few know how.
                 Uptech Consulting is built around the how — the part that turns
                 a plan into a filed document, a placed candidate, or a system

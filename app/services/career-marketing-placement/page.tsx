@@ -7,6 +7,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { TrustStrip } from "@/components/TrustStrip";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { Button } from "@/components/Button";
 import { images } from "@/lib/images";
@@ -195,38 +196,36 @@ export default function CareerMarketingPlacementPage() {
       <main>
         {/* Hero */}
         <section className="relative bg-navy-950 overflow-hidden pt-14 pb-28 lg:pt-20 lg:pb-36 border-b border-slate-800/80">
-          <div className="absolute right-0 top-0 w-full lg:w-3/4 h-full opacity-70 lg:opacity-80 pointer-events-none">
-            <Image
-              src={images["career-review"].src}
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              placeholder="blur"
-              blurDataURL={images["career-review"].blurDataURL}
-              className="object-cover object-center"
+          <div className="absolute inset-0 z-0">
+            {/* Full-bleed rotating background + centered text (management
+                request: hero backgrounds cycle automatically). Was a
+                partial-width right-hand image with left-aligned text. */}
+            <HeroImageCarousel
+              keys={["career-review", "dedicated-advisor"]}
+              imageClassName="object-cover object-center scale-105"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/65 to-navy-950/50" />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-950/40 pointer-events-none" />
           <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl lg:max-w-3xl">
-              <div className="inline-flex items-center gap-2 mb-6">
+            <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
+              <div className="inline-flex items-center justify-center gap-2 mb-6">
                 <span className="w-7 h-[2px] bg-teal-400 inline-block" />
                 <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
                   CAREER MARKETING &amp; PLACEMENT
                 </span>
+                <span className="w-7 h-[2px] bg-teal-400 inline-block" />
               </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] mb-6">
                 You don&apos;t chase jobs. <br className="hidden sm:inline" />
                 <span className="gradient-teal-blue-text">We do.</span>
               </h1>
-              <p className="text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
+              <p className="mx-auto text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
                 A dedicated human specialist takes over your CV, your LinkedIn, your daily
                 applications, and your recruiter follow-up — so you can take your evenings back
                 and focus solely on showing up to interview.
               </p>
-              <div className="flex flex-wrap items-center gap-4 mb-10">
+              <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
                 <Button href="#start-campaign" icon={arrowRightIcon}>
                   Start Your Career Campaign
                 </Button>

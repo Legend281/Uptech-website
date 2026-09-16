@@ -6,6 +6,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { TrustStrip } from "@/components/TrustStrip";
 import { Button } from "@/components/Button";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { ComplianceDisclaimer } from "@/components/ComplianceDisclaimer";
 import { WhatComesNext } from "@/components/WhatComesNext";
@@ -195,27 +196,23 @@ export default function BusinessFormalisationUnitedStatesPage() {
             than the earlier washed-out opacity+luminosity recipe. */}
         <section className="relative bg-navy-950 overflow-hidden pt-14 pb-28 lg:pt-20 lg:pb-36 border-b border-slate-800/80">
           <div className="absolute inset-0 z-0">
-            <Image
-              src={images["cross-border-boardroom"].src}
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              placeholder="blur"
-              blurDataURL={images["cross-border-boardroom"].blurDataURL}
-              className="object-cover object-right scale-105"
+            {/* Rotating background (management request: hero backgrounds
+                cycle automatically). */}
+            <HeroImageCarousel
+              keys={["cross-border-boardroom", "it-advisory"]}
+              imageClassName="object-cover object-center scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-950/20" />
-            <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-transparent to-navy-950/60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/65 to-navy-950/50" />
           </div>
           <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl lg:max-w-3xl">
-              <div className="inline-flex items-center gap-2 mb-6">
+            <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
+              <div className="inline-flex items-center justify-center gap-2 mb-6">
                 <span className="w-7 h-[2px] bg-teal-400 inline-block" />
                 <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
                   UNITED STATES JURISDICTION • 50 STATES
                 </span>
+                <span className="w-7 h-[2px] bg-teal-400 inline-block" />
               </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] mb-6">
                 Form your US entity, <span className="gradient-teal-blue-text">without the guesswork.</span>
@@ -223,13 +220,13 @@ export default function BusinessFormalisationUnitedStatesPage() {
               {/* Explicitly names both starting points this page serves —
                   previously conflated into one vague "international
                   founders" phrase with no persona section to separate them. */}
-              <p className="text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
+              <p className="mx-auto text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
                 LLC and C-Corp formation for two starting points: Cameroon-based businesses
                 expanding into the US market, and diaspora individuals already living or working
                 abroad who want to register their own US entity — state filing, registered agent,
                 and IRS EIN coordination handled end to end.
               </p>
-              <div className="flex flex-wrap items-center gap-4">
+              <div className="flex flex-wrap items-center justify-center gap-4">
                 <Button href="#checklist">Get Formation Checklist</Button>
                 <WhatsAppButton phone="237678597593" label="Chat on WhatsApp Legal Desk" />
               </div>

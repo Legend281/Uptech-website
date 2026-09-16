@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -8,8 +7,8 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { TrustStrip } from "@/components/TrustStrip";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { ContactForm } from "@/components/ContactForm";
+import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
-import { images } from "@/lib/images";
 
 export const metadata: Metadata = {
   title: "Book a Consultation",
@@ -105,23 +104,13 @@ export default function ContactPage() {
         {/* Hero */}
         <section className="relative bg-navy-950 overflow-hidden pt-14 pb-28 lg:pt-20 lg:pb-36 border-b border-slate-800/80">
           <div className="absolute inset-0 z-0">
-            {/* Was opacity-30 + mix-blend-luminosity — reduced this to a
-                barely-visible navy smudge, same washed-out pattern already
-                fixed elsewhere on the site. This hero is centered text over
-                a full-bleed photo (not a split layout), so the fix is a
-                grounded gradient rather than the left-to-right one used on
-                split-layout heroes: full-color, unblended image, darkest at
-                the bottom where the CTA buttons/trust strip sit, still
-                clearly visible as a photo everywhere else. */}
-            <Image
-              src={images["dedicated-advisor"].src}
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              placeholder="blur"
-              blurDataURL={images["dedicated-advisor"].blurDataURL}
-              className="object-cover object-[75%_center] scale-105"
+            {/* Grounded gradient over a rotating background (management
+                request: hero backgrounds cycle automatically) — full-color,
+                unblended images, darkest at the bottom where the CTA
+                buttons/trust strip sit, still clearly visible as photos. */}
+            <HeroImageCarousel
+              keys={["dedicated-advisor", "career-review"]}
+              imageClassName="object-cover object-center scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/55 to-navy-950/55" />
           </div>

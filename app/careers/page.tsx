@@ -8,6 +8,7 @@ import { TrustStrip } from "@/components/TrustStrip";
 import { Button } from "@/components/Button";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { OpenPositions, type JobPosting } from "@/components/OpenPositions";
+import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { Reveal } from "@/components/Reveal";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { images } from "@/lib/images";
@@ -178,20 +179,11 @@ export default function CareersPage() {
         {/* Hero */}
         <section className="relative bg-navy-950 overflow-hidden pt-14 pb-28 lg:pt-20 lg:pb-36 border-b border-slate-800/80">
           <div className="absolute inset-0 z-0">
-            {/* Was opacity-30 + mix-blend-luminosity — same washed-out
-                pattern fixed elsewhere on the site. Centered text over a
-                full-bleed photo, same grounded-gradient treatment as the
-                Contact hero fix: full-color, unblended image, darkest at
-                the bottom where the CTA/trust strip sit. */}
-            <Image
-              src={images["it-advisory"].src}
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              placeholder="blur"
-              blurDataURL={images["it-advisory"].blurDataURL}
-              className="object-cover object-center scale-105"
+            {/* Grounded gradient over a rotating background (management
+                request: hero backgrounds cycle automatically). */}
+            <HeroImageCarousel
+              keys={["it-advisory", "ops-center"]}
+              imageClassName="object-cover object-center scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/55 to-navy-950/55" />
           </div>

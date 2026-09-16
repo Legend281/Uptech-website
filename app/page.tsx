@@ -13,6 +13,7 @@ import {
 
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 import { TrustStrip, type TrustStripItem } from "@/components/TrustStrip";
 import { FaqAccordion } from "@/components/FaqAccordion";
@@ -196,29 +197,21 @@ export default function HomePage() {
         {/* ---------------- Hero ---------------- */}
         <section className="relative overflow-hidden bg-navy-900 pb-24 pt-12 lg:pb-36 lg:pt-20">
           <div className="absolute inset-0 z-0">
-            <Image
-              src={images["compliance-advisory"].src}
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              placeholder="blur"
-              blurDataURL={images["compliance-advisory"].blurDataURL}
-              /* People sit right of centre, clear of the headline on the left.
-                 Mobile crops tighter onto the adviser, since a narrow slice at
-                 the desktop anchor lands on empty table. */
-              className="hero-settle object-cover object-[76%_center] opacity-70 lg:object-[70%_center] lg:opacity-80"
+            <HeroImageCarousel
+              keys={["compliance-advisory", "cross-border-boardroom"]}
+              imageClassName="hero-settle object-cover object-center scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/70 to-navy-950/20" />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/60 to-navy-950/45" />
           </div>
 
           <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl lg:max-w-3xl">
-              <div className="mb-6 inline-flex items-center gap-2">
+            <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
+              <div className="mb-6 inline-flex items-center justify-center gap-2">
                 <span className="inline-block h-[2px] w-7 bg-teal-400" />
                 <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
                   Uptech Consulting &amp; Outsourcing
                 </span>
+                <span className="inline-block h-[2px] w-7 bg-teal-400" />
               </div>
 
               <h1 className="mb-6 text-4xl font-extrabold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-6xl">
@@ -229,13 +222,13 @@ export default function HomePage() {
                 <span className="text-sky-400">execution.</span>
               </h1>
 
-              <p className="mb-8 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
+              <p className="mx-auto mb-8 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
                 Technology-driven consulting, outsourcing and business support
                 for individuals and organisations operating across Cameroon and
                 the United States.
               </p>
 
-              <div className="flex flex-wrap items-center gap-4">
+              <div className="flex flex-wrap items-center justify-center gap-4">
                 <Link
                   href="/contact"
                   className="gradient-teal-blue flex items-center gap-2 rounded-lg px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-teal-950/50 transition-all hover:brightness-105 active:scale-[0.98]"

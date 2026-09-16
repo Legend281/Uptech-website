@@ -33,7 +33,7 @@ export const businesses: PersonaContent = {
       "A company to register or keep compliant",
       "A function you'd rather not staff in-house",
     ],
-    image: "it-advisory",
+    images: ["it-advisory", "cross-border-boardroom"],
   },
 
   /*

@@ -182,17 +182,17 @@ export default function CnpsComplianceCameroonPage() {
         <section className="relative bg-navy-950 overflow-hidden pt-14 pb-28 lg:pt-20 lg:pb-36 border-b border-slate-800/80">
           <div className="absolute inset-0 z-0">
             <Image
-              src={images["dedicated-advisor"].src}
+              src={images["compliance-advisory"].src}
               alt=""
               fill
               priority
               sizes="100vw"
               placeholder="blur"
-              blurDataURL={images["dedicated-advisor"].blurDataURL}
-              className="object-cover object-right opacity-35 mix-blend-luminosity scale-105"
+              blurDataURL={images["compliance-advisory"].blurDataURL}
+              className="object-cover object-right scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/90 to-navy-950/40" />
-            <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-transparent to-navy-950/70" />
+            <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-950/20" />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-transparent to-navy-950/60" />
           </div>
           <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -391,21 +391,69 @@ export default function CnpsComplianceCameroonPage() {
             but a real cross-page naming standard doesn't currently exist —
             worth a team decision on which direction should win. */}
         <section id="checklist" className="py-24 bg-slate-50 border-y border-slate-200/80">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl mb-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-2xl mb-12">
               <span className="text-xs font-bold uppercase tracking-wider text-sky-600">DOCUMENTS &amp; REQUIREMENTS</span>
-              <h2 className="text-3xl font-extrabold text-navy-950 tracking-tight mt-2">CNPS registration checklist</h2>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight mt-2">
+                CNPS registration checklist
+              </h2>
+              <p className="text-sm sm:text-base text-slate-600 mt-2">
+                Gather these before we begin your employer registration — no back-and-forth once
+                your dossier is with us.
+              </p>
             </div>
-            <ul className="bg-white rounded-2xl border border-slate-200/80 shadow-sm divide-y divide-slate-100">
-              {documents.map((doc) => (
-                <li key={doc.strong} className="p-5 flex items-start gap-3">
-                  <MaterialIcon name="check_circle" className="text-emerald-600 text-[18px] shrink-0 mt-0.5" />
-                  <span className="text-sm text-slate-700">
-                    <strong className="text-slate-900">{doc.strong}</strong> {doc.text}
-                  </span>
-                </li>
-              ))}
-            </ul>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <div className="lg:col-span-7 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm">
+                <div className="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
+                  <div className="w-9 h-9 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center">
+                    <MaterialIcon name="diversity_3" className="text-[20px]" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-navy-950">Required Documentation</h3>
+                    <span className="text-xs text-slate-500">For the business and every employee being declared</span>
+                  </div>
+                </div>
+                <ul className="flex flex-col gap-3 text-sm text-slate-600">
+                  {documents.map((doc) => (
+                    <li key={doc.strong} className="flex items-start gap-3">
+                      <MaterialIcon name="check_circle" className="text-emerald-600 text-[18px] shrink-0 mt-0.5" />
+                      <span>
+                        <strong className="text-slate-900">{doc.strong}</strong> {doc.text}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="lg:col-span-5">
+                <div className="bg-navy-950 text-white rounded-2xl p-7 border border-slate-800 shadow-xl h-full flex flex-col justify-between">
+                  <div>
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-teal-400/30 text-teal-300 text-xs font-bold tracking-wider uppercase mb-4">
+                      <span className="w-2 h-2 rounded-full bg-teal-400" />
+                      Fast-Track Your Registration
+                    </div>
+                    <h3 className="text-xl font-extrabold text-white mb-2">
+                      Already have your documents ready?
+                    </h3>
+                    <p className="text-sm text-slate-300 leading-relaxed">
+                      Send them directly to our CNPS desk on WhatsApp and we&apos;ll start your
+                      employer registration the same day we receive them — no need to wait for a
+                      full consultation first.
+                    </p>
+                  </div>
+                  <a
+                    href="https://wa.me/237670000000"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-uco-green hover:bg-uco-green-hover text-white text-sm font-semibold transition-colors"
+                  >
+                    Send Documents via WhatsApp
+                    <MaterialIcon name="arrow_forward" className="text-[16px]" />
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -623,24 +671,33 @@ export default function CnpsComplianceCameroonPage() {
         />
 
         {/* Final CTA */}
-        <section className="relative py-24 bg-navy-950 text-white text-center overflow-hidden">
+        <section className="relative py-28 bg-navy-950 text-white text-center overflow-hidden">
           <div className="absolute inset-0 z-0">
             <Image
-              src={images["dedicated-advisor"].src}
+              src={images["compliance-advisory"].src}
               alt=""
               fill
               sizes="100vw"
               placeholder="blur"
-              blurDataURL={images["dedicated-advisor"].blurDataURL}
-              className="object-cover object-top opacity-25 mix-blend-luminosity scale-105"
+              blurDataURL={images["compliance-advisory"].blurDataURL}
+              className="object-cover object-center scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/90 to-navy-950/80" />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/80 to-navy-950/50" />
+            <div className="absolute inset-0 bg-navy-950/30" />
           </div>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[36rem] h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white max-w-2xl mx-auto leading-tight mb-4">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-teal-400/40 text-teal-300 text-xs font-bold tracking-widest uppercase mb-5 backdrop-blur-md">
+              CNPS Desk Active in Buea &amp; Douala
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white max-w-2xl mx-auto leading-tight mb-4">
               Ready to bring your <span className="gradient-teal-blue-text">team into compliance?</span>
             </h2>
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
+            <p className="text-base sm:text-lg text-slate-300 max-w-xl mx-auto mb-8 leading-relaxed">
+              Book a consultation or message our CNPS desk directly — we&apos;ll assess your current
+              standing and set up your filing rhythm.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-4">
               <Button href="/contact?service=cnps-compliance">Book a Consultation</Button>
               <WhatsAppButton phone="237670000000" label="Chat on WhatsApp CNPS Desk" />
             </div>

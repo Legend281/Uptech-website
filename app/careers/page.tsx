@@ -67,6 +67,19 @@ const coreValues = [
   },
 ];
 
+/*
+ * FLAG FOR TEAM: IT Consulting & Outsourcing and Recruitment & BPO are
+ * displayed below as normal, fully-active departments — same visual weight
+ * as Business Formalisation & Compliance and Career Marketing & Placement —
+ * but both are paused/deprioritized everywhere else on the site per
+ * leadership's direction (see CLAUDE.md Section 5/9, components/Header.tsx).
+ * This may be intentional (a careers page can reasonably describe the
+ * company's full internal structure separately from what's actively being
+ * marketed to clients), or it may be an inconsistency that should match the
+ * paused treatment used elsewhere. This is a deliberate open decision, not
+ * yet resolved — do not change the department grid's current display until
+ * the team responds either way.
+ */
 const departments = [
   {
     icon: "terminal",
@@ -94,6 +107,11 @@ const departments = [
     description: "Contracts and supply arrangements supporting client operations — scope still being defined.",
   },
   {
+    // FLAG FOR TEAM: confirm "Corporate & Administration" is a real internal
+    // department before this stays live — not found in any official company
+    // documentation referenced elsewhere in this project (CLAUDE.md's own
+    // service/organizational inventory does not name it). Do not remove or
+    // rename it without team confirmation either way.
     icon: "account_balance",
     title: "Corporate & Administration",
     description: "The internal operations, finance, and administration that keep both offices running.",
@@ -125,9 +143,14 @@ const faqItems = [
       "Yes. Use the \"Send Us Your CV\" option in the Open Positions section. We keep general applications on file and reach out when a matching role opens.",
   },
   {
+    // FLAG FOR TEAM: this answer states a specific hiring policy (a mix of
+    // on-site and remote roles) that has not been confirmed as accurate in
+    // this session — it reads as plausible but could be an assumption
+    // rather than Uptech Consulting's actual practice. Confirm before this
+    // ships; do not treat the current wording as verified fact.
     question: "Do you hire remote, or only in Buea and Stafford, Texas?",
     answer:
-      "It depends on the role. Some positions require being on-site in Buea or Stafford; others can be done remotely. Each listing will state this — if you're unsure, ask when you apply.",
+      "It depends on the role. Some positions require being on-site in Buea or Stafford; others can be done remotely. Each listing will state this — if you're unsure, ask when you apply. [PENDING: confirm this reflects Uptech Consulting's actual hiring policy]",
   },
   {
     question: "Can I apply to more than one role at a time?",

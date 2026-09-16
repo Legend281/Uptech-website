@@ -27,9 +27,56 @@ const generalInterestHref = `mailto:${GENERAL_INTEREST_EMAIL}?subject=${encodeUR
   "Hi Uptech Consulting,\n\nI don't see an open role that matches my background right now, but I'd like to be considered for future opportunities.\n\nName:\nArea of interest:\nLocation:\nLinkedIn / portfolio (optional):\n\nPlease attach your CV before sending this email.\n\n"
 )}`;
 
+/*
+ * FIX 2 finding, worth keeping visible in code: "Send Us Your CV" / "Apply
+ * for This Role" were already real working mailto: links (not a dead end) —
+ * same client-side handoff pattern ContactForm.tsx uses for every other
+ * lead-capture form on this site (no Next.js API route + Supabase/Resend
+ * backend exists anywhere in this codebase to wire this into instead;
+ * verified by search). A mailto link has no server round-trip, so there is
+ * nothing to show a "Sending..." state for — the honest equivalent, and
+ * what's implemented below, is the same inline guidance copy ContactForm.tsx
+ * already uses ("this opens your email app — hit send yourself").
+ *
+ * What WAS genuinely missing (Fix 1): no consent checkbox gated either
+ * apply action, unlike ContactForm.tsx's. Added below, mirroring that same
+ * component's copy and disabled-state pattern exactly.
+ */
 export function OpenPositions({ jobs }: { jobs: JobPosting[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [consent, setConsent] = useState(false);
   const baseId = useId();
+
+  const consentCheckbox = (
+    <label className="flex items-start gap-2.5 max-w-xl mx-auto text-left mb-6">
+      <input
+        type="checkbox"
+        checked={consent}
+        onChange={(event) => setConsent(event.target.checked)}
+        className="mt-0.5 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500/40 shrink-0"
+      />
+      <span className="text-xs text-slate-500 leading-relaxed">
+        I agree to Uptech Consulting storing and reviewing my information as described in the{" "}
+        <a href="/privacy-policy" className="text-blue-accent underline hover:text-blue-700">
+          Privacy Policy
+        </a>
+        .
+      </span>
+    </label>
+  );
+
+  const applyLinkClasses = (enabled: boolean, size: "md" | "sm" = "md") =>
+    `inline-flex items-center gap-2 rounded-lg font-semibold transition-all ${
+      size === "md" ? "px-6 py-3 text-sm" : "px-5 py-2.5 text-xs uppercase tracking-wider"
+    } ${
+      enabled
+        ? "gradient-teal-blue text-white shadow-lg shadow-teal-950/40 hover:brightness-105 active:scale-[0.98]"
+        : "bg-slate-100 text-slate-400 cursor-not-allowed pointer-events-none"
+    }`;
+
+  const consentHint = consent
+    ? "This opens your email app with a pre-filled message — attach your CV, then hit send."
+    : "Check the box above to continue.";
 
   if (jobs.length === 0) {
     return (
@@ -43,19 +90,23 @@ export function OpenPositions({ jobs }: { jobs: JobPosting[] }) {
           exceptional people across every department above. Send us your CV and we&apos;ll reach
           out when something fits.
         </p>
+        {consentCheckbox}
         <a
-          href={generalInterestHref}
-          className="inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold gradient-teal-blue text-white shadow-lg shadow-teal-950/40 hover:brightness-105 active:scale-[0.98] transition-all"
+          href={consent ? generalInterestHref : undefined}
+          aria-disabled={!consent}
+          className={applyLinkClasses(consent)}
         >
           <MaterialIcon name="mail" className="text-[18px]" />
           <span>Send Us Your CV</span>
         </a>
+        <p className="text-xs text-slate-400 mt-3">{consentHint}</p>
       </div>
     );
   }
 
   return (
     <div className="flex flex-col gap-4">
+      {consentCheckbox}
       {jobs.map((job, index) => {
         const isOpen = openIndex === index;
         const panelId = `${baseId}-panel-${index}`;
@@ -126,12 +177,14 @@ export function OpenPositions({ jobs }: { jobs: JobPosting[] }) {
                     </ul>
                   )}
                   <a
-                    href={applyMailto(job.title)}
-                    className="inline-flex items-center gap-2 mt-5 rounded-lg px-5 py-2.5 text-xs font-bold uppercase tracking-wider gradient-teal-blue text-white shadow-sm hover:brightness-105 active:scale-[0.98] transition-all"
+                    href={consent ? applyMailto(job.title) : undefined}
+                    aria-disabled={!consent}
+                    className={`mt-5 ${applyLinkClasses(consent, "sm")}`}
                   >
                     <MaterialIcon name="send" className="text-[16px]" />
                     <span>Apply for This Role</span>
                   </a>
+                  <p className="text-xs text-slate-400 mt-2">{consentHint}</p>
                 </div>
               </div>
             </div>

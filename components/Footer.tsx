@@ -138,6 +138,23 @@ export function Footer() {
             </div>
           </div>
         </div>
+
+        {/*
+         * Non-negotiable per CLAUDE.md Section 7: a visible Privacy Policy
+         * (and its Terms counterpart) is required before this site collects
+         * any personal data — resumes and consultation details included —
+         * given cross-border collection between Cameroon and the US. This
+         * was missing sitewide until this pass; both pages it links to
+         * exist but are themselves flagged [PENDING: legal review].
+         */}
+        <div className="pt-6 mt-6 border-t border-slate-800/60 flex items-center justify-center gap-6 text-xs text-slate-500">
+          <Link href="/privacy-policy" className="hover:text-white transition-colors">
+            Privacy Policy
+          </Link>
+          <Link href="/terms-of-service" className="hover:text-white transition-colors">
+            Terms of Service
+          </Link>
+        </div>
       </div>
     </footer>
   );

@@ -112,7 +112,7 @@ const personas = [
   {
     track: "Track B",
     accent: "amber" as const,
-    icon: "healing",
+    icon: "how_to_reg",
     title: "Catching Up on Employee Declarations",
     reality: "“We’ve had staff on payroll for a while without declaring them to CNPS — I don’t know how exposed that leaves us.”",
     method:
@@ -137,7 +137,7 @@ const personas = [
 const personaAccentClasses: Record<"teal" | "amber" | "sky", { chip: string; icon: string; label: string }> = {
   teal: { chip: "bg-teal-500/20 text-teal-300", icon: "bg-teal-500/20 text-teal-300", label: "text-teal-300" },
   amber: { chip: "bg-amber-500/20 text-amber-300", icon: "bg-amber-500/20 text-amber-300", label: "text-amber-300" },
-  sky: { chip: "bg-sky-500/20 text-sky-300", icon: "bg-sky-500/20 text-sky-300", label: "text-sky-300" },
+  sky: { chip: "bg-sky-500/25 text-sky-300", icon: "bg-sky-500/25 text-sky-300", label: "text-sky-300" },
 };
 
 const faqItems = [
@@ -511,17 +511,8 @@ export default function CnpsComplianceCameroonPage() {
 
         {/* Cost comparator */}
         <section className="relative py-24 bg-white overflow-hidden">
-          <div className="absolute inset-0 opacity-[0.06] pointer-events-none">
-            <Image
-              src={images["dedicated-advisor"].src}
-              alt=""
-              fill
-              sizes="100vw"
-              placeholder="blur"
-              blurDataURL={images["dedicated-advisor"].blurDataURL}
-              className="object-cover object-top"
-            />
-          </div>
+          <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-rose-400/10 blur-3xl pointer-events-none" />
+          <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-teal-400/10 blur-3xl pointer-events-none" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-14">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-700 text-xs font-bold tracking-wider uppercase mb-3">
@@ -536,99 +527,101 @@ export default function CnpsComplianceCameroonPage() {
               </p>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-              <div className="rounded-2xl bg-white border border-rose-200 shadow-sm p-6 md:p-8 flex flex-col justify-between">
+              <div className="rounded-2xl bg-rose-50/60 border border-rose-200 shadow-sm p-6 md:p-8 flex flex-col justify-between">
                 <div>
-                  <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
+                  <div className="flex items-center justify-between pb-4 border-b border-rose-200/70 mb-6">
                     <div>
                       <span className="text-[11px] font-extrabold uppercase tracking-widest text-rose-600">Unmanaged Route</span>
                       <h3 className="text-xl font-bold text-navy-950 mt-0.5">Undeclared or Lapsed Standing</h3>
                     </div>
-                    <MaterialIcon name="warning" className="text-rose-500 text-[32px]" />
+                    <div className="w-11 h-11 rounded-xl bg-rose-100 border border-rose-200 flex items-center justify-center shrink-0">
+                      <MaterialIcon name="warning" className="text-rose-500 text-[24px]" />
+                    </div>
                   </div>
-                  <ul className="flex flex-col gap-4 text-sm text-slate-600 mb-8">
+                  <ul className="flex flex-col gap-4 text-sm text-slate-700 mb-8">
                     <li className="flex items-start gap-3">
                       <MaterialIcon name="close" className="text-rose-500 text-[20px] shrink-0 mt-0.5" />
                       <span>
-                        <strong className="text-slate-900">Undeclared Employee Penalties:</strong> CNPS can retroactively
-                        assess unpaid contributions plus penalties once an unregistered employee is
-                        discovered — often during an inspection or a workplace incident claim.{" "}
-                        <span className="text-amber-700 italic">[PENDING: confirm specific CNPS penalty framework with Uptech Consulting]</span>
+                        <strong className="text-slate-900">Undeclared Employee Penalties:</strong> CNPS can
+                        retroactively assess unpaid contributions and penalties once an unregistered
+                        employee is discovered.{" "}
+                        <span className="text-amber-700 italic">[PENDING: confirm penalty framework]</span>
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
                       <MaterialIcon name="close" className="text-rose-500 text-[20px] shrink-0 mt-0.5" />
                       <span>
-                        <strong className="text-slate-900">Lapsed Clearance, Lost Tenders:</strong> An expired or
-                        never-issued Attestation pour Soumission disqualifies your business from
-                        public and many corporate tender processes outright.
+                        <strong className="text-slate-900">Lapsed Clearance, Lost Tenders:</strong> An expired
+                        Attestation pour Soumission disqualifies you from public and corporate tenders.
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
                       <MaterialIcon name="close" className="text-rose-500 text-[20px] shrink-0 mt-0.5" />
                       <span>
-                        <strong className="text-slate-900">Employee Claims Exposure:</strong> Without registration, a
-                        workplace injury or dispute leaves the employer directly exposed instead of
-                        the claim routing through CNPS insurance as intended.
+                        <strong className="text-slate-900">Employee Claims Exposure:</strong> Without
+                        registration, a workplace injury leaves the employer directly exposed instead
+                        of the claim routing through CNPS insurance.
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
                       <MaterialIcon name="close" className="text-rose-500 text-[20px] shrink-0 mt-0.5" />
                       <span>
-                        <strong className="text-slate-900">Back-Payment Audits:</strong> Historical gaps surface during
-                        CNPS inspections, triggering back-payment calculations across your full
-                        employee register at once.
+                        <strong className="text-slate-900">Back-Payment Audits:</strong> Historical gaps
+                        surface during inspections, triggering back-payment across your full register.
                       </span>
                     </li>
                   </ul>
                 </div>
-                <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium flex items-center justify-between">
+                <div className="p-3.5 rounded-xl bg-white border border-rose-200 text-xs text-rose-700 font-medium flex items-center justify-between">
                   <span>Outcome: sudden liabilities and lost tender eligibility, discovered at the worst time.</span>
-                  <MaterialIcon name="error" className="text-rose-500 text-[18px]" />
+                  <MaterialIcon name="error" className="text-rose-500 text-[18px] shrink-0 ml-2" />
                 </div>
               </div>
-              <div className="rounded-2xl bg-gradient-to-b from-navy-900 to-navy-950 border-2 border-teal-400/50 p-6 md:p-8 flex flex-col justify-between shadow-2xl text-white">
+              <div className="rounded-2xl bg-teal-50/60 border border-teal-200 shadow-sm p-6 md:p-8 flex flex-col justify-between">
                 <div>
-                  <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+                  <div className="flex items-center justify-between pb-4 border-b border-teal-200/70 mb-6">
                     <div>
-                      <span className="text-[11px] font-extrabold uppercase tracking-widest text-teal-400">Managed Route</span>
-                      <h3 className="text-xl font-bold text-white mt-0.5">Uptech Consulting Managed Standing</h3>
+                      <span className="text-[11px] font-extrabold uppercase tracking-widest text-teal-700">Managed Route</span>
+                      <h3 className="text-xl font-bold text-navy-950 mt-0.5">Uptech Consulting Managed Standing</h3>
                     </div>
-                    <MaterialIcon name="verified" className="text-teal-400 text-[32px]" />
+                    <div className="w-11 h-11 rounded-xl bg-teal-100 border border-teal-200 flex items-center justify-center shrink-0">
+                      <MaterialIcon name="verified" className="text-teal-600 text-[24px]" />
+                    </div>
                   </div>
-                  <ul className="flex flex-col gap-4 text-sm text-slate-200 mb-8">
+                  <ul className="flex flex-col gap-4 text-sm text-slate-700 mb-8">
                     <li className="flex items-start gap-3">
-                      <MaterialIcon name="check_circle" className="text-teal-400 text-[20px] shrink-0 mt-0.5" />
+                      <MaterialIcon name="check_circle" className="text-teal-600 text-[20px] shrink-0 mt-0.5" />
                       <span>
-                        <strong>Registered From Day One:</strong> Every hire declared on schedule, so
-                        there&apos;s never a gap for an inspection to find.
+                        <strong className="text-slate-900">Registered From Day One:</strong> Every hire
+                        declared on schedule, so there&apos;s never a gap for an inspection to find.
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <MaterialIcon name="check_circle" className="text-teal-400 text-[20px] shrink-0 mt-0.5" />
+                      <MaterialIcon name="check_circle" className="text-teal-600 text-[20px] shrink-0 mt-0.5" />
                       <span>
-                        <strong>Active Clearance, Always Ready:</strong> Attestation pour Soumission
-                        renewed proactively — ready whenever a tender opportunity appears.
+                        <strong className="text-slate-900">Active Clearance, Always Ready:</strong> Attestation
+                        pour Soumission renewed proactively, ready whenever a tender appears.
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <MaterialIcon name="check_circle" className="text-teal-400 text-[20px] shrink-0 mt-0.5" />
+                      <MaterialIcon name="check_circle" className="text-teal-600 text-[20px] shrink-0 mt-0.5" />
                       <span>
-                        <strong>Insured Workforce:</strong> Registered employees are covered by
-                        CNPS&apos;s social insurance framework for workplace incidents, as intended.
+                        <strong className="text-slate-900">Insured Workforce:</strong> Registered employees
+                        are covered by CNPS&apos;s social insurance framework, as intended.
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <MaterialIcon name="check_circle" className="text-teal-400 text-[20px] shrink-0 mt-0.5" />
+                      <MaterialIcon name="check_circle" className="text-teal-600 text-[20px] shrink-0 mt-0.5" />
                       <span>
-                        <strong>Documented Filing Trail:</strong> Verifiable receipts and declaration
-                        records on hand whenever CNPS or a client asks for proof of standing.
+                        <strong className="text-slate-900">Documented Filing Trail:</strong> Verifiable
+                        receipts and declaration records on hand, ready if anyone ever asks.
                       </span>
                     </li>
                   </ul>
                 </div>
-                <div className="p-3.5 rounded-xl bg-teal-500/10 border border-teal-400/40 text-xs text-teal-300 font-medium flex items-center justify-between">
+                <div className="p-3.5 rounded-xl bg-white border border-teal-200 text-xs text-teal-700 font-medium flex items-center justify-between">
                   <span>Outcome: clean employer standing, ready for CNPS review or a tender deadline.</span>
-                  <MaterialIcon name="check" className="text-teal-400 text-[18px]" />
+                  <MaterialIcon name="check" className="text-teal-600 text-[18px] shrink-0 ml-2" />
                 </div>
               </div>
             </div>

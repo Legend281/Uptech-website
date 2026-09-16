@@ -9,6 +9,7 @@ import { Button } from "@/components/Button";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { ComplianceDisclaimer } from "@/components/ComplianceDisclaimer";
+import { TimelineNote } from "@/components/TimelineNote";
 import { WhatComesNext } from "@/components/WhatComesNext";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { images } from "@/lib/images";
@@ -96,11 +97,14 @@ const cadenceColumns = [
     // Individual/personal-tax cadence, added alongside the three business
     // columns above — personal IRPP filing is a single annual cycle, not a
     // monthly one, so it doesn't share a card with the business columns.
-    // March 15 is already stated as the personal filing deadline in this
-    // page's own FAQ ("When is the personal tax filing deadline?") — reused
-    // here rather than re-flagged as a fresh [PENDING] fact.
+    // This page's own FAQ states "before March 15 annually" but immediately
+    // hedges it with its own [PENDING] on specifics — presenting a clean,
+    // unhedged "March 15th Annually" deadline tag here would contradict
+    // that hedge, so this card stays at general "Annual Cycle" framing
+    // (family-wide confidence-vs-pending audit fix) rather than repeating
+    // the specific date without the same qualification.
     tag: "Individual • Annual Cycle",
-    deadline: "March 15th Annually",
+    deadline: "[PENDING: exact date]",
     title: "Personal IRPP Filing",
     description:
       "A single yearly personal income tax declaration — not a monthly cycle like the business columns shown here.",
@@ -244,8 +248,14 @@ export default function TaxComplianceBusinessesCameroonPage() {
                 </div>
                 <div className="grid grid-cols-3 gap-3 max-w-lg pt-4 border-t border-white/10">
                   <div className="p-3 bg-white/5 rounded-lg">
-                    <p className="text-xl font-bold text-teal-300">15th</p>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Monthly Filing Cut-Off</p>
+                    {/* Was a specific "15th" cut-off date stated as fixed
+                        fact here, directly contradicting the cadence
+                        section's own disclaimer below that deadlines vary
+                        by regime classification — downgraded to general
+                        framing per the family-wide confidence-vs-pending
+                        audit fix. */}
+                    <p className="text-xl font-bold text-teal-300">Monthly</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Filing Cadence</p>
                   </div>
                   <div className="p-3 bg-white/5 rounded-lg">
                     <p className="text-xl font-bold text-teal-300">Bilingual</p>
@@ -341,7 +351,7 @@ export default function TaxComplianceBusinessesCameroonPage() {
                       >
                         {column.tag}
                       </span>
-                      <span className="font-mono text-xs text-slate-500 font-semibold">{column.deadline}</span>
+                      <TimelineNote value={column.deadline} className="font-semibold" />
                     </div>
                     <h3 className="text-lg font-bold text-navy-950 mb-2">{column.title}</h3>
                     <p className="text-sm text-slate-600 mb-5 leading-relaxed">{column.description}</p>
@@ -511,11 +521,20 @@ export default function TaxComplianceBusinessesCameroonPage() {
           </div>
         </section>
 
-        {/* Handover vs deliverables */}
+        {/* Handover vs deliverables — this is this page's version of the
+            family-wide "documents needed" section, eyebrow standardized to
+            match. The H2 stays page-specific ("What You Hand Over vs. What
+            You Receive"): unlike the single-direction checklists on the
+            other 3 pages, this section is a genuinely bidirectional
+            exchange (what you submit AND what you get back), so forcing it
+            to read as a plain "checklist" would misdescribe its actual
+            content. Naming consistency fix applies to the eyebrow (the
+            site's real cross-page taxonomy label); H2s are page-specific
+            by convention everywhere else on this site too. */}
         <section className="py-24 bg-slate-50 border-y border-slate-200/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mb-12">
-              <span className="text-xs font-bold uppercase tracking-wider text-sky-600">OPERATIONAL DIVISION OF LABOUR</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-sky-600">DOCUMENTS &amp; REQUIREMENTS</span>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight mt-2">
                 What You Hand Over vs. What You Receive
               </h2>

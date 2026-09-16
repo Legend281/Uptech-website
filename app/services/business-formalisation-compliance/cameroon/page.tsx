@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
@@ -20,9 +21,11 @@ export const metadata: Metadata = {
 
 const trustStripItems = [
   {
+    // Was "17 Member States" — a specific unsourced figure, downgraded per
+    // the family-wide confidence-vs-pending audit fix.
     icon: "gavel",
     title: "OHADA & RCCM Compliant",
-    badgeText: "17 Member States",
+    badgeText: "Multi-Country Standard",
     badgeAccent: "teal" as const,
     description: "Strict adherence to the Uniform Act on General Commercial Law.",
   },
@@ -101,8 +104,12 @@ const identityDocuments = [
     text: "Valid National Identity Card (CNI) or biometric passport copies for all managing directors (Gérants).",
   },
   {
+    // Was "...dated within the last 3 months" — a specific validity window
+    // stated as confident fact with no source and no [PENDING] hedge,
+    // unlike comparable specifics elsewhere on this page. Downgraded per
+    // the family-wide confidence-vs-pending audit fix.
     strong: "Criminal Record Clearance:",
-    text: "Casier Judiciaire (Bulletin N°3) dated within the last 3 months, or sworn affidavit for foreign non-residents.",
+    text: "Casier Judiciaire (Bulletin N°3), recently issued [PENDING: confirm current validity window with Uptech Consulting], or sworn affidavit for foreign non-residents.",
   },
   { strong: "Photographs:", text: "Two (2) recent passport-sized color photos of each declared legal representative." },
   { strong: "Civil Status:", text: "Proof of matrimonial property regime (if applicable under OHADA joint asset rules)." },
@@ -259,8 +266,11 @@ export default function BusinessFormalisationCameroonPage() {
                       <span className="px-3 py-1 rounded-md bg-navy-950/80 border border-teal-400/40 text-[11px] font-bold text-teal-300 uppercase tracking-wider backdrop-blur-md">
                         Statutory Reference
                       </span>
+                      {/* Was "OHADA Art. 313+" — a specific unsourced legal
+                          citation, downgraded per the family-wide
+                          confidence-vs-pending audit fix. */}
                       <span className="px-2.5 py-1 rounded-md bg-white/10 text-[11px] font-mono text-white/90">
-                        OHADA Art. 313+
+                        OHADA Uniform Act
                       </span>
                     </div>
                   </div>
@@ -298,9 +308,15 @@ export default function BusinessFormalisationCameroonPage() {
                         [PENDING: confirm with Uptech Consulting]
                       </span>
                     </div>
+                    {/* Was "Standard benchmarks generally span 2 to 4 business
+                        weeks" — a confident specific range stated directly
+                        beside a badge already marked [PENDING], contradicting
+                        it. Downgraded to general phrasing per the family-wide
+                        confidence-vs-pending audit fix. */}
                     <p className="text-xs text-slate-300 leading-normal">
-                      Standard benchmarks generally span <strong className="text-white">2 to 4 business weeks</strong> depending
-                      on regional court chamber schedules (Buea, Douala, Yaoundé) and bank escrow clearances.
+                      Actual duration depends on regional court chamber schedules (Buea, Douala,
+                      Yaoundé) and bank escrow clearances — we confirm a realistic timeline once
+                      your dossier is reviewed.
                     </p>
                   </div>
                 </div>
@@ -346,6 +362,21 @@ export default function BusinessFormalisationCameroonPage() {
                           Statutory Deliverable: <strong className="text-slate-900">{step.deliverable}</strong>
                         </span>
                       </div>
+                      {/* Disambiguation: this Patente declaration is the
+                          one-time filing obtained during formalisation —
+                          the Tax Compliance page separately covers the
+                          recurring annual Patente renewal. Same disambiguation
+                          pattern already used between Tax Compliance and CNPS
+                          elsewhere in this page family. */}
+                      {step.number === "05" && (
+                        <Link
+                          href="/services/business-formalisation-compliance/tax-compliance-businesses-cameroon"
+                          className="mt-3 flex items-center gap-1.5 text-xs font-semibold text-blue-accent hover:text-teal-600 transition-colors"
+                        >
+                          Annual Patente renewal is handled as part of your ongoing tax compliance
+                          <MaterialIcon name="arrow_forward" className="text-[14px]" />
+                        </Link>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -360,7 +391,7 @@ export default function BusinessFormalisationCameroonPage() {
             <div className="mb-12 max-w-2xl">
               <div className="inline-flex items-center gap-2 mb-2">
                 <span className="w-7 h-[2px] bg-teal-500 inline-block" />
-                <span className="text-xs font-bold uppercase tracking-wider text-sky-600">REQUIRED DOSSIER BREAKDOWN</span>
+                <span className="text-xs font-bold uppercase tracking-wider text-sky-600">DOCUMENTS &amp; REQUIREMENTS</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight">
                 Statutory Requirements Checklist

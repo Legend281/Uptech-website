@@ -11,12 +11,17 @@ type ComplianceDisclaimerProps = {
  * permanent "Last reviewed" date, since this content can go legally stale.
  *
  * FLAG FOR TEAM (raised during the CNPS Compliance page review, applies to
- * every page using this shared component): "Uptech Consulting Legal &
- * Corporate Administration Desk" is the default `reviewedBy` attribution —
- * confirm this is a real, existing internal department name before it
- * continues to appear on public pages. Not verified against any company
- * document; carried over from earlier page-building work without
- * confirmation.
+ * every page using this shared component, re-flagged during the 4-page
+ * Business Formalisation & Compliance family audit): "Uptech Consulting
+ * Legal & Corporate Administration Desk" is the default `reviewedBy`
+ * attribution — confirm this is a real, existing internal department name
+ * before it continues to appear on public pages. Not verified against any
+ * company document; carried over from earlier page-building work without
+ * confirmation. If it is NOT a real department/desk name, replace it with
+ * accurate attribution (a real team name), or drop specific attribution
+ * entirely and state "reviewed internally" instead — do not invent a
+ * different-sounding name as a substitute guess. Left as-is until the team
+ * answers; fixing it here resolves all 4 Template C pages at once.
  *
  * FLAG FOR TEAM: the `lastReviewed` date passed into this component by every
  * Template C page is currently a hardcoded string literal in that page's own

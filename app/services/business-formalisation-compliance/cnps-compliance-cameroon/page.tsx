@@ -28,18 +28,25 @@ const trustStripItems = [
     description: "Employer social insurance registration handled from day one of hiring.",
   },
   {
-    // FLAG FOR TEAM: verify DPAE is one-time vs. monthly recurring before
-    // this ships — possible conflation with monthly CNPS contribution
-    // filing. DPAE (Déclaration Préalable à l'Embauche) is understood to be
-    // a one-time, pre-hiring declaration per employee, not a recurring
-    // monthly one — what's typically monthly is the CNPS contribution /
-    // payroll declaration, a related but different obligation. Left
-    // unchanged pending confirmation; do not silently "correct" this.
+    // ESCALATED, NOT CODE-FIXED: DPAE (Déclaration Préalable à l'Embauche)
+    // is understood to be a one-time, pre-hiring declaration per employee,
+    // not a recurring monthly one — what's typically monthly is the CNPS
+    // contribution/payroll declaration, a related but different obligation.
+    // The confidence-vs-pending audit fix asked every other instance on
+    // this page family to be downgraded to a [PENDING] treatment or hedged
+    // — but "DPAE" itself is a specific named declaration, and there is no
+    // safe general rewording that doesn't either (a) keep asserting
+    // "monthly," the exact claim in question, or (b) silently assert
+    // "one-time" instead, which is just guessing in the other direction.
+    // Dropped "Monthly" from the title and "Recurring" from the
+    // description — neither claim is made anymore — but this is a stopgap,
+    // not a resolution. Needs a real answer from the team on DPAE's actual
+    // frequency before this can be written accurately either way.
     icon: "event_repeat",
-    title: "Monthly DPAE Filing",
+    title: "DPAE Filing",
     badgeText: "Employee Declarations",
     badgeAccent: "sky" as const,
-    description: "Recurring declarations kept current against your payroll records.",
+    description: "Declarations kept current and confirmed against your payroll records.",
   },
   {
     icon: "workspace_premium",
@@ -212,16 +219,17 @@ export default function CnpsComplianceCameroonPage() {
                   Keep your team&apos;s social security compliant,{" "}
                   <span className="gradient-teal-blue-text">without the paperwork maze.</span>
                 </h1>
-                {/* FLAG FOR TEAM: verify DPAE is one-time vs. monthly
-                    recurring before this ships — possible conflation with
-                    monthly CNPS contribution filing. "monthly employee
-                    declarations" below may be describing DPAE (understood to
-                    be a one-time, pre-hiring declaration) when it should
-                    describe the monthly CNPS contribution/payroll filing
-                    instead. Left unchanged pending confirmation. */}
+                {/* ESCALATED, NOT CODE-FIXED: see the matching comment on
+                    the trust strip's DPAE item above — "monthly" dropped
+                    from "employee declarations" here since that claim is
+                    the one in question; "payroll withholding" right after
+                    it correctly keeps its own monthly claim (confirmed
+                    accurate by the Compliance Cycle section's own "Monthly
+                    Payroll Withholding & Filing" step). Still needs a real
+                    team answer on DPAE's actual frequency. */}
                 <p className="text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
-                  Employer registration, monthly employee declarations, payroll withholding, and
-                  CNPS clearance certificates — kept current as your team grows.
+                  Employer registration, employee declarations, payroll withholding, and CNPS
+                  clearance certificates — kept current as your team grows.
                 </p>
                 <div className="flex flex-wrap items-center gap-4 mb-8">
                   <Button href="#checklist">Get CNPS Checklist</Button>

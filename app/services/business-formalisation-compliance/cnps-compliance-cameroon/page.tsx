@@ -153,7 +153,8 @@ const faqItems = [
   },
   {
     question: "What are the current CNPS contribution rates?",
-    answer: "[PENDING: confirm current employer/employee CNPS contribution rates with Uptech Consulting — these are set by CNPS and can be revised].",
+    answer:
+      "[PENDING: confirm current employer/employee CNPS contribution rates with Uptech Consulting — these are set by CNPS and can be revised]. Contribution rates depend on registration category and salary bracket; we confirm your exact rate during onboarding.",
   },
 ];
 

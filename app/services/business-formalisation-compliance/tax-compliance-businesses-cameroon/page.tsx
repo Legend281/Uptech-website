@@ -92,6 +92,26 @@ const cadenceColumns = [
     ],
     artifact: "Official DGI Stamped DSF & Active ANR Certificate",
   },
+  {
+    // Individual/personal-tax cadence, added alongside the three business
+    // columns above — personal IRPP filing is a single annual cycle, not a
+    // monthly one, so it doesn't share a card with the business columns.
+    // March 15 is already stated as the personal filing deadline in this
+    // page's own FAQ ("When is the personal tax filing deadline?") — reused
+    // here rather than re-flagged as a fresh [PENDING] fact.
+    tag: "Individual • Annual Cycle",
+    deadline: "March 15th Annually",
+    title: "Personal IRPP Filing",
+    description:
+      "A single yearly personal income tax declaration — not a monthly cycle like the business columns shown here.",
+    items: [
+      { strong: "Personal IRPP Declaration:", text: "Worldwide income for tax residents, including remote/foreign-client earnings." },
+      { strong: "Supporting Income Documentation:", text: "Contracts, pay slips, or invoices for the tax year being declared." },
+      { strong: "Prior-Year Reference:", text: "Previous IRPP declaration or personal tax identifier, if one exists." },
+    ],
+    artifact: "Personal IRPP Filing Receipt",
+    audience: "individual" as const,
+  },
 ];
 
 const handover = [
@@ -106,6 +126,21 @@ const deliverables = [
   { icon: "receipt_long", title: "Quittance de Paiement Receipts", text: "State treasury payment certificates archived directly in your client drive." },
   { icon: "account_balance_wallet", title: "Tax Portal Ledger Reconciliation", text: "Continuous balance-sheet confirmation to catch discrepancies before they compound." },
   { icon: "workspace_premium", title: "Attestation de Non-Redevance (ANR)", text: "Fresh corporate ANRs issued and renewed to keep you eligible for institutional contracts." },
+];
+
+// Individual/freelancer equivalent of the two lists above — kept as its own
+// smaller block beneath the business one rather than merged into the same
+// list, since the documents involved are genuinely different.
+const individualHandover = [
+  { icon: "badge", title: "Valid ID or Passport", text: "National ID card or passport for identity verification." },
+  { icon: "receipt", title: "Proof of Income", text: "Contracts, pay slips, or invoices for the tax year being declared." },
+  { icon: "history_edu", title: "Prior-Year Filing (if any)", text: "Previous IRPP declaration or personal tax identifier, if one exists." },
+];
+
+const individualDeliverables = [
+  { icon: "verified", title: "Filed Personal IRPP Declaration", text: "Formally lodged through the DGI portal on your behalf." },
+  { icon: "receipt_long", title: "Personal Filing Receipt", text: "Confirmation of your declaration for that tax year." },
+  { icon: "workspace_premium", title: "Personal Tax Clearance (on request)", text: "Available when you need it for travel, visa, or cross-border matters." },
 ];
 
 const faqItems = [
@@ -170,6 +205,20 @@ export default function TaxComplianceBusinessesCameroonPage() {
       <main>
         {/* Hero */}
         <section className="relative bg-navy-950 overflow-hidden pt-14 pb-28 lg:pt-20 lg:pb-36 border-b border-slate-800/80">
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={images["compliance-advisory"].src}
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              placeholder="blur"
+              blurDataURL={images["compliance-advisory"].blurDataURL}
+              className="object-cover object-right scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-950/20" />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-transparent to-navy-950/60" />
+          </div>
           <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
@@ -260,8 +309,9 @@ export default function TaxComplianceBusinessesCameroonPage() {
                   The Recurring Compliance Rhythm
                 </h2>
                 <p className="text-slate-600 mt-2">
-                  Tax compliance in Cameroon is not an annual scramble; it is a systematic monthly
-                  and quarterly operational hygiene that protects your legal capacity.
+                  Businesses run a systematic monthly and quarterly rhythm; individual filers have
+                  one annual cycle. Either way, it&apos;s not a once-a-year scramble — it&apos;s a
+                  documented cadence that protects your standing.
                 </p>
               </div>
               <div className="p-3 bg-slate-100 rounded-lg max-w-xs shrink-0">
@@ -272,12 +322,23 @@ export default function TaxComplianceBusinessesCameroonPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {cadenceColumns.map((column) => (
-                <div key={column.title} className="bg-slate-50 rounded-xl p-7 shadow-sm border border-slate-200/80 flex flex-col justify-between">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {cadenceColumns.map((column) => {
+                const isIndividual = "audience" in column && column.audience === "individual";
+                return (
+                <div
+                  key={column.title}
+                  className={`rounded-xl p-7 shadow-sm border flex flex-col justify-between ${
+                    isIndividual ? "bg-sky-50/50 border-sky-200" : "bg-slate-50 border-slate-200/80"
+                  }`}
+                >
                   <div>
                     <div className="flex items-center justify-between mb-4">
-                      <span className="px-3 py-1 rounded-full bg-teal-50 text-teal-700 text-[11px] font-bold uppercase tracking-wider">
+                      <span
+                        className={`px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider ${
+                          isIndividual ? "bg-sky-100 text-sky-700" : "bg-teal-50 text-teal-700"
+                        }`}
+                      >
                         {column.tag}
                       </span>
                       <span className="font-mono text-xs text-slate-500 font-semibold">{column.deadline}</span>
@@ -287,7 +348,10 @@ export default function TaxComplianceBusinessesCameroonPage() {
                     <ul className="flex flex-col gap-3 text-sm text-slate-700">
                       {column.items.map((item) => (
                         <li key={item.strong} className="flex items-start gap-2">
-                          <MaterialIcon name="check_box" className="text-teal-600 text-[18px] shrink-0 mt-0.5" />
+                          <MaterialIcon
+                            name="check_box"
+                            className={`text-[18px] shrink-0 mt-0.5 ${isIndividual ? "text-sky-600" : "text-teal-600"}`}
+                          />
                           <span>
                             <strong>{item.strong}</strong> {item.text}
                           </span>
@@ -302,7 +366,8 @@ export default function TaxComplianceBusinessesCameroonPage() {
                     <span className="text-xs font-semibold text-slate-800">{column.artifact}</span>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
 
             <div className="mt-6 p-4 bg-slate-50 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -310,8 +375,8 @@ export default function TaxComplianceBusinessesCameroonPage() {
                 <MaterialIcon name="info" className="text-teal-600 text-[24px]" />
                 <p className="text-sm text-slate-600">
                   <strong>Cadence Confirmation:</strong> Exact deadlines fluctuate based on regime
-                  classification (Réel, Simplifié, or IGC). We verify your exact registration
-                  status during initial onboarding.
+                  classification (Réel, Simplifié, or IGC) for businesses, or personal filing
+                  profile for individuals. We verify your exact status during initial onboarding.
                 </p>
               </div>
             </div>
@@ -455,9 +520,9 @@ export default function TaxComplianceBusinessesCameroonPage() {
                 What You Hand Over vs. What You Receive
               </h2>
               <p className="text-slate-600 mt-2">
-                We turn an intimidating legal paperwork maze into a simple monthly exchange. You
-                provide core raw transactions; we handle verification, filing, and delivery of
-                certified receipts.
+                We turn an intimidating legal paperwork maze into a simple, documented exchange —
+                monthly for businesses, annually for individual filers. You provide the raw
+                records; we handle verification, filing, and delivery of certified receipts.
               </p>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -503,6 +568,56 @@ export default function TaxComplianceBusinessesCameroonPage() {
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Individual/freelancer equivalent — a smaller block beneath
+                the business one rather than merged into the same list,
+                since the documents involved are genuinely different. */}
+            <div className="mt-10 pt-10 border-t border-slate-200/80">
+              <div className="flex items-center gap-2 mb-6">
+                <span className="w-6 h-[2px] bg-sky-500 inline-block" />
+                <span className="text-xs font-bold uppercase tracking-wider text-sky-600">For Individual Filers</span>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200/80">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-9 h-9 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600">
+                      <MaterialIcon name="upload_file" className="text-[18px]" />
+                    </div>
+                    <h3 className="text-base font-bold text-navy-950">What You Hand Over</h3>
+                  </div>
+                  <div className="space-y-2.5">
+                    {individualHandover.map((item) => (
+                      <div key={item.title} className="p-2.5 bg-slate-50 rounded-lg flex items-start gap-3">
+                        <MaterialIcon name={item.icon} className="text-slate-500 text-[18px] mt-0.5" />
+                        <div>
+                          <p className="text-sm font-semibold text-navy-950">{item.title}</p>
+                          <p className="text-xs text-slate-500">{item.text}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200/80">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-9 h-9 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600">
+                      <MaterialIcon name="task_alt" className="text-[18px]" />
+                    </div>
+                    <h3 className="text-base font-bold text-navy-950">What You Receive Back</h3>
+                  </div>
+                  <div className="space-y-2.5">
+                    {individualDeliverables.map((item) => (
+                      <div key={item.title} className="p-2.5 bg-slate-50 rounded-lg flex items-start gap-3">
+                        <MaterialIcon name={item.icon} className="text-sky-600 text-[18px] mt-0.5" />
+                        <div>
+                          <p className="text-sm font-semibold text-navy-950">{item.title}</p>
+                          <p className="text-xs text-slate-500">{item.text}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -579,6 +694,16 @@ export default function TaxComplianceBusinessesCameroonPage() {
                       Fiscal), consuming executive bandwidth and risking large reassessments.
                     </p>
                   </div>
+                  {/* Individual-specific risk, for the diaspora/remote-filer
+                      persona (Track C) this page already targets. */}
+                  <div className="p-3.5 bg-white/5 rounded-lg">
+                    <p className="text-sm font-semibold text-rose-300 mb-1">Personal Tax Clearance Gaps</p>
+                    <p className="text-sm text-slate-300">
+                      A missing or lapsed personal ANR can complicate visa applications,
+                      cross-border banking, or other matters that require proof of tax standing —
+                      a real friction point for diaspora and remote filers.
+                    </p>
+                  </div>
                 </div>
               </div>
               <div className="frosted-glass rounded-2xl p-7 border-2 border-teal-400/30">
@@ -605,6 +730,10 @@ export default function TaxComplianceBusinessesCameroonPage() {
                   <div className="p-3.5 bg-white/5 rounded-lg">
                     <p className="text-sm font-semibold text-teal-300 mb-1">Bilingual Institutional Representation</p>
                     <p className="text-sm text-slate-300">If the tax center requests clarification, our tax desk responds on your behalf.</p>
+                  </div>
+                  <div className="p-3.5 bg-white/5 rounded-lg">
+                    <p className="text-sm font-semibold text-teal-300 mb-1">Personal Tax Clearance Maintained</p>
+                    <p className="text-sm text-slate-300">Ready when you need it for travel, visa documentation, or cross-border matters.</p>
                   </div>
                 </div>
               </div>
@@ -638,9 +767,23 @@ export default function TaxComplianceBusinessesCameroonPage() {
         />
 
         {/* Final CTA */}
-        <section id="compliance-check" className="py-24 bg-navy-950 text-white text-center">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 mb-4">
+        <section id="compliance-check" className="relative py-28 bg-navy-950 text-white text-center overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={images["compliance-advisory"].src}
+              alt=""
+              fill
+              sizes="100vw"
+              placeholder="blur"
+              blurDataURL={images["compliance-advisory"].blurDataURL}
+              className="object-cover object-center scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/80 to-navy-950/50" />
+            <div className="absolute inset-0 bg-navy-950/30" />
+          </div>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[36rem] h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-teal-400/30 mb-4 backdrop-blur-md">
               <span className="w-2 h-2 rounded-full bg-emerald-400" />
               <span className="text-xs font-bold uppercase tracking-wider text-teal-300">TAX DESK ACTIVE IN BUEA &amp; DOUALA</span>
             </div>

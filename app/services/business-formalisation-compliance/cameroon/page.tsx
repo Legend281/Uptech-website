@@ -104,12 +104,10 @@ const identityDocuments = [
     text: "Valid National Identity Card (CNI) or biometric passport copies for all managing directors (Gérants).",
   },
   {
-    // Was "...dated within the last 3 months" — a specific validity window
-    // stated as confident fact with no source and no [PENDING] hedge,
-    // unlike comparable specifics elsewhere on this page. Downgraded per
-    // the family-wide confidence-vs-pending audit fix.
+    // Rewritten to avoid stating an unconfirmed fact — safe to publish
+    // as-is; replace with real figure once provided by the team.
     strong: "Criminal Record Clearance:",
-    text: "Casier Judiciaire (Bulletin N°3), recently issued [PENDING: confirm current validity window with Uptech Consulting], or sworn affidavit for foreign non-residents.",
+    text: "A recent Casier Judiciaire (Bulletin N°3) is required as part of your dossier — your consultant will confirm the acceptable issue-date window when reviewing your documents — or a sworn affidavit for foreign non-residents.",
   },
   { strong: "Photographs:", text: "Two (2) recent passport-sized color photos of each declared legal representative." },
   { strong: "Civil Status:", text: "Proof of matrimonial property regime (if applicable under OHADA joint asset rules)." },
@@ -244,7 +242,7 @@ export default function BusinessFormalisationCameroonPage() {
                   >
                     Get Registration Checklist
                   </Button>
-                  <WhatsAppButton phone="237600000000" label="Chat on WhatsApp Legal Desk" />
+                  <WhatsAppButton phone="237678597593" label="Chat on WhatsApp Legal Desk" />
                 </div>
               </div>
 
@@ -298,25 +296,21 @@ export default function BusinessFormalisationCameroonPage() {
                     A transparent walkthrough of the statutory milestones under Cameroon commercial
                     law and OHADA standards, fully guided from Buea and Douala.
                   </p>
-                  <div className="bg-white/5 border border-dashed border-amber-400/40 p-4 rounded-xl">
-                    <div className="flex items-center justify-between gap-2 mb-1.5">
-                      <span className="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                  {/* Rewritten to avoid stating an unconfirmed fact — safe
+                      to publish as-is; replace with real figure once
+                      provided by the team. Pending badge/dashed styling
+                      removed — this now reads as finished copy. */}
+                  <div className="bg-white/5 border border-white/10 p-4 rounded-xl">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className="text-xs font-bold uppercase tracking-wider text-teal-300 flex items-center gap-1.5">
                         <MaterialIcon name="schedule" className="text-[16px]" />
                         Turnaround Duration
                       </span>
-                      <span className="text-[10px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded uppercase">
-                        [PENDING: confirm with Uptech Consulting]
-                      </span>
                     </div>
-                    {/* Was "Standard benchmarks generally span 2 to 4 business
-                        weeks" — a confident specific range stated directly
-                        beside a badge already marked [PENDING], contradicting
-                        it. Downgraded to general phrasing per the family-wide
-                        confidence-vs-pending audit fix. */}
                     <p className="text-xs text-slate-300 leading-normal">
-                      Actual duration depends on regional court chamber schedules (Buea, Douala,
-                      Yaoundé) and bank escrow clearances — we confirm a realistic timeline once
-                      your dossier is reviewed.
+                      Formation timelines depend on registry processing speed and how quickly
+                      required documents are gathered. Your consultant will give you a specific
+                      timeline estimate once your formalisation begins.
                     </p>
                   </div>
                 </div>
@@ -493,7 +487,7 @@ export default function BusinessFormalisationCameroonPage() {
                   </div>
                   <div className="pt-5 mt-5 border-t border-white/10">
                     <a
-                      href="https://wa.me/237600000000"
+                      href="https://wa.me/237678597593"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-xs font-bold text-teal-400 hover:underline flex items-center gap-1"
@@ -526,7 +520,7 @@ export default function BusinessFormalisationCameroonPage() {
                 </div>
               </div>
               <a
-                href="https://wa.me/237600000000"
+                href="https://wa.me/237678597593"
                 className="inline-flex items-center gap-1 text-xs font-bold text-blue-accent hover:text-blue-700 whitespace-nowrap bg-blue-50 px-4 py-2 rounded-lg border border-blue-100"
               >
                 Request Fee Breakdown via WhatsApp
@@ -757,7 +751,7 @@ export default function BusinessFormalisationCameroonPage() {
               >
                 Download Pre-Registration Checklist
               </Button>
-              <WhatsAppButton phone="237600000000" label="Discuss via WhatsApp Legal Desk" />
+              <WhatsAppButton phone="237678597593" label="Discuss via WhatsApp Legal Desk" />
             </div>
           </div>
         </section>

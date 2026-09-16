@@ -193,7 +193,7 @@ export default function BusinessFormalisationCompliancePage() {
                 >
                   Find My Path
                 </Button>
-                <WhatsAppButton phone="237670000000" label="Chat with the Legal Desk" />
+                <WhatsAppButton phone="237678597593" label="Chat with the Legal Desk" />
               </div>
             </div>
           </div>
@@ -455,7 +455,7 @@ export default function BusinessFormalisationCompliancePage() {
               >
                 Schedule Regulatory Scoping
               </Button>
-              <WhatsAppButton phone="237670000000" label="WhatsApp Legal Desk" />
+              <WhatsAppButton phone="237678597593" label="WhatsApp Legal Desk" />
             </div>
           </div>
         </section>

@@ -244,7 +244,7 @@ export default function TaxComplianceBusinessesCameroonPage() {
                 </p>
                 <div className="flex flex-wrap items-center gap-4 mb-8">
                   <Button href="#compliance-check">Get a Compliance Check</Button>
-                  <WhatsAppButton phone="237670000000" label="Chat on WhatsApp Tax Desk" />
+                  <WhatsAppButton phone="237678597593" label="Chat on WhatsApp Tax Desk" />
                 </div>
                 <div className="grid grid-cols-3 gap-3 max-w-lg pt-4 border-t border-white/10">
                   <div className="p-3 bg-white/5 rounded-lg">
@@ -685,11 +685,15 @@ export default function TaxComplianceBusinessesCameroonPage() {
                   <span className="px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 text-[11px] font-bold">HIGH RISK</span>
                 </div>
                 <div className="space-y-3">
+                  {/* Rewritten to avoid stating an unconfirmed fact — safe
+                      to publish as-is; replace with real figure once
+                      provided by the team. */}
                   <div className="p-3.5 bg-white/5 rounded-lg">
                     <p className="text-sm font-semibold text-rose-300 mb-1">Late-Filing Surcharges &amp; Compounding Interest</p>
                     <p className="text-sm text-slate-300">
-                      Monthly penalties applied automatically by DGI systems on unfiled statements.{" "}
-                      <span className="text-amber-300 italic">[PENDING: confirm specific DGI penalty % with Uptech Consulting]</span>
+                      Late filing carries real penalties in both Cameroon and the US. Your
+                      consultant will confirm the exact penalty exposure based on your specific
+                      filing history.
                     </p>
                   </div>
                   <div className="p-3.5 bg-white/5 rounded-lg">
@@ -815,7 +819,7 @@ export default function TaxComplianceBusinessesCameroonPage() {
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Button href="/contact?service=tax-compliance-businesses">Get a Compliance Check</Button>
-              <WhatsAppButton phone="237670000000" label="Discuss via WhatsApp Tax Desk" />
+              <WhatsAppButton phone="237678597593" label="Discuss via WhatsApp Tax Desk" />
             </div>
           </div>
         </section>

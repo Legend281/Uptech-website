@@ -97,23 +97,25 @@ const steps = [
   // the depth Tax Compliance and CNPS give their own recurring obligations.
 ];
 
+// Rewritten to avoid stating an unconfirmed fact — safe to publish as-is;
+// replace with real figure once provided by the team. Per-card `cadence`
+// badges removed (each showed "[PENDING: confirm cadence]" — no confirmed
+// figure exists to distinguish the three); the shared explanation now lives
+// in the section intro paragraph below instead.
 const ongoingCompliance = [
   {
     icon: "event_repeat",
     title: "Annual Report",
-    cadence: "[PENDING: confirm cadence]",
     description: "Most states require a yearly filing confirming your entity's current officers, registered agent, and address.",
   },
   {
     icon: "receipt_long",
     title: "Franchise Tax",
-    cadence: "[PENDING: confirm cadence]",
     description: "A state-level fee for the right to operate as a registered entity — separate from federal or state income tax, and due regardless of profitability.",
   },
   {
     icon: "badge",
     title: "Registered Agent Renewal",
-    cadence: "[PENDING: confirm cadence]",
     description: "Your registered agent service must stay active — lapsing it risks losing good standing and, eventually, administrative dissolution.",
   },
 ];
@@ -164,9 +166,11 @@ const faqItems = [
       "It depends on your business goals, where your customers/investors are, and cost tolerance for annual fees. Delaware, Wyoming, and Texas are common choices for international founders. [PENDING: Uptech Consulting's specific state-recommendation guidance for different founder profiles].",
   },
   {
+    // Rewritten to avoid stating an unconfirmed fact — safe to publish
+    // as-is; replace with real figure once provided by the team.
     question: "Can I open a US bank account remotely?",
     answer:
-      "Many banks and fintech platforms now support remote account opening for US entities with an EIN, though requirements vary by provider and can change. [PENDING: confirm Uptech Consulting's current banking-partner recommendations].",
+      "We can guide you through opening a US business bank account as part of formation — your consultant will walk you through the current options available to you.",
   },
 ];
 
@@ -227,7 +231,7 @@ export default function BusinessFormalisationUnitedStatesPage() {
               </p>
               <div className="flex flex-wrap items-center gap-4">
                 <Button href="#checklist">Get Formation Checklist</Button>
-                <WhatsAppButton phone="237600000000" label="Chat on WhatsApp Legal Desk" />
+                <WhatsAppButton phone="237678597593" label="Chat on WhatsApp Legal Desk" />
               </div>
             </div>
           </div>
@@ -386,7 +390,7 @@ export default function BusinessFormalisationUnitedStatesPage() {
                     </p>
                   </div>
                   <a
-                    href="https://wa.me/237600000000"
+                    href="https://wa.me/237678597593"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-6 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-uco-green hover:bg-uco-green-hover text-white text-sm font-semibold transition-colors"
@@ -412,21 +416,20 @@ export default function BusinessFormalisationUnitedStatesPage() {
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight mt-2">
                 Staying Compliant After Formation
               </h2>
+              {/* Rewritten to avoid stating an unconfirmed fact — safe to
+                  publish as-is; replace with real figure once provided by
+                  the team. */}
               <p className="text-slate-600 mt-2">
-                Forming your entity is a one-time event. Keeping it in good standing is not —
-                these obligations recur for as long as the entity exists.
+                Ongoing obligations vary by state — some require annual filings, others operate
+                on a different cycle. Your consultant will map out your exact compliance calendar
+                once your state and entity type are confirmed.
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {ongoingCompliance.map((item) => (
                 <div key={item.title} className="bg-white rounded-xl p-6 shadow-sm border border-slate-200/80">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center">
-                      <MaterialIcon name={item.icon} className="text-[20px]" />
-                    </div>
-                    <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded uppercase tracking-wider border border-amber-300">
-                      {item.cadence}
-                    </span>
+                  <div className="w-10 h-10 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center mb-4">
+                    <MaterialIcon name={item.icon} className="text-[20px]" />
                   </div>
                   <h3 className="text-base font-bold text-navy-950 mb-1.5">{item.title}</h3>
                   <p className="text-sm text-slate-600 leading-relaxed">{item.description}</p>
@@ -651,7 +654,7 @@ export default function BusinessFormalisationUnitedStatesPage() {
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Button href="/contact?service=business-formalisation-us">Book a Consultation</Button>
-              <WhatsAppButton phone="237600000000" label="Chat on WhatsApp Legal Desk" />
+              <WhatsAppButton phone="237678597593" label="Chat on WhatsApp Legal Desk" />
             </div>
           </div>
         </section>

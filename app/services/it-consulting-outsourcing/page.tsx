@@ -273,7 +273,7 @@ export default function ItConsultingOutsourcingPage() {
                 >
                   Book a Consultation
                 </Button>
-                <WhatsAppButton phone="237670000000" label="Chat on WhatsApp" />
+                <WhatsAppButton phone="237678597593" label="Chat on WhatsApp" />
               </div>
             </div>
           </div>
@@ -625,7 +625,7 @@ export default function ItConsultingOutsourcingPage() {
               >
                 Book a Consultation
               </Button>
-              <WhatsAppButton phone="237670000000" label="Chat on WhatsApp" />
+              <WhatsAppButton phone="237678597593" label="Chat on WhatsApp" />
             </div>
           </div>
         </section>

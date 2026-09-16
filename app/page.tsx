@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     "Technology-driven consulting, outsourcing and business support for individuals and organisations operating across Cameroon and the United States.",
 };
 
-const WHATSAPP = "https://wa.me/237670000000";
+const WHATSAPP = "https://wa.me/237678597593";
 
 const trustItems: TrustStripItem[] = [
   { icon: "apartment", title: "Cameroon S.A.", badgeText: "Buea, Cameroon", badgeAccent: "teal" },
@@ -169,9 +169,11 @@ const faqItems = [
       "Yes. Uptech Consulting operates bilingually in English and Français, which matters for Cameroonian regulatory work where official filings and correspondence are frequently in French.",
   },
   {
+    // Rewritten to avoid stating an unconfirmed fact — safe to publish
+    // as-is; replace with real figure once provided by the team.
     question: "How quickly can you start?",
     answer:
-      "[PENDING: confirm current onboarding lead time with Uptech Consulting]. The first step is always a consultation, which is where scope and sequencing get set.",
+      "Once you book a consultation, we move quickly to understand your situation and outline next steps — your dedicated point of contact will confirm a specific timeline for your case.",
   },
 ];
 
@@ -653,7 +655,7 @@ export default function HomePage() {
                     <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} />
                   </Link>
                   <a
-                    href="tel:+237670000000"
+                    href="tel:+237678597593"
                     className="rounded-lg border border-slate-300 bg-white px-6 py-3.5 text-xs font-bold text-slate-800 transition-all hover:border-slate-400 active:scale-[0.98]"
                   >
                     Talk to our team

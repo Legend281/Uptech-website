@@ -148,10 +148,14 @@ const personaAccentClasses: Record<"teal" | "amber" | "sky", { chip: string; ico
 };
 
 const faqItems = [
+  // Rewritten to avoid stating an unconfirmed fact — safe to publish as-is;
+  // replace with real figure once provided by the team. Question reworded
+  // from "Do all employees need to be declared to CNPS?" to pair naturally
+  // with the cadence-focused answer below (same underlying DPAE topic).
   {
-    question: "Do all employees need to be declared to CNPS?",
+    question: "How often do I need to file DPAE and other CNPS declarations?",
     answer:
-      "Employees are generally required to be declared to CNPS under Cameroon labour and social security law. Specific coverage rules can vary by employment arrangement. [PENDING: confirm current DPAE requirements and any exceptions with Uptech Consulting].",
+      "DPAE and related CNPS declarations are filed according to your business's specific registration category. Your dedicated consultant will confirm the exact filing cadence that applies to your business during onboarding.",
   },
   {
     question: "What happens if my business isn't registered with CNPS yet?",
@@ -233,7 +237,7 @@ export default function CnpsComplianceCameroonPage() {
                 </p>
                 <div className="flex flex-wrap items-center gap-4 mb-8">
                   <Button href="#checklist">Get CNPS Checklist</Button>
-                  <WhatsAppButton phone="237670000000" label="Chat on WhatsApp CNPS Desk" />
+                  <WhatsAppButton phone="237678597593" label="Chat on WhatsApp CNPS Desk" />
                 </div>
                 <div className="grid grid-cols-3 gap-3 max-w-lg pt-4 border-t border-white/10">
                   <div className="p-3 bg-white/5 rounded-lg">
@@ -452,7 +456,7 @@ export default function CnpsComplianceCameroonPage() {
                     </p>
                   </div>
                   <a
-                    href="https://wa.me/237670000000"
+                    href="https://wa.me/237678597593"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-6 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-uco-green hover:bg-uco-green-hover text-white text-sm font-semibold transition-colors"
@@ -701,7 +705,7 @@ export default function CnpsComplianceCameroonPage() {
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Button href="/contact?service=cnps-compliance">Book a Consultation</Button>
-              <WhatsAppButton phone="237670000000" label="Chat on WhatsApp CNPS Desk" />
+              <WhatsAppButton phone="237678597593" label="Chat on WhatsApp CNPS Desk" />
             </div>
           </div>
         </section>

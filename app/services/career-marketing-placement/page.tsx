@@ -151,9 +151,11 @@ const faqItems = [
       "No ethical firm can guarantee a hiring decision made by an independent third-party company. What we do guarantee is disciplined, auditable pipeline volume: tailored applications submitted regularly, continuous recruiter follow-ups, and transparent progress updates. You show up prepared; we ensure you get the meetings.",
   },
   {
+    // Rewritten to avoid stating an unconfirmed fact — safe to publish
+    // as-is; replace with real figure once provided by the team.
     question: "How long does the campaign typically take from audit to first interview?",
     answer:
-      "Timelines vary by role, market, and seniority. Your account specialist will scope a realistic timeline with you at the start of your campaign rather than a one-size-fits-all number — [PENDING: confirm typical stage durations and time-to-first-screen benchmarks with Uptech Consulting].",
+      "Every job search moves at its own pace depending on your field and experience level. Your dedicated career consultant will walk you through what to realistically expect once your profile is reviewed.",
   },
   {
     question: "Is my personal data and employment confidentiality protected?",
@@ -228,7 +230,7 @@ export default function CareerMarketingPlacementPage() {
                 <Button href="#start-campaign" icon={arrowRightIcon}>
                   Start Your Career Campaign
                 </Button>
-                <WhatsAppButton phone="237600000000" />
+                <WhatsAppButton phone="237678597593" />
               </div>
             </div>
           </div>
@@ -535,7 +537,7 @@ export default function CareerMarketingPlacementPage() {
               <Button href="/contact?service=career-marketing" icon={arrowRightIcon}>
                 Start Your Career Campaign
               </Button>
-              <WhatsAppButton phone="237600000000" />
+              <WhatsAppButton phone="237678597593" />
             </div>
           </div>
         </section>

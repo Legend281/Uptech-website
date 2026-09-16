@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 
-const WHATSAPP_NUMBER = "237600000000";
+const WHATSAPP_NUMBER = "237678597593";
 const CONTACT_EMAIL = "infos@uptechconsulting.com";
 
 /*

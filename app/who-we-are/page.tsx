@@ -11,7 +11,7 @@ import { Reveal } from "@/components/Reveal";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 import { images } from "@/lib/images";
 
-const WHATSAPP = "https://wa.me/237670000000";
+const WHATSAPP = "https://wa.me/237678597593";
 
 export const metadata: Metadata = {
   title: "Who We Are",

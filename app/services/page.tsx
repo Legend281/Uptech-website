@@ -250,7 +250,7 @@ export default function ServicesHubPage() {
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Button href="/contact">Book a Consultation</Button>
-              <WhatsAppButton phone="237600000000" />
+              <WhatsAppButton phone="237678597593" />
             </div>
           </div>
         </section>

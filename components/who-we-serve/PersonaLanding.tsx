@@ -12,13 +12,11 @@ import { WaysWeHelp } from "./WaysWeHelp";
 import type { PersonaContent } from "./types";
 
 /*
- * Every consultation CTA on these pages goes to WhatsApp. The site's other
- * "Book a Consultation" buttons point at /contact, which does not exist yet
- * (verified 2026-09-11: no app/contact route, no API route) — a persona page
- * whose entire job is routing cannot end on a 404. Same placeholder number as
- * the homepage and Who We Are; swap all three together when the real one lands.
+ * Every consultation CTA on these pages goes straight to WhatsApp rather
+ * than /contact, matching the direct, routing-focused tone of this page.
+ * Confirmed number, same one used sitewide.
  */
-const WHATSAPP = "https://wa.me/237670000000";
+const WHATSAPP = "https://wa.me/237678597593";
 
 /**
  * The shared persona-landing template. Both Who We Serve pages render this

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
@@ -9,6 +10,7 @@ import { FaqAccordion } from "@/components/FaqAccordion";
 import { ComplianceDisclaimer } from "@/components/ComplianceDisclaimer";
 import { WhatComesNext } from "@/components/WhatComesNext";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
+import { images } from "@/lib/images";
 
 export const metadata: Metadata = {
   title: "Business Formalisation — United States",
@@ -54,24 +56,40 @@ const trustStripItems = [
 const steps = [
   {
     number: "01",
+    phase: "Strategic Selection",
+    reference: "LLC vs. C-Corp",
     title: "Entity Type & State Selection",
     description:
       "We help you weigh LLC vs. C-Corp and compare state-specific tradeoffs (formation cost, privacy, franchise tax) against your goals.",
+    deliverable: "Recommended Entity Type & State",
+    highlight: false,
   },
   {
     number: "02",
+    phase: "State Filing",
+    reference: "Secretary of State",
     title: "Formation Filing",
     description: "Articles of Organization (LLC) or Articles of Incorporation (C-Corp) filed with the state.",
+    deliverable: "Certified Articles of Organization/Incorporation",
+    highlight: true,
   },
   {
     number: "03",
+    phase: "Federal & Statutory Setup",
+    reference: "IRS + Registered Agent",
     title: "Registered Agent & IRS EIN",
     description: "Registered agent service activated, and your federal Employer Identification Number application coordinated with the IRS.",
+    deliverable: "IRS EIN Confirmation Letter",
+    highlight: false,
   },
   {
     number: "04",
+    phase: "Internal Governance",
+    reference: "Founding Documents",
     title: "Operating Agreement / Bylaws",
     description: "Founding governance documents drafted to reflect ownership, decision rights, and profit distribution.",
+    deliverable: "Signed Operating Agreement / Bylaws",
+    highlight: false,
   },
   // Ongoing State & Federal Compliance used to be step 05 here — a single
   // fully-[PENDING] line for a genuinely recurring obligation. Promoted to
@@ -167,7 +185,25 @@ export default function BusinessFormalisationUnitedStatesPage() {
       />
 
       <main>
+        {/* Hero — was flat navy with no imagery at all. Added the same
+            visible-photo treatment already proven on the other 3 sibling
+            pages (full color, directional gradient, no muting blend) rather
+            than the earlier washed-out opacity+luminosity recipe. */}
         <section className="relative bg-navy-950 overflow-hidden pt-14 pb-28 lg:pt-20 lg:pb-36 border-b border-slate-800/80">
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={images["cross-border-boardroom"].src}
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              placeholder="blur"
+              blurDataURL={images["cross-border-boardroom"].blurDataURL}
+              className="object-cover object-right scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-950/20" />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-transparent to-navy-950/60" />
+          </div>
           <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-2xl lg:max-w-3xl">
@@ -199,58 +235,167 @@ export default function BusinessFormalisationUnitedStatesPage() {
 
         <TrustStrip items={trustStripItems} />
 
+        {/* Formation Sequence — was a flat list of plain 2-line cards.
+            Upgraded to the connected-timeline treatment already used on
+            Cameroon and CNPS (sticky sidebar + phase/reference badges +
+            deliverable pill per step) for visual parity with siblings. */}
         <section className="py-24 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl mb-12">
-              <span className="text-xs font-bold uppercase tracking-wider text-sky-600">FORMATION SEQUENCE</span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight mt-2">
-                From entity selection to a functioning US company
-              </h2>
-              <div className="mt-4 inline-flex items-center gap-2 bg-amber-50 border border-dashed border-amber-300 px-3 py-1.5 rounded-lg text-xs text-amber-800">
-                <MaterialIcon name="schedule" className="text-[16px]" />
-                Turnaround timeline: [PENDING: confirm with Uptech Consulting]
-              </div>
-            </div>
-            <div className="space-y-4">
-              {steps.map((step) => (
-                <div key={step.number} className="flex items-start gap-4 p-5 rounded-xl border border-slate-200/80 bg-slate-50">
-                  <span className="w-10 h-10 rounded-xl bg-navy-950 text-teal-400 flex items-center justify-center font-mono font-bold text-sm shrink-0">
-                    {step.number}
-                  </span>
-                  <div>
-                    <h3 className="font-bold text-navy-950">{step.title}</h3>
-                    <p className="text-sm text-slate-600 mt-1 leading-relaxed">{step.description}</p>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+              <div className="lg:col-span-4">
+                <div className="lg:sticky lg:top-28 bg-navy-950 text-white p-7 rounded-2xl border border-slate-800 shadow-xl">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-teal-400 text-xs font-bold tracking-wider uppercase mb-3">
+                    Formation Sequence
+                  </div>
+                  <h2 className="text-2xl lg:text-3xl font-extrabold text-white leading-tight mb-3">
+                    From Entity Selection to a Functioning US Company
+                  </h2>
+                  <p className="text-sm text-slate-300 leading-relaxed mb-6">
+                    A transparent walkthrough of state filing and federal setup, coordinated end to
+                    end for founders based in Cameroon or abroad.
+                  </p>
+                  <div className="bg-white/5 border border-dashed border-amber-400/40 p-4 rounded-xl">
+                    <div className="flex items-center justify-between gap-2 mb-1.5">
+                      <span className="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                        <MaterialIcon name="schedule" className="text-[16px]" />
+                        Turnaround Timeline
+                      </span>
+                      <span className="text-[10px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded uppercase">
+                        [PENDING: confirm with Uptech Consulting]
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-300 leading-normal">
+                      Actual duration depends on the state&apos;s own processing speed and how
+                      quickly your documents are ready — we confirm a realistic timeline once your
+                      details are reviewed.
+                    </p>
                   </div>
                 </div>
-              ))}
+              </div>
+
+              <div className="lg:col-span-8 flex flex-col pl-2 md:pl-6 relative">
+                <div className="absolute left-6 md:left-10 top-6 bottom-8 w-0.5 bg-gradient-to-b from-teal-400 via-blue-accent to-slate-300" />
+                {steps.map((step) => (
+                  <div key={step.number} className="relative flex items-start gap-5 pb-8 last:pb-0 group">
+                    <div
+                      className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-extrabold text-sm md:text-base shrink-0 z-10 group-hover:scale-105 transition-transform ${
+                        step.highlight
+                          ? "bg-blue-accent border-2 border-white text-white shadow-xl shadow-blue-500/40"
+                          : "bg-navy-950 border-2 border-teal-400 text-teal-400 shadow-lg"
+                      }`}
+                    >
+                      {step.number}
+                    </div>
+                    <div
+                      className={`flex-1 rounded-2xl p-5 md:p-6 transition-all ${
+                        step.highlight
+                          ? "bg-gradient-to-br from-blue-50/50 to-white border-2 border-blue-accent/30 shadow-md"
+                          : "bg-white border border-slate-200/80 shadow-sm hover:shadow-md hover:border-teal-500/40"
+                      }`}
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                        <span
+                          className={`text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${
+                            step.highlight
+                              ? "text-blue-accent bg-blue-100 border-transparent"
+                              : "text-teal-700 bg-teal-50 border-teal-100"
+                          }`}
+                        >
+                          {step.phase}
+                        </span>
+                        <span className="text-xs font-mono text-slate-500 font-semibold">{step.reference}</span>
+                      </div>
+                      <h3 className="text-lg md:text-xl font-bold text-navy-950 mb-1.5">{step.title}</h3>
+                      <p className="text-sm text-slate-600 leading-relaxed mb-3">{step.description}</p>
+                      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs font-medium text-slate-700">
+                        <MaterialIcon name="verified" className="text-emerald-600 text-[16px]" />
+                        <span>
+                          Deliverable: <strong className="text-slate-900">{step.deliverable}</strong>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
+        {/* Documents & Requirements — was a single plain white list. Given
+            the same two-column treatment as CNPS's redesign: a proper
+            icon-headed checklist card alongside a real action panel,
+            instead of a lone list on an otherwise empty section. */}
         <section id="checklist" className="py-24 bg-slate-50 border-y border-slate-200/80">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl mb-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-2xl mb-12">
               <span className="text-xs font-bold uppercase tracking-wider text-sky-600">DOCUMENTS &amp; REQUIREMENTS</span>
-              <h2 className="text-3xl font-extrabold text-navy-950 tracking-tight mt-2">What we&apos;ll need from you</h2>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight mt-2">
+                What we&apos;ll need from you
+              </h2>
+              <p className="text-sm sm:text-base text-slate-600 mt-2">
+                Gather these before we begin — no back-and-forth once your details are with us.
+              </p>
             </div>
-            <ul className="bg-white rounded-2xl border border-slate-200/80 shadow-sm divide-y divide-slate-100">
-              {documents.map((doc) => (
-                <li key={doc.strong} className="p-5 flex items-start gap-3">
-                  <MaterialIcon name="check_circle" className="text-emerald-600 text-[18px] shrink-0 mt-0.5" />
-                  <span className="text-sm text-slate-700">
-                    <strong className="text-slate-900">{doc.strong}</strong> {doc.text}
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-6 p-5 rounded-2xl bg-white border border-dashed border-amber-400/80 shadow-sm">
-              <div className="flex items-center gap-2 mb-1">
-                <h4 className="text-sm font-bold text-slate-900">State Filing Fees &amp; Uptech Consulting Service Fees</h4>
-                <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded uppercase tracking-wider border border-amber-300">
-                  [PENDING: confirm with Uptech Consulting]
-                </span>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <div className="lg:col-span-7 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm">
+                <div className="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
+                  <div className="w-9 h-9 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center">
+                    <MaterialIcon name="badge" className="text-[20px]" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-navy-950">Founder &amp; Entity Basics</h3>
+                    <span className="text-xs text-slate-500">Required before we can file with the state</span>
+                  </div>
+                </div>
+                <ul className="flex flex-col gap-3 text-sm text-slate-600">
+                  {documents.map((doc) => (
+                    <li key={doc.strong} className="flex items-start gap-3">
+                      <MaterialIcon name="check_circle" className="text-emerald-600 text-[18px] shrink-0 mt-0.5" />
+                      <span>
+                        <strong className="text-slate-900">{doc.strong}</strong> {doc.text}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-5 pt-4 border-t border-slate-100">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h4 className="text-sm font-bold text-slate-900">State Filing Fees &amp; Uptech Consulting Service Fees</h4>
+                    <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded uppercase tracking-wider border border-amber-300">
+                      [PENDING: confirm with Uptech Consulting]
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-600">State filing fees vary by state and change periodically; confirm current figures with your Uptech Consulting desk.</p>
+                </div>
               </div>
-              <p className="text-xs text-slate-600">State filing fees vary by state and change periodically; confirm current figures with your Uptech Consulting desk.</p>
+
+              <div className="lg:col-span-5">
+                <div className="bg-navy-950 text-white rounded-2xl p-7 border border-slate-800 shadow-xl h-full flex flex-col justify-between">
+                  <div>
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-teal-400/30 text-teal-300 text-xs font-bold tracking-wider uppercase mb-4">
+                      <span className="w-2 h-2 rounded-full bg-teal-400" />
+                      Fast-Track Your Formation
+                    </div>
+                    <h3 className="text-xl font-extrabold text-white mb-2">
+                      Already know your details?
+                    </h3>
+                    <p className="text-sm text-slate-300 leading-relaxed">
+                      Send your founder details and state preference directly to our legal desk on
+                      WhatsApp and we&apos;ll start your state filing the same day — no need to
+                      wait for a full consultation first.
+                    </p>
+                  </div>
+                  <a
+                    href="https://wa.me/237600000000"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-uco-green hover:bg-uco-green-hover text-white text-sm font-semibold transition-colors"
+                  >
+                    Send Details via WhatsApp
+                    <MaterialIcon name="arrow_forward" className="text-[16px]" />
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -474,12 +619,37 @@ export default function BusinessFormalisationUnitedStatesPage() {
           linkLabel="View all pathways"
         />
 
-        <section className="py-24 bg-navy-950 text-white text-center">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white max-w-2xl mx-auto leading-tight mb-4">
+        {/* Final CTA — was flat navy with no imagery at all, the section
+            right before the footer. Same visible-photo treatment as the
+            hero above and the equivalent fix already applied on Tax
+            Compliance and CNPS. */}
+        <section className="relative py-28 bg-navy-950 text-white text-center overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={images["cross-border-boardroom"].src}
+              alt=""
+              fill
+              sizes="100vw"
+              placeholder="blur"
+              blurDataURL={images["cross-border-boardroom"].blurDataURL}
+              className="object-cover object-center scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/80 to-navy-950/50" />
+            <div className="absolute inset-0 bg-navy-950/30" />
+          </div>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[36rem] h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-teal-400/40 text-teal-300 text-xs font-bold tracking-widest uppercase mb-5 backdrop-blur-md">
+              Legal Desk Active in Buea
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white max-w-2xl mx-auto leading-tight mb-4">
               Ready to <span className="gradient-teal-blue-text">form your US entity?</span>
             </h2>
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
+            <p className="text-base sm:text-lg text-slate-300 max-w-xl mx-auto mb-8 leading-relaxed">
+              Whether you&apos;re expanding from Cameroon or registering solo from abroad, our
+              legal desk will scope the right state and entity type for your situation.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-4">
               <Button href="/contact?service=business-formalisation-us">Book a Consultation</Button>
               <WhatsAppButton phone="237600000000" label="Chat on WhatsApp Legal Desk" />
             </div>

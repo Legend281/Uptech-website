@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 
 const WHATSAPP_NUMBER = "237600000000";
@@ -30,7 +31,17 @@ function isServiceValue(value: string): value is ServiceValue {
   return serviceOptions.some((option) => option.value === value);
 }
 
-export function ContactForm({ initialService }: { initialService?: string }) {
+export function ContactForm() {
+  /*
+   * Read directly via useSearchParams (client-side) rather than the parent
+   * page awaiting the searchParams prop — an async Server Component that
+   * awaits searchParams cannot be statically prerendered under
+   * `output: "export"` (breaks the GitHub Pages preview build entirely).
+   * This component is already "use client"; the page that renders it wraps
+   * it in <Suspense> as Next.js requires for useSearchParams.
+   */
+  const searchParams = useSearchParams();
+  const initialService = searchParams.get("service") ?? undefined;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");

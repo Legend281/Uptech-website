@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Header } from "@/components/Header";
@@ -94,13 +95,7 @@ const otherPillars = [
   { icon: "trending_up", title: "Career Marketing & Placement", href: "/services/career-marketing-placement" },
 ];
 
-export default async function ContactPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ service?: string }>;
-}) {
-  const { service } = await searchParams;
-
+export default function ContactPage() {
   return (
     <>
       <Header />
@@ -188,7 +183,9 @@ export default async function ContactPage({
                 Fields marked <span className="text-rose-500">*</span> are required.
               </p>
             </div>
-            <ContactForm initialService={service} />
+            <Suspense fallback={null}>
+              <ContactForm />
+            </Suspense>
           </div>
         </section>
 

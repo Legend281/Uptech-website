@@ -128,7 +128,7 @@ export function Header({
                 <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
-            <div className="absolute top-[100%] left-0 w-64 bg-navy-950/95 backdrop-blur-xl border border-slate-700/80 shadow-2xl rounded-xl p-2.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform -translate-y-1 group-hover:translate-y-0">
+            <div className="absolute top-[100%] left-0 w-64 bg-navy-950/95 backdrop-blur-xl border border-slate-700/80 shadow-2xl rounded-xl p-2.5 opacity-0 invisible scale-95 group-hover:opacity-100 group-hover:visible group-hover:scale-100 transition-[opacity,transform,visibility] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] z-50 transform -translate-y-2 group-hover:translate-y-0 origin-top">
               <Link
                 href="/who-we-are"
                 className="flex flex-col p-2.5 rounded-lg hover:bg-white/5 transition-colors group/item"
@@ -189,7 +189,7 @@ export function Header({
                 <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
-            <div className="absolute top-[100%] left-1/2 -translate-x-1/2 w-[340px] sm:w-[380px] bg-navy-950/95 backdrop-blur-xl border border-slate-700/80 shadow-2xl rounded-xl p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform -translate-y-1 group-hover:translate-y-0">
+            <div className="absolute top-[100%] left-1/2 -translate-x-1/2 w-[340px] sm:w-[380px] bg-navy-950/95 backdrop-blur-xl border border-slate-700/80 shadow-2xl rounded-xl p-3 opacity-0 invisible scale-95 group-hover:opacity-100 group-hover:visible group-hover:scale-100 transition-[opacity,transform,visibility] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] z-50 transform -translate-y-2 group-hover:translate-y-0 origin-top">
               <div className="space-y-1">
                 {services.map((service) => {
                   const isActive = service.key === activeService;
@@ -272,7 +272,7 @@ export function Header({
                 <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
-            <div className="absolute top-[100%] left-0 w-72 bg-navy-950/95 backdrop-blur-xl border border-slate-700/80 shadow-2xl rounded-xl p-2.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform -translate-y-1 group-hover:translate-y-0">
+            <div className="absolute top-[100%] left-0 w-72 bg-navy-950/95 backdrop-blur-xl border border-slate-700/80 shadow-2xl rounded-xl p-2.5 opacity-0 invisible scale-95 group-hover:opacity-100 group-hover:visible group-hover:scale-100 transition-[opacity,transform,visibility] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] z-50 transform -translate-y-2 group-hover:translate-y-0 origin-top">
               <Link
                 href="/who-we-serve/individuals"
                 className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-white/5 transition-colors group/item"

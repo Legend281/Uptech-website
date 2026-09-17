@@ -1,3 +1,6 @@
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 
 type WhatsAppVariant = "muted" | "solid";
@@ -25,25 +28,44 @@ export function WhatsAppButton({
   variant = "muted",
   className = "",
 }: WhatsAppButtonProps) {
+  const reducedMotion = useReducedMotion();
   const variantClasses =
     variant === "solid"
       ? "bg-uco-green hover:bg-uco-green-hover text-white"
       : "bg-navy-900/90 border border-slate-700/80 hover:border-slate-500 backdrop-blur-sm text-white";
 
+  const tapHoverProps = reducedMotion
+    ? { whileHover: { opacity: 0.9 }, whileTap: { opacity: 0.8 } }
+    : {
+        whileHover: { scale: 1.03, y: -1 },
+        whileTap: { scale: 0.97, y: 0 },
+        transition: { type: "spring" as const, stiffness: 400, damping: 25 },
+      };
+
   return (
-    <a
+    <motion.a
       href={`https://wa.me/${phone}`}
       target="_blank"
       rel="noopener noreferrer"
-      className={`inline-flex items-center gap-2.5 h-12 px-6 rounded-lg text-sm font-semibold transition-all ${variantClasses} ${className}`}
+      className={`inline-flex items-center gap-2.5 h-12 px-6 rounded-lg text-sm font-semibold transition-colors ${variantClasses} ${className}`}
+      {...tapHoverProps}
     >
       {variant === "muted" && (
-        <span className="w-2.5 h-2.5 rounded-full bg-uco-green ring-4 ring-uco-green/20" />
+        <span className="relative flex w-2.5 h-2.5">
+          {!reducedMotion && (
+            <motion.span
+              className="absolute inline-flex h-full w-full rounded-full bg-uco-green"
+              animate={{ scale: [1, 2.2], opacity: [0.6, 0] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
+            />
+          )}
+          <span className="relative w-2.5 h-2.5 rounded-full bg-uco-green ring-4 ring-uco-green/20" />
+        </span>
       )}
       <WhatsAppIcon
         className={variant === "solid" ? "w-4 h-4" : "w-4 h-4 text-uco-green"}
       />
       <span>{label}</span>
-    </a>
+    </motion.a>
   );
 }

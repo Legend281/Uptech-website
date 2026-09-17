@@ -196,6 +196,12 @@ h6 {
    Elements carry `data-reveal="<effect>"` and get `data-revealed="true"`
    the first time they enter the viewport (see components/Reveal.tsx).
 
+   "rise" and "fade" are now animated by framer-motion directly (inline
+   styles, spring physics) rather than by CSS transition here — the
+   `data-reveal` attribute stays on those elements only so the no-JS
+   fallback further down still catches them. "marker" and "stagger" still
+   run on this CSS-driven engine.
+
    The hidden state lives entirely inside `prefers-reduced-motion:
    no-preference`, so a reader who has asked for reduced motion never has
    content hidden from them in the first place — there is no state to
@@ -205,24 +211,6 @@ h6 {
    nothing here triggers layout on the low-end phones CLAUDE.md Section 6.9
    treats as the real target. */
 @media (prefers-reduced-motion: no-preference) {
-  [data-reveal="rise"],
-  [data-reveal="fade"] {
-    opacity: 0;
-    transition:
-      opacity 650ms var(--ease-out-expo) var(--reveal-delay, 0ms),
-      transform 650ms var(--ease-out-expo) var(--reveal-delay, 0ms);
-  }
-
-  [data-reveal="rise"] {
-    transform: translateY(24px);
-  }
-
-  [data-reveal="rise"][data-revealed="true"],
-  [data-reveal="fade"][data-revealed="true"] {
-    opacity: 1;
-    transform: none;
-  }
-
   /* The container holds still; its children arrive one after another. */
   [data-reveal="stagger"] > * {
     opacity: 0;

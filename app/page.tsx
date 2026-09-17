@@ -14,6 +14,7 @@ import {
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
+import { HeroIntro } from "@/components/home/HeroIntro";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 import { TrustStrip, type TrustStripItem } from "@/components/TrustStrip";
 import { FaqAccordion } from "@/components/FaqAccordion";
@@ -235,48 +236,7 @@ export default function HomePage() {
           </div>
 
           <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
-              <div className="mb-6 inline-flex items-center justify-center gap-2">
-                <span className="inline-block h-[2px] w-7 bg-teal-400" />
-                <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
-                  Uptech Consulting &amp; Outsourcing
-                </span>
-                <span className="inline-block h-[2px] w-7 bg-teal-400" />
-              </div>
-
-              <h1 className="mb-6 text-4xl font-extrabold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-6xl">
-                We close the distance between
-                <br />
-                <span className="text-teal-400">strategy and</span>
-                <br />
-                <span className="text-sky-400">execution.</span>
-              </h1>
-
-              <p className="mx-auto mb-8 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-                Technology-driven consulting, outsourcing and business support
-                for individuals and organisations operating across Cameroon and
-                the United States.
-              </p>
-
-              <div className="flex flex-wrap items-center justify-center gap-4">
-                <Link
-                  href="/contact"
-                  className="gradient-teal-blue flex items-center gap-2 rounded-lg px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-teal-950/50 transition-all hover:brightness-105 active:scale-[0.98]"
-                >
-                  <span>Book a Consultation</span>
-                  <ArrowRight className="h-4 w-4" strokeWidth={2} />
-                </Link>
-                <a
-                  href={WHATSAPP}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 rounded-lg border border-slate-700/80 bg-navy-950/80 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:border-slate-500 active:scale-[0.98]"
-                >
-                  <WhatsAppIcon className="h-4 w-4 text-teal-400" />
-                  <span>Chat on WhatsApp</span>
-                </a>
-              </div>
-            </div>
+            <HeroIntro whatsapp={WHATSAPP} />
           </div>
         </section>
 

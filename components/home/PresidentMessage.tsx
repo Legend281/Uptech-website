@@ -18,7 +18,7 @@ import { images } from "@/lib/images";
 export function PresidentMessage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
-  const poster = images["team-lineup"];
+  const poster = images["cross-border-boardroom"];
 
   function handlePlay() {
     setPlaying(true);
@@ -26,8 +26,12 @@ export function PresidentMessage() {
   }
 
   return (
-    <section className="bg-navy-950 py-20 lg:py-24 text-white">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden bg-navy-950 py-20 lg:py-24 text-white">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        <div className="float-a absolute -left-16 top-0 h-72 w-72 rounded-full bg-teal-400/10 blur-3xl" />
+        <div className="float-b absolute -right-16 bottom-0 h-72 w-72 rounded-full bg-sky-400/10 blur-3xl" />
+      </div>
+      <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <Reveal effect="rise" className="mb-10 text-center">
           <div className="mb-4 inline-flex items-center gap-2 justify-center">
             <span className="w-7 h-[2px] bg-teal-400 inline-block" />

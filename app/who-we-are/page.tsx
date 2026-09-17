@@ -7,9 +7,13 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
+import { HeroIntro } from "@/components/who-we-are/HeroIntro";
 import { PresidentMessage } from "@/components/home/PresidentMessage";
 import { TeamGrid, type TeamMember } from "@/components/TeamGrid";
 import { Reveal } from "@/components/Reveal";
+import { TextReveal } from "@/components/TextReveal";
+import { TiltCard } from "@/components/TiltCard";
+import { ScrollCue } from "@/components/home/ScrollCue";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 import { images } from "@/lib/images";
 
@@ -161,7 +165,7 @@ export default function WhoWeArePage() {
           <div className="absolute inset-0 z-0">
             <HeroImageCarousel
               keys={["ops-center", "compliance-advisory"]}
-              imageClassName="object-cover object-center scale-105"
+              imageClassName="hero-ken-burns object-cover object-center"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/65 to-navy-950/50" />
           </div>
@@ -175,38 +179,18 @@ export default function WhoWeArePage() {
           />
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(45,212,191,0.12),transparent_60%)]" />
 
-          <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
-              {/* Same eyebrow / three-line headline / subhead rhythm as the
-                  homepage hero, so the two read as one site. */}
-              <div className="mb-6 inline-flex items-center justify-center gap-2">
-                <span className="inline-block h-[2px] w-7 bg-teal-400" />
-                <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
-                  Who We Are
-                </span>
-                <span className="inline-block h-[2px] w-7 bg-teal-400" />
-              </div>
-
-              <h1 className="mb-7 text-4xl font-extrabold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-[68px] xl:leading-[1.08]">
-                Where strategy meets
-                <br />
-                <span className="text-teal-400">accountable</span>
-                <br />
-                <span className="text-sky-400">execution.</span>
-              </h1>
-
-              <p className="mx-auto mb-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-                Many people know what they want to achieve. Very few know how.
-                Uptech Consulting is built around the how — the part that turns
-                a plan into a filed document, a placed candidate, or a system
-                that still runs after we leave.
-              </p>
-              <p className="text-sm text-slate-400">
-                We do not only give advice. This page explains the machinery
-                behind putting it into action.
-              </p>
-            </div>
+          {/* Same slow ambient drift as the homepage hero, for depth behind
+              the copy — purely decorative. */}
+          <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
+            <div className="float-a absolute -left-20 top-6 h-72 w-72 rounded-full bg-teal-400/20 blur-3xl" />
+            <div className="float-b absolute -right-16 bottom-0 h-80 w-80 rounded-full bg-sky-400/15 blur-3xl" />
           </div>
+
+          <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+            <HeroIntro />
+          </div>
+
+          <ScrollCue />
         </section>
 
         <PresidentMessage />
@@ -224,10 +208,10 @@ export default function WhoWeArePage() {
               <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-16">
                 <div className="lg:col-span-5">
                   <h2 className="text-[30px] font-extrabold leading-[38px] tracking-[-0.025em] text-navy-950 sm:text-[38px] sm:leading-[46px] lg:text-[42px] lg:leading-[50px] lg:tracking-[-0.03em]">
-                    What we do
+                    <TextReveal text="What we do" />
                   </h2>
                 </div>
-                <div className="lg:col-span-7">
+                <Reveal effect="fade" className="lg:col-span-7">
                   <p className="text-[16px] leading-[26px] text-slate-600 sm:text-[17px] sm:leading-[28px]">
                     Uptech Consulting &amp; Outsourcing is a technology-driven
                     consulting, outsourcing, and business support company,
@@ -244,7 +228,7 @@ export default function WhoWeArePage() {
                     execution, because that is the part most consulting firms
                     skip.
                   </p>
-                </div>
+                </Reveal>
               </div>
             </Reveal>
           </div>
@@ -260,14 +244,16 @@ export default function WhoWeArePage() {
               <SpineNode />
 
               <h2 className="max-w-4xl text-[30px] font-extrabold leading-[38px] tracking-[-0.025em] text-navy-950 sm:text-[38px] sm:leading-[46px] lg:text-[46px] lg:leading-[54px] lg:tracking-[-0.03em]">
-                Sustainable growth is structural, not accidental
+                <TextReveal text="Sustainable growth is structural, not accidental" />
               </h2>
-              <p className="mt-6 max-w-3xl text-[18px] leading-[30px] tracking-[-0.01em] text-slate-600">
-                Uptech Consulting holds that success does not happen by chance.
-                It happens when three things carry the weight together — and if
-                one of them is missing, consistent results become difficult to
-                achieve.
-              </p>
+              <Reveal effect="fade" delay={100}>
+                <p className="mt-6 max-w-3xl text-[18px] leading-[30px] tracking-[-0.01em] text-slate-600">
+                  Uptech Consulting holds that success does not happen by chance.
+                  It happens when three things carry the weight together — and if
+                  one of them is missing, consistent results become difficult to
+                  achieve.
+                </p>
+              </Reveal>
 
               {/* One beam resting on three columns. */}
               <div className="mt-12 lg:mt-14">
@@ -284,8 +270,9 @@ export default function WhoWeArePage() {
                     load rather than as a row of cards. */}
                 <Reveal effect="stagger" delay={260} className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-7 lg:gap-8">
                   {supports.map((support) => (
-                    <div
+                    <TiltCard
                       key={support.name}
+                      max={4}
                       className="flex flex-col overflow-hidden rounded-b-lg border-x border-b border-slate-200 bg-white shadow-[0_20px_30px_-10px_rgba(11,25,44,0.14),0_10px_15px_-5px_rgba(11,25,44,0.06)]"
                     >
                       <span aria-hidden="true" className={`h-1.5 w-full ${support.edge}`} />
@@ -299,14 +286,16 @@ export default function WhoWeArePage() {
                           {support.body}
                         </p>
                       </div>
-                    </div>
+                    </TiltCard>
                   ))}
                 </Reveal>
 
-                <p className="mt-10 border-t border-slate-200 pt-7 text-[18px] leading-[28px] tracking-[-0.01em] text-navy-950">
-                  Remove any one of the three and the other two cannot hold the
-                  load on their own.
-                </p>
+                <Reveal effect="fade" delay={140}>
+                  <p className="mt-10 border-t border-slate-200 pt-7 text-[18px] leading-[28px] tracking-[-0.01em] text-navy-950">
+                    Remove any one of the three and the other two cannot hold the
+                    load on their own.
+                  </p>
+                </Reveal>
               </div>
             </Reveal>
           </div>
@@ -320,20 +309,23 @@ export default function WhoWeArePage() {
 
               <div className="max-w-3xl">
                 <h2 className="text-[26px] font-extrabold leading-[34px] tracking-[-0.02em] text-navy-950 sm:text-[34px] sm:leading-[42px] sm:tracking-[-0.025em]">
-                  Why we insist on written process
+                  <TextReveal text="Why we insist on written process" />
                 </h2>
-                <p className="mt-5 text-[18px] leading-[28px] tracking-[-0.01em] text-slate-600">
-                  The clearest way to explain it is the one Uptech Consulting
-                  uses internally. Picture two restaurants.
-                </p>
+                <Reveal effect="fade" delay={100}>
+                  <p className="mt-5 text-[18px] leading-[28px] tracking-[-0.01em] text-slate-600">
+                    The clearest way to explain it is the one Uptech Consulting
+                    uses internally. Picture two restaurants.
+                  </p>
+                </Reveal>
               </div>
 
               {/* The two panels are deliberately unequal, and the first one's
                   list is deliberately inconsistent — see `driftedLine`. */}
               <Reveal effect="stagger" className="mt-11 grid grid-cols-1 items-start gap-6 md:grid-cols-2 lg:gap-8">
                 {restaurants.map((restaurant) => (
-                  <div
+                  <TiltCard
                     key={restaurant.label}
+                    max={3}
                     className={
                       restaurant.tone === "accent"
                         ? "rounded-lg border border-teal-500/30 bg-white p-7 shadow-[0_20px_30px_-10px_rgba(11,25,44,0.16),0_10px_15px_-5px_rgba(11,25,44,0.08)] ring-1 ring-teal-500/10 sm:p-9"
@@ -373,13 +365,15 @@ export default function WhoWeArePage() {
                         </li>
                       ))}
                     </ul>
-                  </div>
+                  </TiltCard>
                 ))}
               </Reveal>
 
-              <p className="mt-9 max-w-3xl text-[22px] font-bold leading-[32px] tracking-[-0.02em] text-navy-950 sm:text-[26px] sm:leading-[36px]">
-                Uptech Consulting is built to run like the second restaurant.
-              </p>
+              <Reveal effect="fade" delay={140}>
+                <p className="mt-9 max-w-3xl text-[22px] font-bold leading-[32px] tracking-[-0.02em] text-navy-950 sm:text-[26px] sm:leading-[36px]">
+                  Uptech Consulting is built to run like the second restaurant.
+                </p>
+              </Reveal>
             </Reveal>
           </div>
         </section>
@@ -394,6 +388,7 @@ export default function WhoWeArePage() {
             className="pointer-events-none absolute inset-0 opacity-[0.18] [background-image:linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:64px_64px]"
           />
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_15%_0%,rgba(45,212,191,0.14),transparent_60%)]" />
+          <div className="float-a pointer-events-none absolute right-0 top-0 h-80 w-80 rounded-full bg-sky-400/10 blur-3xl" aria-hidden="true" />
 
           <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Reveal className={`${SPINE_DARK} py-20 sm:py-24 lg:py-28`}>
@@ -401,14 +396,12 @@ export default function WhoWeArePage() {
 
               <blockquote>
                 <p className="max-w-5xl text-[30px] font-extrabold leading-[40px] tracking-[-0.025em] text-white sm:text-[42px] sm:leading-[54px] lg:text-[56px] lg:leading-[68px] lg:tracking-[-0.03em]">
-                  Individual effort only succeeds when it runs through the
-                  repeatable, documented systems the organisation has already
-                  built.
+                  <TextReveal text="Individual effort only succeeds when it runs through the repeatable, documented systems the organisation has already built." />
                 </p>
               </blockquote>
 
               <div className="mt-14 grid grid-cols-1 items-center gap-10 border-t border-white/10 pt-12 lg:grid-cols-12 lg:gap-14">
-                <div className="lg:col-span-6">
+                <Reveal effect="fade" delay={160} className="lg:col-span-6">
                   <p className="text-[17px] leading-[28px] text-slate-400">
                     This is a stated internal expectation, not a marketing line.
                     It is also the practical reason a client&apos;s outcome does
@@ -416,12 +409,12 @@ export default function WhoWeArePage() {
                     that week — the process carries it, and the process is
                     written down.
                   </p>
-                </div>
+                </Reveal>
 
                 {/* Several people working the same file from the same
                     documents: the point is the process, not one individual. */}
                 <div className="lg:col-span-6">
-                  <div className="overflow-hidden rounded-lg border border-slate-800 shadow-[0_20px_30px_-10px_rgba(0,0,0,0.5),0_10px_15px_-5px_rgba(0,0,0,0.3)]">
+                  <TiltCard max={5} className="overflow-hidden rounded-lg border border-slate-800 shadow-[0_20px_30px_-10px_rgba(0,0,0,0.5),0_10px_15px_-5px_rgba(0,0,0,0.3)]">
                     <Image
                       src={images["compliance-advisory"].src}
                       alt={images["compliance-advisory"].alt}
@@ -432,7 +425,7 @@ export default function WhoWeArePage() {
                       blurDataURL={images["compliance-advisory"].blurDataURL}
                       className="h-[240px] w-full object-cover sm:h-[300px]"
                     />
-                  </div>
+                  </TiltCard>
                 </div>
               </div>
             </Reveal>
@@ -446,12 +439,14 @@ export default function WhoWeArePage() {
               <SpineNode />
 
               <h2 className="max-w-4xl text-[30px] font-extrabold leading-[38px] tracking-[-0.025em] text-navy-950 sm:text-[38px] sm:leading-[46px] lg:text-[46px] lg:leading-[54px] lg:tracking-[-0.03em]">
-                Four values, and what each one costs us
+                <TextReveal text="Four values, and what each one costs us" />
               </h2>
-              <p className="mt-6 max-w-2xl text-[18px] leading-[30px] tracking-[-0.01em] text-slate-600">
-                Values are only meaningful where they change a decision. Each
-                one below is paired with the behaviour it actually requires.
-              </p>
+              <Reveal effect="fade" delay={100}>
+                <p className="mt-6 max-w-2xl text-[18px] leading-[30px] tracking-[-0.01em] text-slate-600">
+                  Values are only meaningful where they change a decision. Each
+                  one below is paired with the behaviour it actually requires.
+                </p>
+              </Reveal>
 
               {/* Two columns, not three: name and definition belong together on
                   the left, and the proof — the reason this section is credible
@@ -472,7 +467,7 @@ export default function WhoWeArePage() {
                       </p>
                     </div>
 
-                    <div className="border-l-2 border-teal-500 pl-6 lg:col-span-7">
+                    <div className="border-l-2 border-teal-500 pl-6 transition-[border-width,padding-left] duration-300 hover:border-l-4 hover:pl-[22px] lg:col-span-7">
                       <p className="mb-2 text-[11px] font-bold uppercase leading-4 tracking-[0.08em] text-slate-400">
                         In practice
                       </p>
@@ -523,16 +518,18 @@ export default function WhoWeArePage() {
                 className="mb-9 inline-block h-[3px] w-14 bg-gradient-to-r from-teal-400 to-sky-500"
               />
 
-              <p className="max-w-5xl text-[28px] font-extrabold leading-[38px] tracking-[-0.025em] text-navy-950 sm:text-[38px] sm:leading-[50px] lg:text-[46px] lg:leading-[60px] lg:tracking-[-0.03em]">
-                <span className="text-slate-300">Our mission: </span>
-                To empower businesses, institutions, and individuals by
-                delivering technology, workforce, compliance, career
-                development, and business support solutions that simplify
-                operations, strengthen capacity, and drive sustainable growth.
-              </p>
+              <Reveal effect="rise">
+                <p className="max-w-5xl text-[28px] font-extrabold leading-[38px] tracking-[-0.025em] text-navy-950 sm:text-[38px] sm:leading-[50px] lg:text-[46px] lg:leading-[60px] lg:tracking-[-0.03em]">
+                  <span className="text-slate-300">Our mission: </span>
+                  To empower businesses, institutions, and individuals by
+                  delivering technology, workforce, compliance, career
+                  development, and business support solutions that simplify
+                  operations, strengthen capacity, and drive sustainable growth.
+                </p>
+              </Reveal>
 
               <div className="mt-12 border-t border-slate-200 pt-9 lg:mt-14">
-                <div className="grid grid-cols-1 gap-2 lg:grid-cols-12 lg:gap-8">
+                <Reveal effect="fade" delay={120} className="grid grid-cols-1 gap-2 lg:grid-cols-12 lg:gap-8">
                   <p className="text-[14px] leading-[20px] text-slate-400 lg:col-span-2">
                     Our vision
                   </p>
@@ -540,14 +537,9 @@ export default function WhoWeArePage() {
                     To be a trusted global partner in consulting, outsourcing,
                     and business support solutions.
                   </p>
-                </div>
+                </Reveal>
               </div>
 
-              {team.length === 0 ? (
-                <p className="mt-10 text-[14px] leading-[20px] text-slate-400">
-                  The people behind Uptech Consulting — profiles coming soon.
-                </p>
-              ) : null}
             </Reveal>
           </div>
         </section>
@@ -571,10 +563,10 @@ export default function WhoWeArePage() {
           <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/75 to-navy-950/25" />
 
           <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-center lg:gap-12">
+            <Reveal effect="rise" className="flex flex-col justify-between gap-8 lg:flex-row lg:items-center lg:gap-12">
               <div className="max-w-xl">
                 <h2 className="mb-4 text-3xl font-extrabold leading-[1.15] tracking-tight text-white sm:text-4xl">
-                  See how this works on an actual engagement
+                  <TextReveal text="See how this works on an actual engagement" />
                 </h2>
                 <p className="text-base leading-relaxed text-slate-300">
                   One conversation is enough to tell whether we are the right
@@ -605,7 +597,7 @@ export default function WhoWeArePage() {
                   Chat on WhatsApp
                 </a>
               </div>
-            </div>
+            </Reveal>
           </div>
         </section>
       </main>

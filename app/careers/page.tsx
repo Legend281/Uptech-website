@@ -8,7 +8,11 @@ import { Button } from "@/components/Button";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { OpenPositions, type JobPosting } from "@/components/OpenPositions";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
+import { HeroIntro } from "@/components/careers/HeroIntro";
+import { ScrollCue } from "@/components/home/ScrollCue";
 import { Reveal } from "@/components/Reveal";
+import { TextReveal } from "@/components/TextReveal";
+import { TiltCard } from "@/components/TiltCard";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { images } from "@/lib/images";
 
@@ -44,23 +48,27 @@ const trustStripItems = [
 
 const coreValues = [
   {
+    icon: "verified_user",
     name: "Integrity",
     definition: "How we behave.",
     proof: "You're trusted to flag your own mistakes and help fix them — not manage optics.",
   },
   {
+    icon: "workspace_premium",
     name: "Professionalism",
     definition: "The standard we maintain.",
     proof:
       "Every piece of work you produce is held to the same bar we hold client deliverables to — no separate standard for internal work.",
   },
   {
+    icon: "handshake",
     name: "Commitment",
     definition: "How we serve.",
     proof:
       "The same follow-through we promise clients applies to each other: no one is left to solve a hard problem alone.",
   },
   {
+    icon: "bolt",
     name: "Innovation",
     definition: "How we solve problems and improve.",
     proof:
@@ -181,28 +189,24 @@ export default function CareersPage() {
                 request: hero backgrounds cycle automatically). */}
             <HeroImageCarousel
               keys={["it-advisory", "ops-center"]}
-              imageClassName="object-cover object-center scale-105"
+              imageClassName="hero-ken-burns object-cover object-center"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/55 to-navy-950/55" />
           </div>
-          <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
-          <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div className="inline-flex items-center gap-2 mb-6 justify-center">
-              <span className="w-7 h-[2px] bg-teal-400 inline-block" />
-              <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
-                CAREERS AT UPTECH CONSULTING
-              </span>
-              <span className="w-7 h-[2px] bg-teal-400 inline-block" />
-            </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] mb-6">
-              Get a job{" "}
-              <span className="gradient-teal-blue-text">at Uptech.</span>
-            </h1>
-            <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto mb-4">
-              We&apos;re a cross-border team working across IT, compliance, recruitment, and career
-              services — in Buea, Cameroon and in Stafford, Texas.
-            </p>
+
+          {/* Ambient depth — same slow-drifting glows as the other two
+              hero treatments sitewide, replacing the single static blur
+              circle this section had before. */}
+          <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
+            <div className="float-a absolute top-1/4 -left-10 w-96 h-96 rounded-full bg-teal-500/15 blur-3xl" />
+            <div className="float-b absolute bottom-0 -right-16 w-80 h-80 rounded-full bg-sky-400/10 blur-3xl" />
           </div>
+
+          <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <HeroIntro />
+          </div>
+
+          <ScrollCue />
         </section>
 
         <TrustStrip items={trustStripItems} />
@@ -216,24 +220,28 @@ export default function CareersPage() {
                   WHY WORK HERE
                 </span>
                 <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight mt-2">
-                  The same values we hold clients to, we hold ourselves to.
+                  <TextReveal text="The same values we hold clients to, we hold ourselves to." />
                 </h2>
               </div>
             </Reveal>
             <Reveal effect="stagger">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {coreValues.map((value) => (
-                  <div
+                  <TiltCard
                     key={value.name}
-                    className="bg-slate-50 rounded-2xl p-6 border border-slate-200/80 relative overflow-hidden"
+                    max={5}
+                    className="group bg-slate-50 rounded-2xl p-6 border border-slate-200/80 relative overflow-hidden"
                   >
                     <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-teal-400 to-blue-accent" />
-                    <h3 className="text-lg font-bold text-navy-950 mt-1 mb-1">{value.name}</h3>
+                    <div className="w-11 h-11 rounded-xl bg-white text-teal-700 shadow-sm border border-slate-200/80 flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110">
+                      <MaterialIcon name={value.icon} className="text-[22px]" />
+                    </div>
+                    <h3 className="text-lg font-bold text-navy-950 mb-1">{value.name}</h3>
                     <p className="text-xs font-semibold text-teal-700 uppercase tracking-wide mb-3">
                       {value.definition}
                     </p>
                     <p className="text-sm text-slate-600 leading-relaxed">{value.proof}</p>
-                  </div>
+                  </TiltCard>
                 ))}
               </div>
             </Reveal>
@@ -249,23 +257,24 @@ export default function CareersPage() {
                   WHERE YOU MIGHT FIT
                 </span>
                 <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight mt-2">
-                  Six departments, one practice.
+                  <TextReveal text="Six departments, one practice." />
                 </h2>
               </div>
             </Reveal>
             <Reveal effect="stagger">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {departments.map((dept) => (
-                  <div
+                  <TiltCard
                     key={dept.title}
-                    className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm"
+                    max={5}
+                    className="group bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm"
                   >
-                    <div className="w-11 h-11 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center mb-4">
+                    <div className="w-11 h-11 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110">
                       <MaterialIcon name={dept.icon} className="text-[22px]" />
                     </div>
                     <h3 className="text-base font-bold text-navy-950 mb-1.5">{dept.title}</h3>
                     <p className="text-sm text-slate-600 leading-relaxed">{dept.description}</p>
-                  </div>
+                  </TiltCard>
                 ))}
               </div>
             </Reveal>
@@ -275,30 +284,36 @@ export default function CareersPage() {
         {/* Open Positions */}
         <section id="open-positions" className="py-24 bg-white">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
-                OPEN POSITIONS
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight mt-2">
-                Current opportunities
-              </h2>
-            </div>
-            <OpenPositions jobs={jobPostings} />
+            <Reveal effect="rise">
+              <div className="text-center mb-12">
+                <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
+                  OPEN POSITIONS
+                </span>
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight mt-2">
+                  <TextReveal text="Current opportunities" />
+                </h2>
+              </div>
+            </Reveal>
+            <Reveal effect="fade" delay={120}>
+              <OpenPositions jobs={jobPostings} />
+            </Reveal>
           </div>
         </section>
 
         {/* How we hire */}
         <section className="py-24 bg-slate-50 border-y border-slate-200/80">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-2xl mx-auto mb-14">
-              <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
-                HOW WE HIRE
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight mt-2">
-                Three steps, no waiting in the dark.
-              </h2>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <Reveal effect="rise">
+              <div className="text-center max-w-2xl mx-auto mb-14">
+                <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
+                  HOW WE HIRE
+                </span>
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight mt-2">
+                  <TextReveal text="Three steps, no waiting in the dark." />
+                </h2>
+              </div>
+            </Reveal>
+            <Reveal effect="stagger" className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {hiringSteps.map((step) => (
                 <div key={step.number} className="text-center sm:text-left">
                   <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-teal-50 text-teal-700 font-mono font-bold text-sm mb-4">
@@ -308,26 +323,30 @@ export default function CareersPage() {
                   <p className="text-sm text-slate-600 leading-relaxed">{step.description}</p>
                 </div>
               ))}
-            </div>
+            </Reveal>
           </div>
         </section>
 
         {/* FAQ */}
         <section className="py-24 bg-white">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-12 text-center">
-              <div className="inline-flex items-center gap-2 mb-3 justify-center">
-                <span className="w-7 h-[2px] bg-teal-500 inline-block" />
-                <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
-                  FREQUENTLY ASKED QUESTIONS
-                </span>
-                <span className="w-7 h-[2px] bg-teal-500 inline-block" />
+            <Reveal effect="rise">
+              <div className="mb-12 text-center">
+                <div className="inline-flex items-center gap-2 mb-3 justify-center">
+                  <span className="w-7 h-[2px] bg-teal-500 inline-block" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
+                    FREQUENTLY ASKED QUESTIONS
+                  </span>
+                  <span className="w-7 h-[2px] bg-teal-500 inline-block" />
+                </div>
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight leading-tight">
+                  <TextReveal text="Before you apply" />
+                </h2>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight leading-tight">
-                Before you apply
-              </h2>
-            </div>
-            <FaqAccordion items={faqItems} />
+            </Reveal>
+            <Reveal effect="fade" delay={120}>
+              <FaqAccordion items={faqItems} />
+            </Reveal>
           </div>
         </section>
 
@@ -352,7 +371,12 @@ export default function CareersPage() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-navy-950/92 via-navy-950/68 to-navy-950/68" />
           </div>
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
+            <div className="float-a absolute -left-16 top-0 h-72 w-72 rounded-full bg-teal-400/10 blur-3xl" />
+            <div className="float-b absolute -right-16 bottom-0 h-72 w-72 rounded-full bg-sky-400/10 blur-3xl" />
+          </div>
+
+          <Reveal effect="rise" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white max-w-2xl mx-auto leading-tight mb-4">
               Ready to build something <span className="gradient-teal-blue-text">real?</span>
             </h2>
@@ -362,7 +386,7 @@ export default function CareersPage() {
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Button href="#open-positions">View Open Positions</Button>
             </div>
-          </div>
+          </Reveal>
         </section>
       </main>
 

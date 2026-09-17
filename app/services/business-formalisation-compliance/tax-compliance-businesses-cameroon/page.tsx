@@ -98,14 +98,14 @@ const cadenceColumns = [
     // Individual/personal-tax cadence, added alongside the three business
     // columns above — personal IRPP filing is a single annual cycle, not a
     // monthly one, so it doesn't share a card with the business columns.
-    // This page's own FAQ states "before March 15 annually" but immediately
-    // hedges it with its own [PENDING] on specifics — presenting a clean,
-    // unhedged "March 15th Annually" deadline tag here would contradict
-    // that hedge, so this card stays at general "Annual Cycle" framing
-    // (family-wide confidence-vs-pending audit fix) rather than repeating
-    // the specific date without the same qualification.
+    // Web research (2026-09) confirmed March 15 directly from DGI's own
+    // published guidance (impots.cm), resolving the earlier contradiction
+    // between this card's placeholder deadline and the FAQ's own "before
+    // March 15" claim — both now state the same, sourced date. Worth noting
+    // DGI has administratively extended related deadlines in some years, so
+    // still worth confirming the current year's date with Uptech Consulting.
     tag: "Individual • Annual Cycle",
-    deadline: "[PENDING: exact date]",
+    deadline: "March 15 Annually",
     title: "Personal IRPP Filing",
     description:
       "A single yearly personal income tax declaration — not a monthly cycle like the business columns shown here.",
@@ -173,9 +173,15 @@ const faqItems = [
   // page when it was merged into this one — personal tax (IRPP), not
   // corporate tax.
   {
+    // Web research (2026-09) confirmed this directly, citing Article 25 of
+    // Cameroon's General Tax Code (the "principe de mondialité" — tax
+    // residents are taxed on worldwide income, not just Cameroon-source
+    // income). Kept a lighter hedge on situation-specific treatment (double-
+    // tax treaty relief, specific income types), since that genuinely
+    // varies case by case and wasn't part of this research.
     question: "Do I need to declare income I earn remotely from foreign clients?",
     answer:
-      "Cameroon tax residents generally have personal income tax obligations on worldwide income, including remote/foreign-client earnings, though the exact treatment depends on your specific residency and income situation. [PENDING: confirm current IRPP treatment of foreign-sourced income with Uptech Consulting].",
+      "Yes. Cameroon tax residents are taxed on worldwide income under Article 25 of the General Tax Code, including remote or foreign-client earnings — not just Cameroon-source income. Situation-specific details, like double-tax treaty relief, are confirmed with your consultant.",
   },
   {
     question: "I don't have a registered company — do personal tax rules still apply to me?",
@@ -183,8 +189,13 @@ const faqItems = [
       "Yes. Personal income tax (IRPP) applies to individuals regardless of whether they operate through a registered company. Freelancers, consultants, and independent earners are assessed as individual taxpayers.",
   },
   {
+    // Web research (2026-09) confirmed March 15 directly from DGI's own
+    // published guidance (impots.cm) — resolving the contradiction this
+    // answer used to have with the cadence card above (see that card's
+    // comment). DGI has administratively extended related deadlines in some
+    // years, so kept a note about confirming the current year specifically.
     question: "When is the personal tax filing deadline?",
-    answer: "Filing deadline: before March 15 annually. [PENDING: confirm exact requirements for your specific income situation with Uptech Consulting].",
+    answer: "March 15 annually, per DGI's published deadline — though this has been administratively extended in some years, so it's worth confirming the current year's exact date with your consultant.",
   },
   {
     question: "What documents do I need for my personal tax filing?",
@@ -275,26 +286,23 @@ export default function TaxComplianceBusinessesCameroonPage() {
         {/* Compliance calendar */}
         <section className="py-24 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-              <div className="max-w-2xl">
-                <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
-                  STATUTORY CADENCE &amp; DELIVERABLES
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight mt-2">
-                  The Recurring Compliance Rhythm
-                </h2>
-                <p className="text-slate-600 mt-2">
-                  Businesses run a systematic monthly and quarterly rhythm; individual filers have
-                  one annual cycle. Either way, it&apos;s not a once-a-year scramble — it&apos;s a
-                  documented cadence that protects your standing.
-                </p>
-              </div>
-              <div className="p-3 bg-slate-100 rounded-lg max-w-xs shrink-0">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-rose-600 block">
-                  Note for engagement teams:
-                </span>
-                <span className="text-xs text-slate-600 italic">[PENDING: confirm real cadence &amp; deadlines with Uptech Consulting]</span>
-              </div>
+            {/* Was a "Note for engagement teams" callout, publicly visible
+                on the live page — an internal note, not visitor copy, and
+                redundant besides: the cadenceColumns grid right below
+                already carries the real cadence/deadline detail. Removed
+                rather than filled in. */}
+            <div className="max-w-2xl mb-12">
+              <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
+                STATUTORY CADENCE &amp; DELIVERABLES
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight mt-2">
+                The Recurring Compliance Rhythm
+              </h2>
+              <p className="text-slate-600 mt-2">
+                Businesses run a systematic monthly and quarterly rhythm; individual filers have
+                one annual cycle. Either way, it&apos;s not a once-a-year scramble — it&apos;s a
+                documented cadence that protects your standing.
+              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

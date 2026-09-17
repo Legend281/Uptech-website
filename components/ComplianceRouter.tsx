@@ -37,7 +37,9 @@ const results: Record<BusinessNeed | "personal-tax", PathwayResult> = {
     description:
       "Full incorporation under OHADA Uniform Commercial Acts: notarial drafting, trade registry (RCCM) certification, and Taxpayer Identification Number (NIU) issuance.",
     deliverables: ["Notarial Articles of Association", "RCCM Certificate of Registration", "Taxpayer ID (NIU)"],
-    timeline: "Typical completion: [PENDING: confirm with Uptech Consulting]",
+    // Web research (2026-09): see the Cameroon page's own Turnaround
+    // Duration widget for the full sourcing note.
+    timeline: "CFCE targets 72 hours; practically 3–15 days",
     href: "/services/business-formalisation-compliance/cameroon",
   },
   "formalisation-us": {
@@ -46,7 +48,9 @@ const results: Record<BusinessNeed | "personal-tax", PathwayResult> = {
     description:
       "Formation of state-specific LLCs and C-Corps for international founders, including Registered Agent service and IRS EIN acquisition.",
     deliverables: ["US LLC / C-Corp filing", "IRS EIN Issuance", "Registered Agent service"],
-    timeline: "Typical completion: [PENDING: confirm with Uptech Consulting]",
+    // Web research (2026-09): see the US page's own Turnaround Timeline
+    // widget for the full sourcing note.
+    timeline: "State filing 2–10 days, plus ~1 week for EIN",
     href: "/services/business-formalisation-compliance/united-states",
   },
   "tax-cmr": {
@@ -61,9 +65,13 @@ const results: Record<BusinessNeed | "personal-tax", PathwayResult> = {
   "cnps-cmr": {
     badge: "CNPS & Labour",
     title: "CNPS Compliance — Cameroon",
+    // Was "monthly employee declarations (DPAE)" / "Monthly DPAE" — web
+    // research (2026-09) confirmed DPAE is a one-time declaration per
+    // employee at hiring, not monthly (see the CNPS page's own sourced
+    // comment on this).
     description:
-      "Employer social insurance registration, monthly employee declarations (DPAE), payroll withholding, and CNPS Clearance Certificates.",
-    deliverables: ["Employer Matricule", "Monthly DPAE", "CNPS Clearance Certificate"],
+      "Employer social insurance registration, employee declarations (DPAE), monthly payroll withholding, and CNPS Clearance Certificates.",
+    deliverables: ["Employer Matricule", "DPAE at Hiring", "CNPS Clearance Certificate"],
     timeline: "Routine regulatory cycle",
     href: "/services/business-formalisation-compliance/cnps-compliance-cameroon",
   },
@@ -73,7 +81,9 @@ const results: Record<BusinessNeed | "personal-tax", PathwayResult> = {
     description:
       "Statutory personal income tax declarations (IRPP), freelance and remote cross-border earnings regularisation, and personal Attestation de Non-Redevance issuance.",
     deliverables: ["Annual IRPP Filing", "Foreign Income Regularisation", "Individual ANR (Tax Clearance)"],
-    timeline: "Filing deadline: [PENDING: confirm with Uptech Consulting]",
+    // Web research (2026-09) confirmed March 15 directly from DGI's own
+    // published guidance — see the Tax Compliance page's own sourced note.
+    timeline: "Filing deadline: March 15 annually",
     // Tax Compliance for Individuals was merged into the unified page.
     href: "/services/business-formalisation-compliance/tax-compliance-businesses-cameroon",
   },

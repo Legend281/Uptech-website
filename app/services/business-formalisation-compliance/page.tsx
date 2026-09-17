@@ -70,7 +70,10 @@ const pathways: Array<{
     description:
       "Full incorporation under OHADA standards: Articles of Association, notarial deposit, RCCM registration, and Taxpayer ID (NIU).",
     tags: ["SARL / SA / SAS", "Notarial Deed", "Taxpayer Card (NIU)"],
-    timeline: "[PENDING: confirm with Uptech Consulting]",
+    // Web research (2026-09): CFCE's own published target for RCCM
+    // registration, plus the practical range multiple independent sources
+    // report. Distinct from Uptech's own total engagement timeline.
+    timeline: "CFCE targets 72 hours; practically 3–15 days",
     href: "/services/business-formalisation-compliance/cameroon",
   },
   {
@@ -81,7 +84,10 @@ const pathways: Array<{
     description:
       "Formation of Delaware, Wyoming, Texas, or state-specific LLCs and C-Corps, including Registered Agent service and IRS EIN acquisition.",
     tags: ["US LLC / C-Corp", "IRS EIN Issuance", "Registered Agent"],
-    timeline: "[PENDING: confirm with Uptech Consulting]",
+    // Web research (2026-09): state filing + non-US-resident EIN processing
+    // ranges, corroborated across multiple sources. See the US page's own
+    // Turnaround Timeline widget for the full sourcing note.
+    timeline: "State filing 2–10 days, plus ~1 week for EIN",
     href: "/services/business-formalisation-compliance/united-states",
   },
   {
@@ -101,9 +107,13 @@ const pathways: Array<{
     flag: "🇨🇲 Cameroon • CNPS & Labour",
     accent: "teal",
     title: "CNPS Compliance — Cameroon",
+    // Was "monthly employee declarations (DPAE)" / "Monthly DPAE" tag — web
+    // research (2026-09) confirmed DPAE is a one-time declaration per
+    // employee at hiring, not monthly (see the CNPS page's own sourced
+    // comment on this). Corrected here to match.
     description:
-      "Employer social insurance registration, monthly employee declarations (DPAE), payroll withholding, and CNPS Clearance Certificates.",
-    tags: ["Employer Matricule", "Monthly DPAE", "CNPS Clearance"],
+      "Employer social insurance registration, employee declarations (DPAE), monthly payroll withholding, and CNPS Clearance Certificates.",
+    tags: ["Employer Matricule", "DPAE at Hiring", "CNPS Clearance"],
     timeline: "Routine regulatory cycle",
     href: "/services/business-formalisation-compliance/cnps-compliance-cameroon",
   },

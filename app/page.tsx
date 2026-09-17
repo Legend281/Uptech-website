@@ -176,9 +176,13 @@ const faqItems = [
       "Engagements are scoped before they are quoted. We map your situation during the consultation, tell you plainly whether we are the right partner, and price the work from there. Contact us for a quote rather than a package rate.",
   },
   {
+    // Web research (2026-09) added the Cameroon half of this answer,
+    // corroborated across multiple independent sources on Cameroon
+    // business-formation procedure. Worth a quick confirmation with Uptech
+    // Consulting's own legal desk, since practice varies by bank.
     question: "Do I have to travel to register a business?",
     answer:
-      "For a US LLC or C-Corp, no — non-US residents can form and own one without a US visa, Social Security Number or American address, though the entity itself needs a registered agent with a physical in-state address. For Cameroon formalisation, [PENDING: confirm which steps require the founder in person with Uptech Consulting].",
+      "For a US LLC or C-Corp, no — non-US residents can form and own one without a US visa, Social Security Number or American address, though the entity itself needs a registered agent with a physical in-state address. For Cameroon formalisation, the paperwork itself (Articles of Association, RCCM registration) can be handled remotely through a notarized power of attorney for a local representative. The step most likely to need your direct involvement is depositing share capital — some banks allow this remotely with power of attorney, but not all, so we confirm your specific bank's requirements early.",
   },
   {
     question: "Can you handle both the registration and the filings that follow it?",

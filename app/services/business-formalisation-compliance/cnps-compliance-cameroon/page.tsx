@@ -29,25 +29,23 @@ const trustStripItems = [
     description: "Employer social insurance registration handled from day one of hiring.",
   },
   {
-    // ESCALATED, NOT CODE-FIXED: DPAE (Déclaration Préalable à l'Embauche)
-    // is understood to be a one-time, pre-hiring declaration per employee,
-    // not a recurring monthly one — what's typically monthly is the CNPS
-    // contribution/payroll declaration, a related but different obligation.
-    // The confidence-vs-pending audit fix asked every other instance on
-    // this page family to be downgraded to a [PENDING] treatment or hedged
-    // — but "DPAE" itself is a specific named declaration, and there is no
-    // safe general rewording that doesn't either (a) keep asserting
-    // "monthly," the exact claim in question, or (b) silently assert
-    // "one-time" instead, which is just guessing in the other direction.
-    // Dropped "Monthly" from the title and "Recurring" from the
-    // description — neither claim is made anymore — but this is a stopgap,
-    // not a resolution. Needs a real answer from the team on DPAE's actual
-    // frequency before this can be written accurately either way.
+    // RESOLVED via web research (2026-09): DPAE (Déclaration Préalable à
+    // l'Embauche) is a one-time declaration per employee, filed within days
+    // of hiring — corroborated across multiple independent sources on
+    // Cameroon CNPS procedure (e.g. lefisk.cm/social/declarations-sociales,
+    // infospratiques.cm/cnps-cameroun). It is distinct from the recurring
+    // monthly CNPS contribution filing (DSU — Déclaration Sociale Unifiée),
+    // due by the 15th of the following month, which is what "monthly"
+    // actually describes. Previously flagged ESCALATED/NOT CODE-FIXED after
+    // an earlier confidence-vs-pending audit found "Monthly DPAE" asserted
+    // with no source — this now replaces that flag with a sourced answer.
+    // Still worth a quick confirmation with Uptech Consulting's own CNPS
+    // desk, since procedure specifics can be revised.
     icon: "event_repeat",
     title: "DPAE Filing",
-    badgeText: "Employee Declarations",
+    badgeText: "Filed at Hiring",
     badgeAccent: "sky" as const,
-    description: "Declarations kept current and confirmed against your payroll records.",
+    description: "A one-time declaration per employee, filed within days of hiring.",
   },
   {
     icon: "workspace_premium",
@@ -149,14 +147,14 @@ const personaAccentClasses: Record<"teal" | "amber" | "sky", { chip: string; ico
 };
 
 const faqItems = [
-  // Rewritten to avoid stating an unconfirmed fact — safe to publish as-is;
-  // replace with real figure once provided by the team. Question reworded
-  // from "Do all employees need to be declared to CNPS?" to pair naturally
-  // with the cadence-focused answer below (same underlying DPAE topic).
+  // RESOLVED via web research (2026-09), replacing the earlier generic
+  // hedge — corroborated across multiple independent sources on Cameroon
+  // CNPS procedure. Worth a quick confirmation with Uptech Consulting's own
+  // CNPS desk, since procedure specifics can be revised.
   {
     question: "How often do I need to file DPAE and other CNPS declarations?",
     answer:
-      "DPAE and related CNPS declarations are filed according to your business's specific registration category. Your dedicated consultant will confirm the exact filing cadence that applies to your business during onboarding.",
+      "DPAE is filed once per employee, within days of hiring — it's not a recurring filing. Separately, your CNPS contribution declaration (covering everyone on payroll) is filed every month, due by the 15th of the following month.",
   },
   {
     question: "What happens if my business isn't registered with CNPS yet?",
@@ -164,9 +162,15 @@ const faqItems = [
       "We conduct a review of your current employee register and help bring your CNPS registration and past declarations up to date, similar to how back-filings are handled for tax compliance.",
   },
   {
+    // Web research (2026-09) confirmed the 3-branch structure and that a
+    // salary ceiling applies, but independent sources gave materially
+    // different splits for the pension branch specifically (one source:
+    // 4.2% total; another: 8.4% total, split evenly) — too inconsistent to
+    // publish a specific percentage without it risking being wrong. [PENDING]
+    // stays on the exact rate; structure below is sourced, not guessed.
     question: "What are the current CNPS contribution rates?",
     answer:
-      "[PENDING: confirm current employer/employee CNPS contribution rates with Uptech Consulting — these are set by CNPS and can be revised]. Contribution rates depend on registration category and salary bracket; we confirm your exact rate during onboarding.",
+      "CNPS contributions cover three branches — family benefits, old-age pension, and workplace accident insurance — each with its own rate and employer/employee split, calculated against a monthly salary ceiling for most branches. [PENDING: confirm the exact current percentages with Uptech Consulting — these are set by CNPS and revised periodically]. We confirm your business's specific rates during onboarding.",
   },
 ];
 
@@ -223,14 +227,13 @@ export default function CnpsComplianceCameroonPage() {
                 Keep your team&apos;s social security compliant,{" "}
                 <span className="gradient-teal-blue-text">without the paperwork maze.</span>
               </h1>
-              {/* ESCALATED, NOT CODE-FIXED: see the matching comment on
-                  the trust strip's DPAE item above — "monthly" dropped
-                  from "employee declarations" here since that claim is
-                  the one in question; "payroll withholding" right after
-                  it correctly keeps its own monthly claim (confirmed
-                  accurate by the Compliance Cycle section's own "Monthly
-                  Payroll Withholding & Filing" step). Still needs a real
-                  team answer on DPAE's actual frequency. */}
+              {/* RESOLVED — see the sourced comment on the trust strip's
+                  DPAE item above. "Employee declarations" here correctly
+                  stays unqualified (DPAE is one-time, not monthly);
+                  "payroll withholding" right after it correctly keeps its
+                  own monthly claim (confirmed accurate by the Compliance
+                  Cycle section's own "Monthly Payroll Withholding &
+                  Filing" step). */}
               <p className="mx-auto text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
                 Employer registration, employee declarations, payroll withholding, and CNPS
                 clearance certificates — kept current as your team grows.
@@ -275,20 +278,21 @@ export default function CnpsComplianceCameroonPage() {
                     A transparent walkthrough of employer social-insurance obligations under CNPS,
                     fully guided from Buea and Douala.
                   </p>
-                  <div className="bg-white/5 border border-dashed border-amber-400/40 p-4 rounded-xl">
-                    <div className="flex items-center justify-between gap-2 mb-1.5">
-                      <span className="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                  {/* Web research (2026-09), replacing the earlier pending
+                      badge — corroborated across multiple independent
+                      sources on Cameroon CNPS procedure. Worth a quick
+                      confirmation with Uptech Consulting's own CNPS desk. */}
+                  <div className="bg-white/5 border border-white/10 p-4 rounded-xl">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className="text-xs font-bold uppercase tracking-wider text-teal-300 flex items-center gap-1.5">
                         <MaterialIcon name="schedule" className="text-[16px]" />
                         Filing Cadence
                       </span>
-                      <span className="text-[10px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded uppercase">
-                        [PENDING: confirm with Uptech Consulting]
-                      </span>
                     </div>
                     <p className="text-xs text-slate-300 leading-normal">
-                      Employer registration is generally handled promptly at hiring, with ongoing
-                      contribution filings kept to a <strong className="text-white">predictable monthly rhythm</strong> against
-                      your payroll records.
+                      DPAE is a one-time declaration per employee at hiring. Ongoing contribution
+                      filings follow a <strong className="text-white">monthly rhythm</strong>, due by the 15th of the
+                      following month, against your payroll records.
                     </p>
                   </div>
                 </div>
@@ -517,10 +521,19 @@ export default function CnpsComplianceCameroonPage() {
                     <li className="flex items-start gap-3">
                       <MaterialIcon name="close" className="text-rose-500 text-[20px] shrink-0 mt-0.5" />
                       <span>
+                        {/* Web research (2026-09) points to CNPS's own published
+                            sanctions schedule: a surcharge starting around 10%
+                            of the amount due, increasing for each additional
+                            quarter of delay beyond 3 months. Could not confirm
+                            by fetching CNPS's sanctions page directly (blocked
+                            the request) — sourced from secondary summaries of
+                            it instead, so worth a direct confirmation with
+                            Uptech Consulting before treating as final. */}
                         <strong className="text-slate-900">Undeclared Employee Penalties:</strong> CNPS can
-                        retroactively assess unpaid contributions and penalties once an unregistered
-                        employee is discovered.{" "}
-                        <span className="text-amber-700 italic">[PENDING: confirm penalty framework]</span>
+                        retroactively assess unpaid contributions once an unregistered employee is
+                        discovered, plus a late-payment surcharge starting around 10% of the amount
+                        due — increasing for each additional quarter of delay.{" "}
+                        <span className="text-amber-700 italic">[PENDING: confirm exact penalty schedule with Uptech Consulting]</span>
                       </span>
                     </li>
                     <li className="flex items-start gap-3">

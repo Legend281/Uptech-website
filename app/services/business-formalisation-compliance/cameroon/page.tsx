@@ -105,10 +105,13 @@ const identityDocuments = [
     text: "Valid National Identity Card (CNI) or biometric passport copies for all managing directors (Gérants).",
   },
   {
-    // Rewritten to avoid stating an unconfirmed fact — safe to publish
-    // as-is; replace with real figure once provided by the team.
+    // Web research (2026-09) restores the specific figure this item was
+    // downgraded from during an earlier audit: multiple independent sources
+    // on Cameroon business-formation procedure corroborate a 3-month
+    // validity window for Bulletin N°3. Worth a quick confirmation with
+    // Uptech Consulting's own legal desk, since CFCE requirements can shift.
     strong: "Criminal Record Clearance:",
-    text: "A recent Casier Judiciaire (Bulletin N°3) is required as part of your dossier — your consultant will confirm the acceptable issue-date window when reviewing your documents — or a sworn affidavit for foreign non-residents.",
+    text: "Casier Judiciaire (Bulletin N°3), dated within the last 3 months, for each manager and associate — or a sworn affidavit for foreign non-residents.",
   },
   { strong: "Photographs:", text: "Two (2) recent passport-sized color photos of each declared legal representative." },
   { strong: "Civil Status:", text: "Proof of matrimonial property regime (if applicable under OHADA joint asset rules)." },
@@ -267,10 +270,12 @@ export default function BusinessFormalisationCameroonPage() {
                     A transparent walkthrough of the statutory milestones under Cameroon commercial
                     law and OHADA standards, fully guided from Buea and Douala.
                   </p>
-                  {/* Rewritten to avoid stating an unconfirmed fact — safe
-                      to publish as-is; replace with real figure once
-                      provided by the team. Pending badge/dashed styling
-                      removed — this now reads as finished copy. */}
+                  {/* Web research (2026-09) adds the CFCE registry's own
+                      published target and the practical range multiple
+                      independent Cameroon business-formation guides report —
+                      distinct from Uptech Consulting's own total engagement
+                      timeline, which still isn't something research can
+                      supply and stays as the consultant's own commitment. */}
                   <div className="bg-white/5 border border-white/10 p-4 rounded-xl">
                     <div className="flex items-center gap-2 mb-1.5">
                       <span className="text-xs font-bold uppercase tracking-wider text-teal-300 flex items-center gap-1.5">
@@ -279,9 +284,11 @@ export default function BusinessFormalisationCameroonPage() {
                       </span>
                     </div>
                     <p className="text-xs text-slate-300 leading-normal">
-                      Formation timelines depend on registry processing speed and how quickly
-                      required documents are gathered. Your consultant will give you a specific
-                      timeline estimate once your formalisation begins.
+                      Cameroon&apos;s CFCE one-stop shop targets a 72-hour turnaround for RCCM
+                      registration itself, though in practice it commonly runs 3–15 days depending
+                      on entity type and how complete your dossier is. Your consultant will give
+                      you a specific timeline for your full engagement once your formalisation
+                      begins.
                     </p>
                   </div>
                 </div>

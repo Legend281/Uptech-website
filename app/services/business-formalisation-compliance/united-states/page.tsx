@@ -98,26 +98,28 @@ const steps = [
   // the depth Tax Compliance and CNPS give their own recurring obligations.
 ];
 
-// Rewritten to avoid stating an unconfirmed fact — safe to publish as-is;
-// replace with real figure once provided by the team. Per-card `cadence`
-// badges removed (each showed "[PENDING: confirm cadence]" — no confirmed
-// figure exists to distinguish the three); the shared explanation now lives
-// in the section intro paragraph below instead.
+// Web research (2026-09) replaced the earlier fully-generic cards with
+// figures specific to Delaware, Wyoming, and Texas — the 3 states this page
+// names as common choices — corroborated across multiple independent
+// sources per state. Per-founder service fees still aren't published (see
+// the pricing section further down), consistent with the site's "contact us
+// for a quote" policy; these are the states' own government fees, not
+// Uptech Consulting's.
 const ongoingCompliance = [
   {
     icon: "event_repeat",
     title: "Annual Report",
-    description: "Most states require a yearly filing confirming your entity's current officers, registered agent, and address.",
+    description: "Wyoming requires this every year on your LLC's formation-anniversary month ($60 minimum). Texas requires a Public Information Report alongside its franchise tax (see next). Delaware has no separate annual report for LLCs.",
   },
   {
     icon: "receipt_long",
     title: "Franchise Tax",
-    description: "A state-level fee for the right to operate as a registered entity — separate from federal or state income tax, and due regardless of profitability.",
+    description: "Delaware: a flat $400/year, due June 1. Texas: due May 15, though no tax is owed below its no-tax-due revenue threshold — the report is still required either way. Wyoming has no franchise tax.",
   },
   {
     icon: "badge",
     title: "Registered Agent Renewal",
-    description: "Your registered agent service must stay active — lapsing it risks losing good standing and, eventually, administrative dissolution.",
+    description: "An annual subscription with your registered agent provider, regardless of state — lapsing it risks losing good standing and, eventually, administrative dissolution.",
   },
 ];
 
@@ -162,9 +164,14 @@ const faqItems = [
       "Generally, no — non-US residents can typically form and own a US LLC or C-Corp without a US visa, Social Security Number, or physical US address as a founder, though a registered agent with a physical in-state address is required for the entity itself. Confirm current requirements for your specific situation with your Uptech Consulting consultant.",
   },
   {
+    // Web research (2026-09) adds the well-established, factual trade-offs
+    // between the three states, corroborated across multiple sources — but
+    // stops short of asserting Uptech Consulting's own recommendation
+    // framework for specific founder profiles, since that's a genuine
+    // advisory judgment call for your consultant, not a researchable fact.
     question: "Which state should I choose?",
     answer:
-      "It depends on your business goals, where your customers/investors are, and cost tolerance for annual fees. Delaware, Wyoming, and Texas are common choices for international founders. [PENDING: Uptech Consulting's specific state-recommendation guidance for different founder profiles].",
+      "It depends on your goals. Delaware is the standard choice if you're raising outside investment — its courts and corporate law are what most US investors expect. Wyoming tends to suit founders prioritizing low ongoing cost and privacy (no franchise tax, member names aren't public). Texas has no personal state income tax but more ongoing reporting. Your consultant will help you weigh these against your specific situation.",
   },
   {
     // Rewritten to avoid stating an unconfirmed fact — safe to publish
@@ -255,20 +262,26 @@ export default function BusinessFormalisationUnitedStatesPage() {
                     A transparent walkthrough of state filing and federal setup, coordinated end to
                     end for founders based in Cameroon or abroad.
                   </p>
-                  <div className="bg-white/5 border border-dashed border-amber-400/40 p-4 rounded-xl">
-                    <div className="flex items-center justify-between gap-2 mb-1.5">
-                      <span className="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                  {/* Web research (2026-09) adds state filing and EIN
+                      processing ranges from multiple corroborating sources —
+                      distinct from Uptech Consulting's own total engagement
+                      timeline, which stays as the consultant's own
+                      commitment below. EIN timing specifically reflects the
+                      fax-filing route non-US-resident founders without an
+                      SSN/ITIN have to use, not the faster online path
+                      available to US-resident applicants. */}
+                  <div className="bg-white/5 border border-white/10 p-4 rounded-xl">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className="text-xs font-bold uppercase tracking-wider text-teal-300 flex items-center gap-1.5">
                         <MaterialIcon name="schedule" className="text-[16px]" />
                         Turnaround Timeline
                       </span>
-                      <span className="text-[10px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded uppercase">
-                        [PENDING: confirm with Uptech Consulting]
-                      </span>
                     </div>
                     <p className="text-xs text-slate-300 leading-normal">
-                      Actual duration depends on the state&apos;s own processing speed and how
-                      quickly your documents are ready — we confirm a realistic timeline once your
-                      details are reviewed.
+                      State filing typically runs 2–10 business days depending on the state and
+                      filing method, and EIN issuance for founders without a US SSN/ITIN (via fax
+                      to the IRS) usually takes about another week on top of that. We confirm a
+                      realistic total timeline once your state and details are reviewed.
                     </p>
                   </div>
                 </div>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import {
   ArrowRight,
   Briefcase,
@@ -14,6 +15,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import { TiltCard } from "@/components/TiltCard";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 import type { Way, WayIcon } from "./types";
 
@@ -93,8 +95,9 @@ export function WaysWeHelp({
           const Icon = icons[item.icon];
 
           return (
-            <div
+            <TiltCard
               key={item.key}
+              max={4}
               className={`card-hover-shadow flex flex-col overflow-hidden rounded-2xl border bg-white transition-colors ${
                 isSelected
                   ? "border-teal-500 ring-2 ring-teal-500/25"
@@ -156,7 +159,7 @@ export function WaysWeHelp({
                   </span>
                 )}
               </div>
-            </div>
+            </TiltCard>
           );
         })}
       </div>
@@ -171,7 +174,12 @@ export function WaysWeHelp({
         )}
 
         {single && single.href && (
-          <div className="flex flex-col gap-5 rounded-2xl border border-slate-200/90 bg-slate-50 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-7">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col gap-5 rounded-2xl border border-slate-200/90 bg-slate-50 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-7"
+          >
             <p className="text-base text-slate-700">
               One thing: <span className="font-bold text-navy-950">{single.title}</span>. That has
               its own page, with the full process on it.
@@ -183,7 +191,7 @@ export function WaysWeHelp({
               Continue to {single.title}
               <ArrowRight className="h-4 w-4" strokeWidth={2} />
             </Link>
-          </div>
+          </motion.div>
         )}
 
         {single && !single.href && (
@@ -208,7 +216,12 @@ function ConsultationPanel({
   ctaHref: string;
 }) {
   return (
-    <div className="flex flex-col gap-6 rounded-2xl border border-teal-400/30 bg-navy-950 p-6 text-white sm:flex-row sm:items-center sm:justify-between sm:p-7">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      className="flex flex-col gap-6 rounded-2xl border border-teal-400/30 bg-navy-950 p-6 text-white sm:flex-row sm:items-center sm:justify-between sm:p-7"
+    >
       <p className="max-w-xl text-base leading-relaxed text-slate-200">{message}</p>
       {/* TODO(analytics): "consultation CTA clicked" from the router panel. Deferred — see top of file. */}
       <a
@@ -220,6 +233,6 @@ function ConsultationPanel({
         <WhatsAppIcon className="h-4 w-4" />
         {ctaLabel}
       </a>
-    </div>
+    </motion.div>
   );
 }

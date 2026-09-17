@@ -5,8 +5,11 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
+import { HeroIntro } from "./HeroIntro";
+import { ScrollCue } from "@/components/home/ScrollCue";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { Reveal } from "@/components/Reveal";
+import { TextReveal } from "@/components/TextReveal";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 import { images } from "@/lib/images";
 import { WaysWeHelp } from "./WaysWeHelp";
@@ -48,7 +51,7 @@ export function PersonaLanding({ content }: { content: PersonaContent }) {
                 cycle automatically). */}
             <HeroImageCarousel
               keys={content.hero.images}
-              imageClassName="object-cover object-center scale-105"
+              imageClassName="hero-ken-burns object-cover object-center"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/65 to-navy-950/50" />
           </div>
@@ -57,73 +60,50 @@ export function PersonaLanding({ content }: { content: PersonaContent }) {
             className="pointer-events-none absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:64px_64px]"
           />
 
-          <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
-              <div className="mb-6 inline-flex items-center justify-center gap-2">
-                <span className="inline-block h-[2px] w-7 bg-teal-400" />
-                <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
-                  {content.hero.eyebrow}
-                </span>
-                <span className="inline-block h-[2px] w-7 bg-teal-400" />
-              </div>
-
-              <h1 className="mb-6 text-4xl font-extrabold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-6xl">
-                {content.hero.headline[0]}
-                <br />
-                <span className="text-teal-400">{content.hero.headline[1]}</span>
-                <br />
-                <span className="text-sky-400">{content.hero.headline[2]}</span>
-              </h1>
-
-              <p className="mx-auto mb-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-                {content.hero.lead}
-              </p>
-
-              {/* The scope disclosure sits in the hero, not in the FAQ, so
-                  nobody selects a card on a false assumption. Top border
-                  instead of the old left-accent border — a left rule looks
-                  lopsided once the block is centered. */}
-              <p className="mx-auto mb-8 max-w-xl border-t border-teal-400/60 pt-4 text-sm leading-relaxed text-slate-300">
-                {content.hero.note}
-              </p>
-
-              <ul className="flex flex-wrap justify-center gap-2.5">
-                {content.hero.situations.map((situation) => (
-                  <li
-                    key={situation}
-                    className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3.5 py-1.5 text-xs font-semibold text-slate-200 backdrop-blur-sm"
-                  >
-                    <span className="h-1.5 w-1.5 rounded-full bg-teal-400" />
-                    {situation}
-                  </li>
-                ))}
-              </ul>
-            </div>
+          {/* Ambient depth — same slow-drifting glows as every other hero
+              on the site. */}
+          <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
+            <div className="float-a absolute top-1/4 -left-10 w-96 h-96 rounded-full bg-teal-500/15 blur-3xl" />
+            <div className="float-b absolute bottom-0 -right-16 w-80 h-80 rounded-full bg-sky-400/10 blur-3xl" />
           </div>
+
+          <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+            <HeroIntro
+              eyebrow={content.hero.eyebrow}
+              headline={content.hero.headline}
+              lead={content.hero.lead}
+              note={content.hero.note}
+              situations={content.hero.situations}
+            />
+          </div>
+
+          <ScrollCue />
         </section>
 
         {/* ---------------- Three ways we help (the router) ---------------- */}
         <section id="ways-we-help" className="scroll-mt-24 border-b border-slate-200/80 bg-slate-100/70 py-20 lg:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+            <Reveal effect="rise" className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
               <div className="max-w-2xl">
                 <p className="mb-3 text-xs font-bold uppercase tracking-wider text-sky-600">
                   {content.ways.eyebrow}
                 </p>
                 <h2 className="text-3xl font-extrabold tracking-tight text-navy-950 sm:text-4xl">
-                  {content.ways.heading}
+                  <TextReveal text={content.ways.heading} />
                 </h2>
               </div>
               <p className="max-w-sm text-sm leading-relaxed text-slate-500">{content.ways.intro}</p>
-            </div>
+            </Reveal>
 
-            <WaysWeHelp
-              items={content.ways.items}
-              multiNeedMessage={content.ways.multiNeedMessage}
-              noDestinationMessage={content.ways.noDestinationMessage}
-              ctaLabel={content.ctaLabel}
-              ctaHref={WHATSAPP}
-            />
+            <Reveal effect="fade" delay={100}>
+              <WaysWeHelp
+                items={content.ways.items}
+                multiNeedMessage={content.ways.multiNeedMessage}
+                noDestinationMessage={content.ways.noDestinationMessage}
+                ctaLabel={content.ctaLabel}
+                ctaHref={WHATSAPP}
+              />
+            </Reveal>
           </div>
         </section>
 
@@ -136,7 +116,7 @@ export function PersonaLanding({ content }: { content: PersonaContent }) {
                   {content.story.eyebrow}
                 </p>
                 <h2 className="mb-6 text-3xl font-extrabold leading-tight tracking-tight text-navy-950 sm:text-4xl">
-                  {content.story.heading}
+                  <TextReveal text={content.story.heading} />
                 </h2>
                 {content.story.paragraphs.map((paragraph) => (
                   <p
@@ -194,10 +174,14 @@ export function PersonaLanding({ content }: { content: PersonaContent }) {
         {/* ---------------- FAQ ---------------- */}
         <section className="border-y border-slate-200/80 bg-slate-100/70 py-20 lg:py-24">
           <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-            <h2 className="mb-12 text-3xl font-extrabold tracking-tight text-navy-950 sm:text-4xl">
-              Before you get in touch.
-            </h2>
-            <FaqAccordion items={content.faq} />
+            <Reveal effect="rise">
+              <h2 className="mb-12 text-3xl font-extrabold tracking-tight text-navy-950 sm:text-4xl">
+                <TextReveal text="Before you get in touch." />
+              </h2>
+            </Reveal>
+            <Reveal effect="fade" delay={100}>
+              <FaqAccordion items={content.faq} />
+            </Reveal>
           </div>
         </section>
 
@@ -212,15 +196,27 @@ export function PersonaLanding({ content }: { content: PersonaContent }) {
             left-to-right gradient is enough on its own for contrast. */}
         <section className="relative overflow-hidden bg-navy-900 py-20 text-white sm:py-24">
           <div className="absolute inset-0">
-            <Image src={images["ops-center"].src} alt="" fill sizes="100vw" className="object-cover scale-105" />
+            <Image
+              src={images["ops-center"].src}
+              alt=""
+              fill
+              sizes="100vw"
+              placeholder="blur"
+              blurDataURL={images["ops-center"].blurDataURL}
+              className="object-cover scale-105"
+            />
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-950/35" />
+          <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
+            <div className="float-a absolute -left-16 top-0 h-72 w-72 rounded-full bg-teal-400/10 blur-3xl" />
+            <div className="float-b absolute -right-16 bottom-0 h-72 w-72 rounded-full bg-sky-400/10 blur-3xl" />
+          </div>
 
-          <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Reveal effect="rise" className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-center lg:gap-12">
               <div className="max-w-xl">
                 <h2 className="mb-4 text-3xl font-extrabold leading-[1.15] tracking-tight text-white sm:text-4xl">
-                  {content.close.heading}
+                  <TextReveal text={content.close.heading} />
                 </h2>
                 <p className="text-base leading-relaxed text-slate-300">{content.close.body}</p>
               </div>
@@ -236,7 +232,7 @@ export function PersonaLanding({ content }: { content: PersonaContent }) {
                 {content.ctaLabel}
               </a>
             </div>
-          </div>
+          </Reveal>
         </section>
       </main>
 

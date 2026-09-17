@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 
-const WHATSAPP_NUMBER = "237678597593";
 const CONTACT_EMAIL = "infos@uptechconsulting.com";
 
 /*
@@ -74,19 +73,14 @@ export function ContactForm() {
     return lines.join("\n");
   }, [name, email, phone, company, serviceLabel, language, message]);
 
-  const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-    `Hi Uptech Consulting, I'd like to book a consultation.\n\n${summary}`
-  )}`;
   const mailtoHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
     `Consultation request — ${serviceLabel}`
   )}&body=${encodeURIComponent(summary)}`;
 
-  const linkClasses = (enabled: boolean, variant: "whatsapp" | "email") =>
-    `inline-flex flex-1 items-center justify-center gap-2.5 rounded-lg px-6 py-3.5 text-sm font-semibold transition-all ${
+  const linkClasses = (enabled: boolean) =>
+    `inline-flex w-full items-center justify-center gap-2.5 rounded-lg px-6 py-3.5 text-sm font-semibold transition-all ${
       enabled
-        ? variant === "whatsapp"
-          ? "bg-uco-green text-white hover:bg-uco-green-hover shadow-sm"
-          : "gradient-teal-blue text-white shadow-lg shadow-teal-950/40 hover:brightness-105 active:scale-[0.98]"
+        ? "gradient-teal-blue text-white shadow-lg shadow-teal-950/40 hover:brightness-105 active:scale-[0.98]"
         : "bg-slate-100 text-slate-400 cursor-not-allowed pointer-events-none"
     }`;
 
@@ -221,25 +215,15 @@ export function ContactForm() {
             Privacy Policy
           </a>
           . My details are used only to respond to this inquiry — nothing is stored until I send
-          this message myself via WhatsApp or email below.
+          this message myself via email below.
         </span>
       </label>
 
-      <div className="flex flex-col sm:flex-row gap-3 mt-6">
-        <a
-          href={canSend ? whatsappHref : undefined}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-disabled={!canSend}
-          className={linkClasses(canSend, "whatsapp")}
-        >
-          <MaterialIcon name="chat" className="text-[18px]" />
-          <span>Continue on WhatsApp</span>
-        </a>
+      <div className="mt-6">
         <a
           href={canSend ? mailtoHref : undefined}
           aria-disabled={!canSend}
-          className={linkClasses(canSend, "email")}
+          className={linkClasses(canSend)}
         >
           <MaterialIcon name="mail" className="text-[18px]" />
           <span>Continue via Email</span>
@@ -247,7 +231,7 @@ export function ContactForm() {
       </div>
       <p className="text-xs text-slate-400 mt-3">
         {canSend
-          ? "This opens WhatsApp or your email app with your details already filled in — just hit send."
+          ? "This opens your email app with your details already filled in — just hit send."
           : "Fill in the required fields and agree to the Privacy Policy to continue."}
       </p>
     </div>

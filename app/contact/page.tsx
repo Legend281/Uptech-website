@@ -15,7 +15,7 @@ import { MaterialIcon } from "@/components/icons/MaterialIcon";
 export const metadata: Metadata = {
   title: "Book a Consultation",
   description:
-    "Tell us what you need. A specialist reviews your request and responds directly by WhatsApp or email.",
+    "Tell us what you need. A specialist reviews your request and responds directly by email.",
 };
 
 const trustStripItems = [
@@ -46,7 +46,7 @@ const nextSteps = [
   {
     number: "01",
     title: "Send your request",
-    description: "Fill in the form and continue on WhatsApp or email — whichever you prefer.",
+    description: "Fill in the form and continue the conversation by email.",
   },
   {
     number: "02",
@@ -83,7 +83,7 @@ const faqItems = [
   {
     question: "Is my information kept confidential?",
     answer:
-      "Yes. This form does not submit your details to any server — it prepares a WhatsApp message or email for you to send yourself, so only Uptech Consulting receives it, exactly as you'd expect from messaging us directly.",
+      "Yes. This form does not submit your details to any server — it prepares an email for you to send yourself, so only Uptech Consulting receives it, exactly as you'd expect from emailing us directly.",
   },
   {
     question: "I'm looking for a job, not a business consultation — is this the right page?",
@@ -143,7 +143,7 @@ export default function ContactPage() {
             </h1>
             <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto">
               No ticket queue, no automated replies. Fill in a few details and continue the
-              conversation on WhatsApp or email — whichever you prefer.
+              conversation by email.
             </p>
           </div>
         </section>

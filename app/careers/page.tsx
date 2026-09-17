@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
@@ -205,22 +204,12 @@ export default function CareersPage() {
               <span className="w-7 h-[2px] bg-teal-400 inline-block" />
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] mb-6">
-              Build your career on{" "}
-              <span className="gradient-teal-blue-text">both sides of the bridge.</span>
+              Get a job{" "}
+              <span className="gradient-teal-blue-text">at Uptech.</span>
             </h1>
             <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto mb-4">
               We&apos;re a cross-border team working across IT, compliance, recruitment, and career
-              services — in Buea and in Stafford, Texas.
-            </p>
-            <p className="text-sm text-slate-400">
-              Looking for a job with one of our clients instead?{" "}
-              <Link
-                href="/services/career-marketing-placement"
-                className="text-teal-400 underline hover:text-white font-semibold"
-              >
-                Career Marketing &amp; Placement
-              </Link>{" "}
-              is built for that.
+              services — in Buea, Cameroon and in Stafford, Texas.
             </p>
           </div>
         </section>

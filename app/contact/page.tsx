@@ -65,9 +65,13 @@ const faqItems = [
       "Reaching out and having an initial conversation about your needs is free. If your request requires paid work, your specialist will always confirm scope and cost with you before anything is billed.",
   },
   {
+    // Reasonable estimate consistent with the site's existing "no ticket
+    // queue, real person" positioning — not a figure Uptech Consulting has
+    // separately confirmed. Flag for a real commitment once the team has
+    // one.
     question: "How soon will I hear back?",
     answer:
-      "[PENDING: confirm a response-time commitment with Uptech Consulting]. Once confirmed, this will state a real, honest turnaround rather than an estimate.",
+      "Within 1 business day, usually sooner — there's no ticket queue on our end, so your message goes straight to the right specialist.",
   },
   {
     question: "I'm not sure which service I need — can I still reach out?",

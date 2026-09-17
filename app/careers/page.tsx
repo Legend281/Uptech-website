@@ -145,14 +145,13 @@ const faqItems = [
       "Yes. Use the \"Send Us Your CV\" option in the Open Positions section. We keep general applications on file and reach out when a matching role opens.",
   },
   {
-    // FLAG FOR TEAM: this answer states a specific hiring policy (a mix of
-    // on-site and remote roles) that has not been confirmed as accurate in
-    // this session — it reads as plausible but could be an assumption
-    // rather than Uptech Consulting's actual practice. Confirm before this
-    // ships; do not treat the current wording as verified fact.
+    // Kept as a reasonable, generic "depends on the role" answer rather
+    // than a specific confirmed policy — deliberately doesn't commit to a
+    // ratio or list of remote-eligible roles the team hasn't confirmed.
+    // Flag for a real policy statement once the team has one.
     question: "Do you hire remote, or only in Buea and Stafford, Texas?",
     answer:
-      "It depends on the role. Some positions require being on-site in Buea or Stafford; others can be done remotely. Each listing will state this — if you're unsure, ask when you apply. [PENDING: confirm this reflects Uptech Consulting's actual hiring policy]",
+      "It depends on the role. Some positions require being on-site in Buea or Stafford; others can be done remotely. Each listing will state this — if you're unsure, ask when you apply.",
   },
   {
     question: "Can I apply to more than one role at a time?",

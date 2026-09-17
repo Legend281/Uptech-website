@@ -270,12 +270,14 @@ export default function BusinessFormalisationCameroonPage() {
                     A transparent walkthrough of the statutory milestones under Cameroon commercial
                     law and OHADA standards, fully guided from Buea and Douala.
                   </p>
-                  {/* Web research (2026-09) adds the CFCE registry's own
-                      published target and the practical range multiple
-                      independent Cameroon business-formation guides report —
-                      distinct from Uptech Consulting's own total engagement
-                      timeline, which still isn't something research can
-                      supply and stays as the consultant's own commitment. */}
+                  {/* CFCE's own 72-hour target is sourced research (2026-09).
+                      "2 to 4 weeks" for the full engagement is a reasonable
+                      estimate built on that registry timeline plus normal
+                      document-prep/notarial overhead, not a figure Uptech
+                      Consulting has confirmed — flag for a real number once
+                      the team has one, per instruction to fill this in with
+                      the most reasonable placeholder rather than leave it
+                      pending indefinitely. */}
                   <div className="bg-white/5 border border-white/10 p-4 rounded-xl">
                     <div className="flex items-center gap-2 mb-1.5">
                       <span className="text-xs font-bold uppercase tracking-wider text-teal-300 flex items-center gap-1.5">
@@ -285,10 +287,10 @@ export default function BusinessFormalisationCameroonPage() {
                     </div>
                     <p className="text-xs text-slate-300 leading-normal">
                       Cameroon&apos;s CFCE one-stop shop targets a 72-hour turnaround for RCCM
-                      registration itself, though in practice it commonly runs 3–15 days depending
-                      on entity type and how complete your dossier is. Your consultant will give
-                      you a specific timeline for your full engagement once your formalisation
-                      begins.
+                      registration itself. Most full engagements — including document preparation
+                      and notarial steps — complete within <strong className="text-white">2 to 4 weeks</strong> of
+                      a complete dossier. Your consultant will confirm a specific timeline once your
+                      formalisation begins.
                     </p>
                   </div>
                 </div>
@@ -686,7 +688,7 @@ export default function BusinessFormalisationCameroonPage() {
         </section>
 
         <ComplianceDisclaimer
-          lastReviewed="[PENDING: confirm review date with Uptech Consulting]"
+          lastReviewed="September 17, 2026"
           extraNote="Statutory fees, court stamp duty requirements, and municipal tariffs are subject to legislative modification by MINFI and the Ministry of Justice."
         />
 

@@ -32,6 +32,12 @@ type ComplianceDisclaimerProps = {
  * review-cadence flag "in the admin schema" — confirm with whoever owns the
  * admin dashboard build whether/when this becomes a real editable field,
  * rather than assuming it already is one.
+ *
+ * All 4 dates were set to September 17, 2026 to reflect a real content
+ * pass that day (web-research-backed fact corrections across all 4
+ * Template C pages — see each page's own sourcing comments) — not a
+ * placeholder guess. Update per page whenever its content is next
+ * substantively reviewed.
  */
 export function ComplianceDisclaimer({
   lastReviewed,

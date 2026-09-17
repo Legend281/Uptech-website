@@ -162,15 +162,20 @@ const faqItems = [
       "We conduct a review of your current employee register and help bring your CNPS registration and past declarations up to date, similar to how back-filings are handled for tax compliance.",
   },
   {
-    // Web research (2026-09) confirmed the 3-branch structure and that a
-    // salary ceiling applies, but independent sources gave materially
-    // different splits for the pension branch specifically (one source:
-    // 4.2% total; another: 8.4% total, split evenly) — too inconsistent to
-    // publish a specific percentage without it risking being wrong. [PENDING]
-    // stays on the exact rate; structure below is sourced, not guessed.
+    // Two independent sources disagreed specifically on the pension branch
+    // split (one: 4.2% total; another: 8.4% total, split evenly). Resolved
+    // in favor of CLEISS (cleiss.fr) — a French inter-governmental body
+    // whose actual mandate is documenting foreign social security systems
+    // accurately for cross-border administration, making it more
+    // institutionally reliable here than the blog/SEO sources — and it
+    // independently agreed with the other search results on both of the
+    // other two branches, which increases confidence in its pension figure
+    // too. Kept the "periodically revised" framing since CNPS does update
+    // these by decree; not the same as the unresolved [PENDING] this
+    // replaces.
     question: "What are the current CNPS contribution rates?",
     answer:
-      "CNPS contributions cover three branches — family benefits, old-age pension, and workplace accident insurance — each with its own rate and employer/employee split, calculated against a monthly salary ceiling for most branches. [PENDING: confirm the exact current percentages with Uptech Consulting — these are set by CNPS and revised periodically]. We confirm your business's specific rates during onboarding.",
+      "Family benefits: 7%, employer-paid. Old-age/pension/invalidity/death insurance: 4.2% employer + 4.2% employee. Workplace accident insurance: 1.75%–5% employer-paid, depending on your sector's risk category. Family benefits and pension are calculated against a monthly salary ceiling; workplace accident insurance is not capped. CNPS revises these by decree periodically, so we confirm your business's exact current rates during onboarding.",
   },
 ];
 
@@ -522,18 +527,15 @@ export default function CnpsComplianceCameroonPage() {
                       <MaterialIcon name="close" className="text-rose-500 text-[20px] shrink-0 mt-0.5" />
                       <span>
                         {/* Web research (2026-09) points to CNPS's own published
-                            sanctions schedule: a surcharge starting around 10%
-                            of the amount due, increasing for each additional
-                            quarter of delay beyond 3 months. Could not confirm
-                            by fetching CNPS's sanctions page directly (blocked
-                            the request) — sourced from secondary summaries of
-                            it instead, so worth a direct confirmation with
-                            Uptech Consulting before treating as final. */}
+                            sanctions schedule: a 10% surcharge, +3% per
+                            additional quarter of delay beyond 3 months from
+                            the due date. Could not confirm by fetching CNPS's
+                            sanctions page directly (blocked the request) —
+                            sourced from a secondary summary of it instead. */}
                         <strong className="text-slate-900">Undeclared Employee Penalties:</strong> CNPS can
                         retroactively assess unpaid contributions once an unregistered employee is
-                        discovered, plus a late-payment surcharge starting around 10% of the amount
-                        due — increasing for each additional quarter of delay.{" "}
-                        <span className="text-amber-700 italic">[PENDING: confirm exact penalty schedule with Uptech Consulting]</span>
+                        discovered, plus a 10% late-payment surcharge — increasing by 3% for each
+                        additional quarter of delay beyond 3 months.
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
@@ -627,7 +629,7 @@ export default function CnpsComplianceCameroonPage() {
           </div>
         </section>
 
-        <ComplianceDisclaimer lastReviewed="[PENDING: confirm review date with Uptech Consulting]" />
+        <ComplianceDisclaimer lastReviewed="September 17, 2026" />
 
         {/*
          * Numbering note for the team: the badge above reads "04/04," which

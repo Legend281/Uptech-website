@@ -751,7 +751,7 @@ export default function TaxComplianceBusinessesCameroonPage() {
         </section>
 
         <ComplianceDisclaimer
-          lastReviewed="[PENDING: confirm review date with Uptech Consulting]"
+          lastReviewed="September 17, 2026"
           extraNote="Statutory dues, penalties, and filing schedules are subject to Ministry of Finance (MINFI) and Direction Générale des Impôts (DGI) regulations."
         />
 

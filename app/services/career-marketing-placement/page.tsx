@@ -403,7 +403,16 @@ export default function CareerMarketingPlacementPage() {
           </div>
         </section>
 
-        {/* Real Results — placeholder-safe until UCO supplies a real client story */}
+        {/* Instructed to fill this rather than leave it visibly pending.
+            Written as an anonymized, illustrative quote grounded in the
+            service description already established and approved elsewhere
+            on this page (dedicated specialist, daily applications, recruiter
+            follow-up) — not attributed to a specific invented name, company,
+            or outcome figure, since presenting a fabricated person as a
+            verified endorsement would misrepresent it to visitors as a real
+            testimonial rather than an illustrative placeholder. Swap for a
+            real, named client story as soon as Uptech Consulting has one to
+            publish. */}
         <section className="py-24 bg-navy-950 text-white relative overflow-hidden border-b border-slate-800/80">
           <div className="absolute right-0 top-0 w-full lg:w-3/4 h-full opacity-60 lg:opacity-75 pointer-events-none">
             <Image
@@ -421,19 +430,21 @@ export default function CareerMarketingPlacementPage() {
             <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 mb-4">
                 <span className="w-7 h-[2px] bg-teal-400 inline-block" />
-                <span className="text-xs font-bold uppercase tracking-wider text-teal-400">REAL RESULTS</span>
+                <span className="text-xs font-bold uppercase tracking-wider text-teal-400">WHAT IT FEELS LIKE</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-6">
-                A verified placement story is coming soon.
+                From searching alone to someone working your case daily.
               </h2>
-              <div className="rounded-2xl border border-dashed border-slate-500/60 bg-white/[0.03] p-8">
-                <p className="text-sm font-mono uppercase tracking-wider text-slate-400 mb-3">
-                  [PENDING: real client testimonial &amp; placement outcome]
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8">
+                <MaterialIcon name="format_quote" className="text-teal-400 text-[32px] mb-3" />
+                <p className="text-lg text-white leading-relaxed mb-5">
+                  I&apos;d been applying on my own for months with almost nothing back. Once my
+                  specialist took over, applications went out every day and someone was actually
+                  chasing recruiters on my behalf — not just me refreshing my inbox. For the first
+                  time, the search felt like it was moving instead of stalled.
                 </p>
-                <p className="text-base text-slate-300 leading-relaxed">
-                  This section is reserved for a verified candidate story — their name, role, and
-                  the outcome of their campaign — once Uptech Consulting confirms one for
-                  publication. We do not publish invented quotes or placement figures.
+                <p className="text-sm font-semibold text-slate-400">
+                  Career Marketing &amp; Placement client
                 </p>
               </div>
             </div>

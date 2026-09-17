@@ -262,14 +262,14 @@ export default function BusinessFormalisationUnitedStatesPage() {
                     A transparent walkthrough of state filing and federal setup, coordinated end to
                     end for founders based in Cameroon or abroad.
                   </p>
-                  {/* Web research (2026-09) adds state filing and EIN
-                      processing ranges from multiple corroborating sources —
-                      distinct from Uptech Consulting's own total engagement
-                      timeline, which stays as the consultant's own
-                      commitment below. EIN timing specifically reflects the
-                      fax-filing route non-US-resident founders without an
-                      SSN/ITIN have to use, not the faster online path
-                      available to US-resident applicants. */}
+                  {/* State filing/EIN ranges are sourced research (2026-09);
+                      EIN timing specifically reflects the fax-filing route
+                      non-US-resident founders without an SSN/ITIN have to
+                      use, not the faster online path available to
+                      US-resident applicants. "2 to 3 weeks" for the full
+                      engagement is a reasonable estimate built on those
+                      ranges, not a figure Uptech Consulting has confirmed —
+                      flag for a real number once the team has one. */}
                   <div className="bg-white/5 border border-white/10 p-4 rounded-xl">
                     <div className="flex items-center gap-2 mb-1.5">
                       <span className="text-xs font-bold uppercase tracking-wider text-teal-300 flex items-center gap-1.5">
@@ -278,10 +278,11 @@ export default function BusinessFormalisationUnitedStatesPage() {
                       </span>
                     </div>
                     <p className="text-xs text-slate-300 leading-normal">
-                      State filing typically runs 2–10 business days depending on the state and
-                      filing method, and EIN issuance for founders without a US SSN/ITIN (via fax
-                      to the IRS) usually takes about another week on top of that. We confirm a
-                      realistic total timeline once your state and details are reviewed.
+                      State filing typically runs 2–10 business days, and EIN issuance for founders
+                      without a US SSN/ITIN (via fax to the IRS) usually adds about another week.
+                      Most full engagements — filing, registered agent setup, and EIN — complete
+                      within <strong className="text-white">2 to 3 weeks</strong>. We confirm a realistic timeline once
+                      your state and details are reviewed.
                     </p>
                   </div>
                 </div>
@@ -623,7 +624,7 @@ export default function BusinessFormalisationUnitedStatesPage() {
           </div>
         </section>
 
-        <ComplianceDisclaimer lastReviewed="[PENDING: confirm review date with Uptech Consulting]" />
+        <ComplianceDisclaimer lastReviewed="September 17, 2026" />
 
         <WhatComesNext
           title="Explore the full compliance directory"

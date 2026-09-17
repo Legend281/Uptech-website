@@ -45,56 +45,6 @@ function SpineNode({ tone = "light" }: { tone?: "light" | "dark" }) {
   );
 }
 
-/*
- * The company's four official pillars, in full. The homepage lists only the
- * two that are live, because it is a marketing surface; this page is the
- * organisational record, so the paused pillars are named here rather than
- * quietly omitted.
- *
- * A row without an `href` is not a link and gets no hover affordance. Only the
- * exceptions carry a status line — a working link is its own proof that a
- * service is active, so labelling every row "Active / Active / Paused /
- * Paused / Paused" would be decoration rather than information.
- *
- * IT Consulting & Outsourcing moved from the live group to the paused group
- * when leadership paused that pillar sitewide (soft-hidden, not deleted — see
- * components/Header.tsx). It sits first among the paused rows since it was
- * previously live, not because it outranks the other two.
- */
-const pillars: Array<{
-  name: string;
-  href?: string;
-  kicker?: string;
-  body?: string;
-  status?: string;
-}> = [
-  {
-    name: "Business Formalisation & Compliance",
-    href: "/services/business-formalisation-compliance",
-    body: "Registration, corporate structuring and tax standing, in Cameroon and in the United States.",
-  },
-  {
-    // No kicker: broadened per leadership decision to general career
-    // placement, no longer positioned as nested under IT Consulting.
-    name: "Career Marketing & Placement",
-    href: "/services/career-marketing-placement",
-    body: "A dedicated worker on your account: profile positioning, daily applications, and recruiter follow-up until you are placed.",
-  },
-  // No description on the paused pillars. Describing the scope of something we
-  // are not currently selling would be inventing it.
-  {
-    name: "IT Consulting & Outsourcing",
-    status: "Paused — not currently offered",
-  },
-  {
-    name: "Third-Party Recruitment & BPO",
-    status: "In active development",
-  },
-  {
-    name: "General Contracts and Supplies",
-    status: "Not currently offered as a standalone service",
-  },
-];
 
 /*
  * Empty until the client supplies real names, roles and portraits. While it is
@@ -271,7 +221,7 @@ export default function WhoWeArePage() {
               <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-16">
                 <div className="lg:col-span-5">
                   <h2 className="text-[30px] font-extrabold leading-[38px] tracking-[-0.025em] text-navy-950 sm:text-[38px] sm:leading-[46px] lg:text-[42px] lg:leading-[50px] lg:tracking-[-0.03em]">
-                    Everything we do, including what we have paused
+                    What we do
                   </h2>
                 </div>
                 <div className="lg:col-span-7">
@@ -293,78 +243,6 @@ export default function WhoWeArePage() {
                   </p>
                 </div>
               </div>
-
-              {/* A register, not a card grid: the useful distinction here is
-                  availability, so the left rail carries it. Solid gradient rail
-                  on a lifted white row = live; dashed and recessed into the page
-                  ground = named but not currently sold. */}
-              <Reveal effect="stagger" className="mt-12 space-y-3 lg:mt-14">
-                {pillars.map((pillar) =>
-                  pillar.href ? (
-                    <Link
-                      key={pillar.name}
-                      href={pillar.href}
-                      className="group flex gap-5 rounded-lg border border-slate-200 bg-white p-6 shadow-[0_1px_3px_0_rgba(11,25,44,0.04),0_1px_2px_-1px_rgba(11,25,44,0.03)] transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_10px_25px_-5px_rgba(11,25,44,0.10),0_8px_10px_-6px_rgba(11,25,44,0.04)] sm:gap-6 sm:p-7"
-                    >
-                      <span
-                        aria-hidden="true"
-                        className="w-[3px] flex-shrink-0 rounded-full bg-gradient-to-b from-teal-400 to-sky-500"
-                      />
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-start justify-between gap-4">
-                          <h3 className="text-[19px] font-bold leading-[26px] tracking-[-0.01em] text-navy-950 transition-colors group-hover:text-blue-accent sm:text-[21px] sm:leading-[28px]">
-                            {pillar.name}
-                          </h3>
-                          <ArrowRight
-                            className="mt-1 h-4 w-4 flex-shrink-0 text-slate-400 transition-all duration-300 group-hover:translate-x-1 group-hover:text-blue-accent"
-                            strokeWidth={2}
-                          />
-                        </div>
-                        {pillar.kicker ? (
-                          <p className="mt-1.5 text-[13px] leading-[18px] text-teal-700">
-                            {pillar.kicker}
-                          </p>
-                        ) : null}
-                        <p className="mt-2.5 max-w-2xl text-[15px] leading-[24px] text-slate-600">
-                          {pillar.body}
-                        </p>
-                      </div>
-                    </Link>
-                  ) : (
-                    <div
-                      key={pillar.name}
-                      className="flex gap-5 rounded-lg border border-dashed border-slate-300 bg-slate-100/50 p-6 sm:gap-6 sm:p-7"
-                    >
-                      <span
-                        aria-hidden="true"
-                        className="h-10 w-0 flex-shrink-0 self-center border-l-2 border-dashed border-slate-400"
-                      />
-                      <div className="flex flex-1 flex-col gap-1.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8">
-                        <h3 className="text-[19px] font-bold leading-[26px] tracking-[-0.01em] text-slate-500 sm:text-[21px] sm:leading-[28px]">
-                          {pillar.name}
-                        </h3>
-                        <p className="text-[14px] leading-[20px] text-slate-500 sm:flex-shrink-0 sm:text-right">
-                          {pillar.status}
-                        </p>
-                      </div>
-                    </div>
-                  ),
-                )}
-              </Reveal>
-
-              {/* The jurisdictions story is told properly on the homepage, with
-                  live office clocks and the regulatory bodies named. Pointed to
-                  rather than rebuilt here. */}
-              <p className="mt-7 text-[14px] leading-[20px] text-slate-500">
-                Both entities run through one structure —{" "}
-                <Link
-                  href="/#two-jurisdictions"
-                  className="font-semibold text-blue-accent underline-offset-4 transition-colors hover:underline"
-                >
-                  see how Cameroon and the United States operate together
-                </Link>
-                .
-              </p>
             </Reveal>
           </div>
         </section>

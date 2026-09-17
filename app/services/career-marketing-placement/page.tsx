@@ -187,7 +187,7 @@ export default function CareerMarketingPlacementPage() {
       <Breadcrumb
         items={[
           { label: "Home", href: "/" },
-          { label: "Services", href: "/#services" },
+          { label: "Services", href: "/services" },
           { label: "Career Marketing & Placement" },
         ]}
         tag="INDIVIDUAL CAREER ADVANCEMENT"

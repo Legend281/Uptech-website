@@ -41,24 +41,60 @@ const trustStripItems = [
 ];
 
 /*
- * Two practices only — IT Consulting & Outsourcing is paused by leadership
- * decision and soft-hidden sitewide (unlinked, not deleted; the page and its
- * code still exist at /services/it-consulting-outsourcing for when it's
- * unpaused). Do not add it back to this array without that decision being
- * reversed.
+ * Leadership decision: each real, live service is presented individually at
+ * equal visual weight — not bundled with 4 others under one "Business
+ * Formalisation & Compliance" umbrella card (the previous structure here).
+ * This is the same flattening applied to the primary nav — see the comment
+ * on the `services` array in components/Header.tsx for the full reasoning.
+ *
+ * 5 cards total, matching the 5 real, live, unpaused services in CLAUDE.md's
+ * own inventory (Section 5). IT Consulting & Outsourcing, Recruitment & BPO,
+ * and General Contracts & Supplies are paused/not scoped and stay out of
+ * this grid — do not add any of them back without that decision reversing.
+ *
+ * The umbrella page these 4 formalisation/compliance services used to be
+ * grouped under still exists at /services/business-formalisation-compliance
+ * — not deleted, just repositioned as an optional guided finder (linked
+ * below the grid, not listed here as a 6th, unequal card).
  */
-const practices: Array<{
+const services: Array<{
+  flag?: string;
   title: string;
   description: string;
   href: string;
   image: ImageKey;
 }> = [
   {
-    title: "Business Formalisation & Compliance",
+    flag: "🇨🇲",
+    title: "Business Formalisation — Cameroon",
     description:
-      "Cross-border entity formation and statutory compliance across Cameroon (OHADA) and US jurisdictions, guided to the exact pathway for your situation.",
-    href: "/services/business-formalisation-compliance",
+      "Full incorporation under OHADA standards — Articles of Association, RCCM registration, and Taxpayer ID (NIU).",
+    href: "/services/business-formalisation-compliance/cameroon",
     image: "cross-border-boardroom",
+  },
+  {
+    flag: "🇺🇸",
+    title: "Business Formalisation — United States",
+    description:
+      "LLC and C-Corp formation for Cameroon-based businesses and diaspora founders — state filing, registered agent, and IRS EIN.",
+    href: "/services/business-formalisation-compliance/united-states",
+    image: "it-advisory",
+  },
+  {
+    flag: "🇨🇲",
+    title: "Tax Compliance — Cameroon",
+    description:
+      "Monthly DGI filings and Corporate Income Tax for businesses, personal IRPP declarations for individuals — one tax desk, either way.",
+    href: "/services/business-formalisation-compliance/tax-compliance-businesses-cameroon",
+    image: "compliance-advisory",
+  },
+  {
+    flag: "🇨🇲",
+    title: "CNPS Compliance — Cameroon",
+    description:
+      "Employer registration, employee declarations, payroll withholding, and CNPS Clearance Certificates.",
+    href: "/services/business-formalisation-compliance/cnps-compliance-cameroon",
+    image: "ops-center",
   },
   {
     title: "Career Marketing & Placement",
@@ -66,39 +102,6 @@ const practices: Array<{
       "A dedicated specialist manages your CV, LinkedIn, daily applications, and recruiter follow-up until you're placed.",
     href: "/services/career-marketing-placement",
     image: "career-review",
-  },
-];
-
-/*
- * The 4 real Business Formalisation & Compliance sub-pages, kept visually
- * subordinate to (and nested under) the practice card above rather than
- * flattened into one undifferentiated grid — a first-time visitor seeing
- * "Business Formalisation & Compliance" and "Business Formalisation —
- * Cameroon" as equal, unrelated cards has no way to tell one is the parent
- * of the other. Tax Compliance for Businesses and for Individuals were
- * unified into one page/card per leadership decision — the individuals-only
- * URL now redirects here.
- */
-const formalisationPages: Array<{ flag: string; title: string; href: string }> = [
-  {
-    flag: "🇨🇲",
-    title: "Business Formalisation — Cameroon",
-    href: "/services/business-formalisation-compliance/cameroon",
-  },
-  {
-    flag: "🇺🇸",
-    title: "Business Formalisation — United States",
-    href: "/services/business-formalisation-compliance/united-states",
-  },
-  {
-    flag: "🇨🇲",
-    title: "Tax Compliance — Cameroon",
-    href: "/services/business-formalisation-compliance/tax-compliance-businesses-cameroon",
-  },
-  {
-    flag: "🇨🇲",
-    title: "CNPS Compliance — Cameroon",
-    href: "/services/business-formalisation-compliance/cnps-compliance-cameroon",
   },
 ];
 
@@ -136,12 +139,12 @@ export default function ServicesHubPage() {
                 <span className="w-7 h-[2px] bg-teal-400 inline-block" />
               </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] mb-6">
-                Two practices, <span className="gradient-teal-blue-text">one standard.</span>
+                Five services, <span className="gradient-teal-blue-text">one accountable standard.</span>
               </h1>
               <p className="mx-auto text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
-                At Uptech Consulting, our clients come first. We help individuals build their
-                careers and help businesses formalise and stay compliant — bridging the gap
-                between strategy and execution across Cameroon and the United States.
+                No bundling, no guesswork. Explore exactly the service you need — business
+                formalisation, tax, social security, or career placement — across Cameroon and the
+                United States.
               </p>
             </div>
           </div>
@@ -149,38 +152,45 @@ export default function ServicesHubPage() {
 
         <TrustStrip items={trustStripItems} />
 
-        {/* Practices */}
+        {/* Services — 5 individual, equally-weighted cards. See the comment
+            on the `services` array above for why this replaced the old
+            "2 practices + 1 subordinate under one" structure. */}
         <section className="pt-24 pb-20 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-2xl mb-12">
               <div className="inline-flex items-center gap-2 mb-3">
                 <span className="w-7 h-[2px] bg-teal-500 inline-block" />
                 <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
-                  OUR TWO PRACTICES
+                  COMPLETE SERVICE DIRECTORY
                 </span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight leading-tight">
-                Everything we offer, run by two focused teams.
+                Five services. Pick exactly what you need.
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-14">
-              {practices.map((card) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-14">
+              {services.map((card) => (
                 <Link key={card.href} href={card.href} className="group block">
                   <div className="relative aspect-[4/3] rounded-xl overflow-hidden">
                     <Image
                       src={images[card.image].src}
                       alt={images[card.image].alt}
                       fill
-                      sizes="(min-width: 640px) 45vw, 90vw"
+                      sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
                       placeholder="blur"
                       blurDataURL={images[card.image].blurDataURL}
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>
                   <div className="relative -mt-10 mx-4 bg-white rounded-xl p-6 shadow-xl group-hover:shadow-2xl transition-shadow">
-                    <h3 className="text-lg font-bold text-navy-950 leading-snug mb-2">
-                      {card.title}
+                    <h3 className="text-lg font-bold text-navy-950 leading-snug mb-2 flex items-start gap-2">
+                      {card.flag && (
+                        <span className="text-base leading-none shrink-0 mt-0.5" aria-hidden="true">
+                          {card.flag}
+                        </span>
+                      )}
+                      <span>{card.title}</span>
                     </h3>
                     <p className="text-sm text-slate-600 leading-relaxed mb-4">
                       {card.description}
@@ -194,34 +204,22 @@ export default function ServicesHubPage() {
               ))}
             </div>
 
-            {/* Nested under Business Formalisation & Compliance — same
-                relationship the hub page itself shows in its own "Four
-                Pathways" grid, kept visually subordinate here rather than
-                repeated at full weight. */}
-            <div className="mt-6 rounded-2xl border border-slate-200/90 bg-slate-50 p-6 sm:p-8">
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-5">
-                Business Formalisation &amp; Compliance includes:
+            {/* Secondary, clearly-subordinate pointer to the guided finder
+                for the 4 Business Formalisation/Compliance pathways above —
+                not a 6th card, so it never reads as an equal-weight service
+                of its own. */}
+            <div className="mt-4 flex items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 px-6 py-4 text-center">
+              <MaterialIcon name="explore" className="text-[18px] text-slate-400 shrink-0" />
+              <p className="text-sm text-slate-600">
+                Not sure which Business Formalisation or Compliance service fits your situation?{" "}
+                <Link
+                  href="/services/business-formalisation-compliance"
+                  className="font-semibold text-teal-600 hover:text-teal-700 underline"
+                >
+                  Use our guided finder
+                </Link>
+                .
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                {formalisationPages.map((page) => (
-                  <Link
-                    key={page.href}
-                    href={page.href}
-                    className="flex items-center gap-3 bg-white rounded-xl p-4 border border-slate-200/80 hover:border-teal-500/40 hover:shadow-sm transition-all group"
-                  >
-                    <span className="text-lg leading-none shrink-0" aria-hidden="true">
-                      {page.flag}
-                    </span>
-                    <span className="text-xs font-semibold text-navy-950 group-hover:text-teal-600 transition-colors leading-snug">
-                      {page.title}
-                    </span>
-                    <MaterialIcon
-                      name="arrow_forward"
-                      className="text-[14px] ml-auto shrink-0 text-slate-400 group-hover:text-teal-600 group-hover:translate-x-0.5 transition-all"
-                    />
-                  </Link>
-                ))}
-              </div>
             </div>
           </div>
         </section>

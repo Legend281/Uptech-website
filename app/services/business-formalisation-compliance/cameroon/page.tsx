@@ -184,11 +184,11 @@ const faqItems = [
 export default function BusinessFormalisationCameroonPage() {
   return (
     <>
-      <Header activeService="business-formalisation" />
+      <Header activeService="business-formalisation-cameroon" />
       <Breadcrumb
         items={[
           { label: "Home", href: "/" },
-          { label: "Services", href: "/#services" },
+          { label: "Services", href: "/services" },
           { label: "Business Formalisation & Compliance", href: "/services/business-formalisation-compliance" },
           { label: "Cameroon" },
         ]}

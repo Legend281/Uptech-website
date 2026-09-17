@@ -139,11 +139,14 @@ const relatedServices: Array<{
 export default function BusinessFormalisationCompliancePage() {
   return (
     <>
-      <Header activeService="business-formalisation" />
+      {/* No activeService: this page is no longer one of the 5 individual
+          nav destinations (see components/Header.tsx) — it's an optional
+          guided finder pointed to from the dropdown, not a primary one. */}
+      <Header />
       <Breadcrumb
         items={[
           { label: "Home", href: "/" },
-          { label: "Services", href: "/#services" },
+          { label: "Services", href: "/services" },
           { label: "Business Formalisation & Compliance" },
         ]}
         tag="BILATERAL LEGAL & REGULATORY COMPLIANCE"

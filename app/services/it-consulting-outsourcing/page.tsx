@@ -224,7 +224,7 @@ export default function ItConsultingOutsourcingPage() {
       <Breadcrumb
         items={[
           { label: "Home", href: "/" },
-          { label: "Services", href: "/#services" },
+          { label: "Services", href: "/services" },
           { label: "IT Consulting & Outsourcing" },
         ]}
         tag="MANAGED IT & INFRASTRUCTURE"

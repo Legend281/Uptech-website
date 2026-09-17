@@ -204,8 +204,15 @@ export default function CareersPage() {
               We&apos;re a cross-border team working across IT, compliance, recruitment, and career
               services — in Buea and in Stafford, Texas.
             </p>
+            {/* Was "a job with one of our clients" — inaccurate, since
+                Career Marketing & Placement doesn't place people with a
+                client roster (verified against that page's own copy: it's
+                general job-search help — daily applications, LinkedIn,
+                recruiter follow-up — for any employer, not just Uptech's).
+                Reworded so it's unambiguous this page means working AT
+                Uptech Consulting itself, not applying to a Uptech client. */}
             <p className="text-sm text-slate-400">
-              Looking for a job with one of our clients instead?{" "}
+              Not looking to join Uptech Consulting itself, but want help landing a job elsewhere?{" "}
               <Link
                 href="/services/career-marketing-placement"
                 className="text-teal-400 underline hover:text-white font-semibold"

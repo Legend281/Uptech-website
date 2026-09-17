@@ -1,11 +1,26 @@
 import Image from "next/image";
 import Link from "next/link";
 
-// IT Consulting & Outsourcing is paused by leadership decision — soft-hidden
-// sitewide, not deleted (see components/Header.tsx). Do not relist it here
-// without that decision being reversed.
+/*
+ * The 5 real, live services listed individually at equal weight — not
+ * bundled as "Business Formalisation & Compliance" (one link) + "Career
+ * Marketing & Placement" (another), matching the flattening applied to the
+ * primary nav and the /services directory (see components/Header.tsx and
+ * app/services/page.tsx). The umbrella page these 4 formalisation/compliance
+ * links used to collapse into still exists at
+ * /services/business-formalisation-compliance as an optional guided finder
+ * — not linked from the footer directly, to avoid re-introducing it as an
+ * unequal 6th entry in this list.
+ *
+ * IT Consulting & Outsourcing is paused by leadership decision — soft-hidden
+ * sitewide, not deleted (see components/Header.tsx). Do not relist it here
+ * without that decision being reversed.
+ */
 const serviceLinks = [
-  { label: "Business Formalisation & Compliance", href: "/services/business-formalisation-compliance" },
+  { label: "Business Formalisation — Cameroon", href: "/services/business-formalisation-compliance/cameroon" },
+  { label: "Business Formalisation — United States", href: "/services/business-formalisation-compliance/united-states" },
+  { label: "Tax Compliance — Cameroon", href: "/services/business-formalisation-compliance/tax-compliance-businesses-cameroon" },
+  { label: "CNPS Compliance — Cameroon", href: "/services/business-formalisation-compliance/cnps-compliance-cameroon" },
   { label: "Career Marketing & Placement", href: "/services/career-marketing-placement" },
 ];
 

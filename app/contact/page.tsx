@@ -86,11 +86,19 @@ const faqItems = [
   },
 ];
 
-// IT Consulting & Outsourcing removed — paused by leadership decision,
-// soft-hidden sitewide. The page and its code still exist; only this
-// cross-link is gone.
-const otherPillars = [
-  { icon: "gavel", title: "Business Formalisation & Compliance", href: "/services/business-formalisation-compliance" },
+/*
+ * The 5 real, live services listed individually — not bundled as 2 broad
+ * "pillars" (the previous structure here). Same flattening applied to the
+ * primary nav, footer, homepage and /services directory — see the comment
+ * on the `services` array in components/Header.tsx. IT Consulting &
+ * Outsourcing stays excluded — paused by leadership decision, soft-hidden
+ * sitewide. The page and its code still exist; only this cross-link is gone.
+ */
+const otherServices = [
+  { icon: "gavel", title: "Business Formalisation — Cameroon", href: "/services/business-formalisation-compliance/cameroon" },
+  { icon: "public", title: "Business Formalisation — United States", href: "/services/business-formalisation-compliance/united-states" },
+  { icon: "receipt_long", title: "Tax Compliance — Cameroon", href: "/services/business-formalisation-compliance/tax-compliance-businesses-cameroon" },
+  { icon: "diversity_3", title: "CNPS Compliance — Cameroon", href: "/services/business-formalisation-compliance/cnps-compliance-cameroon" },
   { icon: "trending_up", title: "Career Marketing & Placement", href: "/services/career-marketing-placement" },
 ];
 
@@ -205,21 +213,21 @@ export default function ContactPage() {
                 Want to explore first?
               </h2>
               <p className="text-sm text-slate-600 mt-2">
-                Browse what each pillar actually includes before reaching out.
+                Browse what each service actually includes before reaching out.
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto">
-              {otherPillars.map((pillar) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-4xl mx-auto">
+              {otherServices.map((service) => (
                 <Link
-                  key={pillar.href}
-                  href={pillar.href}
+                  key={service.href}
+                  href={service.href}
                   className="flex items-center gap-3 bg-white rounded-xl p-5 border border-slate-200/80 hover:border-teal-500/40 hover:shadow-md transition-all group"
                 >
                   <div className="w-10 h-10 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
-                    <MaterialIcon name={pillar.icon} className="text-[20px]" />
+                    <MaterialIcon name={service.icon} className="text-[20px]" />
                   </div>
                   <span className="text-sm font-bold text-navy-950 group-hover:text-teal-600 transition-colors">
-                    {pillar.title}
+                    {service.title}
                   </span>
                 </Link>
               ))}

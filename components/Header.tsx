@@ -6,7 +6,10 @@ import { useState } from "react";
 
 export type ServiceKey =
   | "it-consulting"
-  | "business-formalisation"
+  | "business-formalisation-cameroon"
+  | "business-formalisation-us"
+  | "tax-compliance"
+  | "cnps-compliance"
   | "career-marketing";
 
 type HeaderProps = {
@@ -17,10 +20,17 @@ type HeaderProps = {
 };
 
 /*
- * IT Consulting & Outsourcing is paused by leadership decision — soft-hidden
- * sitewide (unlinked, not deleted; the page and its code still exist at
- * /services/it-consulting-outsourcing for when it's unpaused). Do not add it
- * back to this array without that decision being reversed.
+ * Flattened to 5 individual top-level services (leadership decision): each
+ * real, live service gets its own nav entry at equal weight rather than 4 of
+ * them nesting under one "Business Formalisation & Compliance" nav item as a
+ * subItems flyout. The umbrella page that used to be that flyout's parent
+ * still exists at /services/business-formalisation-compliance — it's not
+ * deleted, just repositioned as an optional guided finder for whichever of
+ * the 4 Cameroon/US pathways fits a visitor's situation (linked below, not
+ * listed here as a 6th item). IT Consulting & Outsourcing stays out of this
+ * array — paused by leadership decision, soft-hidden sitewide (unlinked, not
+ * deleted; the page and its code still exist at
+ * /services/it-consulting-outsourcing for when it's unpaused).
  */
 const services: Array<{
   key: ServiceKey;
@@ -28,27 +38,41 @@ const services: Array<{
   title: string;
   description: string;
   href: string;
-  subItems?: Array<{ title: string; href: string }>;
 }> = [
   {
-    key: "business-formalisation",
+    key: "business-formalisation-cameroon",
     number: "01",
-    title: "Business Formalisation & Compliance",
-    description: "Licensing, corporate structuring & tax standing",
-    href: "/services/business-formalisation-compliance",
+    title: "Business Formalisation — Cameroon",
+    description: "OHADA incorporation, RCCM & taxpayer ID",
+    href: "/services/business-formalisation-compliance/cameroon",
+  },
+  {
+    key: "business-formalisation-us",
+    number: "02",
+    title: "Business Formalisation — United States",
+    description: "LLC/C-Corp formation, registered agent & EIN",
+    href: "/services/business-formalisation-compliance/united-states",
+  },
+  {
+    key: "tax-compliance",
+    number: "03",
+    title: "Tax Compliance — Cameroon",
     // Tax Compliance for Businesses and for Individuals were merged into one
     // unified page (leadership decision) — the individuals URL now redirects
     // to it rather than appearing here as a second nav entry.
-    subItems: [
-      { title: "Business Formalisation — Cameroon", href: "/services/business-formalisation-compliance/cameroon" },
-      { title: "Business Formalisation — United States", href: "/services/business-formalisation-compliance/united-states" },
-      { title: "Tax Compliance — Cameroon", href: "/services/business-formalisation-compliance/tax-compliance-businesses-cameroon" },
-      { title: "CNPS Compliance — Cameroon", href: "/services/business-formalisation-compliance/cnps-compliance-cameroon" },
-    ],
+    description: "DGI filings, corporate tax & personal IRPP",
+    href: "/services/business-formalisation-compliance/tax-compliance-businesses-cameroon",
+  },
+  {
+    key: "cnps-compliance",
+    number: "04",
+    title: "CNPS Compliance — Cameroon",
+    description: "Employer registration & social security filings",
+    href: "/services/business-formalisation-compliance/cnps-compliance-cameroon",
   },
   {
     key: "career-marketing",
-    number: "02",
+    number: "05",
     title: "Career Marketing & Placement",
     description: "Executive positioning & international placement",
     href: "/services/career-marketing-placement",
@@ -57,7 +81,10 @@ const services: Array<{
 
 const contactServiceParam: Record<ServiceKey, string> = {
   "it-consulting": "it-consulting",
-  "business-formalisation": "business-formalisation",
+  "business-formalisation-cameroon": "business-formalisation-cameroon",
+  "business-formalisation-us": "business-formalisation-us",
+  "tax-compliance": "tax-compliance-businesses",
+  "cnps-compliance": "cnps-compliance",
   "career-marketing": "career-marketing",
 };
 
@@ -167,57 +194,58 @@ export function Header({
                 {services.map((service) => {
                   const isActive = service.key === activeService;
                   return (
-                    <div key={service.key}>
-                      <Link
-                        href={service.href}
-                        className={`flex items-start gap-3 p-2.5 rounded-lg transition-colors group/item ${
+                    <Link
+                      key={service.key}
+                      href={service.href}
+                      className={`flex items-start gap-3 p-2.5 rounded-lg transition-colors group/item ${
+                        isActive
+                          ? "bg-white/[0.06] border border-teal-500/30"
+                          : "hover:bg-white/5"
+                      }`}
+                    >
+                      <span
+                        className={`text-xs font-mono font-bold mt-0.5 px-1.5 py-0.5 rounded ${
                           isActive
-                            ? "bg-white/[0.06] border border-teal-500/30"
-                            : "hover:bg-white/5"
+                            ? "text-teal-400 bg-teal-500/20"
+                            : "text-teal-400 bg-teal-500/10"
                         }`}
                       >
+                        {service.number}
+                      </span>
+                      <div>
                         <span
-                          className={`text-xs font-mono font-bold mt-0.5 px-1.5 py-0.5 rounded ${
+                          className={`text-sm block transition-colors ${
                             isActive
-                              ? "text-teal-400 bg-teal-500/20"
-                              : "text-teal-400 bg-teal-500/10"
+                              ? "font-bold text-teal-300"
+                              : "font-semibold text-white group-hover/item:text-teal-400"
                           }`}
                         >
-                          {service.number}
+                          {service.title}
                         </span>
-                        <div>
-                          <span
-                            className={`text-sm block transition-colors ${
-                              isActive
-                                ? "font-bold text-teal-300"
-                                : "font-semibold text-white group-hover/item:text-teal-400"
-                            }`}
-                          >
-                            {service.title}
-                          </span>
-                          <span className="text-xs text-slate-400 leading-snug">
-                            {service.description}
-                          </span>
-                        </div>
-                      </Link>
-                      {service.subItems && (
-                        <div className="ml-9 mt-0.5 mb-1 space-y-0.5 border-l border-slate-800 pl-3">
-                          {service.subItems.map((sub) => (
-                            <Link
-                              key={sub.href}
-                              href={sub.href}
-                              className="block px-2 py-1.5 rounded-md text-xs text-slate-400 hover:text-teal-400 hover:bg-white/5 transition-colors"
-                            >
-                              {sub.title}
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+                        <span className="text-xs text-slate-400 leading-snug">
+                          {service.description}
+                        </span>
+                      </div>
+                    </Link>
                   );
                 })}
               </div>
-              <div className="mt-2 pt-2 border-t border-slate-800">
+              <div className="mt-2 pt-2 border-t border-slate-800 space-y-1">
+                {/* The 4 Business Formalisation & Compliance pathways above
+                    are now individually listed, at equal weight, rather than
+                    nested under one umbrella entry — this points to the
+                    guided finder for whoever isn't sure which of those 4
+                    fits their situation, without re-introducing a 6th,
+                    unequal "grouping" item into the list itself. */}
+                <Link
+                  href="/services/business-formalisation-compliance"
+                  className="flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-teal-400 hover:bg-white/5 transition-colors"
+                >
+                  <span>Not sure which one? Use the guided finder</span>
+                  <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </Link>
                 <Link
                   href="/services"
                   className="flex items-center justify-between px-2.5 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-teal-400 hover:bg-white/5 transition-colors"
@@ -334,34 +362,28 @@ export function Header({
             </p>
             <div className="space-y-1">
               {services.map((service) => (
-                <div key={service.key}>
-                  <Link
-                    href={service.href}
-                    onClick={() => setMobileOpen(false)}
-                    className={`block px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
-                      service.key === activeService
-                        ? "text-teal-300 bg-white/[0.06] border border-teal-500/30"
-                        : "text-white hover:bg-white/5"
-                    }`}
-                  >
-                    {service.title}
-                  </Link>
-                  {service.subItems && (
-                    <div className="ml-4 mt-0.5 mb-1 space-y-0.5 border-l border-slate-800 pl-3">
-                      {service.subItems.map((sub) => (
-                        <Link
-                          key={sub.href}
-                          href={sub.href}
-                          onClick={() => setMobileOpen(false)}
-                          className="block px-2.5 py-2 rounded-md text-xs font-medium text-slate-400 hover:text-teal-400 hover:bg-white/5 transition-colors"
-                        >
-                          {sub.title}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <Link
+                  key={service.key}
+                  href={service.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`block px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
+                    service.key === activeService
+                      ? "text-teal-300 bg-white/[0.06] border border-teal-500/30"
+                      : "text-white hover:bg-white/5"
+                  }`}
+                >
+                  {service.title}
+                </Link>
               ))}
+              {/* Same guided-finder pointer as the desktop dropdown — see
+                  the comment there for why this isn't a 6th list item. */}
+              <Link
+                href="/services/business-formalisation-compliance"
+                onClick={() => setMobileOpen(false)}
+                className="block px-3 py-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:bg-white/5"
+              >
+                Not sure which one? Use the guided finder
+              </Link>
               <Link
                 href="/services"
                 onClick={() => setMobileOpen(false)}

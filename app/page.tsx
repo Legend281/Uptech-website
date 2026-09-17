@@ -103,22 +103,48 @@ const promises: PromiseStatement[] = [
 ];
 
 /*
- * The mockup shows five pillars. CLAUDE.md Section 9 bars two of them from the
- * real nav and content: Recruitment & BPO is paused, and General Contracts &
- * Supplies is not being pushed. IT Consulting & Outsourcing is also paused, by
- * a later leadership decision — soft-hidden sitewide (see components/Header.tsx),
- * not deleted. That leaves two live pillars here, not three.
+ * Leadership decision: each real, live service listed individually at equal
+ * weight, not bundled as 2 broad pillars (the previous structure here, which
+ * also collapsed 4 Business Formalisation & Compliance pages into one link).
+ * Same flattening applied to the primary nav and the /services directory —
+ * see the comment on the `services` array in components/Header.tsx. 5 items,
+ * matching CLAUDE.md's own inventory of real, live, unpaused services
+ * (Section 5). Recruitment & BPO and General Contracts & Supplies are
+ * paused/not scoped; IT Consulting & Outsourcing is paused by a later
+ * leadership decision — soft-hidden sitewide (see components/Header.tsx).
+ * None of the three are listed here without that changing.
  */
 const pillars = [
   {
     number: "01",
-    title: "Business Formalisation & Compliance",
-    href: "/services/business-formalisation-compliance",
+    title: "Business Formalisation — Cameroon",
+    href: "/services/business-formalisation-compliance/cameroon",
     description:
-      "Business legalisation, tax and social insurance compliance, ministry licensing and accreditation managed as one accountable process.",
+      "Full incorporation under OHADA standards — Articles of Association, RCCM registration, and Taxpayer ID (NIU).",
   },
   {
     number: "02",
+    title: "Business Formalisation — United States",
+    href: "/services/business-formalisation-compliance/united-states",
+    description:
+      "LLC and C-Corp formation for Cameroon-based businesses and diaspora founders — state filing, registered agent, and IRS EIN.",
+  },
+  {
+    number: "03",
+    title: "Tax Compliance — Cameroon",
+    href: "/services/business-formalisation-compliance/tax-compliance-businesses-cameroon",
+    description:
+      "Monthly DGI filings and Corporate Income Tax for businesses, personal IRPP declarations for individuals — one tax desk, either way.",
+  },
+  {
+    number: "04",
+    title: "CNPS Compliance — Cameroon",
+    href: "/services/business-formalisation-compliance/cnps-compliance-cameroon",
+    description:
+      "Employer registration, employee declarations, payroll withholding, and CNPS Clearance Certificates.",
+  },
+  {
+    number: "05",
     title: "Career Marketing & Placement",
     href: "/services/career-marketing-placement",
     description:
@@ -409,11 +435,12 @@ export default function HomePage() {
               <div className="lg:col-span-5">
                 <div className="lg:sticky lg:top-28">
                   <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-navy-950 sm:text-4xl">
-                    Two pillars. Advisory, execution, or both.
+                    Five services. Pick exactly what you need.
                   </h2>
                   <p className="mb-8 text-sm leading-relaxed text-slate-600">
-                    We map what you actually need before anything is
-                    quoted—so the work begins with clarity, not a package.
+                    No bundling, no guesswork — we map what you actually need
+                    before anything is quoted, so the work begins with
+                    clarity, not a package.
                   </p>
 
                   <div className="group relative overflow-hidden rounded-2xl border border-slate-200/90 shadow-lg">

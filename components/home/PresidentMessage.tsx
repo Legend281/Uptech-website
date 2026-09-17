@@ -18,7 +18,7 @@ import { images } from "@/lib/images";
 export function PresidentMessage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
-  const poster = images["cross-border-boardroom"];
+  const poster = images["team-lineup"];
 
   function handlePlay() {
     setPlaying(true);
@@ -63,7 +63,17 @@ export function PresidentMessage() {
                 aria-label="Play the message from our president"
                 className="absolute inset-0 flex items-center justify-center group"
               >
-                <span className="absolute inset-0 bg-navy-950/30 group-hover:bg-navy-950/20 transition-colors" />
+                {/* Color-grades the poster photo's plain wall into the site's
+                    navy palette (multiply darkens the pale background far
+                    more than the already-dark suits, so it reads as a
+                    deliberate grade rather than a flat dim-down), then a
+                    radial vignette pulls focus to the centre and grounds the
+                    edges — the source photo can't be re-cropped or re-shot
+                    here, so the grade is doing the work a crop normally
+                    would. */}
+                <span className="absolute inset-0 bg-navy-900/60 mix-blend-multiply" />
+                <span className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(7,14,27,0.6)_100%)]" />
+                <span className="absolute inset-0 bg-navy-950/15 transition-colors group-hover:bg-navy-950/5" />
                 <motion.span
                   whileHover={{ scale: 1.08 }}
                   whileTap={{ scale: 0.95 }}

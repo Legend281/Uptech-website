@@ -7,6 +7,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
+import { PresidentMessage } from "@/components/home/PresidentMessage";
 import { TeamGrid, type TeamMember } from "@/components/TeamGrid";
 import { Reveal } from "@/components/Reveal";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
@@ -207,6 +208,8 @@ export default function WhoWeArePage() {
             </div>
           </div>
         </section>
+
+        <PresidentMessage />
 
         {/* ---------------- What We Do ---------------- */}
         <section

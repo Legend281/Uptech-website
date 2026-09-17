@@ -15,6 +15,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { HeroIntro } from "@/components/home/HeroIntro";
+import { PartnersStrip } from "@/components/home/PartnersStrip";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 import { TrustStrip, type TrustStripItem } from "@/components/TrustStrip";
 import { FaqAccordion } from "@/components/FaqAccordion";
@@ -241,6 +242,8 @@ export default function HomePage() {
         </section>
 
         <TrustStrip items={trustItems} variant="light" />
+
+        <PartnersStrip />
 
         {/* ---------------- Who We Are ---------------- */}
         <section className="relative bg-white py-24">

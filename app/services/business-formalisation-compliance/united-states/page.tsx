@@ -10,6 +10,9 @@ import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { ComplianceDisclaimer } from "@/components/ComplianceDisclaimer";
 import { WhatComesNext } from "@/components/WhatComesNext";
+import { Reveal } from "@/components/Reveal";
+import { TextReveal } from "@/components/TextReveal";
+import { TiltCard } from "@/components/TiltCard";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { images } from "@/lib/images";
 
@@ -250,13 +253,13 @@ export default function BusinessFormalisationUnitedStatesPage() {
         <section className="py-24 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-              <div className="lg:col-span-4">
+              <Reveal effect="rise" className="lg:col-span-4">
                 <div className="lg:sticky lg:top-28 bg-navy-950 text-white p-7 rounded-2xl border border-slate-800 shadow-xl">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-teal-400 text-xs font-bold tracking-wider uppercase mb-3">
                     Formation Sequence
                   </div>
                   <h2 className="text-2xl lg:text-3xl font-extrabold text-white leading-tight mb-3">
-                    From Entity Selection to a Functioning US Company
+                    <TextReveal text="From Entity Selection to a Functioning US Company" />
                   </h2>
                   <p className="text-sm text-slate-300 leading-relaxed mb-6">
                     A transparent walkthrough of state filing and federal setup, coordinated end to
@@ -286,10 +289,11 @@ export default function BusinessFormalisationUnitedStatesPage() {
                     </p>
                   </div>
                 </div>
-              </div>
+              </Reveal>
 
               <div className="lg:col-span-8 flex flex-col pl-2 md:pl-6 relative">
                 <div className="absolute left-6 md:left-10 top-6 bottom-8 w-0.5 bg-gradient-to-b from-teal-400 via-blue-accent to-slate-300" />
+                <Reveal effect="stagger">
                 {steps.map((step) => (
                   <div key={step.number} className="relative flex items-start gap-5 pb-8 last:pb-0 group">
                     <div
@@ -331,6 +335,7 @@ export default function BusinessFormalisationUnitedStatesPage() {
                     </div>
                   </div>
                 ))}
+                </Reveal>
               </div>
             </div>
           </div>
@@ -342,17 +347,17 @@ export default function BusinessFormalisationUnitedStatesPage() {
             instead of a lone list on an otherwise empty section. */}
         <section id="checklist" className="py-24 bg-slate-50 border-y border-slate-200/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl mb-12">
+            <Reveal effect="rise" className="max-w-2xl mb-12">
               <span className="text-xs font-bold uppercase tracking-wider text-sky-600">DOCUMENTS &amp; REQUIREMENTS</span>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight mt-2">
-                What we&apos;ll need from you
+                <TextReveal text="What we'll need from you" />
               </h2>
               <p className="text-sm sm:text-base text-slate-600 mt-2">
                 Gather these before we begin — no back-and-forth once your details are with us.
               </p>
-            </div>
+            </Reveal>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <Reveal effect="rise" delay={120} className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               <div className="lg:col-span-7 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm">
                 <div className="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
                   <div className="w-9 h-9 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center">
@@ -411,7 +416,7 @@ export default function BusinessFormalisationUnitedStatesPage() {
                   </a>
                 </div>
               </div>
-            </div>
+            </Reveal>
           </div>
         </section>
 
@@ -422,10 +427,10 @@ export default function BusinessFormalisationUnitedStatesPage() {
             own recurring obligations. */}
         <section className="py-24 bg-slate-50 border-y border-slate-200/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl mb-12">
+            <Reveal effect="rise" className="max-w-2xl mb-12">
               <span className="text-xs font-bold uppercase tracking-wider text-sky-600">AFTER FORMATION</span>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight mt-2">
-                Staying Compliant After Formation
+                <TextReveal text="Staying Compliant After Formation" />
               </h2>
               {/* Rewritten to avoid stating an unconfirmed fact — safe to
                   publish as-is; replace with real figure once provided by
@@ -435,38 +440,38 @@ export default function BusinessFormalisationUnitedStatesPage() {
                 on a different cycle. Your consultant will map out your exact compliance calendar
                 once your state and entity type are confirmed.
               </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            </Reveal>
+            <Reveal effect="stagger" className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {ongoingCompliance.map((item) => (
-                <div key={item.title} className="bg-white rounded-xl p-6 shadow-sm border border-slate-200/80">
+                <TiltCard key={item.title} max={5} className="bg-white rounded-xl p-6 shadow-sm border border-slate-200/80">
                   <div className="w-10 h-10 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center mb-4">
                     <MaterialIcon name={item.icon} className="text-[20px]" />
                   </div>
                   <h3 className="text-base font-bold text-navy-950 mb-1.5">{item.title}</h3>
                   <p className="text-sm text-slate-600 leading-relaxed">{item.description}</p>
-                </div>
+                </TiltCard>
               ))}
-            </div>
+            </Reveal>
           </div>
         </section>
 
         {/* Who This Is For */}
         <section className="py-24 bg-navy-950 text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-14">
+            <Reveal effect="rise" className="text-center max-w-3xl mx-auto mb-14">
               <span className="text-xs font-bold uppercase tracking-wider text-teal-400">WHO THIS IS FOR</span>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-2">
-                Two Starting Points, One Formation Process
+                <TextReveal text="Two Starting Points, One Formation Process" />
               </h2>
               <p className="text-slate-300 mt-3">
                 Whether you&apos;re expanding an existing Cameroon business into the US, or
                 registering your own US entity from scratch while living abroad, the process is
                 built around where you&apos;re actually starting from.
               </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            </Reveal>
+            <Reveal effect="stagger" className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {personas.map((persona) => (
-                <div key={persona.title} className="frosted-glass rounded-2xl p-7 flex flex-col justify-between">
+                <TiltCard key={persona.title} max={5} className="frosted-glass rounded-2xl p-7 flex flex-col justify-between">
                   <div className="flex flex-col gap-4">
                     <div className="flex items-center justify-between">
                       <div className="w-10 h-10 rounded-lg bg-teal-500/20 flex items-center justify-center text-teal-300">
@@ -491,9 +496,9 @@ export default function BusinessFormalisationUnitedStatesPage() {
                   <Button href="#checklist" variant="secondary" className="mt-6 justify-center">
                     {persona.cta}
                   </Button>
-                </div>
+                </TiltCard>
               ))}
-            </div>
+            </Reveal>
           </div>
         </section>
 
@@ -502,7 +507,7 @@ export default function BusinessFormalisationUnitedStatesPage() {
           <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-rose-400/10 blur-3xl pointer-events-none" />
           <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-teal-400/10 blur-3xl pointer-events-none" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-14">
+            <Reveal effect="rise" className="flex flex-col items-center text-center max-w-3xl mx-auto mb-14">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-700 text-xs font-bold tracking-wider uppercase mb-3">
                 The Cost Of Doing It Alone
               </div>
@@ -513,8 +518,8 @@ export default function BusinessFormalisationUnitedStatesPage() {
                 Weighing the compounding risk of unguided self-filing against a managed formation
                 and compliance process.
               </p>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+            </Reveal>
+            <Reveal effect="stagger" className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
               <div className="rounded-2xl bg-rose-50/60 border border-rose-200 shadow-sm p-6 md:p-8 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between pb-4 border-b border-rose-200/70 mb-6">
@@ -610,16 +615,16 @@ export default function BusinessFormalisationUnitedStatesPage() {
                   <MaterialIcon name="check" className="text-teal-600 text-[18px] shrink-0 ml-2" />
                 </div>
               </div>
-            </div>
+            </Reveal>
           </div>
         </section>
 
         <section className="py-24 bg-white">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-12 text-center">
+            <Reveal effect="rise" className="mb-12 text-center">
               <span className="text-xs font-bold uppercase tracking-wider text-sky-600">FREQUENT QUESTIONS</span>
-              <h2 className="text-3xl font-extrabold text-navy-950 tracking-tight mt-2">Common questions on US formation</h2>
-            </div>
+              <h2 className="text-3xl font-extrabold text-navy-950 tracking-tight mt-2"><TextReveal text="Common questions on US formation" /></h2>
+            </Reveal>
             <FaqAccordion items={faqItems} />
           </div>
         </section>
@@ -652,7 +657,7 @@ export default function BusinessFormalisationUnitedStatesPage() {
             <div className="absolute inset-0 bg-navy-950/30" />
           </div>
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[36rem] h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Reveal effect="rise" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-teal-400/40 text-teal-300 text-xs font-bold tracking-widest uppercase mb-5 backdrop-blur-md">
               Legal Desk Active in Buea
             </div>
@@ -667,7 +672,7 @@ export default function BusinessFormalisationUnitedStatesPage() {
               <Button href="/contact?service=business-formalisation-us">Book a Consultation</Button>
               <WhatsAppButton phone="237678597593" label="Chat on WhatsApp Legal Desk" />
             </div>
-          </div>
+          </Reveal>
         </section>
       </main>
 

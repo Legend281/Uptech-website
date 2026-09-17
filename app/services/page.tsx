@@ -8,6 +8,9 @@ import { TrustStrip } from "@/components/TrustStrip";
 import { Button } from "@/components/Button";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { Reveal } from "@/components/Reveal";
+import { TextReveal } from "@/components/TextReveal";
+import { TiltCard } from "@/components/TiltCard";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { images, type ImageKey } from "@/lib/images";
 
@@ -157,7 +160,7 @@ export default function ServicesHubPage() {
             "2 practices + 1 subordinate under one" structure. */}
         <section className="pt-24 pb-20 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl mb-12">
+            <Reveal effect="rise" className="max-w-2xl mb-12">
               <div className="inline-flex items-center gap-2 mb-3">
                 <span className="w-7 h-[2px] bg-teal-500 inline-block" />
                 <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
@@ -165,14 +168,17 @@ export default function ServicesHubPage() {
                 </span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight leading-tight">
-                Five services. Pick exactly what you need.
+                <TextReveal text="Five services. Pick exactly what you need." />
               </h2>
-            </div>
+            </Reveal>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-14">
+            <Reveal
+              effect="stagger"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-14"
+            >
               {services.map((card) => (
                 <Link key={card.href} href={card.href} className="group block">
-                  <div className="relative aspect-[4/3] rounded-xl overflow-hidden">
+                  <TiltCard max={5} className="relative aspect-[4/3] rounded-xl overflow-hidden">
                     <Image
                       src={images[card.image].src}
                       alt={images[card.image].alt}
@@ -182,7 +188,7 @@ export default function ServicesHubPage() {
                       blurDataURL={images[card.image].blurDataURL}
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                  </div>
+                  </TiltCard>
                   <div className="relative -mt-10 mx-4 bg-white rounded-xl p-6 shadow-xl group-hover:shadow-2xl transition-shadow">
                     <h3 className="text-lg font-bold text-navy-950 leading-snug mb-2 flex items-start gap-2">
                       {card.flag && (
@@ -202,7 +208,7 @@ export default function ServicesHubPage() {
                   </div>
                 </Link>
               ))}
-            </div>
+            </Reveal>
 
             {/* Secondary, clearly-subordinate pointer to the guided finder
                 for the 4 Business Formalisation/Compliance pathways above —
@@ -238,7 +244,7 @@ export default function ServicesHubPage() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/55 to-navy-950/55" />
           </div>
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Reveal effect="rise" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white max-w-2xl mx-auto leading-tight mb-4">
               Not sure which service <span className="gradient-teal-blue-text">you need?</span>
             </h2>
@@ -250,7 +256,7 @@ export default function ServicesHubPage() {
               <Button href="/contact">Book a Consultation</Button>
               <WhatsAppButton phone="237678597593" />
             </div>
-          </div>
+          </Reveal>
         </section>
       </main>
 

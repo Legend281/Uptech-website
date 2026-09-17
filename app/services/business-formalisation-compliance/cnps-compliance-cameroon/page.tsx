@@ -11,6 +11,9 @@ import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { ComplianceDisclaimer } from "@/components/ComplianceDisclaimer";
 import { WhatComesNext } from "@/components/WhatComesNext";
+import { Reveal } from "@/components/Reveal";
+import { TextReveal } from "@/components/TextReveal";
+import { TiltCard } from "@/components/TiltCard";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { images } from "@/lib/images";
 
@@ -271,13 +274,13 @@ export default function CnpsComplianceCameroonPage() {
         <section className="py-24 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-              <div className="lg:col-span-4">
+              <Reveal effect="rise" className="lg:col-span-4">
                 <div className="lg:sticky lg:top-28 bg-navy-950 text-white p-7 rounded-2xl border border-slate-800 shadow-xl">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-teal-400 text-xs font-bold tracking-wider uppercase mb-3">
                     The Compliance Cycle
                   </div>
                   <h2 className="text-2xl lg:text-3xl font-extrabold text-white leading-tight mb-3">
-                    From First Hire to Ongoing Clearance
+                    <TextReveal text="From First Hire to Ongoing Clearance" />
                   </h2>
                   <p className="text-sm text-slate-300 leading-relaxed mb-6">
                     A transparent walkthrough of employer social-insurance obligations under CNPS,
@@ -301,10 +304,11 @@ export default function CnpsComplianceCameroonPage() {
                     </p>
                   </div>
                 </div>
-              </div>
+              </Reveal>
 
               <div className="lg:col-span-8 flex flex-col pl-2 md:pl-6 relative">
                 <div className="absolute left-6 md:left-10 top-6 bottom-8 w-0.5 bg-gradient-to-b from-teal-400 via-blue-accent to-slate-300" />
+                <Reveal effect="stagger">
                 {steps.map((step) => (
                   <div key={step.number} className="relative flex items-start gap-5 pb-8 last:pb-0 group">
                     <div
@@ -359,6 +363,7 @@ export default function CnpsComplianceCameroonPage() {
                     </div>
                   </div>
                 ))}
+                </Reveal>
               </div>
             </div>
           </div>
@@ -376,18 +381,18 @@ export default function CnpsComplianceCameroonPage() {
             worth a team decision on which direction should win. */}
         <section id="checklist" className="py-24 bg-slate-50 border-y border-slate-200/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl mb-12">
+            <Reveal effect="rise" className="max-w-2xl mb-12">
               <span className="text-xs font-bold uppercase tracking-wider text-sky-600">DOCUMENTS &amp; REQUIREMENTS</span>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight mt-2">
-                CNPS registration checklist
+                <TextReveal text="CNPS registration checklist" />
               </h2>
               <p className="text-sm sm:text-base text-slate-600 mt-2">
                 Gather these before we begin your employer registration — no back-and-forth once
                 your dossier is with us.
               </p>
-            </div>
+            </Reveal>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <Reveal effect="rise" delay={120} className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               <div className="lg:col-span-7 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm">
                 <div className="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
                   <div className="w-9 h-9 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center">
@@ -437,29 +442,29 @@ export default function CnpsComplianceCameroonPage() {
                   </a>
                 </div>
               </div>
-            </div>
+            </Reveal>
           </div>
         </section>
 
         {/* Who This Is For */}
         <section className="py-24 bg-navy-950 text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-14">
+            <Reveal effect="rise" className="text-center max-w-3xl mx-auto mb-14">
               <span className="text-xs font-bold uppercase tracking-wider text-teal-400">WHO THIS IS FOR</span>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-2">
-                Three Situations, One CNPS Desk
+                <TextReveal text="Three Situations, One CNPS Desk" />
               </h2>
               <p className="text-slate-300 mt-3">
                 Whether you&apos;re registering your first hire, regularising a team that&apos;s been
                 off the books, or preparing to bid on a tender, our CNPS desk handles it as a
                 distinct, structured engagement.
               </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            </Reveal>
+            <Reveal effect="stagger" className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {personas.map((persona) => {
                 const accentClasses = personaAccentClasses[persona.accent];
                 return (
-                  <div key={persona.title} className="frosted-glass rounded-2xl p-7 flex flex-col justify-between">
+                  <TiltCard key={persona.title} max={5} className="frosted-glass rounded-2xl p-7 flex flex-col justify-between">
                     <div className="flex flex-col gap-4">
                       <div className="flex items-center justify-between">
                         <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${accentClasses.icon}`}>
@@ -486,10 +491,10 @@ export default function CnpsComplianceCameroonPage() {
                     <Button href="#checklist" variant="secondary" className="mt-6 justify-center">
                       {persona.cta}
                     </Button>
-                  </div>
+                  </TiltCard>
                 );
               })}
-            </div>
+            </Reveal>
           </div>
         </section>
 
@@ -498,7 +503,7 @@ export default function CnpsComplianceCameroonPage() {
           <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-rose-400/10 blur-3xl pointer-events-none" />
           <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-teal-400/10 blur-3xl pointer-events-none" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-14">
+            <Reveal effect="rise" className="flex flex-col items-center text-center max-w-3xl mx-auto mb-14">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-700 text-xs font-bold tracking-wider uppercase mb-3">
                 The Cost Of Non-Compliance
               </div>
@@ -509,8 +514,8 @@ export default function CnpsComplianceCameroonPage() {
                 Weighing the compounding risk of undeclared employees against a predictable,
                 managed CNPS filing cadence.
               </p>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+            </Reveal>
+            <Reveal effect="stagger" className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
               <div className="rounded-2xl bg-rose-50/60 border border-rose-200 shadow-sm p-6 md:p-8 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between pb-4 border-b border-rose-200/70 mb-6">
@@ -614,17 +619,17 @@ export default function CnpsComplianceCameroonPage() {
                   <MaterialIcon name="check" className="text-teal-600 text-[18px] shrink-0 ml-2" />
                 </div>
               </div>
-            </div>
+            </Reveal>
           </div>
         </section>
 
         {/* FAQ */}
         <section className="py-24 bg-slate-50">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-12 text-center">
+            <Reveal effect="rise" className="mb-12 text-center">
               <span className="text-xs font-bold uppercase tracking-wider text-sky-600">FREQUENT QUESTIONS</span>
-              <h2 className="text-3xl font-extrabold text-navy-950 tracking-tight mt-2">CNPS compliance questions, answered</h2>
-            </div>
+              <h2 className="text-3xl font-extrabold text-navy-950 tracking-tight mt-2"><TextReveal text="CNPS compliance questions, answered" /></h2>
+            </Reveal>
             <FaqAccordion items={faqItems} />
           </div>
         </section>
@@ -669,7 +674,7 @@ export default function CnpsComplianceCameroonPage() {
             <div className="absolute inset-0 bg-navy-950/30" />
           </div>
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[36rem] h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Reveal effect="rise" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-teal-400/40 text-teal-300 text-xs font-bold tracking-widest uppercase mb-5 backdrop-blur-md">
               CNPS Desk Active in Buea &amp; Douala
             </div>
@@ -684,7 +689,7 @@ export default function CnpsComplianceCameroonPage() {
               <Button href="/contact?service=cnps-compliance">Book a Consultation</Button>
               <WhatsAppButton phone="237678597593" label="Chat on WhatsApp CNPS Desk" />
             </div>
-          </div>
+          </Reveal>
         </section>
       </main>
 

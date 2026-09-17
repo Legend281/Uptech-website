@@ -9,6 +9,8 @@ import { Button } from "@/components/Button";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { FaqAccordion } from "@/components/FaqAccordion";
+import { Reveal } from "@/components/Reveal";
+import { TextReveal } from "@/components/TextReveal";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { images } from "@/lib/images";
 
@@ -284,13 +286,13 @@ export default function ItConsultingOutsourcingPage() {
         <section className="py-24 bg-white relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-              <div className="lg:col-span-5 lg:sticky lg:top-28">
+              <Reveal effect="rise" className="lg:col-span-5 lg:sticky lg:top-28">
                 <div className="inline-flex items-center gap-2 mb-3">
                   <span className="w-7 h-[2px] bg-teal-500 inline-block" />
                   <span className="text-xs font-bold uppercase tracking-wider text-sky-600">WHAT&apos;S INCLUDED</span>
                 </div>
                 <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight leading-tight mb-4">
-                  Six ways we show up, depending on what&apos;s actually broken or missing.
+                  <TextReveal text="Six ways we show up, depending on what's actually broken or missing." />
                 </h2>
                 <p className="text-sm text-slate-600 mb-8 leading-relaxed">
                   We don&apos;t sell monolithic IT bundles. We scope directly to where operational
@@ -328,9 +330,9 @@ export default function ItConsultingOutsourcingPage() {
                     </p>
                   </div>
                 </div>
-              </div>
+              </Reveal>
 
-              <div className="lg:col-span-7 divide-y divide-slate-200/80">
+              <Reveal effect="stagger" className="lg:col-span-7 divide-y divide-slate-200/80">
                 {capabilities.map((item) => (
                   <div
                     key={item.number}
@@ -369,7 +371,7 @@ export default function ItConsultingOutsourcingPage() {
                     </div>
                   </div>
                 ))}
-              </div>
+              </Reveal>
             </div>
           </div>
         </section>
@@ -606,7 +608,7 @@ export default function ItConsultingOutsourcingPage() {
             />
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/80 to-navy-950/50 pointer-events-none" />
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Reveal effect="rise" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-teal-400/40 text-teal-400 text-xs font-bold tracking-widest uppercase mb-4">
               Consultation First
             </div>
@@ -626,7 +628,7 @@ export default function ItConsultingOutsourcingPage() {
               </Button>
               <WhatsAppButton phone="237678597593" label="Chat on WhatsApp" />
             </div>
-          </div>
+          </Reveal>
         </section>
       </main>
 

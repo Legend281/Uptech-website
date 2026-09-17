@@ -1,3 +1,6 @@
+"use client";
+
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 
 export type TrustStripItem = {
@@ -44,6 +47,21 @@ const columnClasses: Record<number, string> = {
   4: "sm:grid-cols-2 lg:grid-cols-4",
 };
 
+const stripContainer: Variants = {
+  hidden: {},
+  shown: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } },
+};
+
+const stripItem: Variants = {
+  hidden: { opacity: 0, y: 22, scale: 0.94 },
+  shown: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { type: "spring", stiffness: 260, damping: 22 },
+  },
+};
+
 /**
  * The "docked" trust bar that overlaps the hero. `dark` is the service-page
  * treatment; `light` is the homepage treatment, where the strip sits against a
@@ -58,6 +76,7 @@ export function TrustStrip({
 }) {
   const isLight = variant === "light";
   const columns = columnClasses[items.length] ?? "sm:grid-cols-3";
+  const reducedMotion = useReducedMotion();
 
   const shell = isLight
     ? "bg-white/95 border-slate-200/90 divide-slate-100 shadow-[0_20px_50px_rgba(8,17,32,0.12),0_1px_3px_rgba(0,0,0,0.05)]"
@@ -65,14 +84,20 @@ export function TrustStrip({
 
   return (
     <div className="relative z-20 mx-auto -mt-10 max-w-7xl px-4 sm:px-6 lg:-mt-14 lg:px-8">
-      <div
+      <motion.div
+        initial={reducedMotion ? "shown" : "hidden"}
+        whileInView="shown"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={stripContainer}
         className={`grid grid-cols-1 overflow-hidden rounded-2xl border divide-y backdrop-blur-xl sm:divide-y-0 sm:divide-x ${columns} ${shell}`}
       >
         {items.map((item) => {
           const accent = accentClasses[item.badgeAccent];
           return (
-            <div
+            <motion.div
               key={item.title}
+              variants={stripItem}
+              whileHover={reducedMotion ? undefined : { y: -3 }}
               className={`flex items-center gap-4 p-6 transition-colors ${
                 isLight ? "hover:bg-slate-50/60" : "hover:bg-navy-850/60"
               }`}
@@ -116,10 +141,10 @@ export function TrustStrip({
                   </p>
                 )}
               </div>
-            </div>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
     </div>
   );
 }

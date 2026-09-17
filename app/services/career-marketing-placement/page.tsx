@@ -10,6 +10,9 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { Button } from "@/components/Button";
+import { Reveal } from "@/components/Reveal";
+import { TextReveal } from "@/components/TextReveal";
+import { TiltCard } from "@/components/TiltCard";
 import { images } from "@/lib/images";
 
 const arrowRightIcon = (
@@ -241,7 +244,7 @@ export default function CareerMarketingPlacementPage() {
         <section className="py-24 bg-white relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-              <div className="lg:col-span-5 lg:sticky lg:top-28">
+              <Reveal effect="rise" className="lg:col-span-5 lg:sticky lg:top-28">
                 <div className="inline-flex items-center gap-2 mb-3">
                   <span className="w-7 h-[2px] bg-teal-500 inline-block" />
                   <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
@@ -249,7 +252,7 @@ export default function CareerMarketingPlacementPage() {
                   </span>
                 </div>
                 <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight leading-tight mb-4">
-                  One unbroken campaign. One dedicated advocate on your side.
+                  <TextReveal text="One unbroken campaign. One dedicated advocate on your side." />
                 </h2>
                 <p className="text-sm text-slate-600 mb-8 leading-relaxed">
                   We don&apos;t sell disconnected services. We dedicate a full-time worker to your
@@ -287,9 +290,9 @@ export default function CareerMarketingPlacementPage() {
                     </p>
                   </div>
                 </div>
-              </div>
+              </Reveal>
 
-              <div className="lg:col-span-7 divide-y divide-slate-200/80">
+              <Reveal effect="stagger" className="lg:col-span-7 divide-y divide-slate-200/80">
                 {campaignStages.map((stage) => (
                   <div
                     key={stage.number}
@@ -328,10 +331,10 @@ export default function CareerMarketingPlacementPage() {
                     </div>
                   </div>
                 ))}
-              </div>
+              </Reveal>
             </div>
 
-            <div className="mt-16 bg-navy-950 p-6 md:p-8 rounded-2xl text-white shadow-xl border border-slate-800/90 flex flex-col md:flex-row items-center justify-between gap-6">
+            <Reveal effect="rise" className="mt-16 bg-navy-950 p-6 md:p-8 rounded-2xl text-white shadow-xl border border-slate-800/90 flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-xl bg-white/10 border border-teal-400/30 flex items-center justify-center shrink-0 text-teal-400">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -348,31 +351,32 @@ export default function CareerMarketingPlacementPage() {
               <Button href="#start-campaign" size="sm" className="shrink-0">
                 Claim Your Account Worker
               </Button>
-            </div>
+            </Reveal>
           </div>
         </section>
 
         {/* Who this is for */}
         <section className="py-24 bg-slate-100/70 border-y border-slate-200/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-14 max-w-2xl">
+            <Reveal effect="rise" className="mb-14 max-w-2xl">
               <div className="inline-flex items-center gap-2 mb-3">
                 <span className="w-7 h-[2px] bg-teal-500 inline-block" />
                 <span className="text-xs font-bold uppercase tracking-wider text-sky-600">WHO THIS IS FOR</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight leading-tight">
-                Built for ambitious professionals tired of shouting into the algorithmic void.
+                <TextReveal text="Built for ambitious professionals tired of shouting into the algorithmic void." />
               </h2>
               <p className="mt-3 text-base text-slate-600">
                 Three candidate profiles where dedicated institutional advocacy shifts the hiring odds in your favor.
               </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            </Reveal>
+            <Reveal effect="stagger" className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
               {personas.map((persona) => {
                 const accent = personaAccentClasses[persona.accent];
                 return (
-                  <div
+                  <TiltCard
                     key={persona.number}
+                    max={5}
                     className="bg-white rounded-2xl p-7 border border-slate-200/90 shadow-md card-hover-shadow flex flex-col justify-between"
                   >
                     <div>
@@ -396,10 +400,10 @@ export default function CareerMarketingPlacementPage() {
                       </span>
                       <p className="text-xs text-slate-700 leading-relaxed font-medium">{persona.outcome}</p>
                     </div>
-                  </div>
+                  </TiltCard>
                 );
               })}
-            </div>
+            </Reveal>
           </div>
         </section>
 
@@ -426,14 +430,14 @@ export default function CareerMarketingPlacementPage() {
             />
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/70 to-transparent pointer-events-none" />
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <Reveal effect="rise" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 mb-4">
                 <span className="w-7 h-[2px] bg-teal-400 inline-block" />
                 <span className="text-xs font-bold uppercase tracking-wider text-teal-400">WHAT IT FEELS LIKE</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-6">
-                From searching alone to someone working your case daily.
+                <TextReveal text="From searching alone to someone working your case daily." />
               </h2>
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8">
                 <MaterialIcon name="format_quote" className="text-teal-400 text-[32px] mb-3" />
@@ -448,22 +452,22 @@ export default function CareerMarketingPlacementPage() {
                 </p>
               </div>
             </div>
-          </div>
+          </Reveal>
         </section>
 
         {/* FAQ */}
         <section className="py-24 bg-white">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-12 text-center">
+            <Reveal effect="rise" className="mb-12 text-center">
               <div className="inline-flex items-center gap-2 mb-3">
                 <span className="w-7 h-[2px] bg-teal-500 inline-block" />
                 <span className="text-xs font-bold uppercase tracking-wider text-sky-600">FREQUENT QUESTIONS</span>
                 <span className="w-7 h-[2px] bg-teal-500 inline-block" />
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight leading-tight">
-                Clarity on scope before we begin.
+                <TextReveal text="Clarity on scope before we begin." />
               </h2>
-            </div>
+            </Reveal>
             <FaqAccordion items={faqItems} />
           </div>
         </section>
@@ -484,7 +488,7 @@ export default function CareerMarketingPlacementPage() {
             </div>
             {/* Sized to the actual card count, not a fixed 2-column skeleton —
                 one card stretched across a wide grid looks orphaned. */}
-            <div className={`grid grid-cols-1 gap-4 ${otherPillars.length > 1 ? "sm:grid-cols-2 max-w-3xl" : "max-w-sm"}`}>
+            <Reveal effect="stagger" className={`grid grid-cols-1 gap-4 ${otherPillars.length > 1 ? "sm:grid-cols-2 max-w-3xl" : "max-w-sm"}`}>
               {otherPillars.map((pillar) => (
                 <Link
                   key={pillar.title}
@@ -508,7 +512,7 @@ export default function CareerMarketingPlacementPage() {
                   </div>
                 </Link>
               ))}
-            </div>
+            </Reveal>
           </div>
         </section>
 
@@ -529,7 +533,7 @@ export default function CareerMarketingPlacementPage() {
             />
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/80 to-navy-950/50 pointer-events-none" />
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+          <Reveal effect="rise" className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
             <div className="inline-flex items-center gap-2 mb-4">
               <span className="w-7 h-[2px] bg-teal-400 inline-block" />
               <span className="text-xs font-bold uppercase tracking-wider text-teal-400">LAUNCH YOUR STRATEGY</span>
@@ -549,7 +553,7 @@ export default function CareerMarketingPlacementPage() {
               </Button>
               <WhatsAppButton phone="237678597593" />
             </div>
-          </div>
+          </Reveal>
         </section>
       </main>
 

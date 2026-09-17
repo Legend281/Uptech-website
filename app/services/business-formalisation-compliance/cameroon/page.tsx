@@ -11,6 +11,9 @@ import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { ComplianceDisclaimer } from "@/components/ComplianceDisclaimer";
 import { WhatComesNext } from "@/components/WhatComesNext";
+import { Reveal } from "@/components/Reveal";
+import { TextReveal } from "@/components/TextReveal";
+import { TiltCard } from "@/components/TiltCard";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { images } from "@/lib/images";
 
@@ -258,13 +261,13 @@ export default function BusinessFormalisationCameroonPage() {
         <section className="py-24 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-              <div className="lg:col-span-4">
+              <Reveal effect="rise" className="lg:col-span-4">
                 <div className="lg:sticky lg:top-28 bg-navy-950 text-white p-7 rounded-2xl border border-slate-800 shadow-xl">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-teal-400 text-xs font-bold tracking-wider uppercase mb-3">
                     Statutory Roadmap
                   </div>
                   <h2 className="text-2xl lg:text-3xl font-extrabold text-white leading-tight mb-3">
-                    The Official Registration Cadence
+                    <TextReveal text="The Official Registration Cadence" />
                   </h2>
                   <p className="text-sm text-slate-300 leading-relaxed mb-6">
                     A transparent walkthrough of the statutory milestones under Cameroon commercial
@@ -294,10 +297,11 @@ export default function BusinessFormalisationCameroonPage() {
                     </p>
                   </div>
                 </div>
-              </div>
+              </Reveal>
 
               <div className="lg:col-span-8 flex flex-col pl-2 md:pl-6 relative">
                 <div className="absolute left-6 md:left-10 top-6 bottom-8 w-0.5 bg-gradient-to-b from-teal-400 via-blue-accent to-slate-300" />
+                <Reveal effect="stagger">
                 {steps.map((step) => (
                   <div key={step.number} className="relative flex items-start gap-5 pb-8 last:pb-0 group">
                     <div
@@ -354,6 +358,7 @@ export default function BusinessFormalisationCameroonPage() {
                     </div>
                   </div>
                 ))}
+                </Reveal>
               </div>
             </div>
           </div>
@@ -362,21 +367,21 @@ export default function BusinessFormalisationCameroonPage() {
         {/* Documents checklist */}
         <section id="registration-checklist" className="py-24 bg-slate-50 border-y border-slate-200/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-12 max-w-2xl">
+            <Reveal effect="rise" className="mb-12 max-w-2xl">
               <div className="inline-flex items-center gap-2 mb-2">
                 <span className="w-7 h-[2px] bg-teal-500 inline-block" />
                 <span className="text-xs font-bold uppercase tracking-wider text-sky-600">DOCUMENTS &amp; REQUIREMENTS</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight">
-                Statutory Requirements Checklist
+                <TextReveal text="Statutory Requirements Checklist" />
               </h2>
               <p className="text-sm sm:text-base text-slate-600 mt-2">
                 Gather these elements prior to formal notary execution to avoid administrative
                 rejections at the Greffe or DGI.
               </p>
-            </div>
+            </Reveal>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <Reveal effect="rise" delay={120} className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               <div className="lg:col-span-7 flex flex-col gap-6">
                 <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm">
                   <div className="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
@@ -478,7 +483,7 @@ export default function BusinessFormalisationCameroonPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Reveal>
 
             <div className="mt-8 p-5 rounded-2xl bg-white border border-dashed border-amber-400/80 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
               <div className="flex items-start gap-3.5">
@@ -513,19 +518,20 @@ export default function BusinessFormalisationCameroonPage() {
         {/* Personas */}
         <section className="py-24 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl mb-12">
+            <Reveal effect="rise" className="max-w-2xl mb-12">
               <div className="inline-flex items-center gap-2 mb-2">
                 <span className="w-7 h-[2px] bg-teal-500 inline-block" />
                 <span className="text-xs font-bold uppercase tracking-wider text-sky-600">TAILORED GUIDANCE</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight">
-                Structured for Your Exact Stage
+                <TextReveal text="Structured for Your Exact Stage" />
               </h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            </Reveal>
+            <Reveal effect="stagger" className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {personas.map((persona) => (
-                <div
+                <TiltCard
                   key={persona.title}
+                  max={5}
                   className="bg-slate-50 rounded-2xl p-6 border border-slate-200/80 hover:border-teal-500/40 transition-all flex flex-col justify-between shadow-sm hover:shadow-md relative overflow-hidden"
                 >
                   <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-teal-400 to-blue-accent" />
@@ -551,9 +557,9 @@ export default function BusinessFormalisationCameroonPage() {
                     <span>Recommended entity:</span>
                     <span className="font-bold text-slate-800">{persona.entity}</span>
                   </div>
-                </div>
+                </TiltCard>
               ))}
-            </div>
+            </Reveal>
           </div>
         </section>
 
@@ -571,7 +577,7 @@ export default function BusinessFormalisationCameroonPage() {
             />
           </div>
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-14">
+            <Reveal effect="rise" className="flex flex-col items-center text-center max-w-3xl mx-auto mb-14">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-teal-400/30 text-teal-400 text-xs font-bold tracking-wider uppercase mb-3">
                 The Strategic Comparison
               </div>
@@ -582,8 +588,8 @@ export default function BusinessFormalisationCameroonPage() {
                 Weighing the compounding friction of unguided public filings against a structured,
                 guided legal cadence.
               </p>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+            </Reveal>
+            <Reveal effect="stagger" className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
               <div className="rounded-2xl bg-white/[0.04] border border-rose-500/30 p-6 md:p-8 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
@@ -666,23 +672,23 @@ export default function BusinessFormalisationCameroonPage() {
                   <MaterialIcon name="check" className="text-teal-400 text-[18px]" />
                 </div>
               </div>
-            </div>
+            </Reveal>
           </div>
         </section>
 
         {/* FAQ */}
         <section className="py-24 bg-slate-50">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-12 text-center">
+            <Reveal effect="rise" className="mb-12 text-center">
               <div className="inline-flex items-center gap-2 mb-3">
                 <span className="w-7 h-[2px] bg-teal-500 inline-block" />
                 <span className="text-xs font-bold uppercase tracking-wider text-sky-600">FREQUENTLY ADDRESSED INQUIRIES</span>
                 <span className="w-7 h-[2px] bg-teal-500 inline-block" />
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight leading-tight">
-                Practical Legal &amp; Procedural Answers
+                <TextReveal text="Practical Legal & Procedural Answers" />
               </h2>
-            </div>
+            </Reveal>
             <FaqAccordion items={faqItems} />
           </div>
         </section>
@@ -713,7 +719,7 @@ export default function BusinessFormalisationCameroonPage() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/90 to-navy-950/80" />
           </div>
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Reveal effect="rise" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-teal-400/40 text-teal-400 text-xs font-bold tracking-widest uppercase mb-4">
               Begin Your Formalisation
             </div>
@@ -733,7 +739,7 @@ export default function BusinessFormalisationCameroonPage() {
               </Button>
               <WhatsAppButton phone="237678597593" label="Discuss via WhatsApp Legal Desk" />
             </div>
-          </div>
+          </Reveal>
         </section>
       </main>
 

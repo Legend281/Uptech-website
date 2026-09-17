@@ -10,6 +10,9 @@ import { Button } from "@/components/Button";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { ComplianceRouter } from "@/components/ComplianceRouter";
 import { TimelineNote } from "@/components/TimelineNote";
+import { Reveal } from "@/components/Reveal";
+import { TextReveal } from "@/components/TextReveal";
+import { TiltCard } from "@/components/TiltCard";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { images } from "@/lib/images";
 
@@ -216,7 +219,7 @@ export default function BusinessFormalisationCompliancePage() {
         {/* Guided router */}
         <section id="guided-router" className="py-20 bg-slate-50 border-b border-slate-200/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-3xl mb-12">
+            <Reveal effect="rise" className="max-w-3xl mb-12">
               <div className="inline-flex items-center gap-2 mb-3">
                 <span className="w-7 h-[2px] bg-teal-500 inline-block" />
                 <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
@@ -224,36 +227,39 @@ export default function BusinessFormalisationCompliancePage() {
                 </span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight leading-tight">
-                Find the exact compliance pathway for your situation.
+                <TextReveal text="Find the exact compliance pathway for your situation." />
               </h2>
               <p className="mt-3 text-base text-slate-600 leading-relaxed">
                 Select your profile and need to see your exact regulatory scope and mandatory
                 deliverables in seconds.
               </p>
-            </div>
-            <ComplianceRouter />
+            </Reveal>
+            <Reveal effect="rise" delay={150}>
+              <ComplianceRouter />
+            </Reveal>
           </div>
         </section>
 
         {/* Full directory */}
         <section id="complete-directory" className="py-24 bg-white border-b border-slate-200/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-14 max-w-3xl">
+            <Reveal effect="rise" className="mb-14 max-w-3xl">
               <div className="inline-flex items-center gap-2 mb-3">
                 <span className="w-7 h-[2px] bg-teal-500 inline-block" />
                 <span className="text-xs font-bold uppercase tracking-wider text-sky-600">COMPLETE DIRECTORY</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight leading-tight">
-                Explore all four formalisation &amp; compliance pathways.
+                <TextReveal text="Explore all four formalisation & compliance pathways." />
               </h2>
-            </div>
+            </Reveal>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Reveal effect="stagger" className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {pathways.map((pathway) => {
                 const accent = accentClasses[pathway.accent];
                 return (
-                  <div
+                  <TiltCard
                     key={pathway.number}
+                    max={4}
                     className="bg-white rounded-2xl p-7 border border-slate-200/90 shadow-sm hover:border-teal-500/40 hover:shadow-md transition-all flex flex-col justify-between group"
                   >
                     <div className="mb-6">
@@ -296,10 +302,10 @@ export default function BusinessFormalisationCompliancePage() {
                         <MaterialIcon name="arrow_forward" className="text-[16px] group-hover:translate-x-1 transition-transform" />
                       </Link>
                     </div>
-                  </div>
+                  </TiltCard>
                 );
               })}
-            </div>
+            </Reveal>
           </div>
         </section>
 

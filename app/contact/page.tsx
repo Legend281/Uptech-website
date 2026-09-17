@@ -8,6 +8,8 @@ import { TrustStrip } from "@/components/TrustStrip";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { ContactForm } from "@/components/ContactForm";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
+import { Reveal } from "@/components/Reveal";
+import { TextReveal } from "@/components/TextReveal";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 
 export const metadata: Metadata = {
@@ -151,15 +153,15 @@ export default function ContactPage() {
         {/* What happens next */}
         <section className="py-20 bg-white">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-2xl mx-auto mb-14">
+            <Reveal effect="rise" className="text-center max-w-2xl mx-auto mb-14">
               <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
                 WHAT HAPPENS NEXT
               </span>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight mt-2">
-                Three steps, no waiting in the dark.
+                <TextReveal text="Three steps, no waiting in the dark." />
               </h2>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            </Reveal>
+            <Reveal effect="stagger" className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {nextSteps.map((step) => (
                 <div key={step.number} className="text-center sm:text-left">
                   <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-teal-50 text-teal-700 font-mono font-bold text-sm mb-4">
@@ -169,21 +171,21 @@ export default function ContactPage() {
                   <p className="text-sm text-slate-600 leading-relaxed">{step.description}</p>
                 </div>
               ))}
-            </div>
+            </Reveal>
           </div>
         </section>
 
         {/* Form */}
         <section className="py-20 bg-slate-50 border-y border-slate-200/80">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-10">
+            <Reveal effect="rise" className="text-center mb-10">
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight">
                 Get in touch
               </h2>
               <p className="text-sm sm:text-base text-slate-600 mt-2">
                 Fields marked <span className="text-rose-500">*</span> are required.
               </p>
-            </div>
+            </Reveal>
             <Suspense fallback={null}>
               <ContactForm />
             </Suspense>
@@ -193,7 +195,7 @@ export default function ContactPage() {
         {/* FAQ */}
         <section className="py-24 bg-white">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-12 text-center">
+            <Reveal effect="rise" className="mb-12 text-center">
               <div className="inline-flex items-center gap-2 mb-3 justify-center">
                 <span className="w-7 h-[2px] bg-teal-500 inline-block" />
                 <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
@@ -202,9 +204,9 @@ export default function ContactPage() {
                 <span className="w-7 h-[2px] bg-teal-500 inline-block" />
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight leading-tight">
-                Before you reach out
+                <TextReveal text="Before you reach out" />
               </h2>
-            </div>
+            </Reveal>
             <FaqAccordion items={faqItems} />
           </div>
         </section>
@@ -212,15 +214,15 @@ export default function ContactPage() {
         {/* Cross-link grid */}
         <section className="py-20 bg-slate-50 border-t border-slate-200/80">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-10">
+            <Reveal effect="rise" className="text-center mb-10">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-navy-950 tracking-tight">
-                Want to explore first?
+                <TextReveal text="Want to explore first?" />
               </h2>
               <p className="text-sm text-slate-600 mt-2">
                 Browse what each service actually includes before reaching out.
               </p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-4xl mx-auto">
+            </Reveal>
+            <Reveal effect="stagger" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-4xl mx-auto">
               {otherServices.map((service) => (
                 <Link
                   key={service.href}
@@ -235,7 +237,7 @@ export default function ContactPage() {
                   </span>
                 </Link>
               ))}
-            </div>
+            </Reveal>
           </div>
         </section>
       </main>

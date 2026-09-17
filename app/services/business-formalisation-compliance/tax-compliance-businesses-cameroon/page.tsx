@@ -12,6 +12,9 @@ import { FaqAccordion } from "@/components/FaqAccordion";
 import { ComplianceDisclaimer } from "@/components/ComplianceDisclaimer";
 import { TimelineNote } from "@/components/TimelineNote";
 import { WhatComesNext } from "@/components/WhatComesNext";
+import { Reveal } from "@/components/Reveal";
+import { TextReveal } from "@/components/TextReveal";
+import { TiltCard } from "@/components/TiltCard";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { images } from "@/lib/images";
 
@@ -291,26 +294,27 @@ export default function TaxComplianceBusinessesCameroonPage() {
                 redundant besides: the cadenceColumns grid right below
                 already carries the real cadence/deadline detail. Removed
                 rather than filled in. */}
-            <div className="max-w-2xl mb-12">
+            <Reveal effect="rise" className="max-w-2xl mb-12">
               <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
                 STATUTORY CADENCE &amp; DELIVERABLES
               </span>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight mt-2">
-                The Recurring Compliance Rhythm
+                <TextReveal text="The Recurring Compliance Rhythm" />
               </h2>
               <p className="text-slate-600 mt-2">
                 Businesses run a systematic monthly and quarterly rhythm; individual filers have
                 one annual cycle. Either way, it&apos;s not a once-a-year scramble — it&apos;s a
                 documented cadence that protects your standing.
               </p>
-            </div>
+            </Reveal>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Reveal effect="stagger" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {cadenceColumns.map((column) => {
                 const isIndividual = "audience" in column && column.audience === "individual";
                 return (
-                <div
+                <TiltCard
                   key={column.title}
+                  max={5}
                   className={`rounded-xl p-7 shadow-sm border flex flex-col justify-between ${
                     isIndividual ? "bg-sky-50/50 border-sky-200" : "bg-slate-50 border-slate-200/80"
                   }`}
@@ -348,10 +352,10 @@ export default function TaxComplianceBusinessesCameroonPage() {
                     </span>
                     <span className="text-xs font-semibold text-slate-800">{column.artifact}</span>
                   </div>
-                </div>
+                </TiltCard>
                 );
               })}
-            </div>
+            </Reveal>
 
             <div className="mt-6 p-4 bg-slate-50 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
@@ -369,18 +373,18 @@ export default function TaxComplianceBusinessesCameroonPage() {
         {/* Personas */}
         <section className="py-24 bg-navy-950 text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-14">
+            <Reveal effect="rise" className="text-center max-w-3xl mx-auto mb-14">
               <span className="text-xs font-bold uppercase tracking-wider text-teal-400">TAILORED TAX ENGAGEMENTS</span>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-2">
-                Three Paths to Total Fiscal Peace of Mind
+                <TextReveal text="Three Paths to Total Fiscal Peace of Mind" />
               </h2>
               <p className="text-slate-300 mt-3">
                 Whether you&apos;re newly established and looking to maintain clean corporate ledgers
                 from day one, navigating business back-filings, or managing your own personal
                 income tax, our tax desk provides clear, structured execution.
               </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </Reveal>
+            <Reveal effect="stagger" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <div className="frosted-glass rounded-2xl p-7 flex flex-col justify-between">
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between">
@@ -490,7 +494,7 @@ export default function TaxComplianceBusinessesCameroonPage() {
                   Get My Personal Tax Checklist
                 </Button>
               </div>
-            </div>
+            </Reveal>
           </div>
         </section>
 
@@ -506,18 +510,18 @@ export default function TaxComplianceBusinessesCameroonPage() {
             by convention everywhere else on this site too. */}
         <section className="py-24 bg-slate-50 border-y border-slate-200/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-3xl mb-12">
+            <Reveal effect="rise" className="max-w-3xl mb-12">
               <span className="text-xs font-bold uppercase tracking-wider text-sky-600">DOCUMENTS &amp; REQUIREMENTS</span>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight mt-2">
-                What You Hand Over vs. What You Receive
+                <TextReveal text="What You Hand Over vs. What You Receive" />
               </h2>
               <p className="text-slate-600 mt-2">
                 We turn an intimidating legal paperwork maze into a simple, documented exchange —
                 monthly for businesses, annually for individual filers. You provide the raw
                 records; we handle verification, filing, and delivery of certified receipts.
               </p>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            </Reveal>
+            <Reveal effect="stagger" className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="bg-white p-7 rounded-xl shadow-sm border border-slate-200/80">
                 <div className="flex items-center gap-3 mb-5">
                   <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-700">
@@ -562,12 +566,12 @@ export default function TaxComplianceBusinessesCameroonPage() {
                   ))}
                 </div>
               </div>
-            </div>
+            </Reveal>
 
             {/* Individual/freelancer equivalent — a smaller block beneath
                 the business one rather than merged into the same list,
                 since the documents involved are genuinely different. */}
-            <div className="mt-10 pt-10 border-t border-slate-200/80">
+            <Reveal effect="rise" className="mt-10 pt-10 border-t border-slate-200/80">
               <div className="flex items-center gap-2 mb-6">
                 <span className="w-6 h-[2px] bg-sky-500 inline-block" />
                 <span className="text-xs font-bold uppercase tracking-wider text-sky-600">For Individual Filers</span>
@@ -612,7 +616,7 @@ export default function TaxComplianceBusinessesCameroonPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Reveal>
 
             <div className="mt-8 p-6 bg-white rounded-xl flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm border border-slate-200/80">
               <div className="flex items-center gap-4">
@@ -638,17 +642,17 @@ export default function TaxComplianceBusinessesCameroonPage() {
         {/* Penalty risk comparator */}
         <section className="py-24 bg-navy-950 text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-14">
+            <Reveal effect="rise" className="text-center max-w-3xl mx-auto mb-14">
               <span className="text-xs font-bold uppercase tracking-wider text-teal-400">THE COST OF INACTION</span>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-2">
-                Unmanaged Exposure vs. the Uptech Consulting Managed Cadence
+                <TextReveal text="Unmanaged Exposure vs. the Uptech Consulting Managed Cadence" />
               </h2>
               <p className="text-slate-300 mt-3">
                 In Cameroon, fiscal sanctions compound rapidly. Comparing what happens when
                 filings lapse against a predictable, managed cadence.
               </p>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            </Reveal>
+            <Reveal effect="stagger" className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="frosted-glass rounded-2xl p-7">
                 <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center gap-2">
@@ -733,19 +737,19 @@ export default function TaxComplianceBusinessesCameroonPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Reveal>
           </div>
         </section>
 
         {/* FAQ */}
         <section className="py-24 bg-slate-50">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-12 text-center">
+            <Reveal effect="rise" className="mb-12 text-center">
               <span className="text-xs font-bold uppercase tracking-wider text-sky-600">DIRECT ANSWERS</span>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight mt-2">
-                Practical Tax Compliance Answers
+                <TextReveal text="Practical Tax Compliance Answers" />
               </h2>
-            </div>
+            </Reveal>
             <FaqAccordion items={faqItems} />
           </div>
         </section>
@@ -778,7 +782,7 @@ export default function TaxComplianceBusinessesCameroonPage() {
             <div className="absolute inset-0 bg-navy-950/30" />
           </div>
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[36rem] h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Reveal effect="rise" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-teal-400/30 mb-4 backdrop-blur-md">
               <span className="w-2 h-2 rounded-full bg-emerald-400" />
               <span className="text-xs font-bold uppercase tracking-wider text-teal-300">TAX DESK ACTIVE IN BUEA &amp; DOUALA</span>
@@ -794,7 +798,7 @@ export default function TaxComplianceBusinessesCameroonPage() {
               <Button href="/contact?service=tax-compliance-businesses">Get a Compliance Check</Button>
               <WhatsAppButton phone="237678597593" label="Discuss via WhatsApp Tax Desk" />
             </div>
-          </div>
+          </Reveal>
         </section>
       </main>
 

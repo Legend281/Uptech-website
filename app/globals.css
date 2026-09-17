@@ -211,27 +211,36 @@ h6 {
    nothing here triggers layout on the low-end phones CLAUDE.md Section 6.9
    treats as the real target. */
 @media (prefers-reduced-motion: no-preference) {
-  /* The container holds still; its children arrive one after another. */
+  /* The container holds still; its children arrive one after another —
+     scale + blur + a spring-like overshoot easing, not a flat fade-up.
+     `filter: blur()` is paint-time rather than compositor-only like
+     opacity/transform, so kept small (6px) and brief (550ms) to stay cheap
+     on the low-end phones CLAUDE.md Section 6.9 treats as the real target —
+     a deliberate, bounded exception to the "opacity/transform only" rule
+     the rest of this block still follows. */
   [data-reveal="stagger"] > * {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(32px) scale(0.92);
+    filter: blur(6px);
     transition:
-      opacity 600ms var(--ease-out-expo),
-      transform 600ms var(--ease-out-expo);
+      opacity 550ms var(--ease-out-expo),
+      transform 650ms cubic-bezier(0.34, 1.56, 0.64, 1),
+      filter 550ms var(--ease-out-expo);
   }
 
   [data-reveal="stagger"][data-revealed="true"] > * {
     opacity: 1;
     transform: none;
+    filter: blur(0);
   }
 
   [data-reveal="stagger"] > *:nth-child(1) { transition-delay: 0ms; }
-  [data-reveal="stagger"] > *:nth-child(2) { transition-delay: 90ms; }
-  [data-reveal="stagger"] > *:nth-child(3) { transition-delay: 180ms; }
-  [data-reveal="stagger"] > *:nth-child(4) { transition-delay: 270ms; }
-  [data-reveal="stagger"] > *:nth-child(5) { transition-delay: 360ms; }
-  [data-reveal="stagger"] > *:nth-child(6) { transition-delay: 450ms; }
-  [data-reveal="stagger"] > *:nth-child(n + 7) { transition-delay: 520ms; }
+  [data-reveal="stagger"] > *:nth-child(2) { transition-delay: 110ms; }
+  [data-reveal="stagger"] > *:nth-child(3) { transition-delay: 220ms; }
+  [data-reveal="stagger"] > *:nth-child(4) { transition-delay: 330ms; }
+  [data-reveal="stagger"] > *:nth-child(5) { transition-delay: 440ms; }
+  [data-reveal="stagger"] > *:nth-child(6) { transition-delay: 550ms; }
+  [data-reveal="stagger"] > *:nth-child(n + 7) { transition-delay: 640ms; }
 
   /* The philosophy beam draws across before the columns beneath it rise —
      the load arrives, then the supports take it. */

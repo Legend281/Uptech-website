@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -8,9 +9,13 @@ import { TrustStrip } from "@/components/TrustStrip";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { ContactForm } from "@/components/ContactForm";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
+import { HeroIntro } from "@/components/contact/HeroIntro";
+import { ScrollCue } from "@/components/home/ScrollCue";
 import { Reveal } from "@/components/Reveal";
 import { TextReveal } from "@/components/TextReveal";
+import { TiltCard } from "@/components/TiltCard";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
+import { images } from "@/lib/images";
 
 export const metadata: Metadata = {
   title: "Book a Consultation",
@@ -27,11 +32,16 @@ const trustStripItems = [
     description: "Every inquiry handled in the language you're most comfortable in.",
   },
   {
-    icon: "chat",
-    title: "Direct WhatsApp Access",
+    // Was "Direct WhatsApp Access" — no longer true on this page specifically:
+    // the form's WhatsApp option was removed (email-only now) and this page
+    // has no floating WhatsApp button either (unlike the service pages).
+    // Reusing the hero's own "no ticket queue, no automated replies" wording
+    // rather than inventing a new claim.
+    icon: "mail",
+    title: "Direct Email Intake",
     badgeText: "Real Person, Not a Bot",
     badgeAccent: "sky" as const,
-    description: "Message our desk directly — no ticket queue, no automated replies.",
+    description: "Message goes straight to a specialist — no ticket queue, no automated replies.",
   },
   {
     icon: "public",
@@ -57,6 +67,26 @@ const nextSteps = [
     number: "03",
     title: "You hear back directly",
     description: "A real person responds through the channel you reached out on.",
+  },
+];
+
+// Same three facts as the FAQ below, condensed and surfaced next to the
+// form itself — nothing claimed here that isn't already stated there.
+const sidebarNotes = [
+  {
+    icon: "schedule",
+    title: "Fast response",
+    description: "Within 1 business day, usually sooner — no ticket queue on our end.",
+  },
+  {
+    icon: "lock",
+    title: "Confidential by design",
+    description: "Nothing is submitted to a server. This just prepares an email for you to send yourself.",
+  },
+  {
+    icon: "help",
+    title: "Not sure what to select?",
+    description: "Choose \"Something else\" and briefly describe your situation — we'll point you to the right service.",
   },
 ];
 
@@ -124,28 +154,24 @@ export default function ContactPage() {
                 buttons/trust strip sit, still clearly visible as photos. */}
             <HeroImageCarousel
               keys={["dedicated-advisor", "career-review"]}
-              imageClassName="object-cover object-center scale-105"
+              imageClassName="hero-ken-burns object-cover object-center"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/55 to-navy-950/55" />
           </div>
-          <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
-          <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div className="inline-flex items-center gap-2 mb-6 justify-center">
-              <span className="w-7 h-[2px] bg-teal-400 inline-block" />
-              <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
-                BOOK A CONSULTATION
-              </span>
-              <span className="w-7 h-[2px] bg-teal-400 inline-block" />
-            </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] mb-6">
-              Tell us what you need. <br className="hidden sm:inline" />
-              <span className="gradient-teal-blue-text">A specialist responds directly.</span>
-            </h1>
-            <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto">
-              No ticket queue, no automated replies. Fill in a few details and continue the
-              conversation by email.
-            </p>
+
+          {/* Ambient depth — same slow-drifting glows as every other hero
+              on the site, replacing the single static blur circle this
+              section had before. */}
+          <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
+            <div className="float-a absolute top-1/4 -left-10 w-96 h-96 rounded-full bg-teal-500/15 blur-3xl" />
+            <div className="float-b absolute bottom-0 -right-16 w-80 h-80 rounded-full bg-sky-400/10 blur-3xl" />
           </div>
+
+          <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <HeroIntro />
+          </div>
+
+          <ScrollCue />
         </section>
 
         <TrustStrip items={trustStripItems} />
@@ -177,8 +203,8 @@ export default function ContactPage() {
 
         {/* Form */}
         <section className="py-20 bg-slate-50 border-y border-slate-200/80">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <Reveal effect="rise" className="text-center mb-10">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <Reveal effect="rise" className="text-center mb-14">
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight">
                 Get in touch
               </h2>
@@ -186,9 +212,54 @@ export default function ContactPage() {
                 Fields marked <span className="text-rose-500">*</span> are required.
               </p>
             </Reveal>
-            <Suspense fallback={null}>
-              <ContactForm />
-            </Suspense>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+              <Reveal effect="fade" className="lg:col-span-7">
+                <Suspense fallback={null}>
+                  <ContactForm />
+                </Suspense>
+              </Reveal>
+
+              {/* Photo + the same facts already stated in the FAQ below,
+                  surfaced here next to the form itself rather than making a
+                  reader scroll down to find them — nothing new claimed. */}
+              <Reveal effect="stagger" delay={120} className="lg:col-span-5 flex flex-col gap-4">
+                <TiltCard max={4} className="relative overflow-hidden rounded-2xl border border-slate-200/80 shadow-sm">
+                  <Image
+                    src={images["compliance-advisory"].src}
+                    alt={images["compliance-advisory"].alt}
+                    width={images["compliance-advisory"].width}
+                    height={images["compliance-advisory"].height}
+                    sizes="(min-width: 1024px) 40vw, 100vw"
+                    placeholder="blur"
+                    blurDataURL={images["compliance-advisory"].blurDataURL}
+                    className="h-56 w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-navy-950/75 via-navy-950/10 to-transparent" />
+                  <div className="absolute inset-x-4 bottom-4 text-white">
+                    <p className="text-sm font-bold leading-snug">A specialist reviews it.</p>
+                    <p className="mt-1 text-xs text-slate-300">
+                      Your message is matched to the right desk for the service you selected.
+                    </p>
+                  </div>
+                </TiltCard>
+                {sidebarNotes.map((note) => (
+                  <TiltCard
+                    key={note.title}
+                    max={3}
+                    className="flex items-start gap-4 rounded-xl border border-slate-200/80 bg-white p-5"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
+                      <MaterialIcon name={note.icon} className="text-[20px]" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-navy-950 mb-1">{note.title}</h3>
+                      <p className="text-xs text-slate-600 leading-relaxed">{note.description}</p>
+                    </div>
+                  </TiltCard>
+                ))}
+              </Reveal>
+            </div>
           </div>
         </section>
 
@@ -224,18 +295,19 @@ export default function ContactPage() {
             </Reveal>
             <Reveal effect="stagger" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-4xl mx-auto">
               {otherServices.map((service) => (
-                <Link
-                  key={service.href}
-                  href={service.href}
-                  className="flex items-center gap-3 bg-white rounded-xl p-5 border border-slate-200/80 hover:border-teal-500/40 hover:shadow-md transition-all group"
-                >
-                  <div className="w-10 h-10 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
-                    <MaterialIcon name={service.icon} className="text-[20px]" />
-                  </div>
-                  <span className="text-sm font-bold text-navy-950 group-hover:text-teal-600 transition-colors">
-                    {service.title}
-                  </span>
-                </Link>
+                <TiltCard key={service.href} max={4}>
+                  <Link
+                    href={service.href}
+                    className="flex items-center gap-3 bg-white rounded-xl p-5 border border-slate-200/80 hover:border-teal-500/40 hover:shadow-md transition-all group"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
+                      <MaterialIcon name={service.icon} className="text-[20px]" />
+                    </div>
+                    <span className="text-sm font-bold text-navy-950 group-hover:text-teal-600 transition-colors">
+                      {service.title}
+                    </span>
+                  </Link>
+                </TiltCard>
               ))}
             </Reveal>
           </div>

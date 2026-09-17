@@ -48,9 +48,9 @@ export function HeroIntro({ whatsapp }: { whatsapp: string }) {
       >
         We close the distance between
         <br />
-        <span className="text-teal-400">strategy and</span>
+        <span className="shimmer-text text-teal-400">strategy and</span>
         <br />
-        <span className="text-sky-400">execution.</span>
+        <span className="shimmer-text text-sky-400">execution.</span>
       </motion.h1>
 
       <motion.p

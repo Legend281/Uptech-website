@@ -6,6 +6,7 @@ import {
   ArrowUpRight,
   Check,
   FileCheck2,
+  Layers,
   Lock,
   Plus,
   Quote,
@@ -15,7 +16,10 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { HeroIntro } from "@/components/home/HeroIntro";
+import { ScrollCue } from "@/components/home/ScrollCue";
 import { PartnersStrip } from "@/components/home/PartnersStrip";
+import { TiltCard } from "@/components/TiltCard";
+import { TextReveal } from "@/components/TextReveal";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 import { TrustStrip, type TrustStripItem } from "@/components/TrustStrip";
 import { FaqAccordion } from "@/components/FaqAccordion";
@@ -39,7 +43,9 @@ const trustItems: TrustStripItem[] = [
   { icon: "apartment", title: "Cameroon S.A.", badgeText: "Buea, Cameroon", badgeAccent: "teal" },
   { icon: "public", title: "USA S-Corp", badgeText: "Stafford, Texas", badgeAccent: "sky" },
   { icon: "verified_user", title: "Compliance-first", badgeText: "Documented delivery", badgeAccent: "emerald" },
-  { icon: "translate", title: "Bilingual", badgeText: "English & Français", badgeAccent: "sky" },
+  // Same "within 1 business day" SLA already stated on /contact — reused
+  // rather than a new claim invented for this strip.
+  { icon: "schedule", title: "Fast Response", badgeText: "Within 1 business day", badgeAccent: "sky" },
 ];
 
 const startingPoints = [
@@ -79,6 +85,8 @@ const startingPoints = [
  */
 const promises: PromiseStatement[] = [
   {
+    tag: "Career Placement",
+    accent: "teal",
     lead: "We dedicate a full-time worker to your account whose job is to make sure you never miss a relevant posting, and",
     emphasis: "follow up with recruiters until you are placed.",
     support:
@@ -87,6 +95,8 @@ const promises: PromiseStatement[] = [
     ctaHref: "/services/career-marketing-placement",
   },
   {
+    tag: "Compliance",
+    accent: "sky",
     lead: "Business legalisation, tax and social insurance compliance, ministry licensing and accreditation,",
     emphasis: "managed as one accountable process.",
     support:
@@ -95,6 +105,8 @@ const promises: PromiseStatement[] = [
     ctaHref: "/services/business-formalisation-compliance",
   },
   {
+    tag: "How We Operate",
+    accent: "emerald",
     lead: "Individual effort only succeeds when it runs through the",
     emphasis: "repeatable, documented systems the organisation has already built.",
     support:
@@ -230,15 +242,24 @@ export default function HomePage() {
         <section className="relative overflow-hidden bg-navy-900 pb-24 pt-12 lg:pb-36 lg:pt-20">
           <div className="absolute inset-0 z-0">
             <HeroImageCarousel
-              keys={["compliance-advisory", "cross-border-boardroom"]}
-              imageClassName="hero-settle object-cover object-center scale-105"
+              keys={["compliance-advisory", "cross-border-boardroom", "team-presenting"]}
+              imageClassName="hero-ken-burns object-cover object-center"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/60 to-navy-950/45" />
+          </div>
+
+          {/* Ambient depth only — low-opacity, slow-drifting glows behind the
+              copy. Purely decorative, so hidden from assistive tech. */}
+          <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
+            <div className="float-a absolute -left-24 top-10 h-72 w-72 rounded-full bg-teal-400/20 blur-3xl" />
+            <div className="float-b absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-sky-400/15 blur-3xl" />
           </div>
 
           <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <HeroIntro whatsapp={WHATSAPP} />
           </div>
+
+          <ScrollCue />
         </section>
 
         <TrustStrip items={trustItems} variant="light" />
@@ -250,7 +271,11 @@ export default function HomePage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Reveal effect="stagger" className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
               <div className="relative lg:col-span-6">
-                <div className="relative overflow-hidden rounded-2xl border border-slate-200/90 shadow-2xl ring-1 ring-black/5">
+                <div
+                  className="pointer-events-none absolute -left-8 -top-8 -z-10 h-56 w-56 rounded-full bg-teal-400/15 blur-3xl"
+                  aria-hidden="true"
+                />
+                <TiltCard max={5} className="relative overflow-hidden rounded-2xl border border-slate-200/90 shadow-2xl ring-1 ring-black/5">
                   <Image
                     src={images["ops-center"].src}
                     alt={images["ops-center"].alt}
@@ -270,13 +295,12 @@ export default function HomePage() {
                       We stay until the process runs.
                     </p>
                   </div>
-                </div>
+                </TiltCard>
               </div>
 
               <div className="lg:col-span-6">
                 <h2 className="mb-6 text-3xl font-extrabold leading-tight tracking-tight text-navy-950 sm:text-4xl">
-                  Built for the part everyone else calls
-                  &ldquo;implementation&rdquo;.
+                  <TextReveal text={"Built for the part everyone else calls “implementation”."} />
                 </h2>
                 <p className="mb-4 text-sm leading-relaxed text-slate-600 sm:text-base">
                   Uptech Consulting combines technology-driven advisory with
@@ -290,7 +314,7 @@ export default function HomePage() {
                 </p>
 
                 <dl className="mb-8 divide-y divide-slate-200/80 rounded-xl border border-slate-200/90 bg-slate-50/80 p-5">
-                  <div className="flex flex-col gap-2 py-3.5 first:pt-1 sm:flex-row sm:items-baseline sm:gap-5">
+                  <Reveal effect="rise" className="flex flex-col gap-2 py-3.5 first:pt-1 sm:flex-row sm:items-baseline sm:gap-5">
                     <dt className="inline-flex w-fit flex-shrink-0 items-center rounded-md bg-navy-900 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-teal-400">
                       Our Vision
                     </dt>
@@ -298,8 +322,8 @@ export default function HomePage() {
                       To be a trusted global partner in consulting, outsourcing
                       and business support solutions.
                     </dd>
-                  </div>
-                  <div className="flex flex-col gap-2 py-3.5 last:pb-1 sm:flex-row sm:items-baseline sm:gap-5">
+                  </Reveal>
+                  <Reveal effect="rise" delay={100} className="flex flex-col gap-2 py-3.5 last:pb-1 sm:flex-row sm:items-baseline sm:gap-5">
                     <dt className="inline-flex w-fit flex-shrink-0 items-center rounded-md bg-navy-900 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-sky-400">
                       Our Mission
                     </dt>
@@ -310,7 +334,7 @@ export default function HomePage() {
                       operations, strengthen capacity and drive sustainable
                       growth.
                     </dd>
-                  </div>
+                  </Reveal>
                 </dl>
 
                 <Link
@@ -343,10 +367,13 @@ export default function HomePage() {
             </div>
 
             <Reveal effect="stagger" className="grid grid-cols-1 gap-8 md:grid-cols-2">
-              {startingPoints.map((card) => (
-                <div
+              {startingPoints.map((card, index) => (
+                <TiltCard
                   key={card.audience}
-                  className="card-hover-shadow flex flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white"
+                  max={4}
+                  className={`card-hover-shadow group/card flex flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white ${
+                    index === 1 ? "md:mt-10" : ""
+                  }`}
                 >
                   <div className="group relative h-64 overflow-hidden">
                     <Image
@@ -373,7 +400,7 @@ export default function HomePage() {
                       <ul className="mb-8 space-y-4">
                         {card.points.map((point) => (
                           <li key={point} className="flex items-start gap-3.5 text-sm text-slate-700">
-                            <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-teal-200/70 bg-teal-50">
+                            <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-teal-200/70 bg-teal-50 transition-transform duration-200 group-hover/card:scale-110">
                               <Check className="h-3.5 w-3.5 text-teal-600" strokeWidth={2.5} />
                             </span>
                             <span className="leading-relaxed">{point}</span>
@@ -389,7 +416,7 @@ export default function HomePage() {
                       <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2} />
                     </Link>
                   </div>
-                </div>
+                </TiltCard>
               ))}
             </Reveal>
           </div>
@@ -402,7 +429,7 @@ export default function HomePage() {
               <div className="lg:col-span-5">
                 <div className="lg:sticky lg:top-28">
                   <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-navy-950 sm:text-4xl">
-                    Five services. Pick exactly what you need.
+                    <TextReveal text="Five services. Pick exactly what you need." />
                   </h2>
                   <p className="mb-8 text-sm leading-relaxed text-slate-600">
                     No bundling, no guesswork — we map what you actually need
@@ -468,10 +495,17 @@ export default function HomePage() {
         </section>
 
         {/* ---------------- Meet your dedicated person ---------------- */}
-        <section className="border-y border-slate-200/80 bg-navy-950 py-24 text-white">
-          <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-            {/* The mark stays put while the statements change beneath it. */}
-            <Quote className="mx-auto mb-8 h-9 w-9 text-teal-400" strokeWidth={1.5} />
+        <section className="relative overflow-hidden border-y border-slate-200/80 bg-navy-950 py-24 text-white lg:py-28">
+          <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+            <div className="float-a absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-teal-400/10 blur-3xl" />
+            {/* A large, faint editorial quote mark behind the copy — the mark
+                stays put while the statements change in front of it. */}
+            <Quote
+              className="absolute left-1/2 top-6 h-40 w-40 -translate-x-1/2 text-teal-400/[0.06] sm:h-48 sm:w-48"
+              strokeWidth={1}
+            />
+          </div>
+          <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
             <RotatingPromise items={promises} />
           </div>
         </section>
@@ -483,23 +517,46 @@ export default function HomePage() {
             teasing it. Shrunk to one paragraph + a link, not removed: the
             homepage still needs to establish tone fast for a zero-context
             visitor, just without re-explaining what Who We Are already owns. */}
-        <section className="border-y border-slate-200/80 bg-slate-100/70 py-16">
-          <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-            <h2 className="mb-4 text-2xl font-extrabold leading-tight tracking-tight text-navy-950 sm:text-3xl">
-              Documented systems, not individual heroics.
-            </h2>
-            <p className="mb-6 text-sm leading-relaxed text-slate-600 sm:text-base">
-              A clear operating rhythm — not individual heroics — keeps every engagement
-              accountable, built on the same four values our whole team is held to: integrity,
-              professionalism, commitment and innovation.
-            </p>
-            <Link
-              href="/who-we-are"
-              className="inline-flex items-center gap-2 text-sm font-bold text-blue-accent transition-colors hover:text-blue-700"
-            >
-              <span>Learn more about how we work</span>
-              <ArrowRight className="h-4 w-4" strokeWidth={2} />
-            </Link>
+        <section className="border-y border-slate-200/80 bg-slate-100/70 py-20 lg:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <Reveal effect="stagger" className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-16">
+              <div className="lg:col-span-5">
+                <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-navy-900">
+                  <Layers className="h-5 w-5 text-teal-400" strokeWidth={2} />
+                </div>
+                <h2 className="text-3xl font-extrabold leading-tight tracking-tight text-navy-950 sm:text-4xl">
+                  <TextReveal text="Documented systems, not individual heroics." />
+                </h2>
+              </div>
+
+              <div className="lg:col-span-7">
+                <p className="mb-7 max-w-xl text-sm leading-relaxed text-slate-600 sm:text-base">
+                  A clear operating rhythm — not individual heroics — keeps every engagement
+                  accountable, built on the same four values our whole team is held to.
+                </p>
+
+                <div className="mb-8 grid grid-cols-2 gap-x-8 gap-y-5 border-t border-slate-300/70 pt-6 sm:grid-cols-4">
+                  {["Integrity", "Professionalism", "Commitment", "Innovation"].map((value, index) => (
+                    <div key={value}>
+                      <span className="mb-1 block text-[11px] font-extrabold tracking-tight text-teal-600">
+                        0{index + 1}
+                      </span>
+                      <span className="text-xs font-bold uppercase tracking-wide text-navy-950">
+                        {value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <Link
+                  href="/who-we-are"
+                  className="inline-flex items-center gap-2 text-sm font-bold text-blue-accent transition-colors hover:text-blue-700"
+                >
+                  <span>Learn more about how we work</span>
+                  <ArrowRight className="h-4 w-4" strokeWidth={2} />
+                </Link>
+              </div>
+            </Reveal>
           </div>
         </section>
 
@@ -553,34 +610,23 @@ export default function HomePage() {
                 <h3 className="mb-6 text-lg font-bold text-navy-950">
                   The systems this work runs through
                 </h3>
-                <dl className="divide-y divide-slate-200/80 border-y border-slate-200/80">
-                  {systems.map((system) => (
-                    <div key={system.code} className="flex items-baseline gap-5 py-3.5">
-                      <dt className="w-16 shrink-0 text-sm font-extrabold tracking-tight text-navy-950">
+                <dl className="space-y-3">
+                  {systems.map((system, index) => (
+                    <Reveal
+                      key={system.code}
+                      effect="rise"
+                      delay={index * 70}
+                      className="flex items-center gap-4 rounded-xl border border-slate-200/80 bg-slate-50/60 p-4 transition-colors hover:bg-slate-50"
+                    >
+                      <dt className="flex h-10 w-16 shrink-0 items-center justify-center rounded-lg bg-navy-900 text-xs font-extrabold tracking-tight text-teal-400">
                         {system.code}
                       </dt>
                       <dd className="text-xs leading-relaxed text-slate-600">
                         {system.label}
                       </dd>
-                    </div>
+                    </Reveal>
                   ))}
                 </dl>
-
-                <div className="mt-8 rounded-xl border border-dashed border-slate-300 bg-slate-50/60 p-5">
-                  <div className="mb-2 flex items-center gap-2">
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                      Client stories
-                    </span>
-                    <span className="rounded border border-slate-300 bg-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                      Pending
-                    </span>
-                  </div>
-                  <p className="text-xs leading-relaxed text-slate-500">
-                    Named references and outcome figures go here once Uptech
-                    Consulting supplies approved client stories. Nothing has been
-                    invented to fill this space.
-                  </p>
-                </div>
               </div>
             </Reveal>
           </div>
@@ -590,9 +636,11 @@ export default function HomePage() {
         <section className="border-y border-slate-200/80 bg-slate-100/70 py-24">
           <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
             <h2 className="mb-12 text-3xl font-extrabold tracking-tight text-navy-950 sm:text-4xl">
-              Before you book anything.
+              <TextReveal text="Before you book anything." />
             </h2>
-            <FaqAccordion items={faqItems} />
+            <Reveal effect="fade">
+              <FaqAccordion items={faqItems} />
+            </Reveal>
           </div>
         </section>
 
@@ -600,8 +648,8 @@ export default function HomePage() {
         <section id="careers" className="scroll-mt-24 bg-white py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Reveal effect="stagger" className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
-              <div className="lg:col-span-6">
-                <div className="relative overflow-hidden rounded-2xl border border-slate-200/90 shadow-2xl ring-1 ring-black/5">
+              <div className="lg:order-2 lg:col-span-6">
+                <TiltCard max={5} className="relative overflow-hidden rounded-2xl border border-slate-200/90 shadow-2xl ring-1 ring-black/5">
                   <Image
                     src={images["career-review"].src}
                     alt={images["career-review"].alt}
@@ -612,12 +660,12 @@ export default function HomePage() {
                     blurDataURL={images["career-review"].blurDataURL}
                     className="h-[460px] w-full object-cover"
                   />
-                </div>
+                </TiltCard>
               </div>
 
-              <div className="lg:col-span-6">
+              <div className="lg:order-1 lg:col-span-6">
                 <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-navy-950 sm:text-4xl">
-                  Work where the standard is written down.
+                  <TextReveal text="Work where the standard is written down." />
                 </h2>
                 <p className="mb-8 text-sm leading-relaxed text-slate-600 sm:text-base">
                   We look for people who bring integrity, professionalism,
@@ -674,10 +722,10 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/75 to-navy-950/25" />
 
           <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col justify-between gap-10 lg:flex-row lg:items-center">
+            <Reveal effect="rise" className="flex flex-col justify-between gap-10 lg:flex-row lg:items-center">
               <div className="max-w-2xl">
                 <h2 className="mb-5 text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
-                  One focused conversation tells us what you actually need.
+                  <TextReveal text="One focused conversation tells us what you actually need." />
                 </h2>
                 <p className="text-base leading-relaxed text-slate-300">
                   We will map your situation, tell you plainly whether we are
@@ -703,7 +751,7 @@ export default function HomePage() {
                   <span>WhatsApp us</span>
                 </a>
               </div>
-            </div>
+            </Reveal>
           </div>
         </section>
       </main>

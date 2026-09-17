@@ -10,28 +10,57 @@ const partners = [
   { name: "GVEC", src: "/images/s5.webp", width: 165, height: 62 },
 ];
 
+/**
+ * Two back-to-back copies of the same logo row inside one `marquee-track`
+ * (app/globals.css) — animating the track left by exactly 50% loops the
+ * second copy in seamlessly, so the strip reads as one continuous ribbon of
+ * logos rather than a row that snaps back. Full colour, no dimming: an
+ * earlier grayscale/opacity treatment was exactly why these stopped
+ * reading as the partners' real logos.
+ */
+function LogoRow({ ariaHidden }: { ariaHidden?: boolean }) {
+  return (
+    <div className="flex shrink-0 items-center gap-16 sm:gap-20" aria-hidden={ariaHidden}>
+      {partners.map((partner) => (
+        <Image
+          key={partner.name}
+          src={partner.src}
+          alt={partner.name}
+          width={partner.width}
+          height={partner.height}
+          className="h-9 w-auto shrink-0 object-contain sm:h-11"
+        />
+      ))}
+    </div>
+  );
+}
+
 export function PartnersStrip() {
   return (
-    <section className="border-y border-slate-200/80 bg-white py-14">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <Reveal effect="fade">
-          <p className="mb-8 text-center text-xs font-bold uppercase tracking-wider text-slate-400">
-            Our Partners
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-8 sm:gap-x-16">
-            {partners.map((partner) => (
-              <Image
-                key={partner.name}
-                src={partner.src}
-                alt={partner.name}
-                width={partner.width}
-                height={partner.height}
-                className="h-8 w-auto object-contain opacity-60 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0 sm:h-9"
-              />
-            ))}
+    <section className="border-y border-slate-200/80 bg-slate-50/60 py-14">
+      <Reveal effect="fade">
+        <div className="mx-auto mb-8 max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center gap-2.5">
+            <span className="h-[2px] w-6 bg-teal-500" />
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              Our Partners
+            </span>
+            <span className="h-[2px] w-6 bg-teal-500" />
           </div>
-        </Reveal>
-      </div>
+        </div>
+
+        {/* Edges fade to the section background via a mask, so the ribbon
+            appears to emerge from and dissolve into the page rather than
+            being cropped by a hard edge. */}
+        <div
+          className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"
+        >
+          <div className="marquee-track flex w-max items-center gap-16 sm:gap-20">
+            <LogoRow />
+            <LogoRow ariaHidden />
+          </div>
+        </div>
+      </Reveal>
     </section>
   );
 }

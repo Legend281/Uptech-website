@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeftRight, ArrowRight } from "lucide-react";
 import { LocalTime } from "@/components/home/LocalTime";
 import { Reveal } from "@/components/Reveal";
+import { TextReveal } from "@/components/TextReveal";
 
 const offices = [
   {
@@ -50,9 +51,9 @@ export function BridgeSection() {
             not need a label above it to be understood. */}
         <div className="mb-16 max-w-4xl">
           <h2 className="text-4xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Two jurisdictions.
+            <TextReveal text="Two jurisdictions." />
             <br />
-            One accountable structure.
+            <TextReveal text="One accountable structure." />
           </h2>
           <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-300">
             Most firms sit on one side of this relationship and hand you off at
@@ -108,7 +109,7 @@ export function BridgeSection() {
           </div>
         </Reveal>
 
-        <div className="grid grid-cols-1 gap-x-10 gap-y-8 border-t border-slate-800 pt-10 md:grid-cols-3">
+        <Reveal effect="stagger" className="grid grid-cols-1 gap-x-10 gap-y-8 border-t border-slate-800 pt-10 md:grid-cols-3">
           {crossings.map((crossing) => (
             <div key={crossing.title}>
               <h4 className="mb-2 text-sm font-bold leading-snug text-white">
@@ -119,7 +120,7 @@ export function BridgeSection() {
               </p>
             </div>
           ))}
-        </div>
+        </Reveal>
 
         <div className="mt-12">
           <Link

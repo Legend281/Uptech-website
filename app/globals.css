@@ -117,6 +117,30 @@ h6 {
   animation: hero-settle 1200ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* One combined animation (settle-in, then a slow continuous Ken Burns
+   drift) rather than two separate `animation` declarations stacked on the
+   same element — comma-separated animations that both touch `transform`
+   don't compose, the later one simply wins, so the settle and the drift
+   have to live in one keyframe list to both survive. Plays once and holds
+   its final frame rather than looping: each slide is only on screen for
+   one carousel interval anyway, so a loop back to the start would just be
+   a visible jump cut. */
+@keyframes hero-ken-burns {
+  0% {
+    transform: scale(1.04) translate3d(0, 0, 0);
+  }
+  8% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  100% {
+    transform: scale(1.1) translate3d(-1.4%, -1%, 0);
+  }
+}
+
+.hero-ken-burns {
+  animation: hero-ken-burns 20s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* The Buea–Stafford rail draws itself once, when scrolled into view. */
 .rail-draw {
   transform: scaleX(0);
@@ -302,4 +326,85 @@ h6 {
     transform-origin: top center;
     transition: transform 900ms var(--ease-out-expo);
   }
+}
+
+/* ============================================================
+   Homepage design-polish pass — marquee, ambient floats, shimmer text.
+   All three are continuous (not scroll-triggered), so they are CSS
+   keyframe animations rather than framer-motion: cheaper on the low-end
+   mobile hardware CLAUDE.md Section 6.9 treats as a hard constraint, and
+   the blanket `prefers-reduced-motion: reduce` rule near the top of this
+   file already zeroes every animation-duration sitewide, so none of these
+   need their own reduced-motion override.
+   ============================================================ */
+
+/* Partner logos: two copies of the same track sit side by side; sliding
+   the whole thing left by exactly 50% loops seamlessly into copy two. */
+@keyframes marquee-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee-x 32s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* Slow ambient drift for the hero's background glows — barely-there depth,
+   not a feature in itself. */
+@keyframes float-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(14px, -22px, 0);
+  }
+}
+
+@keyframes float-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-18px, 18px, 0);
+  }
+}
+
+.float-a {
+  animation: float-a 10s ease-in-out infinite;
+}
+
+.float-b {
+  animation: float-b 12s ease-in-out infinite;
+}
+
+/* Slow-moving gradient sheen for the two hero keywords — a colour drift,
+   not a flashing sweep, so it reads as premium rather than busy. */
+@keyframes text-shimmer {
+  to {
+    background-position: 200% center;
+  }
+}
+
+.shimmer-text {
+  background-image: linear-gradient(
+    100deg,
+    currentColor 30%,
+    #a7f3ec 45%,
+    currentColor 60%
+  );
+  background-size: 220% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-shimmer 5s linear infinite;
 }

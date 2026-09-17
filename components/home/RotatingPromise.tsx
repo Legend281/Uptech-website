@@ -3,8 +3,13 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 export type PromiseStatement = {
+  /** Short category label shown above the statement, so a reader knows what
+   *  this principle is about before reading it — e.g. "Compliance". */
+  tag: string;
+  accent: "teal" | "sky" | "emerald";
   /** Plain opening of the statement. */
   lead: string;
   /** The half that carries the gradient — the part worth remembering. */
@@ -12,6 +17,12 @@ export type PromiseStatement = {
   support: string;
   ctaLabel: string;
   ctaHref: string;
+};
+
+const accentClasses: Record<PromiseStatement["accent"], { text: string; bg: string; dot: string }> = {
+  teal: { text: "text-teal-300", bg: "bg-teal-400/10 border-teal-400/25", dot: "bg-teal-400" },
+  sky: { text: "text-sky-300", bg: "bg-sky-400/10 border-sky-400/25", dot: "bg-sky-400" },
+  emerald: { text: "text-emerald-300", bg: "bg-emerald-400/10 border-emerald-400/25", dot: "bg-emerald-400" },
 };
 
 const INTERVAL_MS = 7000;
@@ -145,15 +156,32 @@ export function RotatingPromise({ items }: { items: PromiseStatement[] }) {
       <div className="grid">
         {items.map((item, index) => {
           const isActive = index === active;
+          // Direction-aware: statements ahead of `active` slide in from the
+          // right, statements behind it from the left, so advancing always
+          // reads as forward motion rather than a flat crossfade.
+          const offset = index > active ? 24 : index < active ? -24 : 0;
           return (
-            <div
+            <motion.div
               key={item.lead}
-              className={`col-start-1 row-start-1 transition-opacity duration-500 ease-out ${
-                isActive ? "opacity-100" : "pointer-events-none opacity-0"
-              }`}
+              className="col-start-1 row-start-1"
+              animate={
+                reducedMotion
+                  ? { opacity: isActive ? 1 : 0 }
+                  : { opacity: isActive ? 1 : 0, x: isActive ? 0 : offset, scale: isActive ? 1 : 0.97 }
+              }
+              transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+              style={{ pointerEvents: isActive ? "auto" : "none" }}
               inert={!isActive}
               aria-hidden={!isActive}
             >
+              <div className="mb-5 flex justify-center">
+                <span
+                  className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-bold uppercase tracking-wider ${accentClasses[item.accent].text} ${accentClasses[item.accent].bg}`}
+                >
+                  <span className={`h-1.5 w-1.5 rounded-full ${accentClasses[item.accent].dot}`} />
+                  {item.tag}
+                </span>
+              </div>
               <blockquote className="text-2xl font-extrabold leading-[1.3] tracking-tight text-white sm:text-3xl lg:text-4xl">
                 {item.lead}{" "}
                 <span className="gradient-teal-blue-text">{item.emphasis}</span>
@@ -176,7 +204,7 @@ export function RotatingPromise({ items }: { items: PromiseStatement[] }) {
                   <ArrowRight className="h-4 w-4" strokeWidth={2} />
                 </Link>
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>
@@ -192,7 +220,7 @@ export function RotatingPromise({ items }: { items: PromiseStatement[] }) {
             <ChevronLeft className="h-4 w-4" strokeWidth={2} />
           </button>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             {items.map((item, index) => (
               <button
                 key={item.lead}
@@ -200,12 +228,14 @@ export function RotatingPromise({ items }: { items: PromiseStatement[] }) {
                 onClick={() => go(index)}
                 aria-label={`Show statement ${index + 1} of ${count}`}
                 aria-current={index === active}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
+                className={`flex h-7 min-w-7 items-center justify-center rounded-full border px-2 text-[10px] font-bold transition-all duration-300 ${
                   index === active
-                    ? "w-8 bg-teal-400"
-                    : "w-3 bg-slate-600 hover:bg-slate-500"
+                    ? "border-teal-400/50 bg-teal-400/10 text-teal-300"
+                    : "border-slate-700 text-slate-500 hover:border-slate-500 hover:text-slate-300"
                 }`}
-              />
+              >
+                0{index + 1}
+              </button>
             ))}
           </div>
 

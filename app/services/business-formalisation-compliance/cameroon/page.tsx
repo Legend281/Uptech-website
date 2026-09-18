@@ -8,6 +8,9 @@ import { TrustStrip } from "@/components/TrustStrip";
 import { Button } from "@/components/Button";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
+import { HeroIntro } from "@/components/services/HeroIntro";
+import { ScrollFillTrack } from "@/components/services/ScrollFillTrack";
+import { ScrollCue } from "@/components/home/ScrollCue";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { ComplianceDisclaimer } from "@/components/ComplianceDisclaimer";
 import { WhatComesNext } from "@/components/WhatComesNext";
@@ -214,45 +217,44 @@ export default function BusinessFormalisationCameroonPage() {
                 covered by this hero's own eyebrow line below. */}
             <HeroImageCarousel
               keys={["cross-border-boardroom", "compliance-advisory"]}
-              imageClassName="object-cover object-center scale-105"
+              imageClassName="hero-ken-burns object-cover object-center"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/65 to-navy-950/50" />
           </div>
-          <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
-              <div className="inline-flex items-center justify-center gap-2 mb-6">
-                <span className="w-7 h-[2px] bg-teal-400 inline-block" />
-                <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
-                  CAMEROON JURISDICTION • OHADA UNIFORM ACT
-                </span>
-                <span className="w-7 h-[2px] bg-teal-400 inline-block" />
-              </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] mb-6">
-                Formalise your business in Cameroon,{" "}
-                <span className="gradient-teal-blue-text">without the guesswork.</span>
-              </h1>
-              <p className="mx-auto text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
-                Clear, compliant corporate formation under OHADA standards. From trade name
-                reservation and notarial statutes to RCCM court registration and Tax
-                Identification (NIU) — executed with procedural certainty for domestic operators
-                and diaspora founders.
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-4">
-                <Button
-                  href="#registration-checklist"
-                  icon={
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path d="M19 14l-7 7m0 0l-7-7m7 7V3" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  }
-                >
-                  Get Registration Checklist
-                </Button>
-                <WhatsAppButton phone="237678597593" label="Chat on WhatsApp Legal Desk" />
-              </div>
-            </div>
+
+          {/* Ambient depth — same slow-drifting glows as every other hero
+              on the site, replacing the single static blur circle this
+              section had before. */}
+          <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
+            <div className="float-a absolute top-1/4 -left-10 w-96 h-96 rounded-full bg-teal-500/15 blur-3xl" />
+            <div className="float-b absolute bottom-0 -right-16 w-80 h-80 rounded-full bg-sky-400/10 blur-3xl" />
           </div>
+
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <HeroIntro
+              eyebrow="CAMEROON JURISDICTION • OHADA UNIFORM ACT"
+              headlineLead="Formalise your business in Cameroon,"
+              headlineHighlight="without the guesswork."
+              lead="Clear, compliant corporate formation under OHADA standards. From trade name reservation and notarial statutes to RCCM court registration and Tax Identification (NIU) — executed with procedural certainty for domestic operators and diaspora founders."
+              buttons={
+                <>
+                  <Button
+                    href="#registration-checklist"
+                    icon={
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d="M19 14l-7 7m0 0l-7-7m7 7V3" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    }
+                  >
+                    Get Registration Checklist
+                  </Button>
+                  <WhatsAppButton phone="237678597593" label="Chat on WhatsApp Legal Desk" />
+                </>
+              }
+            />
+          </div>
+
+          <ScrollCue />
         </section>
 
         <TrustStrip items={trustStripItems} />
@@ -299,8 +301,8 @@ export default function BusinessFormalisationCameroonPage() {
                 </div>
               </Reveal>
 
-              <div className="lg:col-span-8 flex flex-col pl-2 md:pl-6 relative">
-                <div className="absolute left-6 md:left-10 top-6 bottom-8 w-0.5 bg-gradient-to-b from-teal-400 via-blue-accent to-slate-300" />
+              <div className="lg:col-span-8 flex flex-col pl-2 md:pl-6">
+                <ScrollFillTrack>
                 <Reveal effect="stagger">
                 {steps.map((step) => (
                   <div key={step.number} className="relative flex items-start gap-5 pb-8 last:pb-0 group">
@@ -359,6 +361,7 @@ export default function BusinessFormalisationCameroonPage() {
                   </div>
                 ))}
                 </Reveal>
+                </ScrollFillTrack>
               </div>
             </div>
           </div>
@@ -383,13 +386,18 @@ export default function BusinessFormalisationCameroonPage() {
 
             <Reveal effect="rise" delay={120} className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               <div className="lg:col-span-7 flex flex-col gap-6">
-                <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm">
-                  <div className="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
+                <TiltCard max={4} className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
+                  <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1 bg-blue-accent" />
+                  <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-200/60 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700 mb-4">
+                    <span className="w-2 h-2 rounded-full bg-blue-accent" />
+                    1. Identity Documents
+                  </div>
+                  <div className="flex items-center gap-3 mb-4">
                     <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-accent flex items-center justify-center">
                       <MaterialIcon name="badge" className="text-[20px]" />
                     </div>
                     <div>
-                      <h3 className="text-base font-bold text-navy-950">1. Personal Identity Dossier</h3>
+                      <h3 className="text-base font-bold text-navy-950">Personal Identity Dossier</h3>
                       <span className="text-xs text-slate-500">For all declared managing directors &amp; shareholders</span>
                     </div>
                   </div>
@@ -403,15 +411,20 @@ export default function BusinessFormalisationCameroonPage() {
                       </li>
                     ))}
                   </ul>
-                </div>
+                </TiltCard>
 
-                <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm">
-                  <div className="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
+                <TiltCard max={4} className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
+                  <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1 bg-indigo-500" />
+                  <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 border border-indigo-200/60 px-3 py-1 text-xs font-bold uppercase tracking-wider text-indigo-700 mb-4">
+                    <span className="w-2 h-2 rounded-full bg-indigo-500" />
+                    2. Entity Documents
+                  </div>
+                  <div className="flex items-center gap-3 mb-4">
                     <div className="w-9 h-9 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
                       <MaterialIcon name="corporate_fare" className="text-[20px]" />
                     </div>
                     <div>
-                      <h3 className="text-base font-bold text-navy-950">2. Entity &amp; Operational Structure</h3>
+                      <h3 className="text-base font-bold text-navy-950">Entity &amp; Operational Structure</h3>
                       <span className="text-xs text-slate-500">Commercial objectives and registered head office</span>
                     </div>
                   </div>
@@ -425,11 +438,11 @@ export default function BusinessFormalisationCameroonPage() {
                       </li>
                     ))}
                   </ul>
-                </div>
+                </TiltCard>
               </div>
 
               <div className="lg:col-span-5">
-                <div className="bg-navy-950 text-white rounded-2xl p-7 border border-slate-800 shadow-2xl flex flex-col justify-between h-full">
+                <TiltCard max={4} className="bg-navy-950 text-white rounded-2xl p-7 border border-slate-800 shadow-2xl flex flex-col justify-between h-full">
                   <div>
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-teal-400/30 text-teal-300 text-xs font-bold tracking-wider uppercase mb-4">
                       <span className="w-2 h-2 rounded-full bg-teal-400" />
@@ -481,37 +494,46 @@ export default function BusinessFormalisationCameroonPage() {
                       <MaterialIcon name="arrow_forward" className="text-[14px]" />
                     </a>
                   </div>
-                </div>
+                </TiltCard>
               </div>
             </Reveal>
 
-            <div className="mt-8 p-5 rounded-2xl bg-white border border-dashed border-amber-400/80 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-              <div className="flex items-start gap-3.5">
-                <div className="p-2 rounded-xl bg-amber-50 text-amber-600 border border-amber-200 shrink-0">
-                  <MaterialIcon name="receipt_long" className="text-[24px]" />
-                </div>
-                <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h4 className="text-sm font-bold text-slate-900">Official Registry &amp; Notarial Tariffs</h4>
-                    <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded uppercase tracking-wider border border-amber-300">
-                      [PENDING: confirm with Uptech Consulting]
-                    </span>
+            {/*
+             * Was a dashed amber "[PENDING: confirm with Uptech Consulting]"
+             * badge — exact court/notarial fee schedules are exactly the
+             * category CLAUDE.md Section 6.6 says to keep off public pages
+             * (default to consultation-based, never invent a figure), so the
+             * honest permanent fix isn't a number, it's this framing: these
+             * are third-party disbursements billed at the registry/notary's
+             * own rate, not an Uptech Consulting fee, confirmed at scoping —
+             * same "contact us for a quote" pattern used sitewide for
+             * pricing, not a placeholder waiting on real data.
+             */}
+            <Reveal effect="fade" delay={200}>
+              <div className="mt-8 p-5 rounded-2xl bg-slate-50 border border-slate-200/80 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div className="flex items-start gap-3.5">
+                  <div className="p-2 rounded-xl bg-blue-50 text-blue-accent border border-blue-100 shrink-0">
+                    <MaterialIcon name="receipt_long" className="text-[24px]" />
                   </div>
-                  <p className="text-xs text-slate-600 mt-1 max-w-3xl">
-                    Direct disbursements comprise RCCM court stamps, Greffe deposits, notarial
-                    statute registration dues, and regional fiscal stamp sheets. Consult your
-                    Uptech Consulting desk for the official schedule.
-                  </p>
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900">Official Registry &amp; Notarial Costs</h4>
+                    <p className="text-xs text-slate-600 mt-1 max-w-3xl">
+                      Direct disbursements — RCCM court stamps, Greffe deposits, notarial statute
+                      registration dues, and regional fiscal stamp sheets — are billed at the
+                      registry or notary&apos;s own rate, not an Uptech Consulting fee. Your
+                      consultant confirms the exact figure for your file before anything is paid.
+                    </p>
+                  </div>
                 </div>
+                <a
+                  href="https://wa.me/237678597593"
+                  className="inline-flex items-center gap-1 text-xs font-bold text-blue-accent hover:text-blue-700 whitespace-nowrap bg-blue-50 px-4 py-2 rounded-lg border border-blue-100"
+                >
+                  Ask About Registry Costs
+                  <MaterialIcon name="arrow_forward" className="text-[16px]" />
+                </a>
               </div>
-              <a
-                href="https://wa.me/237678597593"
-                className="inline-flex items-center gap-1 text-xs font-bold text-blue-accent hover:text-blue-700 whitespace-nowrap bg-blue-50 px-4 py-2 rounded-lg border border-blue-100"
-              >
-                Request Fee Breakdown via WhatsApp
-                <MaterialIcon name="arrow_forward" className="text-[16px]" />
-              </a>
-            </div>
+            </Reveal>
           </div>
         </section>
 
@@ -689,7 +711,9 @@ export default function BusinessFormalisationCameroonPage() {
                 <TextReveal text="Practical Legal & Procedural Answers" />
               </h2>
             </Reveal>
-            <FaqAccordion items={faqItems} />
+            <Reveal effect="fade" delay={100}>
+              <FaqAccordion items={faqItems} />
+            </Reveal>
           </div>
         </section>
 
@@ -708,23 +732,34 @@ export default function BusinessFormalisationCameroonPage() {
         {/* Final CTA */}
         <section className="relative py-24 bg-navy-950 text-white text-center overflow-hidden">
           <div className="absolute inset-0 z-0">
+            {/* Was opacity-25 + mix-blend-luminosity — the same washed-out
+                treatment already found and fixed on the Who We Serve pages,
+                reduced the photo to an almost imperceptible navy smudge.
+                Full-colour image + gradient overlay is enough on its own for
+                contrast. Also swapped off cross-border-boardroom, already
+                used twice elsewhere on this same page (hero + comparison
+                section). */}
             <Image
-              src={images["cross-border-boardroom"].src}
+              src={images["ops-center"].src}
               alt=""
               fill
               sizes="100vw"
               placeholder="blur"
-              blurDataURL={images["cross-border-boardroom"].blurDataURL}
-              className="object-cover opacity-25 mix-blend-luminosity scale-105"
+              blurDataURL={images["ops-center"].blurDataURL}
+              className="object-cover scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/90 to-navy-950/80" />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950/95 via-navy-950/80 to-navy-950/70" />
+          </div>
+          <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
+            <div className="float-a absolute -left-16 top-0 h-72 w-72 rounded-full bg-teal-400/10 blur-3xl" />
+            <div className="float-b absolute -right-16 bottom-0 h-72 w-72 rounded-full bg-sky-400/10 blur-3xl" />
           </div>
           <Reveal effect="rise" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-teal-400/40 text-teal-400 text-xs font-bold tracking-widest uppercase mb-4">
               Begin Your Formalisation
             </div>
             <h2 className="text-3xl md:text-5xl font-extrabold text-white max-w-3xl mx-auto leading-tight mb-4">
-              Ready to establish your Cameroon <span className="gradient-teal-blue-text">corporate standing?</span>
+              <TextReveal text="Ready to establish your Cameroon" /> <span className="shimmer-text text-teal-400">corporate standing?</span>
             </h2>
             <p className="text-base md:text-lg text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed">
               Download the statutory checklist or connect immediately with our bilingual legal

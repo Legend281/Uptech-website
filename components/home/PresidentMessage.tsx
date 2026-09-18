@@ -14,7 +14,17 @@ import { images } from "@/lib/images";
  * case." Worth compressing this file for web delivery (H.264, a more
  * moderate bitrate) if there's ever a chance to re-export it — no video
  * transcoding tool was available in this environment to do that here.
+ *
+ * `BASE_PATH` fixes a real bug found on the live GitHub Pages preview: every
+ * photo on the site goes through next/image, which runs the custom loader in
+ * lib/pagesImageLoader.js to prepend the repo subpath
+ * (github.io/Uptech-website/...) — but this is a raw HTML <video> element,
+ * which next/image never touches, so its hardcoded src/poster 404'd on that
+ * subpath even though they resolve fine locally at the root. Same fix
+ * next.config.mjs and app/layout.tsx already apply for the same reason.
  */
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
 export function PresidentMessage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
@@ -49,8 +59,8 @@ export function PresidentMessage() {
           <div className="relative aspect-video rounded-2xl overflow-hidden border border-slate-800 shadow-2xl bg-navy-900">
             <video
               ref={videoRef}
-              src="/images/Video-with-the-president-talking-about-uptech.mp4"
-              poster={poster.src}
+              src={`${BASE_PATH}/images/Video-with-the-president-talking-about-uptech.mp4`}
+              poster={`${BASE_PATH}${poster.src}`}
               controls={playing}
               preload="none"
               playsInline

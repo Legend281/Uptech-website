@@ -8,6 +8,8 @@ import { TrustStrip } from "@/components/TrustStrip";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
+import { HeroIntro } from "@/components/services/career-marketing-placement/HeroIntro";
+import { ScrollCue } from "@/components/home/ScrollCue";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { Button } from "@/components/Button";
 import { Reveal } from "@/components/Reveal";
@@ -205,37 +207,37 @@ export default function CareerMarketingPlacementPage() {
                 partial-width right-hand image with left-aligned text. */}
             <HeroImageCarousel
               keys={["career-review", "dedicated-advisor"]}
-              imageClassName="object-cover object-center scale-105"
+              imageClassName="hero-ken-burns object-cover object-center"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/65 to-navy-950/50" />
           </div>
-          <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
-              <div className="inline-flex items-center justify-center gap-2 mb-6">
-                <span className="w-7 h-[2px] bg-teal-400 inline-block" />
-                <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
-                  CAREER MARKETING &amp; PLACEMENT
-                </span>
-                <span className="w-7 h-[2px] bg-teal-400 inline-block" />
-              </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] mb-6">
-                You don&apos;t chase jobs. <br className="hidden sm:inline" />
-                <span className="gradient-teal-blue-text">We do.</span>
-              </h1>
-              <p className="mx-auto text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
-                A dedicated human specialist takes over your CV, your LinkedIn, your daily
-                applications, and your recruiter follow-up — so you can take your evenings back
-                and focus solely on showing up to interview.
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
-                <Button href="#start-campaign" icon={arrowRightIcon}>
-                  Start Your Career Campaign
-                </Button>
-                <WhatsAppButton phone="237678597593" />
-              </div>
-            </div>
+
+          {/* Ambient depth — same slow-drifting glows as every other hero
+              on the site, replacing the single static blur circle this
+              section had before. */}
+          <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
+            <div className="float-a absolute top-1/4 -left-10 w-96 h-96 rounded-full bg-teal-500/15 blur-3xl" />
+            <div className="float-b absolute bottom-0 -right-16 w-80 h-80 rounded-full bg-sky-400/10 blur-3xl" />
           </div>
+
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <HeroIntro
+              eyebrow="CAREER MARKETING & PLACEMENT"
+              lineOne="You don't chase jobs."
+              lineTwo="We do."
+              lead="A dedicated human specialist takes over your CV, your LinkedIn, your daily applications, and your recruiter follow-up — so you can take your evenings back and focus solely on showing up to interview."
+              buttons={
+                <>
+                  <Button href="#start-campaign" icon={arrowRightIcon}>
+                    Start Your Career Campaign
+                  </Button>
+                  <WhatsAppButton phone="237678597593" />
+                </>
+              }
+            />
+          </div>
+
+          <ScrollCue />
         </section>
 
         <TrustStrip items={trustStripItems} />
@@ -294,8 +296,9 @@ export default function CareerMarketingPlacementPage() {
 
               <Reveal effect="stagger" className="lg:col-span-7 divide-y divide-slate-200/80">
                 {campaignStages.map((stage) => (
-                  <div
+                  <TiltCard
                     key={stage.number}
+                    max={3}
                     className="py-7 first:pt-0 group hover:bg-slate-50/70 p-5 -mx-4 rounded-xl transition-all border border-transparent hover:border-teal-500/20 hover:shadow-sm"
                   >
                     <div className="flex items-start gap-4 sm:gap-5">
@@ -329,7 +332,7 @@ export default function CareerMarketingPlacementPage() {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </TiltCard>
                 ))}
               </Reveal>
             </div>
@@ -468,49 +471,52 @@ export default function CareerMarketingPlacementPage() {
                 <TextReveal text="Clarity on scope before we begin." />
               </h2>
             </Reveal>
-            <FaqAccordion items={faqItems} />
+            <Reveal effect="fade" delay={100}>
+              <FaqAccordion items={faqItems} />
+            </Reveal>
           </div>
         </section>
 
         {/* Explore other pillars */}
         <section className="py-20 bg-slate-50 border-t border-slate-200/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
+            <Reveal effect="rise" className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
               <div>
                 <div className="inline-flex items-center gap-2 mb-2">
                   <span className="w-7 h-[2px] bg-teal-500 inline-block" />
                   <span className="text-xs font-bold uppercase tracking-wider text-sky-600">EXPLORE OTHER SERVICES</span>
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-navy-950 tracking-tight">
-                  Comprehensive capability across advisory and execution.
+                  <TextReveal text="Comprehensive capability across advisory and execution." />
                 </h2>
               </div>
-            </div>
+            </Reveal>
             {/* Sized to the actual card count, not a fixed 2-column skeleton —
                 one card stretched across a wide grid looks orphaned. */}
             <Reveal effect="stagger" className={`grid grid-cols-1 gap-4 ${otherPillars.length > 1 ? "sm:grid-cols-2 max-w-3xl" : "max-w-sm"}`}>
               {otherPillars.map((pillar) => (
-                <Link
-                  key={pillar.title}
-                  href={pillar.href}
-                  className="p-5 rounded-xl bg-white border border-slate-200/90 shadow-sm hover:border-teal-500/40 hover:shadow-md transition-all flex flex-col justify-between group"
-                >
-                  <div>
-                    <div className="w-9 h-9 rounded-lg bg-navy-950 text-teal-400 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-                      <MaterialIcon name={pillar.icon} className="text-[18px]" />
+                <TiltCard key={pillar.title} max={4}>
+                  <Link
+                    href={pillar.href}
+                    className="p-5 rounded-xl bg-white border border-slate-200/90 shadow-sm hover:border-teal-500/40 hover:shadow-md transition-all flex flex-col justify-between group"
+                  >
+                    <div>
+                      <div className="w-9 h-9 rounded-lg bg-navy-950 text-teal-400 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+                        <MaterialIcon name={pillar.icon} className="text-[18px]" />
+                      </div>
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                        {pillar.relationship}
+                      </span>
+                      <h3 className="text-sm font-bold text-navy-950 group-hover:text-blue-accent transition-colors mt-1">
+                        {pillar.title}
+                      </h3>
                     </div>
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
-                      {pillar.relationship}
-                    </span>
-                    <h3 className="text-sm font-bold text-navy-950 group-hover:text-blue-accent transition-colors mt-1">
-                      {pillar.title}
-                    </h3>
-                  </div>
-                  <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blue-accent group-hover:text-teal-600">
-                    <span>View details</span>
-                    <MaterialIcon name="arrow_forward" className="text-[16px] group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </Link>
+                    <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blue-accent group-hover:text-teal-600">
+                      <span>View details</span>
+                      <MaterialIcon name="arrow_forward" className="text-[16px] group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </Link>
+                </TiltCard>
               ))}
             </Reveal>
           </div>
@@ -533,6 +539,10 @@ export default function CareerMarketingPlacementPage() {
             />
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/80 to-navy-950/50 pointer-events-none" />
+          <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
+            <div className="float-a absolute -left-16 top-0 h-72 w-72 rounded-full bg-teal-400/10 blur-3xl" />
+            <div className="float-b absolute -right-16 bottom-0 h-72 w-72 rounded-full bg-sky-400/10 blur-3xl" />
+          </div>
           <Reveal effect="rise" className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
             <div className="inline-flex items-center gap-2 mb-4">
               <span className="w-7 h-[2px] bg-teal-400 inline-block" />
@@ -540,8 +550,8 @@ export default function CareerMarketingPlacementPage() {
               <span className="w-7 h-[2px] bg-teal-400 inline-block" />
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight max-w-3xl mx-auto leading-tight mb-4">
-              Ready to stop job hunting alone? <br />
-              <span className="gradient-teal-blue-text">One conversation will tell us.</span>
+              <TextReveal text="Ready to stop job hunting alone?" /> <br />
+              <span className="shimmer-text text-teal-400">One conversation will tell us.</span>
             </h2>
             <p className="mt-4 text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
               Book a strategic consultation with a senior placement specialist to review your

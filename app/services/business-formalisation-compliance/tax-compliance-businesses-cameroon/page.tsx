@@ -8,6 +8,8 @@ import { TrustStrip } from "@/components/TrustStrip";
 import { Button } from "@/components/Button";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
+import { HeroIntro } from "@/components/services/HeroIntro";
+import { ScrollCue } from "@/components/home/ScrollCue";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { ComplianceDisclaimer } from "@/components/ComplianceDisclaimer";
 import { TimelineNote } from "@/components/TimelineNote";
@@ -233,55 +235,56 @@ export default function TaxComplianceBusinessesCameroonPage() {
                 sitewide. */}
             <HeroImageCarousel
               keys={["compliance-advisory", "cross-border-boardroom"]}
-              imageClassName="object-cover object-center scale-105"
+              imageClassName="hero-ken-burns object-cover object-center"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/65 to-navy-950/50" />
           </div>
-          <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
-              <div className="inline-flex items-center justify-center gap-2 mb-6">
-                <span className="w-7 h-[2px] bg-teal-400 inline-block" />
-                <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
-                  STATUTORY TAX DESK • DGI GENERAL TAX CODE
-                </span>
-                <span className="w-7 h-[2px] bg-teal-400 inline-block" />
-              </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] mb-6">
-                Stay ahead of your tax obligations,{" "}
-                <span className="gradient-teal-blue-text">without the stress.</span>
-              </h1>
-              <p className="mx-auto text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
-                Predictable monthly DGI declarations, certified fiscal schedules, and
-                penalty-proof recordkeeping — whether you are staying compliant proactively or
-                catching up on past seasons.
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
-                <Button href="#compliance-check">Get a Compliance Check</Button>
-                <WhatsAppButton phone="237678597593" label="Chat on WhatsApp Tax Desk" />
-              </div>
-              <div className="grid grid-cols-3 gap-3 max-w-lg mx-auto pt-4 border-t border-white/10">
-                <div className="p-3 bg-white/5 rounded-lg">
-                  {/* Was a specific "15th" cut-off date stated as fixed
-                      fact here, directly contradicting the cadence
-                      section's own disclaimer below that deadlines vary
-                      by regime classification — downgraded to general
-                      framing per the family-wide confidence-vs-pending
-                      audit fix. */}
-                  <p className="text-xl font-bold text-teal-300">Monthly</p>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Filing Cadence</p>
-                </div>
-                <div className="p-3 bg-white/5 rounded-lg">
-                  <p className="text-xl font-bold text-teal-300">Bilingual</p>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">MINFI Support</p>
-                </div>
-                <div className="p-3 bg-white/5 rounded-lg">
-                  <p className="text-xl font-bold text-teal-300">Proactive</p>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Lockout Prevention</p>
-                </div>
-              </div>
-            </div>
+
+          {/* Ambient depth — same slow-drifting glows as every other hero
+              on the site, replacing the single static blur circle this
+              section had before. */}
+          <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
+            <div className="float-a absolute top-1/4 -left-10 w-96 h-96 rounded-full bg-teal-500/15 blur-3xl" />
+            <div className="float-b absolute bottom-0 -right-16 w-80 h-80 rounded-full bg-sky-400/10 blur-3xl" />
           </div>
+
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <HeroIntro
+              eyebrow="STATUTORY TAX DESK • DGI GENERAL TAX CODE"
+              headlineLead="Stay ahead of your tax obligations,"
+              headlineHighlight="without the stress."
+              lead="Predictable monthly DGI declarations, certified fiscal schedules, and penalty-proof recordkeeping — whether you are staying compliant proactively or catching up on past seasons."
+              buttons={
+                <>
+                  <Button href="#compliance-check">Get a Compliance Check</Button>
+                  <WhatsAppButton phone="237678597593" label="Chat on WhatsApp Tax Desk" />
+                </>
+              }
+              extra={
+                /* Was a specific "15th" cut-off date stated as fixed fact
+                   here, directly contradicting the cadence section's own
+                   disclaimer below that deadlines vary by regime
+                   classification — downgraded to general framing per the
+                   family-wide confidence-vs-pending audit fix. */
+                <div className="grid grid-cols-3 gap-3 max-w-lg mx-auto pt-4 border-t border-white/10">
+                  <div className="p-3 bg-white/5 rounded-lg">
+                    <p className="text-xl font-bold text-teal-300">Monthly</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Filing Cadence</p>
+                  </div>
+                  <div className="p-3 bg-white/5 rounded-lg">
+                    <p className="text-xl font-bold text-teal-300">Bilingual</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">MINFI Support</p>
+                  </div>
+                  <div className="p-3 bg-white/5 rounded-lg">
+                    <p className="text-xl font-bold text-teal-300">Proactive</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Lockout Prevention</p>
+                  </div>
+                </div>
+              }
+            />
+          </div>
+
+          <ScrollCue />
         </section>
 
         <TrustStrip items={trustStripItems} />
@@ -385,7 +388,7 @@ export default function TaxComplianceBusinessesCameroonPage() {
               </p>
             </Reveal>
             <Reveal effect="stagger" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <div className="frosted-glass rounded-2xl p-7 flex flex-col justify-between">
+              <TiltCard max={5} className="frosted-glass rounded-2xl p-7 flex flex-col justify-between">
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between">
                     <div className="w-10 h-10 rounded-lg bg-teal-500/20 flex items-center justify-center text-teal-300">
@@ -418,9 +421,9 @@ export default function TaxComplianceBusinessesCameroonPage() {
                 <Button href="#compliance-check" className="mt-6 justify-center">
                   Initiate Proactive Schedule
                 </Button>
-              </div>
+              </TiltCard>
 
-              <div className="frosted-glass rounded-2xl p-7 flex flex-col justify-between">
+              <TiltCard max={5} className="frosted-glass rounded-2xl p-7 flex flex-col justify-between">
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between">
                     <div className="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-300">
@@ -453,13 +456,13 @@ export default function TaxComplianceBusinessesCameroonPage() {
                 <Button href="#compliance-check" variant="secondary" className="mt-6 justify-center">
                   Request Confidential Regularisation
                 </Button>
-              </div>
+              </TiltCard>
 
               {/* Personal tax, added when the standalone Tax Compliance for
                   Individuals page was merged into this one. Same card
                   treatment as the two business tracks — equal weight, not a
                   secondary afterthought. */}
-              <div className="frosted-glass rounded-2xl p-7 flex flex-col justify-between">
+              <TiltCard max={5} className="frosted-glass rounded-2xl p-7 flex flex-col justify-between">
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between">
                     <div className="w-10 h-10 rounded-lg bg-sky-500/20 flex items-center justify-center text-sky-300">
@@ -493,7 +496,7 @@ export default function TaxComplianceBusinessesCameroonPage() {
                 <Button href="#compliance-check" variant="secondary" className="mt-6 justify-center">
                   Get My Personal Tax Checklist
                 </Button>
-              </div>
+              </TiltCard>
             </Reveal>
           </div>
         </section>
@@ -521,52 +524,65 @@ export default function TaxComplianceBusinessesCameroonPage() {
                 records; we handle verification, filing, and delivery of certified receipts.
               </p>
             </Reveal>
-            <Reveal effect="stagger" className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="bg-white p-7 rounded-xl shadow-sm border border-slate-200/80">
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-700">
-                    <MaterialIcon name="upload_file" className="text-[22px]" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-navy-950">What You Hand Over</h3>
-                    <p className="text-xs text-slate-500">Provided before the 5th of each calendar month</p>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  {handover.map((item) => (
-                    <div key={item.title} className="p-3 bg-slate-50 rounded-lg flex items-start gap-3">
-                      <MaterialIcon name={item.icon} className="text-slate-500 text-[20px] mt-0.5" />
-                      <div>
-                        <p className="text-sm font-semibold text-navy-950">{item.title}</p>
-                        <p className="text-xs text-slate-500">{item.text}</p>
-                      </div>
+            {/* The two cards are a genuine exchange (you send raw records,
+                you get certified receipts back), not two unrelated lists —
+                the connecting badge between them makes that literal instead
+                of just describing it in the paragraph above. */}
+            <div className="relative">
+              <Reveal effect="stagger" className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <TiltCard max={3} className="bg-white p-7 rounded-xl shadow-sm border border-slate-200/80">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-700">
+                      <MaterialIcon name="upload_file" className="text-[22px]" />
                     </div>
-                  ))}
-                </div>
-              </div>
-              <div className="bg-white p-7 rounded-xl shadow-sm border border-slate-200/80">
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="w-10 h-10 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
-                    <MaterialIcon name="task_alt" className="text-[22px]" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-navy-950">What You Receive Back</h3>
-                    <p className="text-xs text-slate-500">Delivered cleanly before statutory 15th deadlines</p>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  {deliverables.map((item) => (
-                    <div key={item.title} className="p-3 bg-slate-50 rounded-lg flex items-start gap-3">
-                      <MaterialIcon name={item.icon} className="text-emerald-600 text-[20px] mt-0.5" />
-                      <div>
-                        <p className="text-sm font-semibold text-navy-950">{item.title}</p>
-                        <p className="text-xs text-slate-500">{item.text}</p>
-                      </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-navy-950">What You Hand Over</h3>
+                      <p className="text-xs text-slate-500">Provided before the 5th of each calendar month</p>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                  <div className="space-y-3">
+                    {handover.map((item) => (
+                      <div key={item.title} className="p-3 bg-slate-50 rounded-lg flex items-start gap-3">
+                        <MaterialIcon name={item.icon} className="text-slate-500 text-[20px] mt-0.5" />
+                        <div>
+                          <p className="text-sm font-semibold text-navy-950">{item.title}</p>
+                          <p className="text-xs text-slate-500">{item.text}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </TiltCard>
+                <TiltCard max={3} className="bg-white p-7 rounded-xl shadow-sm border border-slate-200/80">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-10 h-10 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
+                      <MaterialIcon name="task_alt" className="text-[22px]" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-navy-950">What You Receive Back</h3>
+                      <p className="text-xs text-slate-500">Delivered cleanly before statutory 15th deadlines</p>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    {deliverables.map((item) => (
+                      <div key={item.title} className="p-3 bg-slate-50 rounded-lg flex items-start gap-3">
+                        <MaterialIcon name={item.icon} className="text-emerald-600 text-[20px] mt-0.5" />
+                        <div>
+                          <p className="text-sm font-semibold text-navy-950">{item.title}</p>
+                          <p className="text-xs text-slate-500">{item.text}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </TiltCard>
+              </Reveal>
+              <div className="pointer-events-none absolute inset-0 z-10 hidden items-center justify-center lg:flex" aria-hidden="true">
+                <Reveal effect="fade" delay={200}>
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-teal-400/60 bg-white shadow-lg">
+                    <MaterialIcon name="swap_horiz" className="text-teal-600 text-[26px]" />
+                  </div>
+                </Reveal>
               </div>
-            </Reveal>
+            </div>
 
             {/* Individual/freelancer equivalent — a smaller block beneath
                 the business one rather than merged into the same list,
@@ -577,7 +593,7 @@ export default function TaxComplianceBusinessesCameroonPage() {
                 <span className="text-xs font-bold uppercase tracking-wider text-sky-600">For Individual Filers</span>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200/80">
+                <TiltCard max={3} className="bg-white p-6 rounded-xl shadow-sm border border-slate-200/80">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-9 h-9 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600">
                       <MaterialIcon name="upload_file" className="text-[18px]" />
@@ -595,8 +611,8 @@ export default function TaxComplianceBusinessesCameroonPage() {
                       </div>
                     ))}
                   </div>
-                </div>
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200/80">
+                </TiltCard>
+                <TiltCard max={3} className="bg-white p-6 rounded-xl shadow-sm border border-slate-200/80">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-9 h-9 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600">
                       <MaterialIcon name="task_alt" className="text-[18px]" />
@@ -614,7 +630,7 @@ export default function TaxComplianceBusinessesCameroonPage() {
                       </div>
                     ))}
                   </div>
-                </div>
+                </TiltCard>
               </div>
             </Reveal>
 
@@ -665,44 +681,59 @@ export default function TaxComplianceBusinessesCameroonPage() {
                   {/* Rewritten to avoid stating an unconfirmed fact — safe
                       to publish as-is; replace with real figure once
                       provided by the team. */}
-                  <div className="p-3.5 bg-white/5 rounded-lg">
-                    <p className="text-sm font-semibold text-rose-300 mb-1">Late-Filing Surcharges &amp; Compounding Interest</p>
-                    <p className="text-sm text-slate-300">
-                      Late filing carries real penalties in both Cameroon and the US. Your
-                      consultant will confirm the exact penalty exposure based on your specific
-                      filing history.
-                    </p>
+                  <div className="flex items-start gap-3 p-3.5 bg-white/5 rounded-lg">
+                    <MaterialIcon name="close" className="text-rose-400 text-[20px] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-rose-300 mb-1">Late-Filing Surcharges &amp; Compounding Interest</p>
+                      <p className="text-sm text-slate-300">
+                        Late filing carries real penalties in both Cameroon and the US. Your
+                        consultant will confirm the exact penalty exposure based on your specific
+                        filing history.
+                      </p>
+                    </div>
                   </div>
-                  <div className="p-3.5 bg-white/5 rounded-lg">
-                    <p className="text-sm font-semibold text-rose-300 mb-1">Automatic Freezing of Bank Accounts (ATD)</p>
-                    <p className="text-sm text-slate-300">
-                      Tax collectors can issue an Avis à Tiers Détenteur (ATD) directly to
-                      commercial banks, freezing operational payroll and vendor accounts overnight.
-                    </p>
+                  <div className="flex items-start gap-3 p-3.5 bg-white/5 rounded-lg">
+                    <MaterialIcon name="close" className="text-rose-400 text-[20px] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-rose-300 mb-1">Automatic Freezing of Bank Accounts (ATD)</p>
+                      <p className="text-sm text-slate-300">
+                        Tax collectors can issue an Avis à Tiers Détenteur (ATD) directly to
+                        commercial banks, freezing operational payroll and vendor accounts overnight.
+                      </p>
+                    </div>
                   </div>
-                  <div className="p-3.5 bg-white/5 rounded-lg">
-                    <p className="text-sm font-semibold text-rose-300 mb-1">Tender Disqualification (Loss of ANR)</p>
-                    <p className="text-sm text-slate-300">
-                      Without an active Attestation de Non-Redevance, your enterprise cannot
-                      legally submit proposals for public tenders or corporate bids.
-                    </p>
+                  <div className="flex items-start gap-3 p-3.5 bg-white/5 rounded-lg">
+                    <MaterialIcon name="close" className="text-rose-400 text-[20px] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-rose-300 mb-1">Tender Disqualification (Loss of ANR)</p>
+                      <p className="text-sm text-slate-300">
+                        Without an active Attestation de Non-Redevance, your enterprise cannot
+                        legally submit proposals for public tenders or corporate bids.
+                      </p>
+                    </div>
                   </div>
-                  <div className="p-3.5 bg-white/5 rounded-lg">
-                    <p className="text-sm font-semibold text-rose-300 mb-1">Sudden Retroactive Audits</p>
-                    <p className="text-sm text-slate-300">
-                      Unchecked irregularities can trigger multi-year field audits (Contrôle
-                      Fiscal), consuming executive bandwidth and risking large reassessments.
-                    </p>
+                  <div className="flex items-start gap-3 p-3.5 bg-white/5 rounded-lg">
+                    <MaterialIcon name="close" className="text-rose-400 text-[20px] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-rose-300 mb-1">Sudden Retroactive Audits</p>
+                      <p className="text-sm text-slate-300">
+                        Unchecked irregularities can trigger multi-year field audits (Contrôle
+                        Fiscal), consuming executive bandwidth and risking large reassessments.
+                      </p>
+                    </div>
                   </div>
                   {/* Individual-specific risk, for the diaspora/remote-filer
                       persona (Track C) this page already targets. */}
-                  <div className="p-3.5 bg-white/5 rounded-lg">
-                    <p className="text-sm font-semibold text-rose-300 mb-1">Personal Tax Clearance Gaps</p>
-                    <p className="text-sm text-slate-300">
-                      A missing or lapsed personal ANR can complicate visa applications,
-                      cross-border banking, or other matters that require proof of tax standing —
-                      a real friction point for diaspora and remote filers.
-                    </p>
+                  <div className="flex items-start gap-3 p-3.5 bg-white/5 rounded-lg">
+                    <MaterialIcon name="close" className="text-rose-400 text-[20px] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-rose-300 mb-1">Personal Tax Clearance Gaps</p>
+                      <p className="text-sm text-slate-300">
+                        A missing or lapsed personal ANR can complicate visa applications,
+                        cross-border banking, or other matters that require proof of tax standing —
+                        a real friction point for diaspora and remote filers.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -715,25 +746,40 @@ export default function TaxComplianceBusinessesCameroonPage() {
                   <span className="px-2.5 py-1 rounded bg-teal-500/20 text-teal-300 text-[11px] font-bold">CONTINUOUS STATUS</span>
                 </div>
                 <div className="space-y-3">
-                  <div className="p-3.5 bg-white/5 rounded-lg">
-                    <p className="text-sm font-semibold text-teal-300 mb-1">Predictable Advisory Retainer</p>
-                    <p className="text-sm text-slate-300">Fixed monthly fee, filings prepared ahead of statutory deadlines.</p>
+                  <div className="flex items-start gap-3 p-3.5 bg-white/5 rounded-lg">
+                    <MaterialIcon name="check_circle" className="text-teal-400 text-[20px] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-teal-300 mb-1">Predictable Advisory Retainer</p>
+                      <p className="text-sm text-slate-300">Fixed monthly fee, filings prepared ahead of statutory deadlines.</p>
+                    </div>
                   </div>
-                  <div className="p-3.5 bg-white/5 rounded-lg">
-                    <p className="text-sm font-semibold text-teal-300 mb-1">Protected Commercial Banking Standing</p>
-                    <p className="text-sm text-slate-300">Reduced risk of administrative freezes or tax agency inquiries disrupting operations.</p>
+                  <div className="flex items-start gap-3 p-3.5 bg-white/5 rounded-lg">
+                    <MaterialIcon name="check_circle" className="text-teal-400 text-[20px] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-teal-300 mb-1">Protected Commercial Banking Standing</p>
+                      <p className="text-sm text-slate-300">Reduced risk of administrative freezes or tax agency inquiries disrupting operations.</p>
+                    </div>
                   </div>
-                  <div className="p-3.5 bg-white/5 rounded-lg">
-                    <p className="text-sm font-semibold text-teal-300 mb-1">Actively Maintained ANR</p>
-                    <p className="text-sm text-slate-300">Non-redevance attestations kept current in your compliance repository, ready for tenders.</p>
+                  <div className="flex items-start gap-3 p-3.5 bg-white/5 rounded-lg">
+                    <MaterialIcon name="check_circle" className="text-teal-400 text-[20px] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-teal-300 mb-1">Actively Maintained ANR</p>
+                      <p className="text-sm text-slate-300">Non-redevance attestations kept current in your compliance repository, ready for tenders.</p>
+                    </div>
                   </div>
-                  <div className="p-3.5 bg-white/5 rounded-lg">
-                    <p className="text-sm font-semibold text-teal-300 mb-1">Bilingual Institutional Representation</p>
-                    <p className="text-sm text-slate-300">If the tax center requests clarification, our tax desk responds on your behalf.</p>
+                  <div className="flex items-start gap-3 p-3.5 bg-white/5 rounded-lg">
+                    <MaterialIcon name="check_circle" className="text-teal-400 text-[20px] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-teal-300 mb-1">Bilingual Institutional Representation</p>
+                      <p className="text-sm text-slate-300">If the tax center requests clarification, our tax desk responds on your behalf.</p>
+                    </div>
                   </div>
-                  <div className="p-3.5 bg-white/5 rounded-lg">
-                    <p className="text-sm font-semibold text-teal-300 mb-1">Personal Tax Clearance Maintained</p>
-                    <p className="text-sm text-slate-300">Ready when you need it for travel, visa documentation, or cross-border matters.</p>
+                  <div className="flex items-start gap-3 p-3.5 bg-white/5 rounded-lg">
+                    <MaterialIcon name="check_circle" className="text-teal-400 text-[20px] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-teal-300 mb-1">Personal Tax Clearance Maintained</p>
+                      <p className="text-sm text-slate-300">Ready when you need it for travel, visa documentation, or cross-border matters.</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -750,7 +796,9 @@ export default function TaxComplianceBusinessesCameroonPage() {
                 <TextReveal text="Practical Tax Compliance Answers" />
               </h2>
             </Reveal>
-            <FaqAccordion items={faqItems} />
+            <Reveal effect="fade" delay={100}>
+              <FaqAccordion items={faqItems} />
+            </Reveal>
           </div>
         </section>
 
@@ -788,7 +836,7 @@ export default function TaxComplianceBusinessesCameroonPage() {
               <span className="text-xs font-bold uppercase tracking-wider text-teal-300">TAX DESK ACTIVE IN BUEA &amp; DOUALA</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white max-w-3xl mx-auto leading-tight mb-4">
-              Ready to take tax anxiety off your operating table?
+              <TextReveal text="Ready to take tax anxiety off your" /> <span className="shimmer-text text-teal-400">operating table?</span>
             </h2>
             <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed">
               Request a compliance check or speak directly with our bilingual corporate tax desk

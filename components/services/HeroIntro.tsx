@@ -31,12 +31,17 @@ export function HeroIntro({
   headlineHighlight,
   lead,
   buttons,
+  extra,
 }: {
   eyebrow: string;
   headlineLead: string;
   headlineHighlight: string;
   lead: string;
   buttons: ReactNode;
+  /** Optional content rendered as its own staggered item after the buttons
+   *  — e.g. Tax Compliance's 3-stat strip, which the other sibling heroes
+   *  don't carry. */
+  extra?: ReactNode;
 }) {
   const reducedMotion = useReducedMotion();
 
@@ -67,6 +72,8 @@ export function HeroIntro({
       <motion.div variants={item} className="flex flex-wrap items-center justify-center gap-4">
         {buttons}
       </motion.div>
+
+      {extra && <motion.div variants={item}>{extra}</motion.div>}
     </motion.div>
   );
 }

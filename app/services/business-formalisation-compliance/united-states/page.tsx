@@ -7,6 +7,9 @@ import { TrustStrip } from "@/components/TrustStrip";
 import { Button } from "@/components/Button";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
+import { HeroIntro } from "@/components/services/HeroIntro";
+import { ScrollFillTrack } from "@/components/services/ScrollFillTrack";
+import { ScrollCue } from "@/components/home/ScrollCue";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { ComplianceDisclaimer } from "@/components/ComplianceDisclaimer";
 import { WhatComesNext } from "@/components/WhatComesNext";
@@ -210,38 +213,38 @@ export default function BusinessFormalisationUnitedStatesPage() {
                 cycle automatically). */}
             <HeroImageCarousel
               keys={["cross-border-boardroom", "it-advisory"]}
-              imageClassName="object-cover object-center scale-105"
+              imageClassName="hero-ken-burns object-cover object-center"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/65 to-navy-950/50" />
           </div>
-          <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
-              <div className="inline-flex items-center justify-center gap-2 mb-6">
-                <span className="w-7 h-[2px] bg-teal-400 inline-block" />
-                <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
-                  UNITED STATES JURISDICTION • 50 STATES
-                </span>
-                <span className="w-7 h-[2px] bg-teal-400 inline-block" />
-              </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] mb-6">
-                Form your US entity, <span className="gradient-teal-blue-text">without the guesswork.</span>
-              </h1>
-              {/* Explicitly names both starting points this page serves —
-                  previously conflated into one vague "international
-                  founders" phrase with no persona section to separate them. */}
-              <p className="mx-auto text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
-                LLC and C-Corp formation for two starting points: Cameroon-based businesses
-                expanding into the US market, and diaspora individuals already living or working
-                abroad who want to register their own US entity — state filing, registered agent,
-                and IRS EIN coordination handled end to end.
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-4">
-                <Button href="#checklist">Get Formation Checklist</Button>
-                <WhatsAppButton phone="237678597593" label="Chat on WhatsApp Legal Desk" />
-              </div>
-            </div>
+
+          {/* Ambient depth — same slow-drifting glows as every other hero
+              on the site, replacing the single static blur circle this
+              section had before. */}
+          <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
+            <div className="float-a absolute top-1/4 -left-10 w-96 h-96 rounded-full bg-teal-500/15 blur-3xl" />
+            <div className="float-b absolute bottom-0 -right-16 w-80 h-80 rounded-full bg-sky-400/10 blur-3xl" />
           </div>
+
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Explicitly names both starting points this page serves —
+                previously conflated into one vague "international
+                founders" phrase with no persona section to separate them. */}
+            <HeroIntro
+              eyebrow="UNITED STATES JURISDICTION • 50 STATES"
+              headlineLead="Form your US entity,"
+              headlineHighlight="without the guesswork."
+              lead="LLC and C-Corp formation for two starting points: Cameroon-based businesses expanding into the US market, and diaspora individuals already living or working abroad who want to register their own US entity — state filing, registered agent, and IRS EIN coordination handled end to end."
+              buttons={
+                <>
+                  <Button href="#checklist">Get Formation Checklist</Button>
+                  <WhatsAppButton phone="237678597593" label="Chat on WhatsApp Legal Desk" />
+                </>
+              }
+            />
+          </div>
+
+          <ScrollCue />
         </section>
 
         <TrustStrip items={trustStripItems} />
@@ -291,8 +294,8 @@ export default function BusinessFormalisationUnitedStatesPage() {
                 </div>
               </Reveal>
 
-              <div className="lg:col-span-8 flex flex-col pl-2 md:pl-6 relative">
-                <div className="absolute left-6 md:left-10 top-6 bottom-8 w-0.5 bg-gradient-to-b from-teal-400 via-blue-accent to-slate-300" />
+              <div className="lg:col-span-8 flex flex-col pl-2 md:pl-6">
+                <ScrollFillTrack>
                 <Reveal effect="stagger">
                 {steps.map((step) => (
                   <div key={step.number} className="relative flex items-start gap-5 pb-8 last:pb-0 group">
@@ -336,6 +339,7 @@ export default function BusinessFormalisationUnitedStatesPage() {
                   </div>
                 ))}
                 </Reveal>
+                </ScrollFillTrack>
               </div>
             </div>
           </div>
@@ -378,14 +382,22 @@ export default function BusinessFormalisationUnitedStatesPage() {
                     </li>
                   ))}
                 </ul>
+                {/*
+                 * Was a dashed "[PENDING: confirm with Uptech Consulting]"
+                 * badge — state filing fees change per state/year and
+                 * Uptech Consulting's own service fees are consultation-based
+                 * (CLAUDE.md Section 6.6), so the permanent fix isn't a
+                 * number, it's this framing: state fees are the state's own
+                 * rate, service scope and cost confirmed at consultation —
+                 * same pattern as every other pricing mention on the site.
+                 */}
                 <div className="mt-5 pt-4 border-t border-slate-100">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h4 className="text-sm font-bold text-slate-900">State Filing Fees &amp; Uptech Consulting Service Fees</h4>
-                    <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded uppercase tracking-wider border border-amber-300">
-                      [PENDING: confirm with Uptech Consulting]
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-600">State filing fees vary by state and change periodically; confirm current figures with your Uptech Consulting desk.</p>
+                  <h4 className="text-sm font-bold text-slate-900">State Filing Fees &amp; Service Cost</h4>
+                  <p className="text-xs text-slate-600 mt-1">
+                    State filing fees are set by the Secretary of State and vary by state — not an
+                    Uptech Consulting charge. Your consultant confirms the current state fee and
+                    scopes our service cost together before anything is filed.
+                  </p>
                 </div>
               </div>
 
@@ -625,7 +637,9 @@ export default function BusinessFormalisationUnitedStatesPage() {
               <span className="text-xs font-bold uppercase tracking-wider text-sky-600">FREQUENT QUESTIONS</span>
               <h2 className="text-3xl font-extrabold text-navy-950 tracking-tight mt-2"><TextReveal text="Common questions on US formation" /></h2>
             </Reveal>
-            <FaqAccordion items={faqItems} />
+            <Reveal effect="fade" delay={100}>
+              <FaqAccordion items={faqItems} />
+            </Reveal>
           </div>
         </section>
 
@@ -662,7 +676,7 @@ export default function BusinessFormalisationUnitedStatesPage() {
               Legal Desk Active in Buea
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white max-w-2xl mx-auto leading-tight mb-4">
-              Ready to <span className="gradient-teal-blue-text">form your US entity?</span>
+              <TextReveal text="Ready to" /> <span className="shimmer-text text-teal-400">form your US entity?</span>
             </h2>
             <p className="text-base sm:text-lg text-slate-300 max-w-xl mx-auto mb-8 leading-relaxed">
               Whether you&apos;re expanding from Cameroon or registering solo from abroad, our

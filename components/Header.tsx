@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
+import { MaterialIcon } from "@/components/icons/MaterialIcon";
 
 export type ServiceKey =
   | "it-consulting"
@@ -88,14 +89,123 @@ const contactServiceParam: Record<ServiceKey, string> = {
   "career-marketing": "career-marketing",
 };
 
+/**
+ * One row of the mobile menu's accordion: the label itself is a real link to
+ * the section's overview page (tapping "Services" goes to /services — it
+ * used to be inert label text with no href at all), and a separate chevron
+ * button expands the same sub-links the desktop hover-flyout shows, so
+ * mobile doesn't lose that content just because there's no hover.
+ */
+function MobileNavSection({
+  href,
+  icon,
+  label,
+  isOpen,
+  onToggle,
+  onNavigate,
+  isActive,
+  linkable = true,
+  children,
+}: {
+  href?: string;
+  icon: string;
+  label: string;
+  isOpen: boolean;
+  onToggle: () => void;
+  onNavigate: () => void;
+  isActive?: boolean;
+  /** Set false for a section with no overview page of its own — the whole
+   *  row just expands/collapses instead of half of it navigating. */
+  linkable?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div className="border-b border-slate-800/60 last:border-b-0">
+      <div className="flex items-center">
+        {linkable && href ? (
+          <>
+            <Link
+              href={href}
+              onClick={onNavigate}
+              className={`flex flex-1 items-center gap-3 py-3.5 pl-1 pr-2 transition-colors ${
+                isActive ? "text-teal-400" : "text-white hover:text-teal-400"
+              }`}
+            >
+              <MaterialIcon name={icon} className="text-[20px] text-teal-400" />
+              <span className="text-[15px] font-semibold">{label}</span>
+            </Link>
+            <button
+              type="button"
+              onClick={onToggle}
+              aria-expanded={isOpen}
+              aria-label={`${isOpen ? "Collapse" : "Expand"} ${label} menu`}
+              className="flex h-11 w-11 flex-shrink-0 items-center justify-center text-slate-400 hover:text-teal-400"
+            >
+              <svg
+                className={`w-4 h-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </>
+        ) : (
+          <button
+            type="button"
+            onClick={onToggle}
+            aria-expanded={isOpen}
+            className="flex flex-1 items-center gap-3 py-3.5 pl-1 pr-2 text-left text-white transition-colors hover:text-teal-400"
+          >
+            <MaterialIcon name={icon} className="text-[20px] text-teal-400" />
+            <span className="flex-1 text-[15px] font-semibold">{label}</span>
+            <svg
+              className={`h-4 w-4 flex-shrink-0 text-slate-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        )}
+      </div>
+      <div
+        className={`grid overflow-hidden transition-[grid-template-rows] duration-200 ease-out ${
+          isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
+      >
+        <div className="min-h-0">
+          <div className="space-y-0.5 py-1 pb-3 pl-[2.65rem] pr-1">{children}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+type MobileSectionKey = "services" | "who-we-are" | "who-we-serve";
+
 export function Header({
   activeService,
   ctaLabel = "Book a Consultation",
   ctaHref,
 }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [openSection, setOpenSection] = useState<MobileSectionKey | null>(null);
   const resolvedCtaHref =
     ctaHref ?? (activeService ? `/contact?service=${contactServiceParam[activeService]}` : "/contact");
+
+  function toggleSection(key: MobileSectionKey) {
+    setOpenSection((current) => (current === key ? null : key));
+  }
+
+  function closeMobileMenu() {
+    setMobileOpen(false);
+    setOpenSection(null);
+  }
 
   return (
     <header className="sticky top-0 z-50 bg-navy-900/95 backdrop-blur-md border-b border-slate-800/80">
@@ -116,7 +226,10 @@ export function Header({
         {/* Center nav (desktop) */}
         <nav className="hidden lg:flex items-center gap-1 xl:gap-2 text-sm font-medium text-slate-300">
           <div className="relative group py-6">
-            <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-300 hover:text-white group-hover:text-teal-400 transition-colors text-sm font-semibold focus:outline-none">
+            <Link
+              href="/who-we-are"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-300 hover:text-white group-hover:text-teal-400 transition-colors text-sm font-semibold focus:outline-none"
+            >
               <span>Who We Are</span>
               <svg
                 className="w-3.5 h-3.5 text-slate-400 group-hover:text-teal-400 group-hover:rotate-180 transition-transform duration-200"
@@ -127,8 +240,8 @@ export function Header({
               >
                 <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-            </button>
-            <div className="absolute top-[100%] left-0 w-64 bg-navy-950/95 backdrop-blur-xl border border-slate-700/80 shadow-2xl rounded-xl p-2.5 opacity-0 invisible scale-95 group-hover:opacity-100 group-hover:visible group-hover:scale-100 transition-[opacity,transform,visibility] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] z-50 transform -translate-y-2 group-hover:translate-y-0 origin-top">
+            </Link>
+            <div className="absolute top-[100%] left-0 w-64 bg-navy-950/95 backdrop-blur-xl border border-slate-700/80 shadow-2xl rounded-xl p-2.5 opacity-0 invisible scale-95 group-hover:opacity-100 group-hover:visible group-hover:scale-100 focus-within:opacity-100 focus-within:visible focus-within:scale-100 transition-[opacity,transform,visibility] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] z-50 transform -translate-y-2 group-hover:translate-y-0 focus-within:translate-y-0 origin-top">
               <Link
                 href="/who-we-are"
                 className="flex flex-col p-2.5 rounded-lg hover:bg-white/5 transition-colors group/item"
@@ -166,7 +279,8 @@ export function Header({
           </div>
 
           <div className="relative group py-6">
-            <button
+            <Link
+              href="/services"
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors text-sm focus:outline-none ${
                 activeService
                   ? "text-teal-400 font-bold bg-white/[0.04]"
@@ -188,8 +302,8 @@ export function Header({
               >
                 <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-            </button>
-            <div className="absolute top-[100%] left-1/2 -translate-x-1/2 w-[340px] sm:w-[380px] bg-navy-950/95 backdrop-blur-xl border border-slate-700/80 shadow-2xl rounded-xl p-3 opacity-0 invisible scale-95 group-hover:opacity-100 group-hover:visible group-hover:scale-100 transition-[opacity,transform,visibility] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] z-50 transform -translate-y-2 group-hover:translate-y-0 origin-top">
+            </Link>
+            <div className="absolute top-[100%] left-1/2 -translate-x-1/2 w-[340px] sm:w-[380px] bg-navy-950/95 backdrop-blur-xl border border-slate-700/80 shadow-2xl rounded-xl p-3 opacity-0 invisible scale-95 group-hover:opacity-100 group-hover:visible group-hover:scale-100 focus-within:opacity-100 focus-within:visible focus-within:scale-100 transition-[opacity,transform,visibility] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] z-50 transform -translate-y-2 group-hover:translate-y-0 focus-within:translate-y-0 origin-top">
               <div className="space-y-1">
                 {services.map((service) => {
                   const isActive = service.key === activeService;
@@ -272,7 +386,7 @@ export function Header({
                 <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
-            <div className="absolute top-[100%] left-0 w-72 bg-navy-950/95 backdrop-blur-xl border border-slate-700/80 shadow-2xl rounded-xl p-2.5 opacity-0 invisible scale-95 group-hover:opacity-100 group-hover:visible group-hover:scale-100 transition-[opacity,transform,visibility] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] z-50 transform -translate-y-2 group-hover:translate-y-0 origin-top">
+            <div className="absolute top-[100%] left-0 w-72 bg-navy-950/95 backdrop-blur-xl border border-slate-700/80 shadow-2xl rounded-xl p-2.5 opacity-0 invisible scale-95 group-hover:opacity-100 group-hover:visible group-hover:scale-100 focus-within:opacity-100 focus-within:visible focus-within:scale-100 transition-[opacity,transform,visibility] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] z-50 transform -translate-y-2 group-hover:translate-y-0 focus-within:translate-y-0 origin-top">
               <Link
                 href="/who-we-serve/individuals"
                 className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-white/5 transition-colors group/item"
@@ -327,7 +441,10 @@ export function Header({
           {/* Mobile menu toggle */}
           <button
             type="button"
-            onClick={() => setMobileOpen((open) => !open)}
+            onClick={() => {
+              setMobileOpen((open) => !open);
+              setOpenSection(null);
+            }}
             aria-expanded={mobileOpen}
             aria-label="Toggle navigation menu"
             className="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border border-slate-700/80 text-slate-200 hover:text-white hover:border-slate-500 transition-colors"
@@ -355,76 +472,126 @@ export function Header({
         }`}
       >
         <div className="min-h-0">
-          <div className="max-h-[calc(100vh-5rem)] space-y-5 overflow-y-auto px-4 py-5">
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">
-              Services
-            </p>
-            <div className="space-y-1">
-              {services.map((service) => (
-                <Link
-                  key={service.key}
-                  href={service.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`block px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
-                    service.key === activeService
-                      ? "text-teal-300 bg-white/[0.06] border border-teal-500/30"
-                      : "text-white hover:bg-white/5"
-                  }`}
-                >
-                  {service.title}
-                </Link>
-              ))}
-              {/* Same guided-finder pointer as the desktop dropdown — see
-                  the comment there for why this isn't a 6th list item. */}
-              <Link
-                href="/services/business-formalisation-compliance"
-                onClick={() => setMobileOpen(false)}
-                className="block px-3 py-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:bg-white/5"
-              >
-                Not sure which one? Use the guided finder
-              </Link>
-              <Link
+          <div className="max-h-[calc(100vh-5rem)] space-y-4 overflow-y-auto px-4 py-5">
+            <div className="rounded-xl border border-slate-800/70 bg-white/[0.02] px-2.5">
+              <MobileNavSection
                 href="/services"
-                onClick={() => setMobileOpen(false)}
-                className="block px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-300 hover:bg-white/5"
+                icon="apps"
+                label="Services"
+                isOpen={openSection === "services"}
+                onToggle={() => toggleSection("services")}
+                onNavigate={closeMobileMenu}
+                isActive={Boolean(activeService)}
               >
-                View All Services
-              </Link>
+                {services.map((service) => (
+                  <Link
+                    key={service.key}
+                    href={service.href}
+                    onClick={closeMobileMenu}
+                    className={`block rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors ${
+                      service.key === activeService
+                        ? "border border-teal-500/30 bg-white/[0.06] text-teal-300"
+                        : "text-slate-200 hover:bg-white/5 hover:text-white"
+                    }`}
+                  >
+                    {service.title}
+                  </Link>
+                ))}
+                {/* Same guided-finder pointer as the desktop dropdown — see
+                    the comment there for why this isn't a 6th list item. */}
+                <Link
+                  href="/services/business-formalisation-compliance"
+                  onClick={closeMobileMenu}
+                  className="block rounded-lg px-3 py-2.5 text-xs font-semibold text-slate-400 hover:bg-white/5"
+                >
+                  Not sure which one? Use the guided finder
+                </Link>
+                <Link
+                  href="/services"
+                  onClick={closeMobileMenu}
+                  className="block rounded-lg px-3 py-2.5 text-sm font-semibold text-slate-300 hover:bg-white/5"
+                >
+                  View All Services
+                </Link>
+              </MobileNavSection>
+
+              <MobileNavSection
+                href="/who-we-are"
+                icon="groups"
+                label="Who We Are"
+                isOpen={openSection === "who-we-are"}
+                onToggle={() => toggleSection("who-we-are")}
+                onNavigate={closeMobileMenu}
+              >
+                <Link
+                  href="/who-we-are"
+                  onClick={closeMobileMenu}
+                  className="block rounded-lg px-3 py-2.5 text-sm font-semibold text-slate-200 hover:bg-white/5 hover:text-white"
+                >
+                  Our Philosophy
+                </Link>
+                <Link
+                  href="/who-we-are#core-values"
+                  onClick={closeMobileMenu}
+                  className="block rounded-lg px-3 py-2.5 text-sm font-semibold text-slate-200 hover:bg-white/5 hover:text-white"
+                >
+                  Core Values
+                </Link>
+                <Link
+                  href="/who-we-are#mission-vision"
+                  onClick={closeMobileMenu}
+                  className="block rounded-lg px-3 py-2.5 text-sm font-semibold text-slate-200 hover:bg-white/5 hover:text-white"
+                >
+                  Mission &amp; Vision
+                </Link>
+              </MobileNavSection>
+
+              <MobileNavSection
+                icon="diversity_3"
+                label="Who We Serve"
+                linkable={false}
+                isOpen={openSection === "who-we-serve"}
+                onToggle={() => toggleSection("who-we-serve")}
+                onNavigate={closeMobileMenu}
+              >
+                <Link
+                  href="/who-we-serve/individuals"
+                  onClick={closeMobileMenu}
+                  className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-semibold text-slate-200 hover:bg-white/5 hover:text-white"
+                >
+                  <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-teal-400" />
+                  For Individuals
+                </Link>
+                <Link
+                  href="/who-we-serve/businesses"
+                  onClick={closeMobileMenu}
+                  className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-semibold text-slate-200 hover:bg-white/5 hover:text-white"
+                >
+                  <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-blue-400" />
+                  For Businesses &amp; Institutions
+                </Link>
+              </MobileNavSection>
             </div>
-          </div>
-          <div className="flex flex-col gap-1 border-t border-slate-800/80 pt-4">
-            <Link
-              href="/who-we-are"
-              onClick={() => setMobileOpen(false)}
-              className="px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-200 hover:bg-white/5"
-            >
-              Who We Are
-            </Link>
-            <Link
-              href="/who-we-serve/individuals"
-              onClick={() => setMobileOpen(false)}
-              className="px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-200 hover:bg-white/5"
-            >
-              Who We Serve
-            </Link>
+
             <Link
               href="/careers"
-              onClick={() => setMobileOpen(false)}
-              className="px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-200 hover:bg-white/5"
+              onClick={closeMobileMenu}
+              className="flex items-center gap-3 rounded-xl border border-slate-800/70 bg-white/[0.02] px-3.5 py-3.5 text-[15px] font-semibold text-white hover:text-teal-400"
             >
+              <MaterialIcon name="work" className="text-[20px] text-teal-400" />
               Careers
             </Link>
-          </div>
-          <div className="flex flex-col gap-2.5 border-t border-slate-800/80 pt-4">
+
             <Link
               href={resolvedCtaHref}
-              onClick={() => setMobileOpen(false)}
-              className="gradient-teal-blue text-white text-sm font-semibold px-4 py-2.5 rounded-lg flex items-center justify-center gap-2"
+              onClick={closeMobileMenu}
+              className="gradient-teal-blue flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-teal-950/40 active:scale-[0.98] transition-transform"
             >
               {ctaLabel}
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </Link>
-          </div>
           </div>
         </div>
       </div>

@@ -8,6 +8,9 @@ import { TrustStrip } from "@/components/TrustStrip";
 import { Button } from "@/components/Button";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
+import { HeroIntro } from "@/components/services/HeroIntro";
+import { ScrollFillTrack } from "@/components/services/ScrollFillTrack";
+import { ScrollCue } from "@/components/home/ScrollCue";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { ComplianceDisclaimer } from "@/components/ComplianceDisclaimer";
 import { WhatComesNext } from "@/components/WhatComesNext";
@@ -214,58 +217,61 @@ export default function CnpsComplianceCameroonPage() {
                 sitewide. */}
             <HeroImageCarousel
               keys={["compliance-advisory", "dedicated-advisor"]}
-              imageClassName="object-cover object-center scale-105"
+              imageClassName="hero-ken-burns object-cover object-center"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/65 to-navy-950/50" />
           </div>
-          <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
-              <div className="inline-flex items-center justify-center gap-2 mb-6">
-                <span className="w-7 h-[2px] bg-teal-400 inline-block" />
-                {/* FLAG FOR TEAM: "LABOUR" mismatch, see the code comment
-                    on the Breadcrumb `tag` prop above — same badge text
-                    appears here. */}
-                <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
-                  CAMEROON • CNPS &amp; LABOUR COMPLIANCE
-                </span>
-                <span className="w-7 h-[2px] bg-teal-400 inline-block" />
-              </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] mb-6">
-                Keep your team&apos;s social security compliant,{" "}
-                <span className="gradient-teal-blue-text">without the paperwork maze.</span>
-              </h1>
-              {/* RESOLVED — see the sourced comment on the trust strip's
-                  DPAE item above. "Employee declarations" here correctly
-                  stays unqualified (DPAE is one-time, not monthly);
-                  "payroll withholding" right after it correctly keeps its
-                  own monthly claim (confirmed accurate by the Compliance
-                  Cycle section's own "Monthly Payroll Withholding &
-                  Filing" step). */}
-              <p className="mx-auto text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
-                Employer registration, employee declarations, payroll withholding, and CNPS
-                clearance certificates — kept current as your team grows.
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
-                <Button href="#checklist">Get CNPS Checklist</Button>
-                <WhatsAppButton phone="237678597593" label="Chat on WhatsApp CNPS Desk" />
-              </div>
-              <div className="grid grid-cols-3 gap-3 max-w-lg mx-auto pt-4 border-t border-white/10">
-                <div className="p-3 bg-white/5 rounded-lg">
-                  <p className="text-xl font-bold text-teal-300">Day 1</p>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Employer Registration</p>
-                </div>
-                <div className="p-3 bg-white/5 rounded-lg">
-                  <p className="text-xl font-bold text-teal-300">Bilingual</p>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">CNPS Desk Support</p>
-                </div>
-                <div className="p-3 bg-white/5 rounded-lg">
-                  <p className="text-xl font-bold text-teal-300">Tender-Ready</p>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Clearance Maintained</p>
-                </div>
-              </div>
-            </div>
+
+          {/* Ambient depth — same slow-drifting glows as every other hero
+              on the site, replacing the single static blur circle this
+              section had before. */}
+          <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
+            <div className="float-a absolute top-1/4 -left-10 w-96 h-96 rounded-full bg-teal-500/15 blur-3xl" />
+            <div className="float-b absolute bottom-0 -right-16 w-80 h-80 rounded-full bg-sky-400/10 blur-3xl" />
           </div>
+
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* FLAG FOR TEAM: "LABOUR" mismatch, see the code comment
+                on the Breadcrumb `tag` prop above — same badge text
+                appears in the eyebrow here. */}
+            {/* RESOLVED — see the sourced comment on the trust strip's
+                DPAE item above. "Employee declarations" here correctly
+                stays unqualified (DPAE is one-time, not monthly);
+                "payroll withholding" right after it correctly keeps its
+                own monthly claim (confirmed accurate by the Compliance
+                Cycle section's own "Monthly Payroll Withholding &
+                Filing" step). */}
+            <HeroIntro
+              eyebrow="CAMEROON • CNPS & LABOUR COMPLIANCE"
+              headlineLead="Keep your team's social security compliant,"
+              headlineHighlight="without the paperwork maze."
+              lead="Employer registration, employee declarations, payroll withholding, and CNPS clearance certificates — kept current as your team grows."
+              buttons={
+                <>
+                  <Button href="#checklist">Get CNPS Checklist</Button>
+                  <WhatsAppButton phone="237678597593" label="Chat on WhatsApp CNPS Desk" />
+                </>
+              }
+              extra={
+                <div className="grid grid-cols-3 gap-3 max-w-lg mx-auto pt-4 border-t border-white/10">
+                  <div className="p-3 bg-white/5 rounded-lg">
+                    <p className="text-xl font-bold text-teal-300">Day 1</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Employer Registration</p>
+                  </div>
+                  <div className="p-3 bg-white/5 rounded-lg">
+                    <p className="text-xl font-bold text-teal-300">Bilingual</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">CNPS Desk Support</p>
+                  </div>
+                  <div className="p-3 bg-white/5 rounded-lg">
+                    <p className="text-xl font-bold text-teal-300">Tender-Ready</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Clearance Maintained</p>
+                  </div>
+                </div>
+              }
+            />
+          </div>
+
+          <ScrollCue />
         </section>
 
         <TrustStrip items={trustStripItems} />
@@ -306,8 +312,8 @@ export default function CnpsComplianceCameroonPage() {
                 </div>
               </Reveal>
 
-              <div className="lg:col-span-8 flex flex-col pl-2 md:pl-6 relative">
-                <div className="absolute left-6 md:left-10 top-6 bottom-8 w-0.5 bg-gradient-to-b from-teal-400 via-blue-accent to-slate-300" />
+              <div className="lg:col-span-8 flex flex-col pl-2 md:pl-6">
+                <ScrollFillTrack>
                 <Reveal effect="stagger">
                 {steps.map((step) => (
                   <div key={step.number} className="relative flex items-start gap-5 pb-8 last:pb-0 group">
@@ -364,6 +370,7 @@ export default function CnpsComplianceCameroonPage() {
                   </div>
                 ))}
                 </Reveal>
+                </ScrollFillTrack>
               </div>
             </div>
           </div>
@@ -393,7 +400,7 @@ export default function CnpsComplianceCameroonPage() {
             </Reveal>
 
             <Reveal effect="rise" delay={120} className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              <div className="lg:col-span-7 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm">
+              <TiltCard max={4} className="lg:col-span-7 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm">
                 <div className="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
                   <div className="w-9 h-9 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center">
                     <MaterialIcon name="diversity_3" className="text-[20px]" />
@@ -413,10 +420,10 @@ export default function CnpsComplianceCameroonPage() {
                     </li>
                   ))}
                 </ul>
-              </div>
+              </TiltCard>
 
               <div className="lg:col-span-5">
-                <div className="bg-navy-950 text-white rounded-2xl p-7 border border-slate-800 shadow-xl h-full flex flex-col justify-between">
+                <TiltCard max={4} className="bg-navy-950 text-white rounded-2xl p-7 border border-slate-800 shadow-xl h-full flex flex-col justify-between">
                   <div>
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-teal-400/30 text-teal-300 text-xs font-bold tracking-wider uppercase mb-4">
                       <span className="w-2 h-2 rounded-full bg-teal-400" />
@@ -440,7 +447,7 @@ export default function CnpsComplianceCameroonPage() {
                     Send Documents via WhatsApp
                     <MaterialIcon name="arrow_forward" className="text-[16px]" />
                   </a>
-                </div>
+                </TiltCard>
               </div>
             </Reveal>
           </div>
@@ -630,7 +637,9 @@ export default function CnpsComplianceCameroonPage() {
               <span className="text-xs font-bold uppercase tracking-wider text-sky-600">FREQUENT QUESTIONS</span>
               <h2 className="text-3xl font-extrabold text-navy-950 tracking-tight mt-2"><TextReveal text="CNPS compliance questions, answered" /></h2>
             </Reveal>
-            <FaqAccordion items={faqItems} />
+            <Reveal effect="fade" delay={100}>
+              <FaqAccordion items={faqItems} />
+            </Reveal>
           </div>
         </section>
 
@@ -679,7 +688,7 @@ export default function CnpsComplianceCameroonPage() {
               CNPS Desk Active in Buea &amp; Douala
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white max-w-2xl mx-auto leading-tight mb-4">
-              Ready to bring your <span className="gradient-teal-blue-text">team into compliance?</span>
+              <TextReveal text="Ready to bring your" /> <span className="shimmer-text text-teal-400">team into compliance?</span>
             </h2>
             <p className="text-base sm:text-lg text-slate-300 max-w-xl mx-auto mb-8 leading-relaxed">
               Book a consultation or message our CNPS desk directly — we&apos;ll assess your current

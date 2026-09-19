@@ -41,22 +41,29 @@ const services: Array<{
   href: string;
 }> = [
   {
-    key: "business-formalisation-cameroon",
+    key: "career-marketing",
     number: "01",
+    title: "Career Marketing & Placement",
+    description: "Executive positioning & international placement",
+    href: "/services/career-marketing-placement",
+  },
+  {
+    key: "business-formalisation-cameroon",
+    number: "02",
     title: "Business Formalisation — Cameroon",
     description: "OHADA incorporation, RCCM & taxpayer ID",
     href: "/services/business-formalisation-compliance/cameroon",
   },
   {
     key: "business-formalisation-us",
-    number: "02",
+    number: "03",
     title: "Business Formalisation — United States",
     description: "LLC/C-Corp formation, registered agent & EIN",
     href: "/services/business-formalisation-compliance/united-states",
   },
   {
     key: "tax-compliance",
-    number: "03",
+    number: "04",
     title: "Tax Compliance — Cameroon",
     // Tax Compliance for Businesses and for Individuals were merged into one
     // unified page (leadership decision) — the individuals URL now redirects
@@ -66,17 +73,10 @@ const services: Array<{
   },
   {
     key: "cnps-compliance",
-    number: "04",
-    title: "CNPS Compliance — Cameroon",
-    description: "Employer registration & social security filings",
-    href: "/services/business-formalisation-compliance/cnps-compliance-cameroon",
-  },
-  {
-    key: "career-marketing",
     number: "05",
-    title: "Career Marketing & Placement",
-    description: "Executive positioning & international placement",
-    href: "/services/career-marketing-placement",
+    title: "CNPS Compliance — Cameroon",
+    description: "Registration, monthly compliance & benefits follow-up",
+    href: "/services/business-formalisation-compliance/cnps-compliance-cameroon",
   },
 ];
 

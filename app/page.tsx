@@ -131,38 +131,38 @@ const promises: PromiseStatement[] = [
 const pillars = [
   {
     number: "01",
+    title: "Career Marketing & Placement",
+    href: "/services/career-marketing-placement",
+    description:
+      "Positioning, market-facing documents and structured placement support for professionals seeking their next role.",
+  },
+  {
+    number: "02",
     title: "Business Formalisation — Cameroon",
     href: "/services/business-formalisation-compliance/cameroon",
     description:
       "Full incorporation under OHADA standards — Articles of Association, RCCM registration, and Taxpayer ID (NIU).",
   },
   {
-    number: "02",
+    number: "03",
     title: "Business Formalisation — United States",
     href: "/services/business-formalisation-compliance/united-states",
     description:
-      "LLC and C-Corp formation for Cameroon-based businesses and diaspora founders — state filing, registered agent, and IRS EIN.",
+      "LLC and C-Corp formation for anyone looking to register a business in the United States — state filing, registered agent, and IRS EIN.",
   },
   {
-    number: "03",
+    number: "04",
     title: "Tax Compliance — Cameroon",
     href: "/services/business-formalisation-compliance/tax-compliance-businesses-cameroon",
     description:
       "Monthly DGI filings and Corporate Income Tax for businesses, personal IRPP declarations for individuals — one tax desk, either way.",
   },
   {
-    number: "04",
+    number: "05",
     title: "CNPS Compliance — Cameroon",
     href: "/services/business-formalisation-compliance/cnps-compliance-cameroon",
     description:
-      "Employer registration, employee declarations, payroll withholding, and CNPS Clearance Certificates.",
-  },
-  {
-    number: "05",
-    title: "Career Marketing & Placement",
-    href: "/services/career-marketing-placement",
-    description:
-      "Positioning, market-facing documents and structured placement support for professionals seeking their next role.",
+      "Employer and employee registration, monthly compliance filings, clearance follow-ups, and social benefits follow-ups — pensions, allowances and more.",
   },
 ];
 

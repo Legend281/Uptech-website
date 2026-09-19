@@ -68,6 +68,13 @@ const services: Array<{
   image: ImageKey;
 }> = [
   {
+    title: "Career Marketing & Placement",
+    description:
+      "A dedicated specialist manages your CV, LinkedIn, daily applications, and recruiter follow-up until you're placed.",
+    href: "/services/career-marketing-placement",
+    image: "career-review",
+  },
+  {
     flag: "🇨🇲",
     title: "Business Formalisation — Cameroon",
     description:
@@ -79,7 +86,7 @@ const services: Array<{
     flag: "🇺🇸",
     title: "Business Formalisation — United States",
     description:
-      "LLC and C-Corp formation for Cameroon-based businesses and diaspora founders — state filing, registered agent, and IRS EIN.",
+      "LLC and C-Corp formation for anyone looking to register a business in the United States — state filing, registered agent, and IRS EIN.",
     href: "/services/business-formalisation-compliance/united-states",
     image: "it-advisory",
   },
@@ -95,16 +102,9 @@ const services: Array<{
     flag: "🇨🇲",
     title: "CNPS Compliance — Cameroon",
     description:
-      "Employer registration, employee declarations, payroll withholding, and CNPS Clearance Certificates.",
+      "Employer and employee registration, monthly compliance filings, clearance follow-ups, and social benefits follow-ups — pensions, allowances and more.",
     href: "/services/business-formalisation-compliance/cnps-compliance-cameroon",
     image: "ops-center",
-  },
-  {
-    title: "Career Marketing & Placement",
-    description:
-      "A dedicated specialist manages your CV, LinkedIn, daily applications, and recruiter follow-up until you're placed.",
-    href: "/services/career-marketing-placement",
-    image: "career-review",
   },
 ];
 

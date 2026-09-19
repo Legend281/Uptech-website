@@ -36,7 +36,7 @@ export function HeroIntro({
   eyebrow: string;
   headlineLead: string;
   headlineHighlight: string;
-  lead: string;
+  lead: ReactNode;
   buttons: ReactNode;
   /** Optional content rendered as its own staggered item after the buttons
    *  — e.g. Tax Compliance's 3-stat strip, which the other sibling heroes

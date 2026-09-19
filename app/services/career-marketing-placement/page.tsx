@@ -225,7 +225,7 @@ export default function CareerMarketingPlacementPage() {
               eyebrow="CAREER MARKETING & PLACEMENT"
               lineOne="You don't chase jobs."
               lineTwo="We do."
-              lead="A dedicated human specialist takes over your CV, your LinkedIn, your daily applications, and your recruiter follow-up — so you can take your evenings back and focus solely on showing up to interview."
+              lead="A dedicated Consultant/Account manager takes over your CV, your LinkedIn, your daily applications, and your recruiter follow-up — so you can take your evenings back and focus solely on showing up to interview."
               buttons={
                 <>
                   <Button href="#start-campaign" icon={arrowRightIcon}>

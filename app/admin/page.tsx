@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { StatCard } from "@/components/admin/StatCard";
 import { StatusBadge } from "@/components/admin/StatusBadge";
+import { Sparkline } from "@/components/admin/Sparkline";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { mockServicePages, mockActivity, mockLeads, MOCK_ADMIN_USERS } from "@/lib/admin/mockData";
 import { getReviewStatus, daysSinceReview, type ReviewStatus } from "@/lib/admin/staleness";
@@ -12,10 +12,14 @@ import {
   getDailyLeadCounts,
   getPipelineCounts,
   getLeadServiceLabel,
-  getServiceAccentClasses,
+  getServiceDotClass,
   leadStatusMeta,
+  PIPELINE_STAGE_COLOR,
 } from "@/lib/admin/leadStats";
 import { images } from "@/lib/images";
+
+/** Shared border treatment for the metrics strip cells — stacked with a bottom rule below `lg`, a single row with a right rule at `lg`. Keeps the 4-up layout safe from the divide-x/divide-y wrapping bugs a 2-column intermediate breakpoint would introduce. */
+const metricCellClasses = "border-b border-slate-100 p-6 last:border-b-0 lg:border-b-0 lg:border-r lg:last:border-r-0";
 
 const reviewStatusMeta: Record<ReviewStatus, { label: string; tone: "success" | "warning" | "danger"; border: string }> = {
   "on-track": { label: "On Track", tone: "success", border: "border-l-emerald-400" },
@@ -101,47 +105,76 @@ export default function AdminDashboardPage() {
         </div>
       </section>
 
-      {/* Stat cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total Leads" value={totalLeads} icon="groups" accent="blue" trend={dailyTrend} />
-        <StatCard
-          label="New Leads"
-          value={newLeadsThisWeek}
-          icon="auto_awesome"
-          accent="teal"
-          delta={newLeadsToday > 0 ? `+${newLeadsToday} today` : "This week"}
-          trend={dailyTrend}
-        />
-        <StatCard
-          label="Consultations Booked / Won"
-          value={bookedOrWonThisMonth}
-          icon="event_available"
-          accent="emerald"
-          delta="This month"
-        />
-        <StatCard
-          label="Compliance Pages Needing Review"
-          value={overdueOrDueSoonCount}
-          icon="warning"
-          accent="amber"
-          href="#compliance-alerts"
-        />
-      </div>
-
-      {/* Lead pipeline */}
-      <section className="mt-8 overflow-hidden rounded-2xl bg-navy-950 p-6 sm:p-7">
-        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="text-base font-bold text-white">Lead Pipeline</h2>
-            <p className="mt-1 text-sm text-slate-400">Where every open lead sits right now.</p>
+      {/* Metrics strip — one bordered container with internal rules, not four identical cards. The numbers read as one connected summary; only the last cell (an alert, not a growth metric) gets a distinct amber wash. */}
+      <section className="grid grid-cols-1 overflow-hidden rounded-2xl border border-slate-200/80 bg-white lg:grid-cols-4">
+        <div className={metricCellClasses}>
+          <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-slate-400">
+            <MaterialIcon name="groups" className="text-[15px]" />
+            Total Leads
+          </div>
+          <p className="mt-2 text-3xl font-extrabold tracking-tight text-navy-950">{totalLeads}</p>
+          <div className="mt-4 h-7">
+            <Sparkline points={dailyTrend} colorClassName="text-blue-accent" />
           </div>
         </div>
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+
+        <div className={metricCellClasses}>
+          <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-slate-400">
+            <MaterialIcon name="auto_awesome" className="text-[15px]" />
+            New Leads
+          </div>
+          <p className="mt-2 text-3xl font-extrabold tracking-tight text-navy-950">{newLeadsThisWeek}</p>
+          <p className="mt-1 flex items-center gap-1 text-xs font-semibold text-teal-600">
+            <MaterialIcon name="trending_up" className="text-[13px]" />
+            {newLeadsToday > 0 ? `+${newLeadsToday} today` : "This week"}
+          </p>
+          <div className="mt-2 h-7">
+            <Sparkline points={dailyTrend} colorClassName="text-teal-500" />
+          </div>
+        </div>
+
+        <div className={metricCellClasses}>
+          <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-slate-400">
+            <MaterialIcon name="event_available" className="text-[15px]" />
+            Booked / Won
+          </div>
+          <p className="mt-2 text-3xl font-extrabold tracking-tight text-navy-950">{bookedOrWonThisMonth}</p>
+          <p className="mt-1 text-xs text-slate-400">This month</p>
+        </div>
+
+        <Link href="#compliance-alerts" className={`${metricCellClasses} bg-amber-50/60 transition-colors hover:bg-amber-50`}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-amber-700">
+              <MaterialIcon name="warning" className="text-[15px]" />
+              Needs Review
+            </div>
+            <MaterialIcon name="arrow_forward" className="text-[15px] text-amber-500" />
+          </div>
+          <p className="mt-2 text-3xl font-extrabold tracking-tight text-navy-950">{overdueOrDueSoonCount}</p>
+          <p className="mt-1 text-xs text-amber-700/80">Compliance pages</p>
+        </Link>
+      </section>
+
+      {/* Lead pipeline — a real proportional funnel, not identical tiles: the bar's own width per segment shows the shape of the pipeline at a glance. */}
+      <section className="mt-8 overflow-hidden rounded-2xl bg-navy-950 p-6 sm:p-7">
+        <h2 className="text-base font-bold text-white">Lead Pipeline</h2>
+        <div className="mt-6 flex h-3 w-full overflow-hidden rounded-full bg-white/10">
+          {pipeline
+            .filter((stage) => stage.percent > 0)
+            .map((stage, index) => (
+              <div
+                key={stage.status}
+                style={{ width: `${stage.percent}%` }}
+                className={`${PIPELINE_STAGE_COLOR[stage.status]} ${index > 0 ? "border-l-2 border-navy-950" : ""}`}
+              />
+            ))}
+        </div>
+        <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3">
           {pipeline.map((stage) => (
-            <div key={stage.status} className="frosted-glass rounded-xl p-4">
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">{stage.label}</p>
-              <p className="mt-2 text-2xl font-extrabold text-white">{stage.count}</p>
-              <p className="mt-0.5 text-xs text-slate-400">{stage.percent}% of pipeline</p>
+            <div key={stage.status} className="flex items-center gap-2">
+              <span className={`h-2.5 w-2.5 rounded-full ${PIPELINE_STAGE_COLOR[stage.status]}`} />
+              <span className="text-sm font-bold text-white">{stage.count}</span>
+              <span className="text-xs text-slate-400">{stage.label}</span>
             </div>
           ))}
         </div>
@@ -150,10 +183,7 @@ export default function AdminDashboardPage() {
       {/* Recent leads */}
       <section className="mt-8 rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="text-base font-bold text-navy-950">Recent Leads</h2>
-            <p className="mt-1 text-sm text-slate-500">The latest enquiries, across every service.</p>
-          </div>
+          <h2 className="text-base font-bold text-navy-950">Recent Leads</h2>
           <span className="w-fit rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">
             Full inbox coming soon
           </span>
@@ -179,7 +209,8 @@ export default function AdminDashboardPage() {
                   <StatusBadge label={statusMeta.label} tone={statusMeta.tone} />
                 </div>
                 <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 pl-[42px] text-xs text-slate-500">
-                  <span className={`rounded-full px-2 py-0.5 font-semibold ${getServiceAccentClasses(lead.service)}`}>
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className={`h-1.5 w-1.5 rounded-full ${getServiceDotClass(lead.service)}`} />
                     {getLeadServiceLabel(lead.service)}
                   </span>
                   <span>{formatRelativeTime(lead.createdAt)}</span>
@@ -220,7 +251,8 @@ export default function AdminDashboardPage() {
                       </div>
                     </td>
                     <td className="py-3 pr-4">
-                      <span className={`inline-block rounded-full px-2.5 py-1 text-xs font-semibold ${getServiceAccentClasses(lead.service)}`}>
+                      <span className="inline-flex items-center gap-2 text-slate-600">
+                        <span className={`h-2 w-2 shrink-0 rounded-full ${getServiceDotClass(lead.service)}`} />
                         {getLeadServiceLabel(lead.service)}
                       </span>
                     </td>
@@ -255,12 +287,12 @@ export default function AdminDashboardPage() {
       </section>
 
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-5">
-        {/* Compliance review alerts */}
-        <section id="compliance-alerts" className="lg:col-span-3 rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
-          <h2 className="text-base font-bold text-navy-950">Compliance Review Alerts</h2>
-          <p className="mt-1 text-sm text-slate-500">
-            The 4 Business Formalisation &amp; Compliance pages, sorted by how urgently each needs review.
-          </p>
+        {/* Compliance review alerts — a warm tint (not the default white/border/shadow every other card uses) signals this is the one panel that wants attention, not just information. */}
+        <section id="compliance-alerts" className="lg:col-span-3 rounded-2xl border border-amber-100 bg-amber-50/40 p-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-base font-bold text-navy-950">Compliance Review Alerts</h2>
+            <span className="text-xs font-medium text-amber-700/80">Sorted by urgency</span>
+          </div>
           <div className="mt-5 space-y-3">
             {pagesWithStatus.map(({ page, status }) => {
               const meta = reviewStatusMeta[status];
@@ -274,7 +306,7 @@ export default function AdminDashboardPage() {
                 <Link
                   key={page.id}
                   href={page.url}
-                  className={`flex items-center justify-between gap-4 rounded-r-lg border-l-4 bg-slate-50/80 py-3 pl-4 pr-3 transition-colors hover:bg-slate-100 ${meta.border}`}
+                  className={`flex items-center justify-between gap-4 rounded-r-lg border-l-4 bg-white/70 py-3 pl-4 pr-3 shadow-sm transition-colors hover:bg-white ${meta.border}`}
                 >
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
@@ -291,22 +323,24 @@ export default function AdminDashboardPage() {
           </div>
         </section>
 
-        {/* Recent activity */}
+        {/* Recent activity — a connecting rail behind the icons reads as a timeline, not a generic icon-plus-text list. */}
         <section className="lg:col-span-2 rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
           <h2 className="text-base font-bold text-navy-950">Recent Activity</h2>
-          <p className="mt-1 text-sm text-slate-500">What the team has been doing lately.</p>
-          <div className="mt-5 space-y-4">
-            {mockActivity.map((entry) => (
-              <div key={entry.id} className="flex gap-3">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500">
-                  <MaterialIcon name={entry.icon} className="text-[16px]" />
+          <div className="relative mt-5">
+            <div className="absolute bottom-2 left-4 top-2 w-px bg-slate-100" aria-hidden="true" />
+            <div className="space-y-4">
+              {mockActivity.map((entry) => (
+                <div key={entry.id} className="relative flex gap-3">
+                  <div className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 ring-4 ring-white">
+                    <MaterialIcon name={entry.icon} className="text-[16px]" />
+                  </div>
+                  <div className="min-w-0 pt-1">
+                    <p className="text-sm text-slate-700">{entry.description}</p>
+                    <p className="mt-0.5 text-xs text-slate-400">{formatRelativeTime(entry.timestamp)}</p>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <p className="text-sm text-slate-700">{entry.description}</p>
-                  <p className="mt-0.5 text-xs text-slate-400">{formatRelativeTime(entry.timestamp)}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
       </div>

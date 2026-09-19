@@ -30,6 +30,21 @@ export function getServiceAccentClasses(service: LeadServiceValue): string {
   return serviceAccentClasses[service];
 }
 
+/** A calmer dot-marker version of the same per-service colors, for contexts (like a dense table) that already have a Status pill and don't need a second competing pill shape. */
+const serviceDotClasses: Record<LeadServiceValue, string> = {
+  "career-marketing": "bg-teal-500",
+  "business-formalisation-cameroon": "bg-sky-500",
+  "business-formalisation-us": "bg-blue-accent",
+  "business-formalisation": "bg-slate-400",
+  "tax-compliance-businesses": "bg-amber-500",
+  "cnps-compliance": "bg-indigo-500",
+  other: "bg-slate-400",
+};
+
+export function getServiceDotClass(service: LeadServiceValue): string {
+  return serviceDotClasses[service];
+}
+
 const DAY_MS = 86_400_000;
 
 export function countCreatedWithinDays(leads: Lead[], days: number, now: Date = new Date()): number {
@@ -68,6 +83,16 @@ export function getDailyLeadCounts(leads: Lead[], days: number, now: Date = new 
   }
   return buckets;
 }
+
+/** Cool-to-warm progression (neutral slate at "New" through to emerald at "Won") so the bar's color itself communicates a deal getting better, not just an arbitrary palette. */
+export const PIPELINE_STAGE_COLOR: Record<LeadStatus, string> = {
+  new: "bg-slate-400",
+  contacted: "bg-sky-400",
+  qualified: "bg-blue-accent",
+  "consultation-booked": "bg-teal-400",
+  won: "bg-emerald-400",
+  lost: "bg-rose-400",
+};
 
 export function getPipelineCounts(leads: Lead[]) {
   const eligible = leads.filter((lead) => lead.status !== "lost");

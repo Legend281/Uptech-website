@@ -3,32 +3,16 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
+import { serviceOptions, isServiceValue, type ServiceValue } from "@/lib/serviceOptions";
 
 const CONTACT_EMAIL = "infos@uptechconsulting.com";
 
 /*
- * IT Consulting & Outsourcing is paused by leadership decision and is
- * deliberately NOT offered here as a selectable service — a visitor who
- * reaches the still-intact IT Consulting page directly and clicks "Book a
- * Consultation" simply lands with no service pre-selected rather than an
- * invalid pre-fill. Tax Compliance for Businesses and for Individuals were
- * unified into one page/option — there is no separate "individuals" value.
+ * Re-exported for anything already importing these from this file —
+ * the actual definitions live in lib/serviceOptions.ts (a plain module,
+ * not "use client") so Server Components can import them too.
  */
-export const serviceOptions = [
-  { value: "business-formalisation", label: "Business Formalisation & Compliance (not sure which)" },
-  { value: "business-formalisation-cameroon", label: "Business Formalisation — Cameroon" },
-  { value: "business-formalisation-us", label: "Business Formalisation — United States" },
-  { value: "tax-compliance-businesses", label: "Tax Compliance — Cameroon" },
-  { value: "cnps-compliance", label: "CNPS Compliance — Cameroon" },
-  { value: "career-marketing", label: "Career Marketing & Placement" },
-  { value: "other", label: "Something else" },
-] as const;
-
-type ServiceValue = (typeof serviceOptions)[number]["value"];
-
-function isServiceValue(value: string): value is ServiceValue {
-  return serviceOptions.some((option) => option.value === value);
-}
+export { serviceOptions, isServiceValue };
 
 export function ContactForm() {
   /*

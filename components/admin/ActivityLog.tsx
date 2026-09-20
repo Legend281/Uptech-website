@@ -1,6 +1,17 @@
 import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
 import type { ActivityEntry } from "@/lib/admin/types";
 
+/** What each activity actually means, not just decoration — a warning reads as a warning, a completed review reads as done. */
+const dotColor: Record<string, string> = {
+  warning: "bg-amber-500",
+  check_circle: "bg-emerald-500",
+  fact_check: "bg-teal-400",
+  edit_note: "bg-blue-accent",
+  person_add: "bg-blue-accent",
+  work_history: "bg-slate-300",
+  help: "bg-slate-300",
+};
+
 /**
  * Secondary, quiet reference material — a real trail of who did what, which
  * is literally the company's own stated principle ("individual efforts only
@@ -17,7 +28,11 @@ export function ActivityLog({ entries }: { entries: ActivityEntry[] }) {
         <ul className="space-y-4">
           {entries.map((entry) => (
             <li key={entry.id} className="relative flex gap-3 pl-0">
-              <span className="relative z-10 mt-1 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border-2 border-white bg-slate-300 ring-2 ring-white" />
+              <span
+                className={`relative z-10 mt-1 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border-2 border-white ring-2 ring-white ${
+                  dotColor[entry.icon] ?? "bg-slate-300"
+                }`}
+              />
               <div className="min-w-0 flex-1">
                 <p className="text-sm leading-snug text-slate-700">{entry.description}</p>
                 <p className="mt-0.5 text-xs text-slate-400">{formatRelativeTime(entry.timestamp)}</p>

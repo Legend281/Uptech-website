@@ -29,12 +29,15 @@ export function AdminTopbar({ urgentCount, onOpenSidebar }: { urgentCount: numbe
 
       <div className="ml-auto flex items-center gap-4 text-sm">
         <span className="hidden text-slate-500 sm:inline">{today}</span>
-        <span className="hidden text-slate-300 sm:inline" aria-hidden="true">
-          |
-        </span>
-        <span className="hidden text-slate-700 sm:inline">
-          {currentUser.name}
-          <span className="text-slate-400"> · {roleLabels[currentUser.role]}</span>
+        <span className="hidden h-4 w-px bg-slate-200 sm:inline-block" aria-hidden="true" />
+        <span className="hidden items-center gap-2 sm:flex">
+          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-teal-400 to-blue-accent text-[10px] font-bold text-white">
+            {currentUser.avatarInitials}
+          </span>
+          <span className="text-slate-700">
+            {currentUser.name}
+            <span className="text-slate-400"> · {roleLabels[currentUser.role]}</span>
+          </span>
         </span>
         {urgentCount > 0 ? (
           <a

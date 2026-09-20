@@ -44,7 +44,7 @@ function NavRow({ item, active }: { item: NavItem; active: boolean }) {
 
   if (item.soon || !item.href) {
     return (
-      <div className={`${rowClasses} cursor-default text-slate-500`}>
+      <div className={`${rowClasses} cursor-default border border-transparent text-slate-500`}>
         <MaterialIcon name={item.icon} className="text-[20px] text-slate-600" />
         <span className="flex-1">{item.label}</span>
         {item.badge !== undefined && (
@@ -62,8 +62,10 @@ function NavRow({ item, active }: { item: NavItem; active: boolean }) {
   return (
     <Link
       href={item.href}
-      className={`${rowClasses} ${
-        active ? "bg-white/10 text-white" : "text-slate-300 hover:bg-white/5 hover:text-white"
+      className={`${rowClasses} border ${
+        active
+          ? "border-teal-400/25 bg-gradient-to-r from-teal-400/15 to-blue-accent/10 text-white"
+          : "border-transparent text-slate-300 hover:bg-white/5 hover:text-white"
       }`}
     >
       <MaterialIcon name={item.icon} className={`text-[20px] ${active ? "text-teal-400" : "text-slate-400"}`} />
@@ -79,11 +81,14 @@ export function AdminSidebar({ open, onClose }: { open: boolean; onClose: () => 
 
   const content = (
     <div className="flex h-full flex-col bg-navy-950">
-      <div className="flex items-center gap-2 border-b border-white/10 px-5 py-5">
-        <Image src="/UPTECH_LOG.png" alt="Uptech Consulting & Outsourcing" width={572} height={233} className="h-9 w-auto" priority />
-        <span className="rounded border border-white/10 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-teal-400">
-          Admin
-        </span>
+      <div>
+        <div className="flex items-center gap-2 px-5 py-5">
+          <Image src="/UPTECH_LOG.png" alt="Uptech Consulting & Outsourcing" width={572} height={233} className="h-9 w-auto" priority />
+          <span className="rounded border border-white/10 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-teal-400">
+            Admin
+          </span>
+        </div>
+        <div className="mx-5 h-0.5 rounded-full bg-gradient-to-r from-teal-400 to-blue-accent" />
       </div>
 
       <nav aria-label="Admin sections" data-lenis-prevent className="min-h-0 flex-1 space-y-6 overflow-y-auto px-3 py-6">

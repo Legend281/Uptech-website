@@ -35,7 +35,7 @@ function Row({ row }: { row: RegisterRow }) {
     </>
   );
 
-  const rowClasses = "flex items-start gap-3 border-b border-slate-100 px-4 py-3 last:border-b-0 sm:px-5";
+  const rowClasses = `flex items-start gap-3 border-b border-l-[3px] border-slate-100 px-4 py-3 last:border-b-0 sm:px-5 ${meta.stripe}`;
 
   if (row.href) {
     return (

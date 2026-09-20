@@ -1,18 +1,21 @@
 import { serviceOptions } from "@/lib/serviceOptions";
-import type { StatusTone } from "@/components/admin/StatusBadge";
+import type { badgeVariants } from "@/components/ui/badge";
+import type { VariantProps } from "class-variance-authority";
 import type { Lead, LeadStatus, LeadServiceValue } from "./types";
+
+type BadgeTone = NonNullable<VariantProps<typeof badgeVariants>["variant"]>;
 
 export function getLeadServiceLabel(service: Lead["service"]): string {
   return serviceOptions.find((option) => option.value === service)?.label ?? "Something else";
 }
 
-export const leadStatusMeta: Record<LeadStatus, { label: string; tone: StatusTone }> = {
+export const leadStatusMeta: Record<LeadStatus, { label: string; tone: BadgeTone }> = {
   new: { label: "New", tone: "info" },
   contacted: { label: "Contacted", tone: "neutral" },
   qualified: { label: "Qualified", tone: "warning" },
   "consultation-booked": { label: "Booked", tone: "success" },
   won: { label: "Won", tone: "success" },
-  lost: { label: "Lost", tone: "danger" },
+  lost: { label: "Lost", tone: "destructive" },
 };
 
 /** Distinct accent per service so a Service pill never gets confused with a Status badge in the same row. */

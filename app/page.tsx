@@ -134,7 +134,7 @@ const pillars = [
     title: "Career Marketing & Placement",
     href: "/services/career-marketing-placement",
     description:
-      "Positioning, market-facing documents and structured placement support for professionals seeking their next role.",
+      "Expert profile positioning, Email management and overall placement support.",
   },
   {
     number: "02",

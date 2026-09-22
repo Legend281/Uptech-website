@@ -46,12 +46,12 @@ export function PresidentMessage() {
           <div className="mb-4 inline-flex items-center gap-2 justify-center">
             <span className="w-7 h-[2px] bg-teal-400 inline-block" />
             <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
-              A MESSAGE FROM OUR PRESIDENT
+              A MESSAGE FROM OUR CEO
             </span>
             <span className="w-7 h-[2px] bg-teal-400 inline-block" />
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight">
-            <TextReveal text="Hear it directly from our president." />
+            <TextReveal text="Hear it directly from our CEO." />
           </h2>
         </Reveal>
 
@@ -70,7 +70,7 @@ export function PresidentMessage() {
               <button
                 type="button"
                 onClick={handlePlay}
-                aria-label="Play the message from our president"
+                aria-label="Play the message from our CEO"
                 className="absolute inset-0 flex items-center justify-center group"
               >
                 {/* Color-grades the poster photo's plain wall into the site's

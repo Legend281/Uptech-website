@@ -250,10 +250,19 @@ export default function TaxComplianceBusinessesCameroonPage() {
 
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <HeroIntro
-              eyebrow="STATUTORY TAX DESK • DGI GENERAL TAX CODE"
+              eyebrow="INDIVIDUAL AND CORPORATE TAX COMPLIANCE."
               headlineLead="Stay ahead of your tax obligations,"
               headlineHighlight="without the stress."
-              lead="Predictable monthly DGI declarations, certified fiscal schedules, and penalty-proof recordkeeping — whether you are staying compliant proactively or catching up on past seasons."
+              lead={
+                <>
+                  We educate you on the Cameroon tax system, the best approach to ensure your
+                  business complies with tax regulations, monthly declarations on your behalf and
+                  manage your tax controls.
+                  <br />
+                  We handle these and more for you so you can focus on your core business
+                  operation.
+                </>
+              }
               buttons={
                 <>
                   <Button href="#compliance-check">Get a Compliance Check</Button>

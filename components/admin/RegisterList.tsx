@@ -8,34 +8,74 @@ import { severityMeta, type RegisterRow } from "@/lib/admin/register";
 
 type Filter = "all" | "lead" | "compliance";
 
+const PAGE_SIZE = 6;
+
 const filters: { value: Filter; label: string }[] = [
   { value: "all", label: "All" },
   { value: "lead", label: "Leads" },
   { value: "compliance", label: "Compliance" },
 ];
 
+/** Visual variety across rows, independent of status — same idea as a person's avatar color, not a semantic signal. */
+const AVATAR_TINTS = [
+  "bg-blue-accent/10 text-blue-accent",
+  "bg-emerald-50 text-emerald-700",
+  "bg-purple-50 text-purple-700",
+  "bg-amber-50 text-amber-700",
+  "bg-teal-50 text-teal-700",
+  "bg-rose-50 text-rose-700",
+];
+
+function initialsOf(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase();
+}
+
+function avatarTint(seed: string): string {
+  const code = seed.charCodeAt(0) + (seed.charCodeAt(1) ?? 0);
+  return AVATAR_TINTS[code % AVATAR_TINTS.length];
+}
+
 function Row({ row }: { row: RegisterRow }) {
   const meta = severityMeta[row.severity];
-  const kindIcon = row.kind === "lead" ? "person" : "gavel";
+
+  const avatar =
+    row.kind === "lead" ? (
+      <span
+        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-xs font-bold ${avatarTint(row.title)}`}
+      >
+        {initialsOf(row.title)}
+      </span>
+    ) : (
+      <span
+        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border ${meta.badge}`}
+      >
+        <MaterialIcon name="gavel" className="text-[17px]" />
+      </span>
+    );
 
   const inner = (
     <>
-      <MaterialIcon name={kindIcon} className="mt-0.5 shrink-0 text-[16px] text-slate-400" />
-      <span className={`mt-0.5 w-20 shrink-0 text-xs font-bold uppercase tracking-wide ${meta.color}`}>
-        {meta.label}
-      </span>
+      {avatar}
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-semibold text-navy-950">{row.title}</p>
-        {row.detail && <p className="truncate text-xs text-slate-500">{row.detail}</p>}
+        <p className="truncate font-sans text-sm font-semibold text-navy-950">{row.title}</p>
+        <div className="mt-1 flex items-center gap-2">
+          <span
+            className={`shrink-0 truncate rounded-full border px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide ${meta.badge}`}
+          >
+            {meta.label}
+          </span>
+          {row.detail && <p className="truncate text-xs text-slate-500">{row.detail}</p>}
+        </div>
       </div>
-      <span className="shrink-0 whitespace-nowrap text-xs tabular-nums text-slate-400">
+      <span className="shrink-0 whitespace-nowrap text-xs tabular-nums text-slate-500">
         {formatRelativeTime(row.timeLabel)}
       </span>
       {row.href && <MaterialIcon name="chevron_right" className="shrink-0 text-[18px] text-slate-300" />}
     </>
   );
 
-  const rowClasses = `flex items-start gap-3 border-b border-l-[3px] border-slate-100 px-4 py-3 last:border-b-0 sm:px-5 ${meta.stripe}`;
+  const rowClasses = `flex items-center gap-3 border-b border-l-[3px] border-slate-100 px-4 py-3.5 last:border-b-0 sm:px-5 ${meta.stripe}`;
 
   if (row.href) {
     return (
@@ -54,6 +94,7 @@ function Row({ row }: { row: RegisterRow }) {
 export function RegisterList({ rows }: { rows: RegisterRow[] }) {
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
   const searchId = useId();
 
   const filtered = rows.filter((row) => {
@@ -65,22 +106,43 @@ export function RegisterList({ rows }: { rows: RegisterRow[] }) {
     return true;
   });
 
+  const counts: Record<Filter, number> = {
+    all: rows.length,
+    lead: rows.filter((row) => row.kind === "lead").length,
+    compliance: rows.filter((row) => row.kind === "compliance").length,
+  };
+
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const safePage = Math.min(page, pageCount);
+  const pageStart = (safePage - 1) * PAGE_SIZE;
+  const paged = filtered.slice(pageStart, pageStart + PAGE_SIZE);
+
   return (
-    <section id="register" className="scroll-mt-20 rounded-lg border border-slate-200 bg-white">
+    <section
+      id="register"
+      className="scroll-mt-20 rounded-xl border border-slate-200 bg-white shadow-[0_1px_2px_rgba(7,14,27,0.04),0_10px_24px_-16px_rgba(7,14,27,0.14)]"
+    >
       <div className="flex flex-col gap-3 border-b border-slate-100 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
-        <div className="flex items-center gap-1" role="tablist" aria-label="Filter register">
+        <div
+          className="flex items-center gap-0.5 rounded-lg border border-slate-200 bg-slate-100 p-0.5"
+          role="tablist"
+          aria-label="Filter register"
+        >
           {filters.map((f) => (
             <button
               key={f.value}
               type="button"
               role="tab"
               aria-selected={filter === f.value}
-              onClick={() => setFilter(f.value)}
+              onClick={() => {
+                setFilter(f.value);
+                setPage(1);
+              }}
               className={`rounded-md px-3 py-1.5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 ${
-                filter === f.value ? "bg-navy-950 text-white" : "text-slate-500 hover:bg-slate-100"
+                filter === f.value ? "bg-white text-navy-950 shadow-sm" : "text-slate-500 hover:text-slate-900"
               }`}
             >
-              {f.label}
+              {f.label} <span className="tabular-nums opacity-60">({counts[f.value]})</span>
             </button>
           ))}
         </div>
@@ -94,7 +156,10 @@ export function RegisterList({ rows }: { rows: RegisterRow[] }) {
             id={searchId}
             type="text"
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event) => {
+              setQuery(event.target.value);
+              setPage(1);
+            }}
             placeholder="Search…"
             autoComplete="off"
             className="w-full rounded-md border border-slate-200 py-1.5 pl-8 pr-3 text-sm text-slate-700 placeholder:text-slate-400 focus-visible:border-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500/40"
@@ -107,11 +172,47 @@ export function RegisterList({ rows }: { rows: RegisterRow[] }) {
           Nothing matches {query ? `"${query}"` : "this filter"}.
         </div>
       ) : (
-        <div>
-          {filtered.map((row) => (
-            <Row key={`${row.kind}-${row.id}`} row={row} />
-          ))}
-        </div>
+        <>
+          <div>
+            {paged.map((row) => (
+              <Row key={`${row.kind}-${row.id}`} row={row} />
+            ))}
+          </div>
+          <div className="flex items-center justify-between border-t border-slate-100 px-4 py-3 sm:px-5">
+            <p className="text-xs text-slate-500">
+              Showing{" "}
+              <span className="font-semibold text-slate-700">
+                {pageStart + 1}–{Math.min(pageStart + PAGE_SIZE, filtered.length)}
+              </span>{" "}
+              of <span className="font-semibold text-slate-700">{filtered.length}</span>
+            </p>
+            {pageCount > 1 && (
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={safePage === 1}
+                  aria-label="Previous page"
+                  className="flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <MaterialIcon name="chevron_left" className="text-[18px]" />
+                </button>
+                <span className="px-2 text-xs font-semibold tabular-nums text-slate-600">
+                  {safePage} / {pageCount}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+                  disabled={safePage === pageCount}
+                  aria-label="Next page"
+                  className="flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <MaterialIcon name="chevron_right" className="text-[18px]" />
+                </button>
+              </div>
+            )}
+          </div>
+        </>
       )}
     </section>
   );

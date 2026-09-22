@@ -42,16 +42,16 @@ export type Severity =
   | "on-track"
   | "lost";
 
-export const severityMeta: Record<Severity, { label: string; color: string; stripe: string }> = {
-  overdue: { label: "Overdue", color: "text-rose-700", stripe: "border-l-rose-500" },
-  "due-soon": { label: "Due soon", color: "text-amber-700", stripe: "border-l-amber-500" },
-  new: { label: "New", color: "text-sky-700", stripe: "border-l-sky-500" },
-  contacted: { label: "Contacted", color: "text-slate-500", stripe: "border-l-slate-300" },
-  qualified: { label: "Qualified", color: "text-blue-accent", stripe: "border-l-blue-accent" },
-  booked: { label: "Booked", color: "text-teal-600", stripe: "border-l-teal-400" },
-  won: { label: "Won", color: "text-emerald-700", stripe: "border-l-emerald-500" },
-  "on-track": { label: "On track", color: "text-emerald-700", stripe: "border-l-emerald-500" },
-  lost: { label: "Lost", color: "text-slate-400", stripe: "border-l-slate-200" },
+export const severityMeta: Record<Severity, { label: string; color: string; stripe: string; badge: string }> = {
+  overdue: { label: "Overdue", color: "text-rose-700", stripe: "border-l-rose-500", badge: "border-rose-200 bg-rose-50 text-rose-700" },
+  "due-soon": { label: "Due soon", color: "text-amber-700", stripe: "border-l-amber-500", badge: "border-amber-200 bg-amber-50 text-amber-700" },
+  new: { label: "New", color: "text-sky-700", stripe: "border-l-sky-500", badge: "border-sky-200 bg-sky-50 text-sky-700" },
+  contacted: { label: "Contacted", color: "text-slate-500", stripe: "border-l-slate-300", badge: "border-slate-200 bg-slate-50 text-slate-600" },
+  qualified: { label: "Qualified", color: "text-blue-accent", stripe: "border-l-blue-accent", badge: "border-blue-accent/20 bg-blue-accent/10 text-blue-accent" },
+  booked: { label: "Booked", color: "text-teal-600", stripe: "border-l-teal-400", badge: "border-teal-200 bg-teal-50 text-teal-700" },
+  won: { label: "Won", color: "text-emerald-700", stripe: "border-l-emerald-500", badge: "border-emerald-200 bg-emerald-50 text-emerald-700" },
+  "on-track": { label: "On track", color: "text-emerald-700", stripe: "border-l-emerald-500", badge: "border-emerald-200 bg-emerald-50 text-emerald-700" },
+  lost: { label: "Lost", color: "text-slate-400", stripe: "border-l-slate-200", badge: "border-slate-200 bg-slate-50 text-slate-400" },
 };
 
 const leadStatusToSeverity: Record<LeadStatus, Severity> = {

@@ -15,7 +15,7 @@
  * unified into one page/option — there is no separate "individuals" value.
  */
 export const serviceOptions = [
-  { value: "business-formalisation", label: "Business Formalisation & Compliance (not sure which)" },
+  { value: "business-formalisation", label: "Business Formalisation & Compliance — General inquiry" },
   { value: "business-formalisation-cameroon", label: "Business Formalisation — Cameroon" },
   { value: "business-formalisation-us", label: "Business Formalisation — United States" },
   { value: "tax-compliance-businesses", label: "Tax Compliance — Cameroon" },

@@ -108,7 +108,7 @@ const faqItems = [
   {
     question: "I'm not sure which service I need — can I still reach out?",
     answer:
-      "Yes. Select \"Business Formalisation & Compliance (not sure which)\" or \"Something else\" in the form, and briefly describe your situation — your specialist will point you to the right service.",
+      "Yes. Select \"Business Formalisation & Compliance — General inquiry\" or \"Something else\" in the form, and briefly describe your situation — your specialist will point you to the right service.",
   },
   {
     question: "Is my information kept confidential?",

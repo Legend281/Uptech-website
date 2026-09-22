@@ -408,3 +408,28 @@ h6 {
   -webkit-text-fill-color: transparent;
   animation: text-shimmer 5s linear infinite;
 }
+
+/* Thin, dark-themed scrollbar for chrome that sits on the navy admin
+   sidebar — the default OS scrollbar reads as a pale, thick intrusion
+   against that background, so it's restyled to match instead of hidden. */
+.scrollbar-dark {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+.scrollbar-dark::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-dark::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-dark::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.18);
+  border-radius: 9999px;
+}
+
+.scrollbar-dark::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.32);
+}

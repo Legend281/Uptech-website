@@ -143,7 +143,7 @@ const relatedServices: Array<{
     // positioned as nested under IT Consulting, but that scoping was removed
     // per leadership decision (broadened to general career placement).
     icon: "trending_up",
-    title: "Career Marketing & Placement",
+    title: "Career Marketing & Placement Support",
     description: "A dedicated worker on your account: profile positioning, daily applications, and recruiter follow-up until you are placed.",
     href: "/services/career-marketing-placement",
   },

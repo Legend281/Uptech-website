@@ -118,7 +118,7 @@ const faqItems = [
   {
     question: "I'm looking for a job, not a business consultation — is this the right page?",
     answer:
-      "You can still reach out here, but Career Marketing & Placement has its own dedicated intake built for job seekers. Visit that page and use \"Start Your Career Campaign\" for a faster start.",
+      "You can still reach out here, but Career Marketing & Placement Support has its own dedicated intake built for job seekers. Visit that page and use \"Start Your Career Campaign\" for a faster start.",
   },
 ];
 
@@ -135,7 +135,7 @@ const otherServices = [
   { icon: "public", title: "Business Formalisation — United States", href: "/services/business-formalisation-compliance/united-states" },
   { icon: "receipt_long", title: "Tax Compliance — Cameroon", href: "/services/business-formalisation-compliance/tax-compliance-businesses-cameroon" },
   { icon: "diversity_3", title: "CNPS Compliance — Cameroon", href: "/services/business-formalisation-compliance/cnps-compliance-cameroon" },
-  { icon: "trending_up", title: "Career Marketing & Placement", href: "/services/career-marketing-placement" },
+  { icon: "trending_up", title: "Career Marketing & Placement Support", href: "/services/career-marketing-placement" },
 ];
 
 export default function ContactPage() {

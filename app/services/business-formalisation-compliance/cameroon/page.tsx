@@ -170,7 +170,7 @@ const faqItems = [
   {
     question: "Can this process be executed 100% remotely if I live in North America or Europe?",
     answer:
-      "Yes. Under Cameroon and OHADA notarial standards, a foreign or diaspora director may execute a dedicated Power of Attorney (Procuration Spéciale). When certified by a Cameroon diplomatic mission or a Hague Apostille notary in your jurisdiction, Uptech Consulting's legal desk can deposit capital, execute notarial statutes, and sign registry court books on your behalf.",
+      "Yes. It can be done remotely. Uptech facilitates the creation of your company from wherever you are, stress-free.",
   },
   {
     question: "What happens if my preferred trade name is already taken at the commercial registry?",
@@ -234,7 +234,7 @@ export default function BusinessFormalisationCameroonPage() {
             <HeroIntro
               eyebrow="CAMEROON JURISDICTION • OHADA UNIFORM ACT"
               headlineLead="Formalise your business in Cameroon,"
-              headlineHighlight="without the guesswork."
+              headlineHighlight="with expert guidance."
               lead="Clear, compliant corporate formation under OHADA standards. From trade name reservation and notarial statutes to RCCM court registration and Tax Identification (NIU) — executed with procedural certainty for domestic operators and diaspora founders."
               buttons={
                 <>
@@ -490,7 +490,7 @@ export default function BusinessFormalisationCameroonPage() {
                       rel="noopener noreferrer"
                       className="text-xs font-bold text-teal-400 hover:underline flex items-center gap-1"
                     >
-                      Ask Legal Desk
+                      Talk to Help Desk to learn more about the requirements based on your specific business type
                       <MaterialIcon name="arrow_forward" className="text-[14px]" />
                     </a>
                   </div>
@@ -772,7 +772,7 @@ export default function BusinessFormalisationCameroonPage() {
               >
                 Download Pre-Registration Checklist
               </Button>
-              <WhatsAppButton phone="237678597593" label="Discuss via WhatsApp Legal Desk" />
+              <WhatsAppButton phone="237678597593" label="Help Desk" />
             </div>
           </Reveal>
         </section>

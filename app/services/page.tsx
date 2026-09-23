@@ -68,7 +68,7 @@ const services: Array<{
   image: ImageKey;
 }> = [
   {
-    title: "Career Marketing & Placement",
+    title: "Career Marketing & Placement Support",
     description:
       "A dedicated specialist manages your CV, LinkedIn, daily applications, and recruiter follow-up until you're placed.",
     href: "/services/career-marketing-placement",

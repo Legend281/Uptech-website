@@ -20,7 +20,7 @@ export const serviceOptions = [
   { value: "business-formalisation-us", label: "Business Formalisation — United States" },
   { value: "tax-compliance-businesses", label: "Tax Compliance — Cameroon" },
   { value: "cnps-compliance", label: "CNPS Compliance — Cameroon" },
-  { value: "career-marketing", label: "Career Marketing & Placement" },
+  { value: "career-marketing", label: "Career Marketing & Placement Support" },
   { value: "other", label: "Something else" },
 ] as const;
 

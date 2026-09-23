@@ -8,6 +8,7 @@ const partners = [
   { name: "HMS", src: "/images/s3.webp", width: 182, height: 64 },
   { name: "Accenture", src: "/images/s4.webp", width: 223, height: 62 },
   { name: "GVEC", src: "/images/s5.webp", width: 165, height: 62 },
+  { name: "KiawiTech IT Academy", src: "/images/header-logo.webp", width: 248, height: 71 },
 ];
 
 /**

@@ -137,7 +137,7 @@ export const mockActivity: ActivityEntry[] = [
   {
     id: "act-3",
     icon: "edit_note",
-    description: "Divine Tabe updated internal notes on the Career Marketing & Placement campaign cadence.",
+    description: "Divine Tabe updated internal notes on the Career Marketing & Placement Support campaign cadence.",
     timestamp: hoursAgo(26),
     relatedHref: "/services/career-marketing-placement",
   },

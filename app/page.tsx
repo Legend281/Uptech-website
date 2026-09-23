@@ -57,7 +57,7 @@ const startingPoints = [
     points: [
       "Career marketing and placement support",
       "Personal tax and social insurance compliance",
-      "Business formalisation and digital capability",
+      "Business formalisation and structuring",
     ],
   },
   {
@@ -131,7 +131,7 @@ const promises: PromiseStatement[] = [
 const pillars = [
   {
     number: "01",
-    title: "Career Marketing & Placement",
+    title: "Career Marketing & Placement Support",
     href: "/services/career-marketing-placement",
     description:
       "Expert profile positioning, Email management and overall placement support.",
@@ -206,7 +206,7 @@ const faqItems = [
   {
     question: "Do I need a specific background for career placement?",
     answer:
-      "No. Career Marketing & Placement is open to anyone looking for their next role, not restricted to a particular field.",
+      "No. Career Marketing & Placement Support is open to anyone looking for their next role, not restricted to a particular field.",
   },
   {
     question: "Do you work in French as well as English?",

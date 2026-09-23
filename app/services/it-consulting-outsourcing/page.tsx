@@ -214,7 +214,7 @@ const relatedServices = [
   {
     icon: "trending_up",
     relationship: "Part of this practice",
-    title: "Career Marketing & Placement",
+    title: "Career Marketing & Placement Support",
     href: "/services/career-marketing-placement",
   },
 ];

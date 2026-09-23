@@ -24,7 +24,7 @@ const arrowRightIcon = (
 );
 
 export const metadata: Metadata = {
-  title: "Career Marketing & Placement",
+  title: "Career Marketing & Placement Support",
   description:
     "A dedicated human specialist takes over your CV, your LinkedIn, your daily applications, and your recruiter follow-up — so you can focus on showing up to interview.",
 };
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 const trustStripItems = [
   {
     icon: "group",
-    title: "Dedicated Account Worker",
+    title: "Dedicated Account Manager",
     badgeText: "Not an automated bot",
     badgeAccent: "teal" as const,
     description: "Real human hands submitting tailored, custom applications daily.",
@@ -66,7 +66,7 @@ const campaignStages = [
   {
     number: "02",
     eyebrow: "Stage 02 • Digital Visibility",
-    title: "LinkedIn & Portal Setup",
+    title: "LinkedIn & Setup",
     icon: "badge",
     description:
       "Complete LinkedIn profile revamp, algorithm-optimized headline and 'About' sections, keyword realignment, and setup across private tier-1 talent aggregators.",
@@ -84,10 +84,10 @@ const campaignStages = [
   {
     number: "04",
     eyebrow: "Stage 04 • Strategic Drills",
-    title: "Interview Preparation",
+    title: "Mock Interviews",
     icon: "co_present",
     description:
-      "Direct briefing on hiring manager backgrounds, company operational models, mock behavioral and technical screening drills, and salary negotiation tactics.",
+      "We organise mock sessions where clients get real experience with interviews, building their confidence to take on interviews without any issues.",
     tags: ["1-on-1 prep sessions before calls", "Company intelligence dossiers"],
   },
   {
@@ -193,7 +193,7 @@ export default function CareerMarketingPlacementPage() {
         items={[
           { label: "Home", href: "/" },
           { label: "Services", href: "/services" },
-          { label: "Career Marketing & Placement" },
+          { label: "Career Marketing & Placement Support" },
         ]}
         tag="INDIVIDUAL CAREER ADVANCEMENT"
       />
@@ -352,7 +352,7 @@ export default function CareerMarketingPlacementPage() {
                 </div>
               </div>
               <Button href="#start-campaign" size="sm" className="shrink-0">
-                Claim Your Account Worker
+                Claim Your Account Manager
               </Button>
             </Reveal>
           </div>
@@ -451,7 +451,7 @@ export default function CareerMarketingPlacementPage() {
                   time, the search felt like it was moving instead of stalled.
                 </p>
                 <p className="text-sm font-semibold text-slate-400">
-                  Career Marketing &amp; Placement client
+                  Career Marketing &amp; Placement Support client
                 </p>
               </div>
             </div>

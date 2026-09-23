@@ -102,7 +102,7 @@ const departments = [
   },
   {
     icon: "trending_up",
-    title: "Career Marketing & Placement",
+    title: "Career Marketing & Placement Support",
     description: "Profile positioning, application management, and recruiter follow-up for job seekers.",
   },
   {
@@ -166,9 +166,9 @@ const faqItems = [
       "Yes, though we'd ask you to send a separate application for each role so it reaches the right team directly.",
   },
   {
-    question: "Is this the same as Career Marketing & Placement?",
+    question: "Is this the same as Career Marketing & Placement Support?",
     answer:
-      "No. Career Marketing & Placement is a paid service for clients seeking jobs with other companies. This page is for people who want to work at Uptech Consulting itself.",
+      "No. Career Marketing & Placement Support is a paid service for clients seeking jobs with other companies. This page is for people who want to work at Uptech Consulting itself.",
   },
 ];
 

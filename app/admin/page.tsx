@@ -7,6 +7,7 @@ import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { RegisterList } from "@/components/admin/RegisterList";
 import { ActivityLog } from "@/components/admin/ActivityLog";
 import { CompletionModal } from "@/components/admin/CompletionModal";
+import { LeadFormDialog } from "@/components/admin/LeadFormDialog";
 import { AnimatedNumber } from "@/components/admin/AnimatedNumber";
 import { Sparkline } from "@/components/admin/Sparkline";
 import { SegmentedBar, BarLegend, type BarSegment } from "@/components/admin/SegmentedBar";
@@ -154,6 +155,7 @@ export default function AdminDashboardPage() {
   const servicePages = useServicePages();
   const { resolveReview, escalateReview } = useServicePageActions();
   const [scope, setScope] = useState<Scope>("mine");
+  const [createLeadOpen, setCreateLeadOpen] = useState(false);
 
   const scopedLeads = scopeLeads(leads, scope, currentUser.department);
   const scopedPages = scopePages(servicePages, scope, currentUser.department);
@@ -265,32 +267,38 @@ export default function AdminDashboardPage() {
             </p>
           )}
         </div>
-        <div
-          className="flex items-center gap-0.5 self-start rounded-lg border border-slate-200 bg-slate-100 p-0.5 sm:self-auto"
-          role="tablist"
-          aria-label="Dashboard scope"
-        >
+        <div className="flex items-center gap-3 self-start sm:self-auto">
+          <div className="flex items-center gap-0.5 rounded-lg border border-slate-200 bg-slate-100 p-0.5" role="tablist" aria-label="Dashboard scope">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={scope === "mine"}
+              onClick={() => setScope("mine")}
+              className={`rounded-md px-3 py-1.5 text-sm font-semibold transition-colors ${
+                scope === "mine" ? "bg-white text-navy-950 shadow-sm" : "text-slate-500 hover:text-slate-900"
+              }`}
+            >
+              {departmentLabels[currentUser.department]}
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={scope === "all"}
+              onClick={() => setScope("all")}
+              className={`rounded-md px-3 py-1.5 text-sm font-semibold transition-colors ${
+                scope === "all" ? "bg-white text-navy-950 shadow-sm" : "text-slate-500 hover:text-slate-900"
+              }`}
+            >
+              All Departments
+            </button>
+          </div>
           <button
             type="button"
-            role="tab"
-            aria-selected={scope === "mine"}
-            onClick={() => setScope("mine")}
-            className={`rounded-md px-3 py-1.5 text-sm font-semibold transition-colors ${
-              scope === "mine" ? "bg-white text-navy-950 shadow-sm" : "text-slate-500 hover:text-slate-900"
-            }`}
+            onClick={() => setCreateLeadOpen(true)}
+            className="flex items-center gap-1.5 rounded-lg bg-navy-950 px-3.5 py-2 text-sm font-semibold text-white transition-colors hover:bg-navy-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
           >
-            {departmentLabels[currentUser.department]}
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={scope === "all"}
-            onClick={() => setScope("all")}
-            className={`rounded-md px-3 py-1.5 text-sm font-semibold transition-colors ${
-              scope === "all" ? "bg-white text-navy-950 shadow-sm" : "text-slate-500 hover:text-slate-900"
-            }`}
-          >
-            All Departments
+            <MaterialIcon name="add" className="text-[18px]" />
+            <span className="hidden sm:inline">New Lead</span>
           </button>
         </div>
       </div>
@@ -366,6 +374,8 @@ export default function AdminDashboardPage() {
           <ActivityLog entries={activity} />
         </div>
       </div>
+
+      <LeadFormDialog open={createLeadOpen} onClose={() => setCreateLeadOpen(false)} mode="create" />
 
       <CompletionModal
         open={resolvingPage !== null}

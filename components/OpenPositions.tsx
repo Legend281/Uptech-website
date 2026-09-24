@@ -13,7 +13,8 @@ export type JobPosting = {
   requirements?: string[];
 };
 
-const GENERAL_INTEREST_EMAIL = "infos@uptechconsulting.com";
+// Exported so the admin's Job Postings module can use the exact same default rather than redefining it and risking drift.
+export const GENERAL_INTEREST_EMAIL = "infos@uptechconsulting.com";
 
 function applyMailto(roleTitle: string) {
   const subject = `Application — ${roleTitle}`;

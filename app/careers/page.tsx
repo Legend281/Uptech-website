@@ -15,6 +15,7 @@ import { TextReveal } from "@/components/TextReveal";
 import { TiltCard } from "@/components/TiltCard";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { images } from "@/lib/images";
+import { HIRING_DEPARTMENTS } from "@/lib/hiringDepartments";
 
 export const metadata: Metadata = {
   title: "Careers at Uptech Consulting",
@@ -76,56 +77,8 @@ const coreValues = [
   },
 ];
 
-/*
- * FLAG FOR TEAM: IT Consulting & Outsourcing and Recruitment & BPO are
- * displayed below as normal, fully-active departments — same visual weight
- * as Business Formalisation & Compliance and Career Marketing & Placement —
- * but both are paused/deprioritized everywhere else on the site per
- * leadership's direction (see CLAUDE.md Section 5/9, components/Header.tsx).
- * This may be intentional (a careers page can reasonably describe the
- * company's full internal structure separately from what's actively being
- * marketed to clients), or it may be an inconsistency that should match the
- * paused treatment used elsewhere. This is a deliberate open decision, not
- * yet resolved — do not change the department grid's current display until
- * the team responds either way.
- */
-const departments = [
-  {
-    icon: "terminal",
-    title: "IT Consulting & Outsourcing",
-    description: "Managed IT support, cloud migration, database administration, and cybersecurity delivery.",
-  },
-  {
-    icon: "gavel",
-    title: "Business Formalisation & Compliance",
-    description: "Corporate formation, tax compliance, and regulatory filing across Cameroon and the US.",
-  },
-  {
-    icon: "trending_up",
-    title: "Career Marketing & Placement Support",
-    description: "Profile positioning, application management, and recruiter follow-up for job seekers.",
-  },
-  {
-    icon: "groups",
-    title: "Recruitment & BPO",
-    description: "Recruitment, selection, and payroll management support for client organizations.",
-  },
-  {
-    icon: "inventory_2",
-    title: "General Contracts & Supplies",
-    description: "Contracts and supply arrangements supporting client operations — scope still being defined.",
-  },
-  {
-    // FLAG FOR TEAM: confirm "Corporate & Administration" is a real internal
-    // department before this stays live — not found in any official company
-    // documentation referenced elsewhere in this project (CLAUDE.md's own
-    // service/organizational inventory does not name it). Do not remove or
-    // rename it without team confirmation either way.
-    icon: "account_balance",
-    title: "Corporate & Administration",
-    description: "The internal operations, finance, and administration that keep both offices running.",
-  },
-];
+// Moved to lib/hiringDepartments.ts — now the shared source of truth for both this page and the admin's Job Postings department dropdown. Both open-decision flags noted there are carried over unchanged, not resolved by this move.
+const departments = HIRING_DEPARTMENTS;
 
 const hiringSteps = [
   {

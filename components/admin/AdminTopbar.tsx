@@ -10,6 +10,8 @@ import { departmentLabels, roleLabels } from "@/lib/admin/labels";
 import { getStaticPageLabel } from "@/lib/admin/nav";
 import { useCurrentUser, useSetCurrentUserId } from "@/components/admin/providers/CurrentUserProvider";
 import { useLead, useLeads } from "@/components/admin/providers/LeadsProvider";
+import { useServicePages } from "@/components/admin/providers/ServicePagesProvider";
+import { getReviewStatus } from "@/lib/admin/staleness";
 
 type Crumb = { label: string; href?: string };
 
@@ -60,8 +62,10 @@ function Breadcrumb({ segments }: { segments: Crumb[] }) {
  * standard placement for this kind of control (Linear, Vercel, Stripe), and
  * one that costs no vertical space when it isn't open.
  */
-export function AdminTopbar({ urgentCount, onOpenSidebar }: { urgentCount: number; onOpenSidebar: () => void }) {
+export function AdminTopbar({ onOpenSidebar }: { onOpenSidebar: () => void }) {
   const currentUser = useCurrentUser();
+  const servicePages = useServicePages();
+  const urgentCount = servicePages.filter((page) => getReviewStatus(page) === "overdue").length;
   const setCurrentUserId = useSetCurrentUserId();
   const breadcrumb = useBreadcrumb();
   const today = new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "numeric" }).format(new Date());

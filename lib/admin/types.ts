@@ -45,6 +45,8 @@ export type ServicePageMeta = {
   lastReviewedAt: string;
   reviewCadenceDays: number;
   reviewedBy: string;
+  /** Who currently owns getting this resolved, if it's been escalated — distinct from reviewedBy, which is historical attribution for the last completed review, not a live ownership assignment. */
+  assignedToId?: string;
 };
 
 export type ActivityEntry = {

@@ -19,11 +19,19 @@ const filters: { value: Filter; label: string }[] = [
   { value: "compliance", label: "Compliance" },
 ];
 
-function Row({ row, onSendReminder }: { row: RegisterRow; onSendReminder?: (row: RegisterRow) => void }) {
+type RowActions = {
+  onSendReminder?: (row: RegisterRow) => void;
+  onResolve?: (row: RegisterRow) => void;
+  onEscalate?: (row: RegisterRow) => void;
+};
+
+function Row({ row, onSendReminder, onResolve, onEscalate }: { row: RegisterRow } & RowActions) {
   const router = useRouter();
   const meta = severityMeta[row.severity];
   // Only a stale lead someone actually owns has anyone to nudge — an unassigned lead needs claiming first, not a reminder.
   const canRemind = row.kind === "lead" && row.isStale && Boolean(row.assignedToId) && Boolean(onSendReminder);
+  const canResolve = row.kind === "compliance" && row.severity === "overdue" && Boolean(onResolve);
+  const hasInlineAction = canRemind || canResolve;
 
   const avatar =
     row.kind === "lead" ? (
@@ -77,6 +85,37 @@ function Row({ row, onSendReminder }: { row: RegisterRow; onSendReminder?: (row:
           <span className="hidden sm:inline">Remind</span>
         </button>
       )}
+      {canResolve && (
+        <div className="flex shrink-0 items-center gap-1.5">
+          {onEscalate && (
+            <button
+              type="button"
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                onEscalate(row);
+              }}
+              title="Escalate to a team lead"
+              className="flex items-center gap-1 rounded-md border border-slate-200 px-2 py-1 text-[11px] font-semibold text-slate-500 transition-colors hover:border-slate-300 hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500"
+            >
+              <MaterialIcon name="arrow_upward" className="text-[12px]" />
+              <span className="hidden lg:inline">Escalate</span>
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              onResolve?.(row);
+            }}
+            className="flex items-center gap-1 rounded-md bg-navy-950 px-2.5 py-1 text-[11px] font-semibold text-white transition-colors hover:bg-navy-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500"
+          >
+            <MaterialIcon name="task_alt" className="text-[13px]" />
+            <span className="hidden sm:inline">Resolve</span>
+          </button>
+        </div>
+      )}
       {row.href && <MaterialIcon name="chevron_right" className="shrink-0 text-[18px] text-slate-300" />}
     </>
   );
@@ -84,7 +123,7 @@ function Row({ row, onSendReminder }: { row: RegisterRow; onSendReminder?: (row:
   const rowClasses = `flex items-center gap-3 border-b border-l-[3px] border-slate-100 px-4 py-3.5 last:border-b-0 sm:px-5 ${meta.stripe}`;
 
   // A row with a nested real button can't also be a real <a> (invalid nested-interactive HTML) — it becomes a synthetic, keyboard-reachable click target instead. Every other row keeps a real Link, so ctrl/middle-click and "open in new tab" keep working there.
-  if (canRemind && row.href) {
+  if (hasInlineAction && row.href) {
     const href = row.href;
     return (
       <div
@@ -115,7 +154,7 @@ function Row({ row, onSendReminder }: { row: RegisterRow; onSendReminder?: (row:
   return <div className={rowClasses}>{inner}</div>;
 }
 
-export function RegisterList({ rows, onSendReminder }: { rows: RegisterRow[]; onSendReminder?: (row: RegisterRow) => void }) {
+export function RegisterList({ rows, onSendReminder, onResolve, onEscalate }: { rows: RegisterRow[] } & RowActions) {
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
@@ -213,7 +252,7 @@ export function RegisterList({ rows, onSendReminder }: { rows: RegisterRow[]; on
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.18, ease: "easeOut" }}
                 >
-                  <Row row={row} onSendReminder={onSendReminder} />
+                  <Row row={row} onSendReminder={onSendReminder} onResolve={onResolve} onEscalate={onEscalate} />
                 </motion.div>
               ))}
             </AnimatePresence>

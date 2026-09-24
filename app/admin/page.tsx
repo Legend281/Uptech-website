@@ -6,13 +6,15 @@ import { toast } from "sonner";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { RegisterList } from "@/components/admin/RegisterList";
 import { ActivityLog } from "@/components/admin/ActivityLog";
+import { CompletionModal } from "@/components/admin/CompletionModal";
 import { AnimatedNumber } from "@/components/admin/AnimatedNumber";
 import { Sparkline } from "@/components/admin/Sparkline";
 import { SegmentedBar, BarLegend, type BarSegment } from "@/components/admin/SegmentedBar";
 import { useLeads } from "@/components/admin/providers/LeadsProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useActivity, useLogActivity } from "@/components/admin/providers/ActivityProvider";
-import { mockServicePages, MOCK_ADMIN_USERS } from "@/lib/admin/mockData";
+import { useServicePages, useServicePageActions } from "@/components/admin/providers/ServicePagesProvider";
+import { MOCK_ADMIN_USERS } from "@/lib/admin/mockData";
 import { getReviewStatus, type ReviewStatus } from "@/lib/admin/staleness";
 import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
 import {
@@ -149,10 +151,12 @@ export default function AdminDashboardPage() {
   const currentUser = useCurrentUser();
   const activity = useActivity();
   const logActivity = useLogActivity();
+  const servicePages = useServicePages();
+  const { resolveReview, escalateReview } = useServicePageActions();
   const [scope, setScope] = useState<Scope>("mine");
 
   const scopedLeads = scopeLeads(leads, scope, currentUser.department);
-  const scopedPages = scopePages(mockServicePages, scope, currentUser.department);
+  const scopedPages = scopePages(servicePages, scope, currentUser.department);
 
   const totalLeads = scopedLeads.length;
   const newLeadsThisWeek = countCreatedWithinDays(scopedLeads, 7);
@@ -194,6 +198,40 @@ export default function AdminDashboardPage() {
       relatedHref: row.href,
     });
     toast.success("Reminder sent", { description: `${assigneeName} has been notified about ${row.title}.` });
+  }
+
+  const [resolvingPageId, setResolvingPageId] = useState<string | null>(null);
+  const resolvingPage = scopedPages.find((page) => page.id === resolvingPageId) ?? null;
+
+  function handleResolveSubmit({ completedAt, notes }: { completedAt: string; notes: string }) {
+    if (!resolvingPage) return;
+    resolveReview(resolvingPage.id, { completedAt, notes }, currentUser.name);
+    logActivity({
+      icon: "check_circle",
+      description: `${currentUser.name} resolved ${resolvingPage.title}: ${notes}`,
+      relatedHref: resolvingPage.url,
+    });
+    toast.success("Marked complete", { description: `${resolvingPage.title}'s review is now current.` });
+    setResolvingPageId(null);
+  }
+
+  /*
+   * No modal, per spec — a team lead can't act on this from wherever they
+   * are right now, so the only honest response is to hand it to someone who
+   * can and say so, not pretend the item itself is resolved.
+   */
+  function handleEscalate(row: RegisterRow) {
+    const page = scopedPages.find((candidate) => candidate.id === row.id);
+    if (!page) return;
+    const lead = MOCK_ADMIN_USERS.find((user) => user.department === page.department && user.role === "administrator");
+    if (!lead) return;
+    escalateReview(page.id, lead.id);
+    logActivity({
+      icon: "priority_high",
+      description: `${currentUser.name} escalated ${page.title} to ${lead.name}`,
+      relatedHref: page.url,
+    });
+    toast.success("Escalated", { description: `${lead.name} has been assigned and notified.` });
   }
 
   const pipelineSegments: BarSegment[] = PIPELINE_STATUS_ORDER.map((status) => ({
@@ -317,12 +355,27 @@ export default function AdminDashboardPage() {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <RegisterList rows={rows} onSendReminder={handleSendReminder} />
+          <RegisterList
+            rows={rows}
+            onSendReminder={handleSendReminder}
+            onResolve={(row) => setResolvingPageId(row.id)}
+            onEscalate={handleEscalate}
+          />
         </div>
         <div>
           <ActivityLog entries={activity} />
         </div>
       </div>
+
+      <CompletionModal
+        open={resolvingPage !== null}
+        title={resolvingPage ? `Resolve ${resolvingPage.title}` : ""}
+        description={resolvingPage ? `This records that the review actually happened — it resets the ${resolvingPage.reviewCadenceDays}-day cycle from the completion date below.` : undefined}
+        notesLabel="What was filed or reviewed?"
+        confirmLabel="Mark Complete"
+        onCancel={() => setResolvingPageId(null)}
+        onConfirm={handleResolveSubmit}
+      />
     </>
   );
 }

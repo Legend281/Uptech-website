@@ -43,7 +43,7 @@ const services: Array<{
   {
     key: "career-marketing",
     number: "01",
-    title: "Career Marketing & Placement",
+    title: "Career Marketing & Placement Support",
     description: "Executive positioning & international placement",
     href: "/services/career-marketing-placement",
   },

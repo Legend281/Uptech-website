@@ -21,7 +21,7 @@ const serviceLinks = [
   { label: "Business Formalisation — United States", href: "/services/business-formalisation-compliance/united-states" },
   { label: "Tax Compliance — Cameroon", href: "/services/business-formalisation-compliance/tax-compliance-businesses-cameroon" },
   { label: "CNPS Compliance — Cameroon", href: "/services/business-formalisation-compliance/cnps-compliance-cameroon" },
-  { label: "Career Marketing & Placement", href: "/services/career-marketing-placement" },
+  { label: "Career Marketing & Placement Support", href: "/services/career-marketing-placement" },
 ];
 
 const companyLinks = [

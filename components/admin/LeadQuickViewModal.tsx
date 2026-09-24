@@ -38,10 +38,12 @@ function QuickViewBody({ lead }: { lead: Lead }) {
     stageClock,
     languageMismatch,
     orphaned,
+    nextStepHint,
     handleClaim,
     handleReassign,
     handleStatusChange,
     handleResolveTriage,
+    handleContactChannelUsed,
   } = useLeadDetailActions(lead);
 
   return (
@@ -76,6 +78,7 @@ function QuickViewBody({ lead }: { lead: Lead }) {
         <div className="mt-3 grid grid-cols-3 gap-1.5">
           <a
             href={`mailto:${lead.email}`}
+            onClick={() => handleContactChannelUsed("email")}
             className="flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 py-2 text-slate-600 transition-colors hover:border-teal-400 hover:text-teal-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
           >
             <MaterialIcon name="mail" className="text-[16px]" />
@@ -83,6 +86,7 @@ function QuickViewBody({ lead }: { lead: Lead }) {
           </a>
           <a
             href={`tel:${lead.phone}`}
+            onClick={() => handleContactChannelUsed("call")}
             className="flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 py-2 text-slate-600 transition-colors hover:border-teal-400 hover:text-teal-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
           >
             <MaterialIcon name="call" className="text-[16px]" />
@@ -92,6 +96,7 @@ function QuickViewBody({ lead }: { lead: Lead }) {
             href={toWhatsAppHref(lead.phone)}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => handleContactChannelUsed("chat")}
             className="flex items-center justify-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 py-2 text-emerald-700 transition-colors hover:border-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
           >
             <MaterialIcon name="chat" className="text-[16px]" />
@@ -199,6 +204,12 @@ function QuickViewBody({ lead }: { lead: Lead }) {
                 ))}
               </select>
             </div>
+            {nextStepHint && (
+              <p className="mt-1.5 flex items-start gap-1 text-[11px] text-slate-500">
+                <MaterialIcon name="arrow_forward" className="mt-0.5 shrink-0 text-[12px] text-slate-400" />
+                {nextStepHint}
+              </p>
+            )}
             <div className="mt-2 space-y-1.5">
               <div className="flex items-center gap-1.5 text-[11px]">
                 <MaterialIcon

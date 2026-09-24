@@ -27,10 +27,12 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
     stageClock,
     languageMismatch,
     orphaned,
+    nextStepHint,
     handleClaim,
     handleReassign,
     handleStatusChange,
     handleResolveTriage,
+    handleContactChannelUsed,
   } = useLeadDetailActions(lead);
 
   return (
@@ -69,6 +71,7 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
         <div className="mt-4 grid grid-cols-3 gap-2">
           <a
             href={`mailto:${lead.email}`}
+            onClick={() => handleContactChannelUsed("email")}
             className="flex flex-col items-center gap-1 rounded-lg border border-slate-200 py-2.5 text-slate-600 transition-colors hover:border-teal-400 hover:text-teal-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
           >
             <MaterialIcon name="mail" className="text-[18px]" />
@@ -76,6 +79,7 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
           </a>
           <a
             href={`tel:${lead.phone}`}
+            onClick={() => handleContactChannelUsed("call")}
             className="flex flex-col items-center gap-1 rounded-lg border border-slate-200 py-2.5 text-slate-600 transition-colors hover:border-teal-400 hover:text-teal-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
           >
             <MaterialIcon name="call" className="text-[18px]" />
@@ -85,6 +89,7 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
             href={toWhatsAppHref(lead.phone)}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => handleContactChannelUsed("chat")}
             className="flex flex-col items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 py-2.5 text-emerald-700 transition-colors hover:border-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
           >
             <MaterialIcon name="chat" className="text-[18px]" />
@@ -208,6 +213,12 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
               ))}
             </select>
           </div>
+          {nextStepHint && (
+            <p className="mt-2 flex items-start gap-1.5 text-xs text-slate-500">
+              <MaterialIcon name="arrow_forward" className="mt-0.5 shrink-0 text-[14px] text-slate-400" />
+              {nextStepHint}
+            </p>
+          )}
 
           <div className="mt-3 space-y-2 border-t border-slate-100 pt-3">
             <div className="flex items-center gap-2 text-xs">

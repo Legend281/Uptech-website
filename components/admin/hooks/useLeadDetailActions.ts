@@ -17,6 +17,20 @@ export const resolvableStatuses: { value: Exclude<LeadStatus, "needs-triage">; l
 ];
 
 /**
+ * What to actually do at each stage — without this, the status dropdown is
+ * just a list of words with no indication of when to touch it. Closed
+ * statuses get nothing; there's no "next" once a lead is won or lost.
+ */
+const NEXT_STEP_HINT: Partial<Record<LeadStatus, string>> = {
+  new: "Reach out by email, call, or WhatsApp below — that'll move this to Contacted for you.",
+  contacted: "Assessed the fit? Mark Qualified to move them forward, or Lost if it isn't a match.",
+  qualified: "Ready for a consultation? Mark Consultation Booked once one's on the calendar.",
+  "consultation-booked": "After the consultation happens, mark this Won or Lost.",
+};
+
+const CHANNEL_VERB: Record<"email" | "call" | "chat", string> = { email: "emailed", call: "called", chat: "messaged" };
+
+/**
  * Shared between the full detail page and the Quick View modal, so the two
  * can never drift in behavior even though they render it very differently.
  *
@@ -42,6 +56,7 @@ export function useLeadDetailActions(lead: Lead) {
   const stageClock = getStageClock(lead);
   const languageMismatch = lead.language === "French" && Boolean(assignedUser) && !assignedUser?.languages.includes("French");
   const orphaned = !assignedUser && lead.status !== "needs-triage" && lead.status !== "new";
+  const nextStepHint = NEXT_STEP_HINT[lead.status] ?? null;
 
   function handleClaim() {
     claimLead(lead.id, currentUser.id);
@@ -73,6 +88,25 @@ export function useLeadDetailActions(lead: Lead) {
     toast.success(`Routed to ${departmentLabels[department]}`, { description: "Now showing as a new lead in that queue." });
   }
 
+  /*
+   * Closes the gap between what actually happened and what the record says
+   * happened: clicking Email/Call/WhatsApp IS contacting them, so there's no
+   * reason to also make someone separately remember to flip the status
+   * dropdown afterward. Only fires from "New" — a lead already past that
+   * point doesn't need a second, redundant status bump every time someone
+   * re-opens their email thread, and a still-unrouted needs-triage lead
+   * should go through resolveTriage first, not skip straight to Contacted.
+   */
+  function handleContactChannelUsed(channel: "email" | "call" | "chat") {
+    if (lead.status !== "new") return;
+    const shouldAutoClaim = !lead.assignedToId;
+    updateStatus(lead.id, "contacted");
+    if (shouldAutoClaim) claimLead(lead.id, currentUser.id);
+    toast.success("Marked as Contacted", {
+      description: `Logged automatically since you just ${CHANNEL_VERB[channel]} them${shouldAutoClaim ? " — you're now the owner too." : "."}`,
+    });
+  }
+
   return {
     currentUser,
     meta,
@@ -81,9 +115,11 @@ export function useLeadDetailActions(lead: Lead) {
     stageClock,
     languageMismatch,
     orphaned,
+    nextStepHint,
     handleClaim,
     handleReassign,
     handleStatusChange,
     handleResolveTriage,
+    handleContactChannelUsed,
   };
 }

@@ -3,6 +3,7 @@
 import { useId, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { useLeads, useLeadActions } from "@/components/admin/providers/LeadsProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
@@ -10,16 +11,20 @@ import { LeadFormDialog } from "@/components/admin/LeadFormDialog";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { LeadRowActions } from "@/components/admin/LeadRowActions";
 import { LeadQuickViewModal } from "@/components/admin/LeadQuickViewModal";
+import { AnimatedNumber } from "@/components/admin/AnimatedNumber";
+import { SegmentedBar, BarLegend, type BarSegment } from "@/components/admin/SegmentedBar";
 import { initialsOf, avatarTint } from "@/lib/admin/avatar";
 import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
 import { departmentLabels } from "@/lib/admin/labels";
 import { MOCK_ADMIN_USERS } from "@/lib/admin/mockData";
 import { severityMeta, leadStatusToSeverity, URGENCY_RANK, getLeadServiceLabel } from "@/lib/admin/register";
 import { getResponseClock, getStageClock, isLeadStale } from "@/lib/admin/leadStaleness";
+import { leadStatusChartColor, LEAD_PIPELINE_ORDER } from "@/lib/admin/chartColors";
 import type { Lead, LeadStatus, Department } from "@/lib/admin/types";
 
 const PAGE_SIZE = 8;
 const CLOSED_STATUSES: LeadStatus[] = ["won", "lost"];
+const CARD_ELEVATION = "shadow-[0_1px_2px_rgba(7,14,27,0.04),0_10px_24px_-16px_rgba(7,14,27,0.14)]";
 
 const statusFilters: { value: LeadStatus | "all"; label: string }[] = [
   { value: "all", label: "All statuses" },
@@ -40,6 +45,16 @@ const departmentFilters: { value: Department | "unassigned" | "all"; label: stri
 ];
 
 const typeIcon: Record<Lead["type"], string> = { "job-seeker": "work", business: "apartment", general: "help" };
+
+const containerVariants: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08 } },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 8 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } },
+};
 
 function staleReason(lead: Lead): string | null {
   const response = getResponseClock(lead);
@@ -151,10 +166,18 @@ export default function LeadsPage() {
   const closedCount = leads.filter((lead) => CLOSED_STATUSES.includes(lead.status)).length;
   const staleCount = leads.filter((lead) => isLeadStale(lead) && !CLOSED_STATUSES.includes(lead.status)).length;
 
-  const statusCounts = statusFilters
-    .filter((f) => f.value !== "all")
-    .map((f) => ({ ...f, count: leads.filter((lead) => lead.status === f.value).length }))
-    .filter((f) => f.count > 0);
+  // Always the full pipeline, regardless of the table's own "show closed" toggle — this is the at-a-glance overview, a different job from the detailed list below.
+  const pipelineSegments: BarSegment[] = LEAD_PIPELINE_ORDER.map((status) => ({
+    key: status,
+    label: severityMeta[leadStatusToSeverity[status]].label,
+    count: leads.filter((lead) => lead.status === status).length,
+    colorClass: leadStatusChartColor[status],
+  }));
+
+  function toggleStatusFilter(key: string) {
+    setStatusFilter((current) => (current === key ? "all" : (key as LeadStatus)));
+    resetPage();
+  }
 
   const filtered = leads
     .filter((lead) => (showClosed ? true : !CLOSED_STATUSES.includes(lead.status)) || statusFilter !== "all")
@@ -186,250 +209,266 @@ export default function LeadsPage() {
 
   return (
     <>
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h1 className="font-sans text-xl font-bold text-navy-950">Leads & Inquiries</h1>
-          <p className="mt-1 text-sm text-slate-500">
-            {leads.length} total
-            {needsTriageCount > 0 && (
-              <>
-                {" "}
-                · <span className="font-semibold text-violet-700">{needsTriageCount} need triage</span>
-              </>
-            )}
-            {staleCount > 0 && (
-              <>
-                {" "}
-                · <span className="font-semibold text-amber-700">{staleCount} stale</span>
-              </>
-            )}
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={() => setDialogOpen(true)}
-          className="flex items-center justify-center gap-2 rounded-lg bg-navy-950 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-navy-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
-        >
-          <MaterialIcon name="add" className="text-[18px]" />
-          Log a New Lead
-        </button>
-      </div>
-
-      {/* Status breakdown — the pipeline's shape at a glance, without opening the filter dropdown */}
-      <div className="mb-4 flex flex-wrap gap-1.5">
-        {statusCounts.map((s) => (
-          <button
-            key={s.value}
-            type="button"
-            onClick={() => {
-              setStatusFilter(s.value === statusFilter ? "all" : (s.value as LeadStatus));
-              resetPage();
-            }}
-            className={`rounded-full border px-2.5 py-1 text-xs font-semibold transition-colors ${
-              statusFilter === s.value
-                ? "border-navy-950 bg-navy-950 text-white"
-                : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
-            }`}
-          >
-            {s.label} <span className="tabular-nums opacity-70">{s.count}</span>
-          </button>
-        ))}
-      </div>
-
-      <section className="rounded-xl border border-slate-200 bg-white shadow-[0_1px_2px_rgba(7,14,27,0.04),0_10px_24px_-16px_rgba(7,14,27,0.14)]">
-        <div className="flex flex-col gap-3 border-b border-slate-100 px-4 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:px-5">
-          <select
-            value={statusFilter}
-            onChange={(e) => {
-              setStatusFilter(e.target.value as LeadStatus | "all");
-              resetPage();
-            }}
-            className="rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-700 focus-visible:border-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500/40"
-          >
-            {statusFilters.map((f) => (
-              <option key={f.value} value={f.value}>
-                {f.label}
-              </option>
-            ))}
-          </select>
-          <select
-            value={departmentFilter}
-            onChange={(e) => {
-              setDepartmentFilter(e.target.value as Department | "unassigned" | "all");
-              resetPage();
-            }}
-            className="rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-700 focus-visible:border-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500/40"
-          >
-            {departmentFilters.map((f) => (
-              <option key={f.value} value={f.value}>
-                {f.label}
-              </option>
-            ))}
-          </select>
-          <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
-            <input
-              type="checkbox"
-              checked={showClosed}
-              onChange={(e) => {
-                setShowClosed(e.target.checked);
-                resetPage();
-              }}
-              className="h-3.5 w-3.5 rounded border-slate-300 text-teal-600 focus:ring-teal-500/40"
-            />
-            Show closed ({closedCount})
-          </label>
-          <label htmlFor={searchId} className="relative sm:ml-auto sm:w-56">
-            <span className="sr-only">Search leads</span>
-            <MaterialIcon name="search" className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[16px] text-slate-400" />
-            <input
-              id={searchId}
-              type="text"
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                resetPage();
-              }}
-              placeholder="Search…"
-              autoComplete="off"
-              className="w-full rounded-md border border-slate-200 py-1.5 pl-8 pr-3 text-sm text-slate-700 placeholder:text-slate-400 focus-visible:border-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500/40"
-            />
-          </label>
-        </div>
-
-        {filtered.length === 0 ? (
-          <div className="px-5 py-10 text-center text-sm text-slate-500">
-            {leads.length === 0
-              ? "No leads yet — logged leads and real submissions will show up here."
-              : `Nothing matches ${query ? `"${query}"` : "this filter"}.`}
-          </div>
-        ) : (
-          <>
-            {/* Desktop / tablet: a real table — dense, sortable-ready, scannable. Tables collapse badly on phones, so this is sm:+ only. */}
-            <table className="hidden w-full sm:table">
-              <thead>
-                <tr className="border-b border-slate-100 text-left text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                  <th scope="col" className="px-4 py-2.5 sm:px-5">
-                    Lead
-                  </th>
-                  <th scope="col" className="px-3 py-2.5">
-                    Status
-                  </th>
-                  <th scope="col" className="px-3 py-2.5">
-                    Service
-                  </th>
-                  <th scope="col" className="px-3 py-2.5">
-                    Assigned
-                  </th>
-                  <th scope="col" className="px-3 py-2.5 text-right">
-                    Activity
-                  </th>
-                  <th scope="col" className="w-12 px-3 py-2.5">
-                    <span className="sr-only">Actions</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {paged.map((lead) => {
-                  const meta = severityMeta[leadStatusToSeverity[lead.status]];
-                  const assignedUser = MOCK_ADMIN_USERS.find((user) => user.id === lead.assignedToId);
-                  return (
-                    <tr
-                      key={lead.id}
-                      onClick={() => setQuickViewLeadId(lead.id)}
-                      className={`cursor-pointer border-b border-l-[3px] border-slate-100 transition-colors last:border-b-0 hover:bg-slate-50 ${meta.stripe}`}
-                    >
-                      <td className="px-4 py-3 sm:px-5">
-                        <LeadIdentity lead={lead} />
-                      </td>
-                      <td className="px-3 py-3">
-                        <span className={`inline-block whitespace-nowrap rounded-full border px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide ${meta.badge}`}>
-                          {meta.label}
-                        </span>
-                      </td>
-                      <td className="px-3 py-3 text-xs text-slate-500">{getLeadServiceLabel(lead.service)}</td>
-                      <td className="px-3 py-3">
-                        {assignedUser ? (
-                          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-700">
-                            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy-950 text-[9px] font-bold text-white">
-                              {assignedUser.avatarInitials}
-                            </span>
-                            {assignedUser.name}
-                          </span>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              claimLead(lead.id, currentUser.id);
-                              toast.success("Lead claimed", { description: `You're now the owner of ${lead.name}'s inquiry.` });
-                            }}
-                            className="inline-flex items-center gap-1 rounded-md border border-teal-200 bg-teal-50 px-2 py-1 text-xs font-semibold text-teal-700 transition-colors hover:border-teal-300 hover:bg-teal-100"
-                          >
-                            <MaterialIcon name="how_to_reg" className="text-[13px]" />
-                            Claim
-                          </button>
-                        )}
-                      </td>
-                      <td className="px-3 py-3 text-right">
-                        <ActivityCell lead={lead} />
-                      </td>
-                      <td className="px-3 py-3">
-                        <LeadRowActions
-                          onView={() => setQuickViewLeadId(lead.id)}
-                          onEdit={() => setEditingLead(lead)}
-                          onDelete={() => setDeletingLead(lead)}
-                        />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-
-            {/* Mobile: the verified card list */}
-            <div className="sm:hidden">
-              {paged.map((lead) => (
-                <LeadCard key={lead.id} lead={lead} />
-              ))}
-            </div>
-
-            <div className="flex items-center justify-between border-t border-slate-100 px-4 py-3 sm:px-5">
-              <p className="text-xs text-slate-500">
-                Showing{" "}
-                <span className="font-semibold text-slate-700">
-                  {pageStart + 1}–{Math.min(pageStart + PAGE_SIZE, filtered.length)}
-                </span>{" "}
-                of <span className="font-semibold text-slate-700">{filtered.length}</span>
-              </p>
-              {pageCount > 1 && (
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    disabled={safePage === 1}
-                    aria-label="Previous page"
-                    className="flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    <MaterialIcon name="chevron_left" className="text-[18px]" />
-                  </button>
-                  <span className="px-2 text-xs font-semibold tabular-nums text-slate-600">
-                    {safePage} / {pageCount}
+      <motion.div variants={containerVariants} initial="hidden" animate="show">
+        <motion.div variants={itemVariants} className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h1 className="font-sans text-xl font-bold text-navy-950">Leads & Inquiries</h1>
+            <p className="mt-1 text-sm text-slate-500">
+              <AnimatedNumber value={leads.length} /> total
+              {needsTriageCount > 0 && (
+                <>
+                  {" "}
+                  ·{" "}
+                  <span className="font-semibold text-violet-700">
+                    <AnimatedNumber value={needsTriageCount} /> need triage
                   </span>
-                  <button
-                    type="button"
-                    onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
-                    disabled={safePage === pageCount}
-                    aria-label="Next page"
-                    className="flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    <MaterialIcon name="chevron_right" className="text-[18px]" />
-                  </button>
-                </div>
+                </>
               )}
+              {staleCount > 0 && (
+                <>
+                  {" "}
+                  ·{" "}
+                  <span className="font-semibold text-amber-700">
+                    <AnimatedNumber value={staleCount} /> stale
+                  </span>
+                </>
+              )}
+            </p>
+          </div>
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+            type="button"
+            onClick={() => setDialogOpen(true)}
+            className="flex items-center justify-center gap-2 rounded-lg bg-navy-950 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-navy-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
+          >
+            <MaterialIcon name="add" className="text-[18px]" />
+            Log a New Lead
+          </motion.button>
+        </motion.div>
+
+        {/* Same chart language as the Dashboard's Pipeline Breakdown — clicking a segment or legend entry filters the table below exactly like the old status pills did, just sharing one visual system across both pages instead of two. */}
+        <motion.div variants={itemVariants} className={`mb-4 rounded-xl border border-slate-200 bg-white p-4 sm:p-5 ${CARD_ELEVATION}`}>
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="font-sans text-sm font-bold text-navy-950">Pipeline</h2>
+            <span className="text-xs font-semibold tabular-nums text-slate-500">
+              <AnimatedNumber value={leads.length} /> leads
+            </span>
+          </div>
+          <div className="mt-4">
+            <SegmentedBar segments={pipelineSegments} activeKey={statusFilter !== "all" ? statusFilter : null} onSegmentClick={toggleStatusFilter} />
+            <BarLegend segments={pipelineSegments} emptyLabel="No leads yet." activeKey={statusFilter !== "all" ? statusFilter : null} onSegmentClick={toggleStatusFilter} />
+          </div>
+        </motion.div>
+
+        <motion.section variants={itemVariants} className={`rounded-xl border border-slate-200 bg-white ${CARD_ELEVATION}`}>
+          <div className="flex flex-col gap-3 border-b border-slate-100 px-4 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:px-5">
+            <select
+              value={statusFilter}
+              onChange={(e) => {
+                setStatusFilter(e.target.value as LeadStatus | "all");
+                resetPage();
+              }}
+              className="rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-700 focus-visible:border-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500/40"
+            >
+              {statusFilters.map((f) => (
+                <option key={f.value} value={f.value}>
+                  {f.label}
+                </option>
+              ))}
+            </select>
+            <select
+              value={departmentFilter}
+              onChange={(e) => {
+                setDepartmentFilter(e.target.value as Department | "unassigned" | "all");
+                resetPage();
+              }}
+              className="rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-700 focus-visible:border-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500/40"
+            >
+              {departmentFilters.map((f) => (
+                <option key={f.value} value={f.value}>
+                  {f.label}
+                </option>
+              ))}
+            </select>
+            <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
+              <input
+                type="checkbox"
+                checked={showClosed}
+                onChange={(e) => {
+                  setShowClosed(e.target.checked);
+                  resetPage();
+                }}
+                className="h-3.5 w-3.5 rounded border-slate-300 text-teal-600 focus:ring-teal-500/40"
+              />
+              Show closed ({closedCount})
+            </label>
+            <label htmlFor={searchId} className="relative sm:ml-auto sm:w-56">
+              <span className="sr-only">Search leads</span>
+              <MaterialIcon name="search" className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[16px] text-slate-400" />
+              <input
+                id={searchId}
+                type="text"
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  resetPage();
+                }}
+                placeholder="Search…"
+                autoComplete="off"
+                className="w-full rounded-md border border-slate-200 py-1.5 pl-8 pr-3 text-sm text-slate-700 placeholder:text-slate-400 focus-visible:border-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500/40"
+              />
+            </label>
+          </div>
+
+          {filtered.length === 0 ? (
+            <div className="flex flex-col items-center gap-2 px-5 py-14 text-center text-sm text-slate-500">
+              <MaterialIcon name={leads.length === 0 ? "inbox" : "search_off"} className="text-[32px] text-slate-300" />
+              <p>
+                {leads.length === 0
+                  ? "No leads yet — logged leads and real submissions will show up here."
+                  : `Nothing matches ${query ? `"${query}"` : "this filter"}.`}
+              </p>
             </div>
-          </>
-        )}
-      </section>
+          ) : (
+            <>
+              {/* Desktop / tablet: a real table — dense, sortable-ready, scannable. Tables collapse badly on phones, so this is sm:+ only. */}
+              <table className="hidden w-full sm:table">
+                <thead>
+                  <tr className="border-b border-slate-100 text-left text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    <th scope="col" className="px-4 py-2.5 sm:px-5">
+                      Lead
+                    </th>
+                    <th scope="col" className="px-3 py-2.5">
+                      Status
+                    </th>
+                    <th scope="col" className="px-3 py-2.5">
+                      Service
+                    </th>
+                    <th scope="col" className="px-3 py-2.5">
+                      Assigned
+                    </th>
+                    <th scope="col" className="px-3 py-2.5 text-right">
+                      Activity
+                    </th>
+                    <th scope="col" className="w-12 px-3 py-2.5">
+                      <span className="sr-only">Actions</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <AnimatePresence initial={false}>
+                    {paged.map((lead) => {
+                      const meta = severityMeta[leadStatusToSeverity[lead.status]];
+                      const assignedUser = MOCK_ADMIN_USERS.find((user) => user.id === lead.assignedToId);
+                      return (
+                        <motion.tr
+                          key={lead.id}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.15 }}
+                          onClick={() => setQuickViewLeadId(lead.id)}
+                          className={`cursor-pointer border-b border-l-[3px] border-slate-100 transition-colors last:border-b-0 hover:bg-slate-50 ${meta.stripe}`}
+                        >
+                          <td className="px-4 py-3 sm:px-5">
+                            <LeadIdentity lead={lead} />
+                          </td>
+                          <td className="px-3 py-3">
+                            <span className={`inline-block whitespace-nowrap rounded-full border px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide ${meta.badge}`}>
+                              {meta.label}
+                            </span>
+                          </td>
+                          <td className="px-3 py-3 text-xs text-slate-500">{getLeadServiceLabel(lead.service)}</td>
+                          <td className="px-3 py-3">
+                            {assignedUser ? (
+                              <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-700">
+                                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy-950 text-[9px] font-bold text-white">
+                                  {assignedUser.avatarInitials}
+                                </span>
+                                {assignedUser.name}
+                              </span>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  claimLead(lead.id, currentUser.id);
+                                  toast.success("Lead claimed", { description: `You're now the owner of ${lead.name}'s inquiry.` });
+                                }}
+                                className="inline-flex items-center gap-1 rounded-md border border-teal-200 bg-teal-50 px-2 py-1 text-xs font-semibold text-teal-700 transition-colors hover:border-teal-300 hover:bg-teal-100"
+                              >
+                                <MaterialIcon name="how_to_reg" className="text-[13px]" />
+                                Claim
+                              </button>
+                            )}
+                          </td>
+                          <td className="px-3 py-3 text-right">
+                            <ActivityCell lead={lead} />
+                          </td>
+                          <td className="px-3 py-3">
+                            <LeadRowActions
+                              onView={() => setQuickViewLeadId(lead.id)}
+                              onEdit={() => setEditingLead(lead)}
+                              onDelete={() => setDeletingLead(lead)}
+                            />
+                          </td>
+                        </motion.tr>
+                      );
+                    })}
+                  </AnimatePresence>
+                </tbody>
+              </table>
+
+              {/* Mobile: the verified card list */}
+              <div className="sm:hidden">
+                <AnimatePresence initial={false}>
+                  {paged.map((lead) => (
+                    <motion.div key={lead.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }}>
+                      <LeadCard lead={lead} />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+
+              <div className="flex items-center justify-between border-t border-slate-100 px-4 py-3 sm:px-5">
+                <p className="text-xs text-slate-500">
+                  Showing{" "}
+                  <span className="font-semibold text-slate-700">
+                    {pageStart + 1}–{Math.min(pageStart + PAGE_SIZE, filtered.length)}
+                  </span>{" "}
+                  of <span className="font-semibold text-slate-700">{filtered.length}</span>
+                </p>
+                {pageCount > 1 && (
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => setPage((p) => Math.max(1, p - 1))}
+                      disabled={safePage === 1}
+                      aria-label="Previous page"
+                      className="flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      <MaterialIcon name="chevron_left" className="text-[18px]" />
+                    </button>
+                    <span className="px-2 text-xs font-semibold tabular-nums text-slate-600">
+                      {safePage} / {pageCount}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+                      disabled={safePage === pageCount}
+                      aria-label="Next page"
+                      className="flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      <MaterialIcon name="chevron_right" className="text-[18px]" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+        </motion.section>
+      </motion.div>
 
       <LeadFormDialog open={dialogOpen} onClose={() => setDialogOpen(false)} mode="create" />
       {editingLead && <LeadFormDialog open={Boolean(editingLead)} onClose={() => setEditingLead(null)} mode="edit" lead={editingLead} />}

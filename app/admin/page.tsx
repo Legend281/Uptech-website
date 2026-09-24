@@ -32,15 +32,14 @@ import {
   type RegisterRow,
   type Severity,
 } from "@/lib/admin/register";
-import { leadStatusChartColor, reviewStatusChartColor } from "@/lib/admin/chartColors";
+import { leadStatusChartColor, reviewStatusChartColor, LEAD_PIPELINE_ORDER } from "@/lib/admin/chartColors";
 import { buildDashboardInsight } from "@/lib/admin/insight";
 import { departmentLabels } from "@/lib/admin/labels";
-import type { Lead, ServicePageMeta, Department, LeadStatus } from "@/lib/admin/types";
+import type { Lead, ServicePageMeta, Department } from "@/lib/admin/types";
 
 /** Soft, layered elevation — a hairline border plus a very low, wide shadow reads as "lifted" without a hard drop-shadow edge. */
 const CARD_ELEVATION = "shadow-[0_1px_2px_rgba(7,14,27,0.04),0_10px_24px_-16px_rgba(7,14,27,0.14)]";
 
-const PIPELINE_STATUS_ORDER: LeadStatus[] = ["needs-triage", "new", "contacted", "qualified", "consultation-booked", "won", "lost"];
 const REVIEW_STATUS_ORDER: ReviewStatus[] = ["on-track", "due-soon", "overdue"];
 
 const statGridVariants: Variants = {
@@ -241,7 +240,7 @@ export default function AdminDashboardPage() {
     toast.success("Escalated", { description: `${lead.name} has been assigned and notified.` });
   }
 
-  const pipelineSegments: BarSegment[] = PIPELINE_STATUS_ORDER.map((status) => ({
+  const pipelineSegments: BarSegment[] = LEAD_PIPELINE_ORDER.map((status) => ({
     key: status,
     label: severityMeta[leadStatusToSeverity[status]].label,
     count: scopedLeads.filter((lead) => lead.status === status).length,

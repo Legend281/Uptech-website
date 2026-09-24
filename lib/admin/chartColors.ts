@@ -30,6 +30,9 @@ export const leadStatusChartColor: Record<LeadStatus, string> = {
   lost: "bg-slate-300",
 };
 
+/** The one shared rendering order for a lead-status segmented bar (Dashboard's Pipeline Breakdown, the Leads page's own) — sharing it, rather than each page hardcoding its own copy, is what guarantees they never drift into showing the same statuses in a different order or color. */
+export const LEAD_PIPELINE_ORDER: LeadStatus[] = ["needs-triage", "new", "contacted", "qualified", "consultation-booked", "won", "lost"];
+
 /** Validated clean — passes all six CVD/contrast checks in this order (on-track → due-soon → overdue). */
 export const reviewStatusChartColor: Record<ReviewStatus, string> = {
   "on-track": "bg-emerald-500",

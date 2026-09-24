@@ -374,7 +374,10 @@ export function Header({
           </div>
 
           <div className="relative group py-6">
-            <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-300 hover:text-white group-hover:text-teal-400 transition-colors text-sm font-semibold focus:outline-none">
+            <Link
+              href="/who-we-serve"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-300 hover:text-white group-hover:text-teal-400 transition-colors text-sm font-semibold focus:outline-none"
+            >
               <span>Who We Serve</span>
               <svg
                 className="w-3.5 h-3.5 text-slate-400 group-hover:text-teal-400 group-hover:rotate-180 transition-transform duration-200"
@@ -385,7 +388,7 @@ export function Header({
               >
                 <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-            </button>
+            </Link>
             <div className="absolute top-[100%] left-0 w-72 bg-navy-950/95 backdrop-blur-xl border border-slate-700/80 shadow-2xl rounded-xl p-2.5 opacity-0 invisible scale-95 group-hover:opacity-100 group-hover:visible group-hover:scale-100 focus-within:opacity-100 focus-within:visible focus-within:scale-100 transition-[opacity,transform,visibility] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] z-50 transform -translate-y-2 group-hover:translate-y-0 focus-within:translate-y-0 origin-top">
               <Link
                 href="/who-we-serve/individuals"
@@ -547,9 +550,9 @@ export function Header({
               </MobileNavSection>
 
               <MobileNavSection
+                href="/who-we-serve"
                 icon="diversity_3"
                 label="Who We Serve"
-                linkable={false}
                 isOpen={openSection === "who-we-serve"}
                 onToggle={() => toggleSection("who-we-serve")}
                 onNavigate={closeMobileMenu}

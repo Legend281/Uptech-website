@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Building2, User } from "lucide-react";
 
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { HeroImageCarousel } from "@/components/HeroImageCarousel";
+import { Button } from "@/components/Button";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Reveal } from "@/components/Reveal";
 import { TextReveal } from "@/components/TextReveal";
 import { TiltCard } from "@/components/TiltCard";
+import { images } from "@/lib/images";
 
 export const metadata: Metadata = {
   title: "Who We Serve",
@@ -15,11 +20,6 @@ export const metadata: Metadata = {
     "Uptech Consulting works with individuals building their careers or personal ventures, and with businesses and institutions that need technology run and compliance kept — in Cameroon and the United States.",
 };
 
-/*
- * Deliberately minimal. This route exists so the "Who We Serve" breadcrumb on
- * the two persona pages resolves to a real page instead of a 404; it will be
- * expanded into a proper hub later. Two doors, nothing else.
- */
 const audiences = [
   {
     href: "/who-we-serve/individuals",
@@ -46,25 +46,40 @@ export default function WhoWeServePage() {
       <Header />
       <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Who We Serve" }]} />
 
-      <main className="bg-slate-100/70">
-        <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-          <Reveal effect="rise" className="max-w-2xl">
-            <div className="mb-6 inline-flex items-center gap-2">
-              <span className="inline-block h-[2px] w-7 bg-teal-500" />
-              <span className="text-xs font-bold uppercase tracking-wider text-teal-700">
-                Who We Serve
-              </span>
-            </div>
-            <h1 className="text-4xl font-extrabold leading-[1.12] tracking-tight text-navy-950 sm:text-5xl">
-              <TextReveal text="Which of these is you?" />
-            </h1>
-            <p className="mt-5 text-base leading-relaxed text-slate-600 sm:text-lg">
-              Two audiences, two different sets of questions. Pick the one that
-              fits and the next page is built around your situation.
-            </p>
-          </Reveal>
+      <main>
+        {/* Hero */}
+        <section className="relative bg-navy-950 overflow-hidden pt-14 pb-28 lg:pt-20 lg:pb-36 border-b border-slate-800/80">
+          <div className="absolute inset-0 z-0">
+            <HeroImageCarousel
+              keys={["dedicated-advisor", "cross-border-boardroom"]}
+              imageClassName="object-cover object-center scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/65 to-navy-950/50" />
+          </div>
+          <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <Reveal effect="rise" className="mx-auto max-w-2xl text-center lg:max-w-3xl">
+              <div className="inline-flex items-center justify-center gap-2 mb-6">
+                <span className="w-7 h-[2px] bg-teal-400 inline-block" />
+                <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
+                  WHO WE SERVE
+                </span>
+                <span className="w-7 h-[2px] bg-teal-400 inline-block" />
+              </div>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] mb-6">
+                <TextReveal text="Which of these is you?" />
+              </h1>
+              <p className="mx-auto text-base sm:text-lg text-slate-300 leading-relaxed">
+                Two audiences, two different sets of questions. Pick the one that
+                fits and the next page is built around your situation.
+              </p>
+            </Reveal>
+          </div>
+        </section>
 
-          <Reveal effect="stagger" className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2">
+        <section className="bg-slate-100/70 py-20 lg:py-28">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Reveal effect="stagger" className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {audiences.map((audience) => {
               const Icon = audience.icon;
               return (
@@ -96,6 +111,35 @@ export default function WhoWeServePage() {
                 </TiltCard>
               );
             })}
+          </Reveal>
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section className="relative py-24 bg-navy-950 text-white text-center overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={images["career-review"].src}
+              alt=""
+              fill
+              sizes="100vw"
+              placeholder="blur"
+              blurDataURL={images["career-review"].blurDataURL}
+              className="object-cover object-center scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/55 to-navy-950/55" />
+          </div>
+          <Reveal effect="rise" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white max-w-2xl mx-auto leading-tight mb-4">
+              Not sure which one <span className="gradient-teal-blue-text">fits?</span>
+            </h2>
+            <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto leading-relaxed mb-8">
+              Reach out directly and a specialist will point you in the right direction.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <Button href="/contact">Book a Consultation</Button>
+              <WhatsAppButton phone="237678597593" />
+            </div>
           </Reveal>
         </section>
       </main>

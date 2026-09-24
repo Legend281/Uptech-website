@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { Toaster } from "sonner";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { mockServicePages } from "@/lib/admin/mockData";
 import { getReviewStatus } from "@/lib/admin/staleness";
@@ -17,5 +18,18 @@ export const metadata: Metadata = {
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const overdueCount = mockServicePages.filter((page) => getReviewStatus(page) === "overdue").length;
 
-  return <AdminShell urgentCount={overdueCount}>{children}</AdminShell>;
+  return (
+    <>
+      <AdminShell urgentCount={overdueCount}>{children}</AdminShell>
+      {/*
+       * Mounted once, as a sibling to AdminShell rather than nested inside
+       * it — modals in this section (LeadFormDialog, ConfirmDialog,
+       * LeadQuickViewModal) are plain fixed-position divs, not portals, so
+       * keeping the Toaster outside their DOM subtree entirely is what
+       * guarantees a toast fired from inside one never ends up trapped
+       * behind its overlay.
+       */}
+      <Toaster richColors position="top-right" />
+    </>
+  );
 }

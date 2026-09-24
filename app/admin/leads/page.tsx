@@ -1,0 +1,453 @@
+"use client";
+
+import { useId, useState } from "react";
+import Link from "next/link";
+import { toast } from "sonner";
+import { MaterialIcon } from "@/components/icons/MaterialIcon";
+import { useLeads, useLeadActions } from "@/components/admin/providers/LeadsProvider";
+import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
+import { LeadFormDialog } from "@/components/admin/LeadFormDialog";
+import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
+import { LeadRowActions } from "@/components/admin/LeadRowActions";
+import { LeadQuickViewModal } from "@/components/admin/LeadQuickViewModal";
+import { initialsOf, avatarTint } from "@/lib/admin/avatar";
+import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
+import { departmentLabels } from "@/lib/admin/labels";
+import { MOCK_ADMIN_USERS } from "@/lib/admin/mockData";
+import { severityMeta, leadStatusToSeverity, URGENCY_RANK, getLeadServiceLabel } from "@/lib/admin/register";
+import { getResponseClock, getStageClock, isLeadStale } from "@/lib/admin/leadStaleness";
+import type { Lead, LeadStatus, Department } from "@/lib/admin/types";
+
+const PAGE_SIZE = 8;
+const CLOSED_STATUSES: LeadStatus[] = ["won", "lost"];
+
+const statusFilters: { value: LeadStatus | "all"; label: string }[] = [
+  { value: "all", label: "All statuses" },
+  { value: "needs-triage", label: "Needs triage" },
+  { value: "new", label: "New" },
+  { value: "contacted", label: "Contacted" },
+  { value: "qualified", label: "Qualified" },
+  { value: "consultation-booked", label: "Consultation booked" },
+  { value: "won", label: "Won" },
+  { value: "lost", label: "Lost" },
+];
+
+const departmentFilters: { value: Department | "unassigned" | "all"; label: string }[] = [
+  { value: "all", label: "All departments" },
+  { value: "career-services-operations", label: departmentLabels["career-services-operations"] },
+  { value: "business-formalisation-compliance", label: departmentLabels["business-formalisation-compliance"] },
+  { value: "unassigned", label: "Not yet triaged" },
+];
+
+const typeIcon: Record<Lead["type"], string> = { "job-seeker": "work", business: "apartment", general: "help" };
+
+function staleReason(lead: Lead): string | null {
+  const response = getResponseClock(lead);
+  if (response.overdue) return "Overdue — not yet contacted";
+  const stage = getStageClock(lead);
+  if (stage.stale) return `Stuck ${Math.round(stage.daysInStatus)}d in "${severityMeta[leadStatusToSeverity[lead.status]].label}"`;
+  return null;
+}
+
+function LeadIdentity({ lead }: { lead: Lead }) {
+  return (
+    <div className="flex min-w-0 items-center gap-2.5">
+      <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[11px] font-bold ${avatarTint(lead.name)}`}>
+        {initialsOf(lead.name)}
+      </span>
+      <div className="min-w-0">
+        <div className="flex items-center gap-1.5">
+          <MaterialIcon name={typeIcon[lead.type]} className="shrink-0 text-[13px] text-slate-400" />
+          <p className="truncate font-sans text-sm font-semibold text-navy-950">{lead.name}</p>
+          {lead.language === "French" && (
+            <span className="shrink-0 rounded border border-slate-200 px-1 py-px text-[9px] font-bold uppercase tracking-wide text-slate-500">
+              FR
+            </span>
+          )}
+        </div>
+        {lead.company && <p className="truncate text-xs text-slate-400">{lead.company}</p>}
+      </div>
+    </div>
+  );
+}
+
+function ActivityCell({ lead }: { lead: Lead }) {
+  const stale = staleReason(lead);
+  return stale ? (
+    <span className="inline-flex items-center gap-1 whitespace-nowrap text-xs font-semibold text-amber-700">
+      <MaterialIcon name="warning" className="text-[13px]" />
+      {stale}
+    </span>
+  ) : (
+    <span className="whitespace-nowrap text-xs tabular-nums text-slate-500">{formatRelativeTime(lead.createdAt)}</span>
+  );
+}
+
+/** Mobile card row — unchanged from the verified mobile pass; the table below is desktop/tablet only. */
+function LeadCard({ lead }: { lead: Lead }) {
+  const meta = severityMeta[leadStatusToSeverity[lead.status]];
+  const stale = staleReason(lead);
+
+  return (
+    <Link
+      href={`/admin/leads/${lead.id}`}
+      className={`flex items-center gap-3 border-b border-l-[3px] border-slate-100 px-4 py-3.5 transition-colors last:border-b-0 hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-teal-500 ${meta.stripe}`}
+    >
+      <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-xs font-bold ${avatarTint(lead.name)}`}>
+        {initialsOf(lead.name)}
+      </span>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-1.5">
+          <MaterialIcon name={typeIcon[lead.type]} className="shrink-0 text-[14px] text-slate-400" />
+          <p className="truncate font-sans text-sm font-semibold text-navy-950">
+            {lead.name}
+            {lead.company && <span className="font-normal text-slate-500"> · {lead.company}</span>}
+          </p>
+          {lead.language === "French" && (
+            <span className="shrink-0 rounded border border-slate-200 px-1 py-px text-[9.5px] font-bold uppercase tracking-wide text-slate-500">
+              FR
+            </span>
+          )}
+        </div>
+        <div className="mt-1 flex flex-wrap items-center gap-2">
+          <span className={`shrink-0 truncate rounded-full border px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide ${meta.badge}`}>
+            {meta.label}
+          </span>
+          <p className="truncate text-xs text-slate-500">{getLeadServiceLabel(lead.service)}</p>
+        </div>
+        <p className="mt-1">
+          {stale ? (
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700">
+              <MaterialIcon name="warning" className="text-[13px]" />
+              {stale}
+            </span>
+          ) : (
+            <span className="text-xs tabular-nums text-slate-500">{formatRelativeTime(lead.createdAt)}</span>
+          )}
+        </p>
+      </div>
+      <MaterialIcon name="chevron_right" className="shrink-0 text-[18px] text-slate-300" />
+    </Link>
+  );
+}
+
+export default function LeadsPage() {
+  const leads = useLeads();
+  const { claimLead, deleteLead } = useLeadActions();
+  const currentUser = useCurrentUser();
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [quickViewLeadId, setQuickViewLeadId] = useState<string | null>(null);
+  const [editingLead, setEditingLead] = useState<Lead | null>(null);
+  const [deletingLead, setDeletingLead] = useState<Lead | null>(null);
+  const [statusFilter, setStatusFilter] = useState<LeadStatus | "all">("all");
+  const [departmentFilter, setDepartmentFilter] = useState<Department | "unassigned" | "all">("all");
+  const [showClosed, setShowClosed] = useState(false);
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const searchId = useId();
+
+  const needsTriageCount = leads.filter((lead) => lead.status === "needs-triage").length;
+  const closedCount = leads.filter((lead) => CLOSED_STATUSES.includes(lead.status)).length;
+  const staleCount = leads.filter((lead) => isLeadStale(lead) && !CLOSED_STATUSES.includes(lead.status)).length;
+
+  const statusCounts = statusFilters
+    .filter((f) => f.value !== "all")
+    .map((f) => ({ ...f, count: leads.filter((lead) => lead.status === f.value).length }))
+    .filter((f) => f.count > 0);
+
+  const filtered = leads
+    .filter((lead) => (showClosed ? true : !CLOSED_STATUSES.includes(lead.status)) || statusFilter !== "all")
+    .filter((lead) => statusFilter === "all" || lead.status === statusFilter)
+    .filter((lead) => {
+      if (departmentFilter === "all") return true;
+      if (departmentFilter === "unassigned") return lead.department === undefined;
+      return lead.department === departmentFilter;
+    })
+    .filter((lead) => {
+      if (!query.trim()) return true;
+      const haystack = `${lead.name} ${lead.email} ${lead.phone} ${lead.company ?? ""} ${getLeadServiceLabel(lead.service)} ${lead.message}`.toLowerCase();
+      return haystack.includes(query.trim().toLowerCase());
+    })
+    .sort((a, b) => {
+      const rankDiff = URGENCY_RANK[leadStatusToSeverity[a.status]] - URGENCY_RANK[leadStatusToSeverity[b.status]];
+      if (rankDiff !== 0) return rankDiff;
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const safePage = Math.min(page, pageCount);
+  const pageStart = (safePage - 1) * PAGE_SIZE;
+  const paged = filtered.slice(pageStart, pageStart + PAGE_SIZE);
+
+  function resetPage() {
+    setPage(1);
+  }
+
+  return (
+    <>
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h1 className="font-sans text-xl font-bold text-navy-950">Leads & Inquiries</h1>
+          <p className="mt-1 text-sm text-slate-500">
+            {leads.length} total
+            {needsTriageCount > 0 && (
+              <>
+                {" "}
+                · <span className="font-semibold text-violet-700">{needsTriageCount} need triage</span>
+              </>
+            )}
+            {staleCount > 0 && (
+              <>
+                {" "}
+                · <span className="font-semibold text-amber-700">{staleCount} stale</span>
+              </>
+            )}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setDialogOpen(true)}
+          className="flex items-center justify-center gap-2 rounded-lg bg-navy-950 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-navy-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
+        >
+          <MaterialIcon name="add" className="text-[18px]" />
+          Log a New Lead
+        </button>
+      </div>
+
+      {/* Status breakdown — the pipeline's shape at a glance, without opening the filter dropdown */}
+      <div className="mb-4 flex flex-wrap gap-1.5">
+        {statusCounts.map((s) => (
+          <button
+            key={s.value}
+            type="button"
+            onClick={() => {
+              setStatusFilter(s.value === statusFilter ? "all" : (s.value as LeadStatus));
+              resetPage();
+            }}
+            className={`rounded-full border px-2.5 py-1 text-xs font-semibold transition-colors ${
+              statusFilter === s.value
+                ? "border-navy-950 bg-navy-950 text-white"
+                : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
+            }`}
+          >
+            {s.label} <span className="tabular-nums opacity-70">{s.count}</span>
+          </button>
+        ))}
+      </div>
+
+      <section className="rounded-xl border border-slate-200 bg-white shadow-[0_1px_2px_rgba(7,14,27,0.04),0_10px_24px_-16px_rgba(7,14,27,0.14)]">
+        <div className="flex flex-col gap-3 border-b border-slate-100 px-4 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:px-5">
+          <select
+            value={statusFilter}
+            onChange={(e) => {
+              setStatusFilter(e.target.value as LeadStatus | "all");
+              resetPage();
+            }}
+            className="rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-700 focus-visible:border-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500/40"
+          >
+            {statusFilters.map((f) => (
+              <option key={f.value} value={f.value}>
+                {f.label}
+              </option>
+            ))}
+          </select>
+          <select
+            value={departmentFilter}
+            onChange={(e) => {
+              setDepartmentFilter(e.target.value as Department | "unassigned" | "all");
+              resetPage();
+            }}
+            className="rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-700 focus-visible:border-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500/40"
+          >
+            {departmentFilters.map((f) => (
+              <option key={f.value} value={f.value}>
+                {f.label}
+              </option>
+            ))}
+          </select>
+          <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
+            <input
+              type="checkbox"
+              checked={showClosed}
+              onChange={(e) => {
+                setShowClosed(e.target.checked);
+                resetPage();
+              }}
+              className="h-3.5 w-3.5 rounded border-slate-300 text-teal-600 focus:ring-teal-500/40"
+            />
+            Show closed ({closedCount})
+          </label>
+          <label htmlFor={searchId} className="relative sm:ml-auto sm:w-56">
+            <span className="sr-only">Search leads</span>
+            <MaterialIcon name="search" className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[16px] text-slate-400" />
+            <input
+              id={searchId}
+              type="text"
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                resetPage();
+              }}
+              placeholder="Search…"
+              autoComplete="off"
+              className="w-full rounded-md border border-slate-200 py-1.5 pl-8 pr-3 text-sm text-slate-700 placeholder:text-slate-400 focus-visible:border-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500/40"
+            />
+          </label>
+        </div>
+
+        {filtered.length === 0 ? (
+          <div className="px-5 py-10 text-center text-sm text-slate-500">
+            {leads.length === 0
+              ? "No leads yet — logged leads and real submissions will show up here."
+              : `Nothing matches ${query ? `"${query}"` : "this filter"}.`}
+          </div>
+        ) : (
+          <>
+            {/* Desktop / tablet: a real table — dense, sortable-ready, scannable. Tables collapse badly on phones, so this is sm:+ only. */}
+            <table className="hidden w-full sm:table">
+              <thead>
+                <tr className="border-b border-slate-100 text-left text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  <th scope="col" className="px-4 py-2.5 sm:px-5">
+                    Lead
+                  </th>
+                  <th scope="col" className="px-3 py-2.5">
+                    Status
+                  </th>
+                  <th scope="col" className="px-3 py-2.5">
+                    Service
+                  </th>
+                  <th scope="col" className="px-3 py-2.5">
+                    Assigned
+                  </th>
+                  <th scope="col" className="px-3 py-2.5 text-right">
+                    Activity
+                  </th>
+                  <th scope="col" className="w-12 px-3 py-2.5">
+                    <span className="sr-only">Actions</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {paged.map((lead) => {
+                  const meta = severityMeta[leadStatusToSeverity[lead.status]];
+                  const assignedUser = MOCK_ADMIN_USERS.find((user) => user.id === lead.assignedToId);
+                  return (
+                    <tr
+                      key={lead.id}
+                      onClick={() => setQuickViewLeadId(lead.id)}
+                      className={`cursor-pointer border-b border-l-[3px] border-slate-100 transition-colors last:border-b-0 hover:bg-slate-50 ${meta.stripe}`}
+                    >
+                      <td className="px-4 py-3 sm:px-5">
+                        <LeadIdentity lead={lead} />
+                      </td>
+                      <td className="px-3 py-3">
+                        <span className={`inline-block whitespace-nowrap rounded-full border px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide ${meta.badge}`}>
+                          {meta.label}
+                        </span>
+                      </td>
+                      <td className="px-3 py-3 text-xs text-slate-500">{getLeadServiceLabel(lead.service)}</td>
+                      <td className="px-3 py-3">
+                        {assignedUser ? (
+                          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-700">
+                            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy-950 text-[9px] font-bold text-white">
+                              {assignedUser.avatarInitials}
+                            </span>
+                            {assignedUser.name}
+                          </span>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              claimLead(lead.id, currentUser.id);
+                              toast.success("Lead claimed", { description: `You're now the owner of ${lead.name}'s inquiry.` });
+                            }}
+                            className="inline-flex items-center gap-1 rounded-md border border-teal-200 bg-teal-50 px-2 py-1 text-xs font-semibold text-teal-700 transition-colors hover:border-teal-300 hover:bg-teal-100"
+                          >
+                            <MaterialIcon name="how_to_reg" className="text-[13px]" />
+                            Claim
+                          </button>
+                        )}
+                      </td>
+                      <td className="px-3 py-3 text-right">
+                        <ActivityCell lead={lead} />
+                      </td>
+                      <td className="px-3 py-3">
+                        <LeadRowActions
+                          onView={() => setQuickViewLeadId(lead.id)}
+                          onEdit={() => setEditingLead(lead)}
+                          onDelete={() => setDeletingLead(lead)}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+
+            {/* Mobile: the verified card list */}
+            <div className="sm:hidden">
+              {paged.map((lead) => (
+                <LeadCard key={lead.id} lead={lead} />
+              ))}
+            </div>
+
+            <div className="flex items-center justify-between border-t border-slate-100 px-4 py-3 sm:px-5">
+              <p className="text-xs text-slate-500">
+                Showing{" "}
+                <span className="font-semibold text-slate-700">
+                  {pageStart + 1}–{Math.min(pageStart + PAGE_SIZE, filtered.length)}
+                </span>{" "}
+                of <span className="font-semibold text-slate-700">{filtered.length}</span>
+              </p>
+              {pageCount > 1 && (
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    disabled={safePage === 1}
+                    aria-label="Previous page"
+                    className="flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    <MaterialIcon name="chevron_left" className="text-[18px]" />
+                  </button>
+                  <span className="px-2 text-xs font-semibold tabular-nums text-slate-600">
+                    {safePage} / {pageCount}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+                    disabled={safePage === pageCount}
+                    aria-label="Next page"
+                    className="flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    <MaterialIcon name="chevron_right" className="text-[18px]" />
+                  </button>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+      </section>
+
+      <LeadFormDialog open={dialogOpen} onClose={() => setDialogOpen(false)} mode="create" />
+      {editingLead && <LeadFormDialog open={Boolean(editingLead)} onClose={() => setEditingLead(null)} mode="edit" lead={editingLead} />}
+      <LeadQuickViewModal leadId={quickViewLeadId} onClose={() => setQuickViewLeadId(null)} />
+      <ConfirmDialog
+        open={Boolean(deletingLead)}
+        title="Delete this lead?"
+        description={deletingLead ? `${deletingLead.name}'s record will be permanently removed. This can't be undone.` : ""}
+        confirmLabel="Delete Lead"
+        onCancel={() => setDeletingLead(null)}
+        onConfirm={() => {
+          if (deletingLead) {
+            deleteLead(deletingLead.id);
+            toast.success("Lead deleted");
+          }
+          setDeletingLead(null);
+        }}
+      />
+    </>
+  );
+}

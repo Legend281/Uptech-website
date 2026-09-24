@@ -68,14 +68,12 @@ export default function PrivacyPolicyPage() {
               <section>
                 <h2 className="text-lg font-bold text-navy-950 mb-3">How Your Information Reaches Us</h2>
                 <p>
-                  Most forms on this site — including the Book a Consultation form and Careers
-                  applications — do not submit your information directly to our servers. Instead,
-                  they prepare a pre-filled WhatsApp message or email addressed to Uptech
-                  Consulting, which <strong>you send yourself</strong> from your own device using
-                  your own WhatsApp or email application. Nothing is stored on our systems through
-                  this website until that message reaches us through the channel you choose to send
-                  it on.{" "}
-                  <PendingBadge>PENDING: confirm this description stays accurate if a direct server-side submission is added later</PendingBadge>
+                  The Book a Consultation form submits your information directly and securely to
+                  our systems, so a specialist can respond. Careers applications currently work
+                  differently: they prepare a pre-filled email addressed to Uptech Consulting,
+                  which <strong>you send yourself</strong> from your own device — nothing is stored
+                  on our systems through that form until you send it.{" "}
+                  <PendingBadge>PENDING: confirm this description stays accurate once Careers applications also submit directly</PendingBadge>
                 </p>
               </section>
 

@@ -1,7 +1,10 @@
+"use client";
+
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { RegisterList } from "@/components/admin/RegisterList";
 import { ActivityLog } from "@/components/admin/ActivityLog";
-import { mockServicePages, mockLeads, mockActivity } from "@/lib/admin/mockData";
+import { useLeads } from "@/components/admin/providers/LeadsProvider";
+import { mockServicePages, mockActivity } from "@/lib/admin/mockData";
 import { getReviewStatus } from "@/lib/admin/staleness";
 import { buildRegister, countCreatedWithinDays, countByStatusWithinDays } from "@/lib/admin/register";
 
@@ -22,23 +25,28 @@ function StatCard({
   sublabel?: string;
 }) {
   return (
-    <div className={`rounded-xl border border-slate-200 bg-white p-4 ${CARD_ELEVATION}`}>
-      <div className="flex items-center gap-2.5">
-        <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${tint}`}>
-          <MaterialIcon name={icon} className="text-[17px]" />
+    <div className={`rounded-xl border border-slate-200 bg-white p-3 sm:p-4 ${CARD_ELEVATION}`}>
+      <div className="flex items-center gap-2">
+        <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg sm:h-8 sm:w-8 ${tint}`}>
+          <MaterialIcon name={icon} className="text-[15px] sm:text-[17px]" />
         </span>
-        <span className="text-xs font-bold uppercase tracking-wide text-slate-600">{label}</span>
+        <span className="truncate text-[10.5px] font-bold uppercase leading-tight tracking-wide text-slate-600 sm:text-xs">
+          {label}
+        </span>
       </div>
-      <p className="mt-3 font-sans text-[28px] font-extrabold leading-none tabular-nums text-navy-950">{value}</p>
-      <p className="mt-1.5 text-xs font-medium text-slate-500">{sublabel ?? " "}</p>
+      <p className="mt-2.5 font-sans text-2xl font-extrabold leading-none tabular-nums text-navy-950 sm:mt-3 sm:text-[28px]">
+        {value}
+      </p>
+      <p className="mt-1.5 truncate text-[11px] font-medium text-slate-500 sm:text-xs">{sublabel ?? " "}</p>
     </div>
   );
 }
 
 export default function AdminDashboardPage() {
-  const totalLeads = mockLeads.length;
-  const newLeadsThisWeek = countCreatedWithinDays(mockLeads, 7);
-  const bookedOrWonThisMonth = countByStatusWithinDays(mockLeads, ["consultation-booked", "won"], 30);
+  const leads = useLeads();
+  const totalLeads = leads.length;
+  const newLeadsThisWeek = countCreatedWithinDays(leads, 7);
+  const bookedOrWonThisMonth = countByStatusWithinDays(leads, ["consultation-booked", "won"], 30);
   const overdueCount = mockServicePages.filter((page) => getReviewStatus(page) === "overdue").length;
   const dueSoonCount = mockServicePages.filter((page) => getReviewStatus(page) === "due-soon").length;
   const needsReviewCount = overdueCount + dueSoonCount;
@@ -52,11 +60,11 @@ export default function AdminDashboardPage() {
           .filter(Boolean)
           .join(", ");
 
-  const rows = buildRegister(mockLeads, mockServicePages);
+  const rows = buildRegister(leads, mockServicePages);
 
   return (
     <>
-      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard icon="inbox" tint="bg-blue-accent/10 text-blue-accent" value={totalLeads} label="Leads" sublabel="Across both departments" />
         <StatCard
           icon="bolt"

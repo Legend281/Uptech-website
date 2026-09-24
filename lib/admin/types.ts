@@ -17,6 +17,14 @@ export type AdminUser = {
   avatarInitials: string;
   /** Buea, Cameroon or Stafford, TX — the company's two real offices (CLAUDE.md Section 1). */
   location: string;
+  /**
+   * Per Admin_Dashboard_Requirements.md Section 3.11's language-aware
+   * assignment requirement: a distinct field from the public-facing Team
+   * Members content (CLAUDE.md Section 3.5) — this is internal staff
+   * account data, used only to flag (not block) a language mismatch when
+   * a French-preferring lead is claimed by someone who doesn't list French.
+   */
+  languages: ("English" | "French")[];
 };
 
 /** Mirrors the three page templates in CLAUDE.md Section 4. */
@@ -48,28 +56,71 @@ export type ActivityEntry = {
 };
 
 /*
- * A lead is created FROM a contact-form submission, so its `service` field
- * must match what that form actually produces — lib/serviceOptions.ts's
- * exported values — not components/Header.tsx's ServiceKey union, which
- * uses different values (e.g. "tax-compliance" there vs. the form's actual
- * "tax-compliance-businesses") and has no "other" option.
- *
- * This is dashboard-preview data only (a unified register, quick counts) —
- * the full Leads module (filtering, status changes, a detail page) is a
- * separate, later build.
+ * A lead is created FROM a contact-form submission (once Phase B wires that
+ * form to a real backend — see Admin_Dashboard_Requirements.md Section
+ * 3.11) or logged by hand by staff (Phase A, the only real intake path
+ * today, since the public form is currently `mailto:`-only). Its `service`
+ * field must match what that form actually produces —
+ * lib/serviceOptions.ts's exported values — not components/Header.tsx's
+ * ServiceKey union, which uses different values (e.g. "tax-compliance"
+ * there vs. the form's actual "tax-compliance-businesses") and has no
+ * "other" option.
  */
-export type LeadStatus = "new" | "contacted" | "qualified" | "consultation-booked" | "won" | "lost";
-export type LeadSource = "contact-form" | "referral" | "whatsapp" | "website";
+export type LeadStatus =
+  | "needs-triage"
+  | "new"
+  | "contacted"
+  | "qualified"
+  | "consultation-booked"
+  | "won"
+  | "lost";
+
+/** "manual-*" values cover Phase A's hand-logged intake; the rest are real form/channel origins for Phase B. */
+export type LeadSource = "contact-form" | "referral" | "whatsapp" | "website" | "manual-phone" | "manual-email" | "manual-other";
+
+/** Distinguishes the two audiences this dashboard's two departments actually serve, plus the genuinely-unsure case. */
+export type LeadType = "job-seeker" | "business" | "general";
+
 export type LeadServiceValue = (typeof serviceOptions)[number]["value"];
 
 export type Lead = {
   id: string;
   name: string;
+  email: string;
+  phone: string;
   company?: string;
   service: LeadServiceValue;
-  department: Department;
+  type: LeadType;
+  /**
+   * Undefined means genuinely ambiguous — a "General inquiry" or "Something
+   * else" selection with no department to safely guess. Per
+   * Admin_Dashboard_Requirements.md Section 3.11, this must NOT be silently
+   * defaulted; an undefined department always pairs with status
+   * "needs-triage" so it surfaces instead of quietly sitting in one queue.
+   */
+  department?: Department;
   status: LeadStatus;
   source: LeadSource;
+  /** The visitor's (or, for a manually-logged lead, the caller's) stated preference — must reach staff, not be dropped. */
+  language: "English" | "French";
+  message: string;
   createdAt: string;
   assignedToId?: string;
+  /**
+   * When the Privacy Policy consent checkbox was ticked — proof of consent
+   * at submission. Only real form submissions (Phase B) have this; a
+   * manually-logged lead (Phase A) never had a checkbox to tick, so it's
+   * left undefined rather than faked.
+   */
+  consentAt?: string;
+  /**
+   * The two-clock staleness model: response-lag (creation → first contact,
+   * measured against the confirmed 1-business-day commitment) and
+   * stage-aging (time sitting in the current status with no movement) are
+   * independent problems, not one. firstContactedAt is set once, the first
+   * time status leaves "needs-triage"/"new"; statusChangedAt updates on
+   * every status transition. Matches supabase/001_leads_table.sql exactly.
+   */
+  firstContactedAt?: string;
+  statusChangedAt: string;
 };

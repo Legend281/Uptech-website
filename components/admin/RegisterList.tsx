@@ -5,6 +5,7 @@ import Link from "next/link";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
 import { severityMeta, type RegisterRow } from "@/lib/admin/register";
+import { initialsOf, avatarTint } from "@/lib/admin/avatar";
 
 type Filter = "all" | "lead" | "compliance";
 
@@ -15,26 +16,6 @@ const filters: { value: Filter; label: string }[] = [
   { value: "lead", label: "Leads" },
   { value: "compliance", label: "Compliance" },
 ];
-
-/** Visual variety across rows, independent of status — same idea as a person's avatar color, not a semantic signal. */
-const AVATAR_TINTS = [
-  "bg-blue-accent/10 text-blue-accent",
-  "bg-emerald-50 text-emerald-700",
-  "bg-purple-50 text-purple-700",
-  "bg-amber-50 text-amber-700",
-  "bg-teal-50 text-teal-700",
-  "bg-rose-50 text-rose-700",
-];
-
-function initialsOf(name: string): string {
-  const parts = name.trim().split(/\s+/);
-  return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase();
-}
-
-function avatarTint(seed: string): string {
-  const code = seed.charCodeAt(0) + (seed.charCodeAt(1) ?? 0);
-  return AVATAR_TINTS[code % AVATAR_TINTS.length];
-}
 
 function Row({ row }: { row: RegisterRow }) {
   const meta = severityMeta[row.severity];
@@ -67,8 +48,9 @@ function Row({ row }: { row: RegisterRow }) {
           </span>
           {row.detail && <p className="truncate text-xs text-slate-500">{row.detail}</p>}
         </div>
+        <p className="mt-1 text-xs tabular-nums text-slate-500 sm:hidden">{formatRelativeTime(row.timeLabel)}</p>
       </div>
-      <span className="shrink-0 whitespace-nowrap text-xs tabular-nums text-slate-500">
+      <span className="hidden shrink-0 whitespace-nowrap text-xs tabular-nums text-slate-500 sm:inline">
         {formatRelativeTime(row.timeLabel)}
       </span>
       {row.href && <MaterialIcon name="chevron_right" className="shrink-0 text-[18px] text-slate-300" />}

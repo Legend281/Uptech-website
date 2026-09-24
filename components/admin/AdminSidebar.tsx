@@ -4,8 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
-import { mockLeads } from "@/lib/admin/mockData";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
+import { useLeads } from "@/components/admin/providers/LeadsProvider";
 
 type NavItem = {
   label: string;
@@ -14,28 +14,30 @@ type NavItem = {
   /** Not built yet this pass — renders as a muted, non-interactive row with a "Soon" tag instead of a dead link. */
   soon?: boolean;
   adminOnly?: boolean;
-  /** Only shown where real mock data backs it (Leads) — no invented count for modules with no data yet. */
+  /** Only shown where real data backs it (Leads) — no invented count for modules with no data yet. */
   badge?: number;
 };
 
 type NavGroup = { label: string; items: NavItem[] };
 
-const navGroups: NavGroup[] = [
-  { label: "Overview", items: [{ label: "Dashboard", icon: "dashboard", href: "/admin" }] },
-  { label: "Pipeline", items: [{ label: "Leads", icon: "inbox", soon: true, badge: mockLeads.length }] },
-  { label: "Careers", items: [{ label: "Job Postings", icon: "work", soon: true }] },
-  {
-    label: "Site Content",
-    items: [
-      { label: "Service Pages", icon: "description", soon: true },
-      { label: "Case Studies", icon: "auto_stories", soon: true },
-      { label: "Testimonials", icon: "format_quote", soon: true },
-      { label: "Team Members", icon: "groups", soon: true },
-      { label: "FAQ Items", icon: "quiz", soon: true },
-    ],
-  },
-  { label: "System", items: [{ label: "Settings", icon: "settings", soon: true, adminOnly: true }] },
-];
+function getNavGroups(leadsCount: number): NavGroup[] {
+  return [
+    { label: "Overview", items: [{ label: "Dashboard", icon: "dashboard", href: "/admin" }] },
+    { label: "Pipeline", items: [{ label: "Leads", icon: "inbox", href: "/admin/leads", badge: leadsCount }] },
+    { label: "Careers", items: [{ label: "Job Postings", icon: "work", soon: true }] },
+    {
+      label: "Site Content",
+      items: [
+        { label: "Service Pages", icon: "description", soon: true },
+        { label: "Case Studies", icon: "auto_stories", soon: true },
+        { label: "Testimonials", icon: "format_quote", soon: true },
+        { label: "Team Members", icon: "groups", soon: true },
+        { label: "FAQ Items", icon: "quiz", soon: true },
+      ],
+    },
+    { label: "System", items: [{ label: "Settings", icon: "settings", soon: true, adminOnly: true }] },
+  ];
+}
 
 function NavRow({ item, active }: { item: NavItem; active: boolean }) {
   const rowClasses =
@@ -70,7 +72,16 @@ function NavRow({ item, active }: { item: NavItem; active: boolean }) {
       >
         <MaterialIcon name={item.icon} className="text-[18px]" />
       </span>
-      <span>{item.label}</span>
+      <span className="flex-1">{item.label}</span>
+      {item.badge !== undefined && (
+        <span
+          className={`rounded px-1.5 py-0.5 text-[11px] font-bold tabular-nums ${
+            active ? "text-teal-200" : "text-slate-400"
+          }`}
+        >
+          {item.badge}
+        </span>
+      )}
     </Link>
   );
 }
@@ -78,6 +89,8 @@ function NavRow({ item, active }: { item: NavItem; active: boolean }) {
 export function AdminSidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const pathname = usePathname();
   const currentUser = useCurrentUser();
+  const leads = useLeads();
+  const navGroups = getNavGroups(leads.length);
 
   const content = (
     <div className="flex h-full flex-col bg-navy-950">

@@ -35,6 +35,8 @@ export function ContactForm() {
   const [language, setLanguage] = useState<"English" | "French">("English");
   const [message, setMessage] = useState("");
   const [consent, setConsent] = useState(false);
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const canSend = name.trim() !== "" && email.trim() !== "" && message.trim() !== "" && consent;
 
@@ -61,15 +63,52 @@ export function ContactForm() {
     `Consultation request — ${serviceLabel}`
   )}&body=${encodeURIComponent(summary)}`;
 
-  const linkClasses = (enabled: boolean) =>
+  const buttonClasses = (enabled: boolean) =>
     `inline-flex w-full items-center justify-center gap-2.5 rounded-lg px-6 py-3.5 text-sm font-semibold transition-all ${
       enabled
         ? "gradient-teal-blue text-white shadow-lg shadow-teal-950/40 hover:brightness-105 active:scale-[0.98]"
-        : "bg-slate-100 text-slate-400 cursor-not-allowed pointer-events-none"
+        : "bg-slate-100 text-slate-400 cursor-not-allowed"
     }`;
 
+  async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    if (!canSend || status === "submitting") return;
+    setStatus("submitting");
+    setErrorMessage(null);
+    try {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, phone, company, service, language, message, consent }),
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(typeof data.error === "string" ? data.error : "Something went wrong. Please try again.");
+      }
+      setStatus("success");
+    } catch (error) {
+      setStatus("error");
+      setErrorMessage(error instanceof Error ? error.message : "Something went wrong. Please try again.");
+    }
+  }
+
+  if (status === "success") {
+    return (
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 sm:p-8 text-center">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-teal-50 text-teal-600">
+          <MaterialIcon name="check_circle" className="text-[28px]" />
+        </div>
+        <h3 className="mt-4 text-lg font-bold text-navy-950">Message sent</h3>
+        <p className="mt-2 text-sm text-slate-500 leading-relaxed">
+          Thanks, {name.split(" ")[0]} — we&apos;ve received your message and will respond within 1 business day,
+          usually sooner.
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 sm:p-8">
+    <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 sm:p-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <label className="flex flex-col gap-1.5">
           <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
@@ -198,26 +237,34 @@ export function ContactForm() {
           <a href="/privacy-policy" className="text-blue-accent underline hover:text-blue-700">
             Privacy Policy
           </a>
-          . My details are used only to respond to this inquiry — nothing is stored until I send
-          this message myself via email below.
+          . My details are securely stored so a specialist can respond to this inquiry.
         </span>
       </label>
 
+      {status === "error" && (
+        <div className="mt-5 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+          <p>{errorMessage ?? "Something went wrong. Please try again."}</p>
+          <p className="mt-1.5">
+            Or{" "}
+            <a href={canSend ? mailtoHref : undefined} className="font-semibold underline hover:text-rose-800">
+              email us directly
+            </a>{" "}
+            instead.
+          </p>
+        </div>
+      )}
+
       <div className="mt-6">
-        <a
-          href={canSend ? mailtoHref : undefined}
-          aria-disabled={!canSend}
-          className={linkClasses(canSend)}
-        >
-          <MaterialIcon name="mail" className="text-[18px]" />
-          <span>Continue via Email</span>
-        </a>
+        <button type="submit" disabled={!canSend || status === "submitting"} className={buttonClasses(canSend && status !== "submitting")}>
+          <MaterialIcon name={status === "submitting" ? "hourglass_top" : "send"} className="text-[18px]" />
+          <span>{status === "submitting" ? "Sending…" : "Send Message"}</span>
+        </button>
       </div>
       <p className="text-xs text-slate-400 mt-3">
         {canSend
-          ? "This opens your email app with your details already filled in — just hit send."
+          ? "We'll respond within 1 business day, usually sooner."
           : "Fill in the required fields and agree to the Privacy Policy to continue."}
       </p>
-    </div>
+    </form>
   );
 }

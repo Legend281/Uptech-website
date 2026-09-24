@@ -56,7 +56,7 @@ const nextSteps = [
   {
     number: "01",
     title: "Send your request",
-    description: "Fill in the form and continue the conversation by email.",
+    description: "Fill in the form and send it — no separate email app needed.",
   },
   {
     number: "02",
@@ -81,7 +81,7 @@ const sidebarNotes = [
   {
     icon: "lock",
     title: "Confidential by design",
-    description: "Nothing is submitted to a server. This just prepares an email for you to send yourself.",
+    description: "Your message is sent securely and used only to respond to your inquiry — never shared or sold.",
   },
   {
     icon: "help",
@@ -97,10 +97,9 @@ const faqItems = [
       "Reaching out and having an initial conversation about your needs is free. If your request requires paid work, your specialist will always confirm scope and cost with you before anything is billed.",
   },
   {
-    // Reasonable estimate consistent with the site's existing "no ticket
-    // queue, real person" positioning — not a figure Uptech Consulting has
-    // separately confirmed. Flag for a real commitment once the team has
-    // one.
+    // Confirmed and finalized by management — this is a locked commitment,
+    // not an estimate. The admin dashboard's lead-staleness threshold
+    // (lib/admin/register.ts) is built directly against this figure.
     question: "How soon will I hear back?",
     answer:
       "Within 1 business day, usually sooner — there's no ticket queue on our end, so your message goes straight to the right specialist.",
@@ -113,7 +112,7 @@ const faqItems = [
   {
     question: "Is my information kept confidential?",
     answer:
-      "Yes. This form does not submit your details to any server — it prepares an email for you to send yourself, so only Uptech Consulting receives it, exactly as you'd expect from emailing us directly.",
+      "Yes. Your message is sent securely and used only to respond to your inquiry, consistent with our Privacy Policy — it's never shared or sold to third parties.",
   },
   {
     question: "I'm looking for a job, not a business consultation — is this the right page?",

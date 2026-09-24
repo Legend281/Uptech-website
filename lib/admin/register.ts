@@ -1,6 +1,7 @@
 import { serviceOptions } from "@/lib/serviceOptions";
 import type { Lead, LeadStatus, LeadServiceValue, ServicePageMeta } from "./types";
 import { getReviewStatus, daysSinceReview, type ReviewStatus } from "./staleness";
+import { isLeadStale } from "./leadStaleness";
 
 const DAY_MS = 86_400_000;
 
@@ -150,7 +151,26 @@ export type RegisterRow = {
   timestamp: string;
   timeLabel: string;
   href?: string;
+  /** Only ever true for an open (non-won/lost) lead — see isLeadStale's two-clock model. Drives both sort order here and the stale badge/nudge in RegisterList. */
+  isStale?: boolean;
 };
+
+/**
+ * The dashboard register's own ranking, separate from URGENCY_RANK (which
+ * LeadsPage's table still uses unchanged): folds a lead's staleness in as
+ * its own tier, ahead of a merely-fresh "new" lead, without touching the
+ * status badge it's shown with. needs-triage / overdue / due-soon keep the
+ * same reasoning as URGENCY_RANK — an unrouted lead or a legal-risk
+ * compliance page outranks everything else.
+ */
+function rowUrgencyTier(row: RegisterRow): number {
+  if (row.severity === "needs-triage") return 0;
+  if (row.severity === "overdue") return 1;
+  if (row.severity === "due-soon") return 2;
+  if (row.kind === "lead" && row.isStale) return 3;
+  const tier: Partial<Record<Severity, number>> = { new: 4, contacted: 5, qualified: 6, booked: 7, won: 8, lost: 10 };
+  return tier[row.severity] ?? 9; // "on-track" (compliance) lands here
+}
 
 export function buildRegister(leads: Lead[], pages: ServicePageMeta[], now: Date = new Date()): RegisterRow[] {
   const leadRows: RegisterRow[] = leads.map((lead) => ({
@@ -162,6 +182,7 @@ export function buildRegister(leads: Lead[], pages: ServicePageMeta[], now: Date
     timestamp: lead.createdAt,
     timeLabel: lead.createdAt,
     href: `/admin/leads/${lead.id}`,
+    isStale: lead.status !== "won" && lead.status !== "lost" && isLeadStale(lead, now),
   }));
 
   const pageRows: RegisterRow[] = pages.map((page) => {
@@ -180,7 +201,7 @@ export function buildRegister(leads: Lead[], pages: ServicePageMeta[], now: Date
   });
 
   return [...pageRows, ...leadRows].sort((a, b) => {
-    const rankDiff = URGENCY_RANK[a.severity] - URGENCY_RANK[b.severity];
+    const rankDiff = rowUrgencyTier(a) - rowUrgencyTier(b);
     if (rankDiff !== 0) return rankDiff;
     return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
   });

@@ -106,28 +106,32 @@ export function RegisterList({ rows }: { rows: RegisterRow[] }) {
       className="scroll-mt-20 rounded-xl border border-slate-200 bg-white shadow-[0_1px_2px_rgba(7,14,27,0.04),0_10px_24px_-16px_rgba(7,14,27,0.14)]"
     >
       <div className="flex flex-col gap-3 border-b border-slate-100 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
-        <div
-          className="flex items-center gap-0.5 rounded-lg border border-slate-200 bg-slate-100 p-0.5"
-          role="tablist"
-          aria-label="Filter register"
-        >
-          {filters.map((f) => (
-            <button
-              key={f.value}
-              type="button"
-              role="tab"
-              aria-selected={filter === f.value}
-              onClick={() => {
-                setFilter(f.value);
-                setPage(1);
-              }}
-              className={`rounded-md px-3 py-1.5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 ${
-                filter === f.value ? "bg-white text-navy-950 shadow-sm" : "text-slate-500 hover:text-slate-900"
-              }`}
-            >
-              {f.label} <span className="tabular-nums opacity-60">({counts[f.value]})</span>
-            </button>
-          ))}
+        <div>
+          <div
+            className="flex items-center gap-0.5 rounded-lg border border-slate-200 bg-slate-100 p-0.5"
+            role="tablist"
+            aria-label="Filter register"
+          >
+            {filters.map((f) => (
+              <button
+                key={f.value}
+                type="button"
+                role="tab"
+                aria-selected={filter === f.value}
+                onClick={() => {
+                  setFilter(f.value);
+                  setPage(1);
+                }}
+                className={`rounded-md px-3 py-1.5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 ${
+                  filter === f.value ? "bg-white text-navy-950 shadow-sm" : "text-slate-500 hover:text-slate-900"
+                }`}
+              >
+                {f.label} <span className="tabular-nums opacity-60">({counts[f.value]})</span>
+              </button>
+            ))}
+          </div>
+          {/* Not a raw creation-date feed — buildRegister already ranks every tab by urgency, so this stays true regardless of which one is active. */}
+          <p className="mt-1.5 pl-1 text-[11px] font-medium text-slate-400">Sorted by urgency</p>
         </div>
         <label htmlFor={searchId} className="relative sm:w-56">
           <span className="sr-only">Search the register</span>

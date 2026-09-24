@@ -31,15 +31,16 @@ type RowActions = {
   onSendReminder?: (row: RegisterRow) => void;
   onResolve?: (row: RegisterRow) => void;
   onEscalate?: (row: RegisterRow) => void;
+  /** A lead row opens the quick-view modal instead of navigating — same surface the Leads page's own table row opens. */
+  onOpenLead?: (leadId: string) => void;
 };
 
-function Row({ row, onSendReminder, onResolve, onEscalate }: { row: RegisterRow } & RowActions) {
+function Row({ row, onSendReminder, onResolve, onEscalate, onOpenLead }: { row: RegisterRow } & RowActions) {
   const router = useRouter();
   const meta = severityMeta[row.severity];
   // Only a stale lead someone actually owns has anyone to nudge — an unassigned lead needs claiming first, not a reminder.
   const canRemind = row.kind === "lead" && row.isStale && Boolean(row.assignedToId) && Boolean(onSendReminder);
   const canResolve = row.kind === "compliance" && row.severity === "overdue" && Boolean(onResolve);
-  const hasInlineAction = canRemind || canResolve;
   const assignee = row.assignedToId ? MOCK_ADMIN_USERS.find((user) => user.id === row.assignedToId) : undefined;
 
   const avatar =
@@ -148,8 +149,28 @@ function Row({ row, onSendReminder, onResolve, onEscalate }: { row: RegisterRow 
 
   const rowClasses = `flex items-center gap-3 border-b border-l-[3px] border-slate-100 px-4 py-3.5 last:border-b-0 sm:px-5 ${meta.stripe}`;
 
-  // A row with a nested real button can't also be a real <a> (invalid nested-interactive HTML) — it becomes a synthetic, keyboard-reachable click target instead. Every other row keeps a real Link, so ctrl/middle-click and "open in new tab" keep working there.
-  if (hasInlineAction && row.href) {
+  // A lead row opens a modal, not a URL — no anchor semantics (ctrl-click, "open in new tab") apply to that, so it's always a synthetic click target when this handler is wired in.
+  if (row.kind === "lead" && onOpenLead) {
+    return (
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => onOpenLead(row.id)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            onOpenLead(row.id);
+          }
+        }}
+        className={`${rowClasses} cursor-pointer transition-colors hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-teal-500`}
+      >
+        {inner}
+      </div>
+    );
+  }
+
+  // A row with a nested real button can't also be a real <a> (invalid nested-interactive HTML) — it becomes a synthetic, keyboard-reachable click target instead. Every other row keeps a real Link, so ctrl/middle-click and "open in new tab" keep working there. (canRemind only reaches here when onOpenLead isn't wired in — otherwise the branch above already handled this row.)
+  if ((canRemind || canResolve) && row.href) {
     const href = row.href;
     return (
       <div
@@ -185,6 +206,7 @@ export function RegisterList({
   onSendReminder,
   onResolve,
   onEscalate,
+  onOpenLead,
   severityFilter,
   onClearSeverityFilter,
 }: { rows: RegisterRow[]; severityFilter?: Severity | null; onClearSeverityFilter?: () => void } & RowActions) {
@@ -302,7 +324,7 @@ export function RegisterList({
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.18, ease: "easeOut" }}
                 >
-                  <Row row={row} onSendReminder={onSendReminder} onResolve={onResolve} onEscalate={onEscalate} />
+                  <Row row={row} onSendReminder={onSendReminder} onResolve={onResolve} onEscalate={onEscalate} onOpenLead={onOpenLead} />
                 </motion.div>
               ))}
             </AnimatePresence>

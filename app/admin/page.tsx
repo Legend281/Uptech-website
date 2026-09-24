@@ -8,6 +8,7 @@ import { RegisterList } from "@/components/admin/RegisterList";
 import { ActivityLog } from "@/components/admin/ActivityLog";
 import { CompletionModal } from "@/components/admin/CompletionModal";
 import { LeadFormDialog } from "@/components/admin/LeadFormDialog";
+import { LeadQuickViewModal } from "@/components/admin/LeadQuickViewModal";
 import { AnimatedNumber } from "@/components/admin/AnimatedNumber";
 import { Sparkline } from "@/components/admin/Sparkline";
 import { SegmentedBar, BarLegend, type BarSegment } from "@/components/admin/SegmentedBar";
@@ -158,6 +159,7 @@ export default function AdminDashboardPage() {
   const [scope, setScope] = useState<Scope>("mine");
   const [createLeadOpen, setCreateLeadOpen] = useState(false);
   const [severityFilter, setSeverityFilter] = useState<Severity | null>(null);
+  const [quickViewLeadId, setQuickViewLeadId] = useState<string | null>(null);
 
   const scopedLeads = scopeLeads(leads, scope, currentUser.department);
   const scopedPages = scopePages(servicePages, scope, currentUser.department);
@@ -381,6 +383,7 @@ export default function AdminDashboardPage() {
             onEscalate={handleEscalate}
             severityFilter={severityFilter}
             onClearSeverityFilter={() => setSeverityFilter(null)}
+            onOpenLead={setQuickViewLeadId}
           />
         </div>
         <div>
@@ -389,6 +392,8 @@ export default function AdminDashboardPage() {
       </div>
 
       <LeadFormDialog open={createLeadOpen} onClose={() => setCreateLeadOpen(false)} mode="create" />
+
+      <LeadQuickViewModal leadId={quickViewLeadId} onClose={() => setQuickViewLeadId(null)} />
 
       <CompletionModal
         open={resolvingPage !== null}

@@ -21,6 +21,8 @@ const dotColor: Record<string, string> = {
   person_add: "bg-blue-accent",
   work_history: "bg-slate-300",
   help: "bg-slate-300",
+  notifications_active: "bg-amber-500",
+  priority_high: "bg-rose-500",
 };
 
 /**

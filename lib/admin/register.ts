@@ -153,6 +153,8 @@ export type RegisterRow = {
   href?: string;
   /** Only ever true for an open (non-won/lost) lead — see isLeadStale's two-clock model. Drives both sort order here and the stale badge/nudge in RegisterList. */
   isStale?: boolean;
+  /** Who owns this item today, if anyone — the reminder action's target for a lead row. */
+  assignedToId?: string;
 };
 
 /**
@@ -183,6 +185,7 @@ export function buildRegister(leads: Lead[], pages: ServicePageMeta[], now: Date
     timeLabel: lead.createdAt,
     href: `/admin/leads/${lead.id}`,
     isStale: lead.status !== "won" && lead.status !== "lost" && isLeadStale(lead, now),
+    assignedToId: lead.assignedToId,
   }));
 
   const pageRows: RegisterRow[] = pages.map((page) => {

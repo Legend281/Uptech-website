@@ -2,6 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import { motion, type Variants } from "framer-motion";
+import { toast } from "sonner";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { RegisterList } from "@/components/admin/RegisterList";
 import { ActivityLog } from "@/components/admin/ActivityLog";
@@ -10,8 +11,10 @@ import { Sparkline } from "@/components/admin/Sparkline";
 import { SegmentedBar, BarLegend, type BarSegment } from "@/components/admin/SegmentedBar";
 import { useLeads } from "@/components/admin/providers/LeadsProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
-import { mockServicePages, mockActivity } from "@/lib/admin/mockData";
+import { useActivity, useLogActivity } from "@/components/admin/providers/ActivityProvider";
+import { mockServicePages, MOCK_ADMIN_USERS } from "@/lib/admin/mockData";
 import { getReviewStatus, type ReviewStatus } from "@/lib/admin/staleness";
+import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
 import {
   buildRegister,
   countCreatedWithinDays,
@@ -22,6 +25,7 @@ import {
   dailyStatusChangeCounts,
   severityMeta,
   leadStatusToSeverity,
+  type RegisterRow,
 } from "@/lib/admin/register";
 import { leadStatusChartColor, reviewStatusChartColor } from "@/lib/admin/chartColors";
 import { buildDashboardInsight } from "@/lib/admin/insight";
@@ -143,6 +147,8 @@ function StatCard({
 export default function AdminDashboardPage() {
   const leads = useLeads();
   const currentUser = useCurrentUser();
+  const activity = useActivity();
+  const logActivity = useLogActivity();
   const [scope, setScope] = useState<Scope>("mine");
 
   const scopedLeads = scopeLeads(leads, scope, currentUser.department);
@@ -169,6 +175,26 @@ export default function AdminDashboardPage() {
   const rows = buildRegister(scopedLeads, scopedPages);
   const staleCount = rows.filter((row) => row.kind === "lead" && row.isStale).length;
   const insight = buildDashboardInsight(scopedLeads, newLeadsThisWeek, newLeadsLastWeek, staleCount);
+
+  /*
+   * No real email/notification channel exists yet for this — no staff email
+   * field on AdminUser, no wired Resend call for internal use (only the
+   * public contact form uses Resend). What IS real: a persisted, shared
+   * Activity entry, which functions as the actual in-app paper trail the
+   * spec asked for, plus a toast for the person who clicked it.
+   */
+  function handleSendReminder(row: RegisterRow) {
+    const assignee = MOCK_ADMIN_USERS.find((user) => user.id === row.assignedToId);
+    const assigneeName = assignee?.name ?? "the assignee";
+    const lead = leads.find((candidate) => candidate.id === row.id);
+    const lastTouched = lead ? formatRelativeTime(lead.statusChangedAt) : "a while ago";
+    logActivity({
+      icon: "notifications_active",
+      description: `Reminder sent to ${assigneeName} re: ${row.title} — no activity in 5+ days (last touched ${lastTouched}).`,
+      relatedHref: row.href,
+    });
+    toast.success("Reminder sent", { description: `${assigneeName} has been notified about ${row.title}.` });
+  }
 
   const pipelineSegments: BarSegment[] = PIPELINE_STATUS_ORDER.map((status) => ({
     key: status,
@@ -291,10 +317,10 @@ export default function AdminDashboardPage() {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <RegisterList rows={rows} />
+          <RegisterList rows={rows} onSendReminder={handleSendReminder} />
         </div>
         <div>
-          <ActivityLog entries={mockActivity} />
+          <ActivityLog entries={activity} />
         </div>
       </div>
     </>

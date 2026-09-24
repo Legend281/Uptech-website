@@ -2,6 +2,7 @@
 
 import { useId, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
@@ -18,8 +19,11 @@ const filters: { value: Filter; label: string }[] = [
   { value: "compliance", label: "Compliance" },
 ];
 
-function Row({ row }: { row: RegisterRow }) {
+function Row({ row, onSendReminder }: { row: RegisterRow; onSendReminder?: (row: RegisterRow) => void }) {
+  const router = useRouter();
   const meta = severityMeta[row.severity];
+  // Only a stale lead someone actually owns has anyone to nudge — an unassigned lead needs claiming first, not a reminder.
+  const canRemind = row.kind === "lead" && row.isStale && Boolean(row.assignedToId) && Boolean(onSendReminder);
 
   const avatar =
     row.kind === "lead" ? (
@@ -41,12 +45,17 @@ function Row({ row }: { row: RegisterRow }) {
       {avatar}
       <div className="min-w-0 flex-1">
         <p className="truncate font-sans text-sm font-semibold text-navy-950">{row.title}</p>
-        <div className="mt-1 flex items-center gap-2">
+        <div className="mt-1 flex flex-wrap items-center gap-2">
           <span
             className={`shrink-0 truncate rounded-full border px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide ${meta.badge}`}
           >
             {meta.label}
           </span>
+          {row.isStale && (
+            <span className="shrink-0 truncate rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide text-amber-700">
+              Stale
+            </span>
+          )}
           {row.detail && <p className="truncate text-xs text-slate-500">{row.detail}</p>}
         </div>
         <p className="mt-1 text-xs tabular-nums text-slate-500 sm:hidden">{formatRelativeTime(row.timeLabel)}</p>
@@ -54,11 +63,43 @@ function Row({ row }: { row: RegisterRow }) {
       <span className="hidden shrink-0 whitespace-nowrap text-xs tabular-nums text-slate-500 sm:inline">
         {formatRelativeTime(row.timeLabel)}
       </span>
+      {canRemind && (
+        <button
+          type="button"
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            onSendReminder?.(row);
+          }}
+          className="flex shrink-0 items-center gap-1 rounded-md border border-amber-200 bg-amber-50 px-2 py-1 text-[11px] font-semibold text-amber-700 transition-colors hover:border-amber-300 hover:bg-amber-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-amber-500"
+        >
+          <MaterialIcon name="notifications_active" className="text-[13px]" />
+          <span className="hidden sm:inline">Remind</span>
+        </button>
+      )}
       {row.href && <MaterialIcon name="chevron_right" className="shrink-0 text-[18px] text-slate-300" />}
     </>
   );
 
   const rowClasses = `flex items-center gap-3 border-b border-l-[3px] border-slate-100 px-4 py-3.5 last:border-b-0 sm:px-5 ${meta.stripe}`;
+
+  // A row with a nested real button can't also be a real <a> (invalid nested-interactive HTML) — it becomes a synthetic, keyboard-reachable click target instead. Every other row keeps a real Link, so ctrl/middle-click and "open in new tab" keep working there.
+  if (canRemind && row.href) {
+    const href = row.href;
+    return (
+      <div
+        role="link"
+        tabIndex={0}
+        onClick={() => router.push(href)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") router.push(href);
+        }}
+        className={`${rowClasses} cursor-pointer transition-colors hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-teal-500`}
+      >
+        {inner}
+      </div>
+    );
+  }
 
   if (row.href) {
     return (
@@ -74,7 +115,7 @@ function Row({ row }: { row: RegisterRow }) {
   return <div className={rowClasses}>{inner}</div>;
 }
 
-export function RegisterList({ rows }: { rows: RegisterRow[] }) {
+export function RegisterList({ rows, onSendReminder }: { rows: RegisterRow[]; onSendReminder?: (row: RegisterRow) => void }) {
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
@@ -172,7 +213,7 @@ export function RegisterList({ rows }: { rows: RegisterRow[] }) {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.18, ease: "easeOut" }}
                 >
-                  <Row row={row} />
+                  <Row row={row} onSendReminder={onSendReminder} />
                 </motion.div>
               ))}
             </AnimatePresence>

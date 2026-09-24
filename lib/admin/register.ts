@@ -2,6 +2,7 @@ import { serviceOptions } from "@/lib/serviceOptions";
 import type { Lead, LeadStatus, LeadServiceValue, ServicePageMeta } from "./types";
 import { getReviewStatus, daysSinceReview, daysUntilReviewDue, type ReviewStatus } from "./staleness";
 import { isLeadStale } from "./leadStaleness";
+import { leadTemperature, type LeadTemperature } from "./leadScore";
 
 const DAY_MS = 86_400_000;
 
@@ -157,6 +158,8 @@ export type RegisterRow = {
   assignedToId?: string;
   /** Lead-only: got its department from deriveDepartment automatically, never went through a human resolveTriage call. */
   autoRouted?: boolean;
+  /** Lead-only, and only while still open — see leadScore.ts. Undefined for a closed (won/lost) lead or any compliance row. */
+  temperature?: LeadTemperature;
 };
 
 /**
@@ -189,6 +192,7 @@ export function buildRegister(leads: Lead[], pages: ServicePageMeta[], now: Date
     isStale: lead.status !== "won" && lead.status !== "lost" && isLeadStale(lead, now),
     assignedToId: lead.assignedToId,
     autoRouted: lead.department !== undefined && !lead.wasManuallyTriaged,
+    temperature: lead.status === "won" || lead.status === "lost" ? undefined : leadTemperature(lead, now),
   }));
 
   const pageRows: RegisterRow[] = pages.map((page) => {

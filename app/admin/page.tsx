@@ -29,6 +29,7 @@ import {
   severityMeta,
   leadStatusToSeverity,
   type RegisterRow,
+  type Severity,
 } from "@/lib/admin/register";
 import { leadStatusChartColor, reviewStatusChartColor } from "@/lib/admin/chartColors";
 import { buildDashboardInsight } from "@/lib/admin/insight";
@@ -156,6 +157,7 @@ export default function AdminDashboardPage() {
   const { resolveReview, escalateReview } = useServicePageActions();
   const [scope, setScope] = useState<Scope>("mine");
   const [createLeadOpen, setCreateLeadOpen] = useState(false);
+  const [severityFilter, setSeverityFilter] = useState<Severity | null>(null);
 
   const scopedLeads = scopeLeads(leads, scope, currentUser.department);
   const scopedPages = scopePages(servicePages, scope, currentUser.department);
@@ -356,8 +358,17 @@ export default function AdminDashboardPage() {
           <span className="text-xs font-semibold tabular-nums text-slate-500">{totalLeads} leads</span>
         </div>
         <div className="mt-4">
-          <SegmentedBar segments={pipelineSegments} />
-          <BarLegend segments={pipelineSegments} emptyLabel="No leads in this scope yet." />
+          <SegmentedBar
+            segments={pipelineSegments}
+            activeKey={severityFilter}
+            onSegmentClick={(key) => setSeverityFilter((current) => (current === key ? null : (key as Severity)))}
+          />
+          <BarLegend
+            segments={pipelineSegments}
+            emptyLabel="No leads in this scope yet."
+            activeKey={severityFilter}
+            onSegmentClick={(key) => setSeverityFilter((current) => (current === key ? null : (key as Severity)))}
+          />
         </div>
       </div>
 
@@ -368,6 +379,8 @@ export default function AdminDashboardPage() {
             onSendReminder={handleSendReminder}
             onResolve={(row) => setResolvingPageId(row.id)}
             onEscalate={handleEscalate}
+            severityFilter={severityFilter}
+            onClearSeverityFilter={() => setSeverityFilter(null)}
           />
         </div>
         <div>

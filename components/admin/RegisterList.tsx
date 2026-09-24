@@ -1,12 +1,12 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
-import { severityMeta, type RegisterRow } from "@/lib/admin/register";
+import { severityMeta, type RegisterRow, type Severity } from "@/lib/admin/register";
 import { initialsOf, avatarTint } from "@/lib/admin/avatar";
 import { MOCK_ADMIN_USERS } from "@/lib/admin/mockData";
 
@@ -19,6 +19,13 @@ const filters: { value: Filter; label: string }[] = [
   { value: "lead", label: "Leads" },
   { value: "compliance", label: "Compliance" },
 ];
+
+/** Reuses the same three hues as everywhere else (rose/amber/slate) rather than inventing a fourth badge color — an icon, not a pill, so it doesn't compete with the status/stale badges for space. */
+const temperatureMeta: Record<string, { icon: string; className: string; label: string }> = {
+  hot: { icon: "local_fire_department", className: "text-rose-500", label: "Hot lead" },
+  warm: { icon: "thermostat", className: "text-amber-500", label: "Warm lead" },
+  cold: { icon: "ac_unit", className: "text-slate-400", label: "Cold lead" },
+};
 
 type RowActions = {
   onSendReminder?: (row: RegisterRow) => void;
@@ -54,7 +61,14 @@ function Row({ row, onSendReminder, onResolve, onEscalate }: { row: RegisterRow 
     <>
       {avatar}
       <div className="min-w-0 flex-1">
-        <p className="truncate font-sans text-sm font-semibold text-navy-950">{row.title}</p>
+        <p className="flex items-center gap-1 truncate font-sans text-sm font-semibold text-navy-950">
+          <span className="truncate">{row.title}</span>
+          {row.temperature && (
+            <span title={temperatureMeta[row.temperature].label} className="shrink-0">
+              <MaterialIcon name={temperatureMeta[row.temperature].icon} className={`text-[14px] ${temperatureMeta[row.temperature].className}`} />
+            </span>
+          )}
+        </p>
         <div className="mt-1 flex flex-wrap items-center gap-2">
           <span
             className={`shrink-0 truncate rounded-full border px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide ${meta.badge}`}
@@ -166,14 +180,27 @@ function Row({ row, onSendReminder, onResolve, onEscalate }: { row: RegisterRow 
   return <div className={rowClasses}>{inner}</div>;
 }
 
-export function RegisterList({ rows, onSendReminder, onResolve, onEscalate }: { rows: RegisterRow[] } & RowActions) {
+export function RegisterList({
+  rows,
+  onSendReminder,
+  onResolve,
+  onEscalate,
+  severityFilter,
+  onClearSeverityFilter,
+}: { rows: RegisterRow[]; severityFilter?: Severity | null; onClearSeverityFilter?: () => void } & RowActions) {
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const searchId = useId();
 
+  // An externally-driven filter (a Pipeline Breakdown segment click) always lands on page 1 — staying on whatever page was scrolled to under the old filter would show the wrong rows.
+  useEffect(() => {
+    setPage(1);
+  }, [severityFilter]);
+
   const filtered = rows.filter((row) => {
     if (filter !== "all" && row.kind !== filter) return false;
+    if (severityFilter && row.severity !== severityFilter) return false;
     if (query.trim()) {
       const haystack = `${row.title} ${row.detail ?? ""}`.toLowerCase();
       if (!haystack.includes(query.trim().toLowerCase())) return false;
@@ -222,8 +249,19 @@ export function RegisterList({ rows, onSendReminder, onResolve, onEscalate }: { 
               </button>
             ))}
           </div>
-          {/* Not a raw creation-date feed — buildRegister already ranks every tab by urgency, so this stays true regardless of which one is active. */}
-          <p className="mt-1.5 pl-1 text-[11px] font-medium text-slate-400">Sorted by urgency</p>
+          {severityFilter ? (
+            <button
+              type="button"
+              onClick={onClearSeverityFilter}
+              className="mt-1.5 flex items-center gap-1 pl-1 text-[11px] font-semibold text-navy-950 hover:text-slate-600"
+            >
+              Filtered: {severityMeta[severityFilter].label}
+              <MaterialIcon name="close" className="text-[13px]" />
+            </button>
+          ) : (
+            // Not a raw creation-date feed — buildRegister already ranks every tab by urgency, so this stays true regardless of which one is active.
+            <p className="mt-1.5 pl-1 text-[11px] font-medium text-slate-400">Sorted by urgency</p>
+          )}
         </div>
         <label htmlFor={searchId} className="relative sm:w-56">
           <span className="sr-only">Search the register</span>

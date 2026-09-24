@@ -128,3 +128,40 @@ export type Lead = {
   /** True only when a human resolved this out of needs-triage via resolveTriage — everything else got its department from deriveDepartment automatically at creation. Distinct from `department` itself, which doesn't say how it got set. */
   wasManuallyTriaged?: boolean;
 };
+
+export type JobPostingStatus = "draft" | "published" | "closed";
+
+/*
+ * Not synced to the live public Careers page — this site is fully
+ * static-exported, so there's no runtime path from this admin's localStorage
+ * to app/careers/page.tsx's hardcoded array. "Published" here means "content
+ * is finalized and export-ready," not "visible on the live site." Getting a
+ * posting actually live still needs the Export action's JSON output hand-
+ * carried into that page and redeployed — same Phase A limitation as every
+ * other admin content type in this build (Leads, Service Pages).
+ *
+ * `department` is a free-text value from HIRING_DEPARTMENT_NAMES (the six
+ * real internal departments) — a different axis entirely from this file's
+ * own `Department` type (the two-value client-facing operational split used
+ * for lead routing). No RLS-style ownership split by department here: unless
+ * proven otherwise, one staff group manages all postings regardless of which
+ * of the six departments is hiring.
+ */
+export type JobPosting = {
+  id: string;
+  title: string;
+  department: string;
+  location: string;
+  employmentType: string;
+  description: string;
+  requirements: string[];
+  status: JobPostingStatus;
+  postedAt: string;
+  /** Attribution only (who created/last touched this record) — not a permission scope. */
+  postedById: string;
+  /** Falls back to a hardcoded default (see jobPostings.ts) when unset — there's no Settings module yet to source a configurable default from. */
+  contactEmail?: string;
+  /** Manually incremented by whoever checks the recruiting inbox — a deliberately cheap stand-in for a real ATS, not a start of one. */
+  applicationsReceived: number;
+  notes?: string;
+};

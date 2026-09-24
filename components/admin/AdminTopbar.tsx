@@ -11,6 +11,7 @@ import { getStaticPageLabel } from "@/lib/admin/nav";
 import { useCurrentUser, useSetCurrentUserId } from "@/components/admin/providers/CurrentUserProvider";
 import { useLead, useLeads } from "@/components/admin/providers/LeadsProvider";
 import { useServicePages } from "@/components/admin/providers/ServicePagesProvider";
+import { useJobPostings } from "@/components/admin/providers/JobPostingsProvider";
 import { getReviewStatus } from "@/lib/admin/staleness";
 
 type Crumb = { label: string; href?: string };
@@ -19,13 +20,14 @@ type Crumb = { label: string; href?: string };
 function useBreadcrumb(): Crumb[] {
   const pathname = usePathname();
   const leadsCount = useLeads().length;
+  const jobPostingsCount = useJobPostings().length;
   const leadIdMatch = pathname.match(/^\/admin\/leads\/(.+)$/);
   const lead = useLead(leadIdMatch?.[1] ?? "");
 
   if (leadIdMatch) {
     return [{ label: "Leads", href: "/admin/leads" }, { label: lead?.name ?? "Lead" }];
   }
-  return [{ label: getStaticPageLabel(pathname, leadsCount) ?? "Dashboard" }];
+  return [{ label: getStaticPageLabel(pathname, leadsCount, jobPostingsCount) ?? "Dashboard" }];
 }
 
 function Breadcrumb({ segments }: { segments: Crumb[] }) {

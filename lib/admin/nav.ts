@@ -17,11 +17,11 @@ export type NavGroup = { label: string; items: NavItem[] };
  * pairs, so the two can never drift into showing different names for the
  * same page.
  */
-export function getNavGroups(leadsCount: number): NavGroup[] {
+export function getNavGroups(leadsCount: number, jobPostingsCount: number): NavGroup[] {
   return [
     { label: "Overview", items: [{ label: "Dashboard", icon: "dashboard", href: "/admin" }] },
     { label: "Pipeline", items: [{ label: "Leads", icon: "inbox", href: "/admin/leads", badge: leadsCount }] },
-    { label: "Careers", items: [{ label: "Job Postings", icon: "work", soon: true }] },
+    { label: "Careers", items: [{ label: "Job Postings", icon: "work", href: "/admin/job-postings", badge: jobPostingsCount }] },
     {
       label: "Site Content",
       items: [
@@ -37,8 +37,8 @@ export function getNavGroups(leadsCount: number): NavGroup[] {
 }
 
 /** Flat href→label lookup for the topbar breadcrumb — undefined for a dynamic route (e.g. a lead detail page), which the caller handles separately. */
-export function getStaticPageLabel(pathname: string, leadsCount: number): string | undefined {
-  for (const group of getNavGroups(leadsCount)) {
+export function getStaticPageLabel(pathname: string, leadsCount: number, jobPostingsCount: number): string | undefined {
+  for (const group of getNavGroups(leadsCount, jobPostingsCount)) {
     for (const item of group.items) {
       if (item.href === pathname) return item.label;
     }

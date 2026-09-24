@@ -1,4 +1,4 @@
-import type { AdminUser, ServicePageMeta, ActivityEntry, Lead } from "./types";
+import type { AdminUser, ServicePageMeta, ActivityEntry, Lead, JobPosting } from "./types";
 import { deriveDepartment, deriveLeadType } from "./leads";
 
 /*
@@ -192,5 +192,78 @@ export const mockActivity: ActivityEntry[] = [
     icon: "person_add",
     description: "Priscilla Anye joined as a Viewer on the Business Formalisation & Compliance team.",
     timestamp: hoursAgo(240),
+  },
+];
+
+/*
+ * One of each real state worth demonstrating: a healthy published posting,
+ * a stale published one (posted well past JOB_POSTING_STALE_DAYS, to show
+ * the flag without anyone having to wait 45 real days to see it), a draft
+ * that's deliberately thin (no requirements yet) to exercise the
+ * publish-validation nudge, and a closed one showing the applications/notes
+ * fields doing real work.
+ */
+export const mockJobPostings: JobPosting[] = [
+  {
+    id: "job-1",
+    title: "Compliance Associate",
+    department: "Business Formalisation & Compliance",
+    location: "Buea, Cameroon",
+    employmentType: "Full-time",
+    description:
+      "Support business formalisation and tax compliance filings for our Cameroon-based clients, working directly with the Business Formalisation & Compliance team.",
+    requirements: [
+      "2+ years in corporate compliance, tax, or paralegal work",
+      "Comfortable working in both English and French",
+      "Based in or willing to relocate to Buea",
+    ],
+    status: "published",
+    postedAt: daysAgo(10),
+    postedById: "jordan-ellis",
+    applicationsReceived: 4,
+    notes: "Two strong candidates — scheduling second-round interviews.",
+  },
+  {
+    id: "job-2",
+    title: "Career Placement Coordinator",
+    department: "Career Marketing & Placement Support",
+    location: "Buea, Cameroon",
+    employmentType: "Full-time",
+    description:
+      "Own the day-to-day of our Career Marketing & Placement Support campaigns — application tracking, recruiter follow-up, and client check-ins.",
+    requirements: ["1+ years in recruiting, career coaching, or client services", "Excellent written English"],
+    status: "published",
+    postedAt: daysAgo(52),
+    postedById: "aline-ngu",
+    applicationsReceived: 1,
+    notes: "Only one applicant so far — worth reposting or widening the search.",
+  },
+  {
+    id: "job-3",
+    title: "Recruitment Specialist",
+    department: "Recruitment & BPO",
+    location: "Stafford, TX",
+    employmentType: "Full-time",
+    description: "",
+    requirements: [],
+    status: "draft",
+    postedAt: daysAgo(2),
+    postedById: "divine-tabe",
+    contactEmail: "recruitment@uptechconsulting.com",
+    applicationsReceived: 0,
+  },
+  {
+    id: "job-4",
+    title: "Administrative Assistant",
+    department: "Corporate & Administration",
+    location: "Buea, Cameroon",
+    employmentType: "Part-time",
+    description: "General administrative support for the Buea office — scheduling, correspondence, and office operations.",
+    requirements: ["Strong organizational skills", "Comfortable with common office software"],
+    status: "closed",
+    postedAt: daysAgo(90),
+    postedById: "solange-mbei",
+    applicationsReceived: 12,
+    notes: "Filled — role closed after final round.",
   },
 ];

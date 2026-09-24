@@ -45,8 +45,8 @@ export function HeroIntro() {
         <span className="shimmer-text text-teal-400">A specialist responds directly.</span>
       </motion.h1>
       <motion.p variants={item} className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto">
-        No ticket queue, no automated replies. Fill in a few details and continue the
-        conversation by email.
+        No ticket queue, no automated replies. Fill in a few details below and a specialist
+        will respond by email.
       </motion.p>
     </motion.div>
   );

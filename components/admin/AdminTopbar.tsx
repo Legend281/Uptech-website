@@ -99,7 +99,7 @@ export function AdminTopbar({ urgentCount, onOpenSidebar }: { urgentCount: numbe
               <p className="border-b border-slate-100 px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-slate-500">
                 Preview as
               </p>
-              <ul className="max-h-72 overflow-y-auto py-1">
+              <ul className="max-h-96 overflow-y-auto py-1">
                 {MOCK_ADMIN_USERS.map((user) => {
                   const isCurrent = user.id === currentUser.id;
                   return (

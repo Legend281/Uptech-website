@@ -32,6 +32,7 @@ export function getLeadServiceLabel(service: LeadServiceValue): string {
  * backgrounds) — this is a register, not a row of stickers.
  */
 export type Severity =
+  | "needs-triage"
   | "overdue"
   | "due-soon"
   | "new"
@@ -43,10 +44,11 @@ export type Severity =
   | "lost";
 
 export const severityMeta: Record<Severity, { label: string; color: string; stripe: string; badge: string }> = {
+  "needs-triage": { label: "Needs triage", color: "text-violet-700", stripe: "border-l-violet-500", badge: "border-violet-200 bg-violet-50 text-violet-700" },
   overdue: { label: "Overdue", color: "text-rose-700", stripe: "border-l-rose-500", badge: "border-rose-200 bg-rose-50 text-rose-700" },
   "due-soon": { label: "Due soon", color: "text-amber-700", stripe: "border-l-amber-500", badge: "border-amber-200 bg-amber-50 text-amber-700" },
   new: { label: "New", color: "text-sky-700", stripe: "border-l-sky-500", badge: "border-sky-200 bg-sky-50 text-sky-700" },
-  contacted: { label: "Contacted", color: "text-slate-500", stripe: "border-l-slate-300", badge: "border-slate-200 bg-slate-50 text-slate-600" },
+  contacted: { label: "Contacted", color: "text-slate-500", stripe: "border-l-slate-400", badge: "border-slate-200 bg-slate-50 text-slate-600" },
   qualified: { label: "Qualified", color: "text-blue-accent", stripe: "border-l-blue-accent", badge: "border-blue-accent/20 bg-blue-accent/10 text-blue-accent" },
   booked: { label: "Booked", color: "text-teal-600", stripe: "border-l-teal-400", badge: "border-teal-200 bg-teal-50 text-teal-700" },
   won: { label: "Won", color: "text-emerald-700", stripe: "border-l-emerald-500", badge: "border-emerald-200 bg-emerald-50 text-emerald-700" },
@@ -54,7 +56,8 @@ export const severityMeta: Record<Severity, { label: string; color: string; stri
   lost: { label: "Lost", color: "text-slate-400", stripe: "border-l-slate-200", badge: "border-slate-200 bg-slate-50 text-slate-400" },
 };
 
-const leadStatusToSeverity: Record<LeadStatus, Severity> = {
+export const leadStatusToSeverity: Record<LeadStatus, Severity> = {
+  "needs-triage": "needs-triage",
   new: "new",
   contacted: "contacted",
   qualified: "qualified",
@@ -69,17 +72,26 @@ const reviewStatusToSeverity: Record<ReviewStatus, Severity> = {
   "on-track": "on-track",
 };
 
-/** Urgency order for the register — legal-risk compliance items outrank fresh leads, which outrank leads already in motion, which outrank closed/healthy items. */
-const URGENCY_RANK: Record<Severity, number> = {
-  overdue: 0,
-  "due-soon": 1,
-  new: 2,
-  contacted: 3,
-  qualified: 4,
-  booked: 5,
-  won: 6,
-  "on-track": 7,
-  lost: 8,
+/**
+ * Urgency order for the register. An unrouted lead outranks even overdue
+ * compliance: an overdue page is at least known and owned by a department
+ * — an unrouted lead risks being invisible to everyone until someone
+ * happens to look, which is exactly the failure mode Section 3.11's
+ * "needs-triage" state exists to prevent. Legal-risk compliance items
+ * outrank fresh leads, which outrank leads already in motion, which
+ * outrank closed/healthy items.
+ */
+export const URGENCY_RANK: Record<Severity, number> = {
+  "needs-triage": 0,
+  overdue: 1,
+  "due-soon": 2,
+  new: 3,
+  contacted: 4,
+  qualified: 5,
+  booked: 6,
+  won: 7,
+  "on-track": 8,
+  lost: 9,
 };
 
 export type RegisterRow = {

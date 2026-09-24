@@ -23,6 +23,11 @@ const dotColor: Record<string, string> = {
   help: "bg-slate-300",
   notifications_active: "bg-amber-500",
   priority_high: "bg-rose-500",
+  fork_right: "bg-violet-500",
+  mail: "bg-blue-accent",
+  call: "bg-blue-accent",
+  chat: "bg-emerald-500",
+  delete: "bg-rose-500",
 };
 
 /**

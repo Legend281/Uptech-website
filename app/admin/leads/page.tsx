@@ -7,6 +7,7 @@ import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { useLeads, useLeadActions } from "@/components/admin/providers/LeadsProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
+import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
 import { LeadFormDialog } from "@/components/admin/LeadFormDialog";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { LeadRowActions } from "@/components/admin/LeadRowActions";
@@ -25,17 +26,6 @@ import type { Lead, LeadStatus, Department } from "@/lib/admin/types";
 const PAGE_SIZE = 8;
 const CLOSED_STATUSES: LeadStatus[] = ["won", "lost"];
 const CARD_ELEVATION = "shadow-[0_1px_2px_rgba(7,14,27,0.04),0_10px_24px_-16px_rgba(7,14,27,0.14)]";
-
-const statusFilters: { value: LeadStatus | "all"; label: string }[] = [
-  { value: "all", label: "All statuses" },
-  { value: "needs-triage", label: "Needs triage" },
-  { value: "new", label: "New" },
-  { value: "contacted", label: "Contacted" },
-  { value: "qualified", label: "Qualified" },
-  { value: "consultation-booked", label: "Consultation booked" },
-  { value: "won", label: "Won" },
-  { value: "lost", label: "Lost" },
-];
 
 const departmentFilters: { value: Department | "unassigned" | "all"; label: string }[] = [
   { value: "all", label: "All departments" },
@@ -150,6 +140,7 @@ export default function LeadsPage() {
   const leads = useLeads();
   const { claimLead, deleteLead } = useLeadActions();
   const currentUser = useCurrentUser();
+  const logActivity = useLogActivity();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [quickViewLeadId, setQuickViewLeadId] = useState<string | null>(null);
@@ -251,9 +242,20 @@ export default function LeadsPage() {
         <motion.div variants={itemVariants} className={`mb-4 rounded-xl border border-slate-200 bg-white p-4 sm:p-5 ${CARD_ELEVATION}`}>
           <div className="flex items-center justify-between gap-2">
             <h2 className="font-sans text-sm font-bold text-navy-950">Pipeline</h2>
-            <span className="text-xs font-semibold tabular-nums text-slate-500">
-              <AnimatedNumber value={leads.length} /> leads
-            </span>
+            {statusFilter !== "all" ? (
+              <button
+                type="button"
+                onClick={() => toggleStatusFilter(statusFilter)}
+                className="flex items-center gap-1 text-xs font-semibold text-navy-950 hover:text-slate-600"
+              >
+                Filtered: {severityMeta[leadStatusToSeverity[statusFilter]].label}
+                <MaterialIcon name="close" className="text-[13px]" />
+              </button>
+            ) : (
+              <span className="text-xs font-semibold tabular-nums text-slate-500">
+                <AnimatedNumber value={leads.length} /> leads
+              </span>
+            )}
           </div>
           <div className="mt-4">
             <SegmentedBar segments={pipelineSegments} activeKey={statusFilter !== "all" ? statusFilter : null} onSegmentClick={toggleStatusFilter} />
@@ -263,20 +265,6 @@ export default function LeadsPage() {
 
         <motion.section variants={itemVariants} className={`rounded-xl border border-slate-200 bg-white ${CARD_ELEVATION}`}>
           <div className="flex flex-col gap-3 border-b border-slate-100 px-4 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:px-5">
-            <select
-              value={statusFilter}
-              onChange={(e) => {
-                setStatusFilter(e.target.value as LeadStatus | "all");
-                resetPage();
-              }}
-              className="rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-700 focus-visible:border-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500/40"
-            >
-              {statusFilters.map((f) => (
-                <option key={f.value} value={f.value}>
-                  {f.label}
-                </option>
-              ))}
-            </select>
             <select
               value={departmentFilter}
               onChange={(e) => {
@@ -394,6 +382,7 @@ export default function LeadsPage() {
                                 onClick={(event) => {
                                   event.stopPropagation();
                                   claimLead(lead.id, currentUser.id);
+                                  logActivity({ icon: "person_add", description: `${currentUser.name} claimed ${lead.name}'s inquiry`, relatedHref: `/admin/leads/${lead.id}` });
                                   toast.success("Lead claimed", { description: `You're now the owner of ${lead.name}'s inquiry.` });
                                 }}
                                 className="inline-flex items-center gap-1 rounded-md border border-teal-200 bg-teal-50 px-2 py-1 text-xs font-semibold text-teal-700 transition-colors hover:border-teal-300 hover:bg-teal-100"
@@ -482,6 +471,7 @@ export default function LeadsPage() {
         onConfirm={() => {
           if (deletingLead) {
             deleteLead(deletingLead.id);
+            logActivity({ icon: "delete", description: `${currentUser.name} deleted ${deletingLead.name}'s lead record` });
             toast.success("Lead deleted");
           }
           setDeletingLead(null);

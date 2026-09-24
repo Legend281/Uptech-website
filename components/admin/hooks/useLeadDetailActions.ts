@@ -1,6 +1,7 @@
 import { toast } from "sonner";
 import { useLeadActions } from "@/components/admin/providers/LeadsProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
+import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
 import { MOCK_ADMIN_USERS } from "@/lib/admin/mockData";
 import { departmentLabels } from "@/lib/admin/labels";
 import { severityMeta, leadStatusToSeverity } from "@/lib/admin/register";
@@ -29,6 +30,8 @@ const NEXT_STEP_HINT: Partial<Record<LeadStatus, string>> = {
 };
 
 const CHANNEL_VERB: Record<"email" | "call" | "chat", string> = { email: "emailed", call: "called", chat: "messaged" };
+const CHANNEL_ICON: Record<"email" | "call" | "chat", string> = { email: "mail", call: "call", chat: "chat" };
+const CHANNEL_NOUN: Record<"email" | "call" | "chat", string> = { email: "email", call: "a call", chat: "WhatsApp" };
 
 /**
  * Shared between the full detail page and the Quick View modal, so the two
@@ -49,6 +52,8 @@ const CHANNEL_VERB: Record<"email" | "call" | "chat", string> = { email: "emaile
 export function useLeadDetailActions(lead: Lead) {
   const { claimLead, reassignLead, updateStatus, resolveTriage } = useLeadActions();
   const currentUser = useCurrentUser();
+  const logActivity = useLogActivity();
+  const leadHref = `/admin/leads/${lead.id}`;
 
   const meta = severityMeta[leadStatusToSeverity[lead.status]];
   const assignedUser = MOCK_ADMIN_USERS.find((user) => user.id === lead.assignedToId);
@@ -60,12 +65,18 @@ export function useLeadDetailActions(lead: Lead) {
 
   function handleClaim() {
     claimLead(lead.id, currentUser.id);
+    logActivity({ icon: "person_add", description: `${currentUser.name} claimed ${lead.name}'s inquiry`, relatedHref: leadHref });
     toast.success("Lead claimed", { description: `You're now the owner of ${lead.name}'s inquiry.` });
   }
 
   function handleReassign(userId: string | undefined) {
     reassignLead(lead.id, userId);
     const user = MOCK_ADMIN_USERS.find((u) => u.id === userId);
+    logActivity({
+      icon: "person_add",
+      description: user ? `${currentUser.name} reassigned ${lead.name} to ${user.name}` : `${currentUser.name} unassigned ${lead.name}`,
+      relatedHref: leadHref,
+    });
     toast.success(user ? `Reassigned to ${user.name}` : "Lead unassigned");
   }
 
@@ -73,8 +84,13 @@ export function useLeadDetailActions(lead: Lead) {
     const label = resolvableStatuses.find((s) => s.value === status)?.label ?? status;
     const shouldAutoClaim = !lead.assignedToId && status !== "new";
     updateStatus(lead.id, status);
+    if (shouldAutoClaim) claimLead(lead.id, currentUser.id);
+    logActivity({
+      icon: status === "won" ? "check_circle" : "edit_note",
+      description: `${currentUser.name} marked ${lead.name} as ${label}${shouldAutoClaim ? " and claimed it" : ""}`,
+      relatedHref: leadHref,
+    });
     if (shouldAutoClaim) {
-      claimLead(lead.id, currentUser.id);
       toast.success(`Claimed and marked as ${label}`, {
         description: "An unclaimed lead is automatically claimed by whoever updates its status.",
       });
@@ -85,6 +101,7 @@ export function useLeadDetailActions(lead: Lead) {
 
   function handleResolveTriage(department: Department) {
     resolveTriage(lead.id, department);
+    logActivity({ icon: "fork_right", description: `${currentUser.name} routed ${lead.name} to ${departmentLabels[department]}`, relatedHref: leadHref });
     toast.success(`Routed to ${departmentLabels[department]}`, { description: "Now showing as a new lead in that queue." });
   }
 
@@ -102,6 +119,11 @@ export function useLeadDetailActions(lead: Lead) {
     const shouldAutoClaim = !lead.assignedToId;
     updateStatus(lead.id, "contacted");
     if (shouldAutoClaim) claimLead(lead.id, currentUser.id);
+    logActivity({
+      icon: CHANNEL_ICON[channel],
+      description: `${currentUser.name} contacted ${lead.name} via ${CHANNEL_NOUN[channel]}${shouldAutoClaim ? " and claimed it" : ""}`,
+      relatedHref: leadHref,
+    });
     toast.success("Marked as Contacted", {
       description: `Logged automatically since you just ${CHANNEL_VERB[channel]} them${shouldAutoClaim ? " — you're now the owner too." : "."}`,
     });

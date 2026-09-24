@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { useLead, useLeadActions } from "@/components/admin/providers/LeadsProvider";
+import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
+import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
 import { LeadFormDialog } from "@/components/admin/LeadFormDialog";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { LeadDetailContent } from "@/components/admin/LeadDetailContent";
@@ -16,6 +18,8 @@ export function LeadDetailPageClient({ id }: { id: string }) {
   const router = useRouter();
   const lead = useLead(id);
   const { deleteLead } = useLeadActions();
+  const currentUser = useCurrentUser();
+  const logActivity = useLogActivity();
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -78,6 +82,7 @@ export function LeadDetailPageClient({ id }: { id: string }) {
         onCancel={() => setDeleteOpen(false)}
         onConfirm={() => {
           deleteLead(lead.id);
+          logActivity({ icon: "delete", description: `${currentUser.name} deleted ${lead.name}'s lead record` });
           toast.success("Lead deleted");
           router.push("/admin/leads");
         }}

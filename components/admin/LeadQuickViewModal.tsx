@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { useLead, useLeadActions } from "@/components/admin/providers/LeadsProvider";
+import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
+import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
 import { useLeadDetailActions, resolvableStatuses } from "@/components/admin/hooks/useLeadDetailActions";
 import { LeadFormDialog } from "@/components/admin/LeadFormDialog";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
@@ -258,6 +260,8 @@ function QuickViewBody({ lead }: { lead: Lead }) {
 export function LeadQuickViewModal({ leadId, onClose }: { leadId: string | null; onClose: () => void }) {
   const lead = useLead(leadId ?? "");
   const { deleteLead } = useLeadActions();
+  const currentUser = useCurrentUser();
+  const logActivity = useLogActivity();
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -321,6 +325,8 @@ export function LeadQuickViewModal({ leadId, onClose }: { leadId: string | null;
         onCancel={() => setDeleteOpen(false)}
         onConfirm={() => {
           deleteLead(lead.id);
+          // No relatedHref — the record is gone, so a link back to it would just 404.
+          logActivity({ icon: "delete", description: `${currentUser.name} deleted ${lead.name}'s lead record` });
           toast.success("Lead deleted");
           setDeleteOpen(false);
           onClose();

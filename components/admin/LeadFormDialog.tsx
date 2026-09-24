@@ -6,6 +6,8 @@ import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { serviceOptions } from "@/lib/serviceOptions";
 import type { Lead, LeadServiceValue } from "@/lib/admin/types";
 import { useLeadActions, type NewLeadInput } from "@/components/admin/providers/LeadsProvider";
+import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
+import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
 
 const sourceOptions: { value: NewLeadInput["source"]; label: string }[] = [
   { value: "manual-phone", label: "Phone call" },
@@ -25,6 +27,8 @@ type Props =
 export function LeadFormDialog(props: Props) {
   const { open, onClose } = props;
   const { addLead, editLead } = useLeadActions();
+  const currentUser = useCurrentUser();
+  const logActivity = useLogActivity();
   const formId = useId();
 
   const [name, setName] = useState("");
@@ -78,9 +82,11 @@ export function LeadFormDialog(props: Props) {
     if (!canSubmit) return;
     if (props.mode === "edit") {
       editLead(props.lead.id, { name, email, phone, company: company || undefined, service, language, message });
+      logActivity({ icon: "edit_note", description: `${currentUser.name} updated ${name}'s lead record`, relatedHref: `/admin/leads/${props.lead.id}` });
       toast.success("Lead updated");
     } else {
-      addLead({ name, email, phone, company: company || undefined, service, language, message, source });
+      const newLead = addLead({ name, email, phone, company: company || undefined, service, language, message, source });
+      logActivity({ icon: "person_add", description: `${currentUser.name} logged a new lead: ${name}`, relatedHref: `/admin/leads/${newLead.id}` });
       toast.success("Lead logged", { description: `${name} was added to the register.` });
     }
     onClose();

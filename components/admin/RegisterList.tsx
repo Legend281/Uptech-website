@@ -81,8 +81,12 @@ function Row({ row, onSendReminder, onResolve, onEscalate, onOpenLead }: { row: 
               Stale
             </span>
           )}
-          {(row.detail || row.autoRouted) && (
-            <p className="truncate text-xs text-slate-500">{[row.detail, row.autoRouted ? "Auto-routed" : null].filter(Boolean).join(" · ")}</p>
+          {row.detail && (
+            <p className="truncate text-xs text-slate-500">
+              {row.detail}
+              {/* Sheds on mobile like the timestamp/assignee avatar do — a low-priority tag isn't worth swallowing the service detail it's appended to at 2-column width. */}
+              {row.autoRouted && <span className="hidden sm:inline"> · Auto-routed</span>}
+            </p>
           )}
         </div>
         <p className="mt-1 text-xs tabular-nums text-slate-500 sm:hidden">{formatRelativeTime(row.timeLabel)}</p>

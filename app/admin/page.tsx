@@ -140,7 +140,8 @@ function StatCard({
       <p className="mt-2.5 font-sans text-2xl font-extrabold leading-none text-navy-950 sm:mt-3 sm:text-[28px]">
         <AnimatedNumber value={value} />
       </p>
-      <div className="mt-1.5 flex items-center justify-between gap-2">
+      {/* Column on mobile, row from sm: up — sharing one row at 2-column grid width was clipping the sublabel mid-word to make room for the trend badge. */}
+      <div className="mt-1.5 flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
         <p className="truncate text-[11px] font-medium text-slate-500 sm:text-xs">{sublabel ?? " "}</p>
         {trend}
       </div>

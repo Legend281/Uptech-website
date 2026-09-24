@@ -2,6 +2,7 @@
 
 import { useId, useState } from "react";
 import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
 import { severityMeta, type RegisterRow } from "@/lib/admin/register";
@@ -155,10 +156,22 @@ export function RegisterList({ rows }: { rows: RegisterRow[] }) {
         </div>
       ) : (
         <>
+          {/* mode="popLayout" lets a row leaving (filter change, page change) collapse out of flow immediately, instead of holding its space until the fade finishes. */}
           <div>
-            {paged.map((row) => (
-              <Row key={`${row.kind}-${row.id}`} row={row} />
-            ))}
+            <AnimatePresence mode="popLayout" initial={false}>
+              {paged.map((row) => (
+                <motion.div
+                  key={`${row.kind}-${row.id}`}
+                  layout
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.18, ease: "easeOut" }}
+                >
+                  <Row row={row} />
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </div>
           <div className="flex items-center justify-between border-t border-slate-100 px-4 py-3 sm:px-5">
             <p className="text-xs text-slate-500">

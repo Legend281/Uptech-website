@@ -3,41 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useLeads } from "@/components/admin/providers/LeadsProvider";
-
-type NavItem = {
-  label: string;
-  icon: string;
-  href?: string;
-  /** Not built yet this pass — renders as a muted, non-interactive row with a "Soon" tag instead of a dead link. */
-  soon?: boolean;
-  adminOnly?: boolean;
-  /** Only shown where real data backs it (Leads) — no invented count for modules with no data yet. */
-  badge?: number;
-};
-
-type NavGroup = { label: string; items: NavItem[] };
-
-function getNavGroups(leadsCount: number): NavGroup[] {
-  return [
-    { label: "Overview", items: [{ label: "Dashboard", icon: "dashboard", href: "/admin" }] },
-    { label: "Pipeline", items: [{ label: "Leads", icon: "inbox", href: "/admin/leads", badge: leadsCount }] },
-    { label: "Careers", items: [{ label: "Job Postings", icon: "work", soon: true }] },
-    {
-      label: "Site Content",
-      items: [
-        { label: "Service Pages", icon: "description", soon: true },
-        { label: "Case Studies", icon: "auto_stories", soon: true },
-        { label: "Testimonials", icon: "format_quote", soon: true },
-        { label: "Team Members", icon: "groups", soon: true },
-        { label: "FAQ Items", icon: "quiz", soon: true },
-      ],
-    },
-    { label: "System", items: [{ label: "Settings", icon: "settings", soon: true, adminOnly: true }] },
-  ];
-}
+import { getNavGroups, type NavItem } from "@/lib/admin/nav";
 
 function NavRow({ item, active }: { item: NavItem; active: boolean }) {
   const rowClasses =
@@ -59,23 +29,29 @@ function NavRow({ item, active }: { item: NavItem; active: boolean }) {
   return (
     <Link
       href={item.href}
-      className={`${rowClasses} border py-2.5 font-sans text-sm font-semibold ${
-        active
-          ? "border-teal-400/20 bg-gradient-to-r from-teal-400/15 to-blue-accent/10 text-white shadow-[0_0_24px_-8px_rgba(45,212,191,0.45)]"
-          : "border-transparent text-slate-300 hover:bg-white/5 hover:text-white"
+      className={`${rowClasses} relative border border-transparent py-2.5 font-sans text-sm font-semibold ${
+        active ? "text-white" : "text-slate-300 hover:bg-white/5 hover:text-white"
       }`}
     >
+      {/* Shared layoutId — framer-motion animates this pill sliding from the previously active row to this one, instead of two rows just swapping color. */}
+      {active && (
+        <motion.span
+          layoutId="admin-nav-active-pill"
+          transition={{ type: "spring", stiffness: 400, damping: 32 }}
+          className="absolute inset-0 rounded-lg border border-teal-400/20 bg-gradient-to-r from-teal-400/15 to-blue-accent/10 shadow-[0_0_24px_-8px_rgba(45,212,191,0.45)]"
+        />
+      )}
       <span
-        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md transition-colors ${
+        className={`relative flex h-7 w-7 shrink-0 items-center justify-center rounded-md transition-colors ${
           active ? "bg-teal-400/15 text-teal-300" : "bg-white/5 text-slate-400"
         }`}
       >
         <MaterialIcon name={item.icon} className="text-[18px]" />
       </span>
-      <span className="flex-1">{item.label}</span>
+      <span className="relative flex-1">{item.label}</span>
       {item.badge !== undefined && (
         <span
-          className={`rounded px-1.5 py-0.5 text-[11px] font-bold tabular-nums ${
+          className={`relative rounded px-1.5 py-0.5 text-[11px] font-bold tabular-nums ${
             active ? "text-teal-200" : "text-slate-400"
           }`}
         >

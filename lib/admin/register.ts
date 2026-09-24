@@ -21,6 +21,53 @@ export function countByStatusWithinDays(
   ).length;
 }
 
+/** Half-open window (fromDaysAgo, toDaysAgo] — e.g. (14, 7) is "the week before last week" — for week-over-week / month-over-month trend comparisons. */
+export function countCreatedInRange(leads: Lead[], fromDaysAgo: number, toDaysAgo: number, now: Date = new Date()): number {
+  const from = now.getTime() - fromDaysAgo * DAY_MS;
+  const to = now.getTime() - toDaysAgo * DAY_MS;
+  return leads.filter((lead) => {
+    const t = new Date(lead.createdAt).getTime();
+    return t >= from && t < to;
+  }).length;
+}
+
+export function countByStatusInRange(
+  leads: Lead[],
+  statuses: LeadStatus[],
+  fromDaysAgo: number,
+  toDaysAgo: number,
+  now: Date = new Date(),
+): number {
+  const from = now.getTime() - fromDaysAgo * DAY_MS;
+  const to = now.getTime() - toDaysAgo * DAY_MS;
+  return leads.filter((lead) => {
+    if (!statuses.includes(lead.status)) return false;
+    const t = new Date(lead.createdAt).getTime();
+    return t >= from && t < to;
+  }).length;
+}
+
+/** Oldest-first daily bucket counts for a Sparkline — e.g. days=7 returns [6-days-ago, ..., today]. */
+export function dailyCreatedCounts(leads: Lead[], days: number, now: Date = new Date()): number[] {
+  const buckets = new Array(days).fill(0);
+  for (const lead of leads) {
+    const diffDays = Math.floor((now.getTime() - new Date(lead.createdAt).getTime()) / DAY_MS);
+    if (diffDays >= 0 && diffDays < days) buckets[days - 1 - diffDays] += 1;
+  }
+  return buckets;
+}
+
+/** Same bucketing, but by statusChangedAt — the accurate event time for "became booked/won", unlike createdAt. */
+export function dailyStatusChangeCounts(leads: Lead[], statuses: LeadStatus[], days: number, now: Date = new Date()): number[] {
+  const buckets = new Array(days).fill(0);
+  for (const lead of leads) {
+    if (!statuses.includes(lead.status)) continue;
+    const diffDays = Math.floor((now.getTime() - new Date(lead.statusChangedAt).getTime()) / DAY_MS);
+    if (diffDays >= 0 && diffDays < days) buckets[days - 1 - diffDays] += 1;
+  }
+  return buckets;
+}
+
 export function getLeadServiceLabel(service: LeadServiceValue): string {
   return serviceOptions.find((option) => option.value === service)?.label ?? "Something else";
 }
@@ -114,6 +161,7 @@ export function buildRegister(leads: Lead[], pages: ServicePageMeta[], now: Date
     detail: [getLeadServiceLabel(lead.service), lead.company].filter(Boolean).join(" · "),
     timestamp: lead.createdAt,
     timeLabel: lead.createdAt,
+    href: `/admin/leads/${lead.id}`,
   }));
 
   const pageRows: RegisterRow[] = pages.map((page) => {

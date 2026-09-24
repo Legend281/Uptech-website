@@ -24,6 +24,7 @@ import {
   leadStatusToSeverity,
 } from "@/lib/admin/register";
 import { leadStatusChartColor, reviewStatusChartColor } from "@/lib/admin/chartColors";
+import { buildDashboardInsight } from "@/lib/admin/insight";
 import { departmentLabels } from "@/lib/admin/labels";
 import type { Lead, ServicePageMeta, Department, LeadStatus } from "@/lib/admin/types";
 
@@ -166,6 +167,8 @@ export default function AdminDashboardPage() {
           .join(", ");
 
   const rows = buildRegister(scopedLeads, scopedPages);
+  const staleCount = rows.filter((row) => row.kind === "lead" && row.isStale).length;
+  const insight = buildDashboardInsight(scopedLeads, newLeadsThisWeek, newLeadsLastWeek, staleCount);
 
   const pipelineSegments: BarSegment[] = PIPELINE_STATUS_ORDER.map((status) => ({
     key: status,
@@ -191,6 +194,12 @@ export default function AdminDashboardPage() {
           <p className="mt-1 text-sm text-slate-500">
             Here&apos;s what&apos;s moving {scope === "all" ? "across both departments" : `in ${departmentLabels[currentUser.department]}`} today.
           </p>
+          {insight && (
+            <p className="mt-1.5 flex items-center gap-1.5 text-sm font-medium text-teal-700">
+              <MaterialIcon name="auto_awesome" className="text-[14px]" />
+              {insight}
+            </p>
+          )}
         </div>
         <div
           className="flex items-center gap-0.5 self-start rounded-lg border border-slate-200 bg-slate-100 p-0.5 sm:self-auto"

@@ -1,6 +1,6 @@
 import { serviceOptions } from "@/lib/serviceOptions";
 import type { Lead, LeadStatus, LeadServiceValue, ServicePageMeta } from "./types";
-import { getReviewStatus, daysSinceReview, type ReviewStatus } from "./staleness";
+import { getReviewStatus, daysSinceReview, daysUntilReviewDue, type ReviewStatus } from "./staleness";
 import { isLeadStale } from "./leadStaleness";
 
 const DAY_MS = 86_400_000;
@@ -187,13 +187,15 @@ export function buildRegister(leads: Lead[], pages: ServicePageMeta[], now: Date
 
   const pageRows: RegisterRow[] = pages.map((page) => {
     const status = getReviewStatus(page, now);
-    const days = daysSinceReview(page, now);
+    // Overdue stays backward-looking ("X days since review") — a page already past due needs to know how overdue it is, not a negative countdown. Everything else is reframed forward, so "due soon"/"on track" read as an actionable deadline rather than a stale-sounding age.
+    const days = status === "overdue" ? daysSinceReview(page, now) : daysUntilReviewDue(page, now);
+    const detail = `${days} day${days === 1 ? "" : "s"} ${status === "overdue" ? "since review" : "until due"}`;
     return {
       id: page.id,
       kind: "compliance",
       severity: reviewStatusToSeverity[status],
       title: page.title,
-      detail: `${days} day${days === 1 ? "" : "s"} since review`,
+      detail,
       timestamp: page.lastReviewedAt,
       timeLabel: page.lastReviewedAt,
       href: page.url,

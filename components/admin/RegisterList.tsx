@@ -8,6 +8,7 @@ import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
 import { severityMeta, type RegisterRow } from "@/lib/admin/register";
 import { initialsOf, avatarTint } from "@/lib/admin/avatar";
+import { MOCK_ADMIN_USERS } from "@/lib/admin/mockData";
 
 type Filter = "all" | "lead" | "compliance";
 
@@ -32,6 +33,7 @@ function Row({ row, onSendReminder, onResolve, onEscalate }: { row: RegisterRow 
   const canRemind = row.kind === "lead" && row.isStale && Boolean(row.assignedToId) && Boolean(onSendReminder);
   const canResolve = row.kind === "compliance" && row.severity === "overdue" && Boolean(onResolve);
   const hasInlineAction = canRemind || canResolve;
+  const assignee = row.assignedToId ? MOCK_ADMIN_USERS.find((user) => user.id === row.assignedToId) : undefined;
 
   const avatar =
     row.kind === "lead" ? (
@@ -64,10 +66,20 @@ function Row({ row, onSendReminder, onResolve, onEscalate }: { row: RegisterRow 
               Stale
             </span>
           )}
-          {row.detail && <p className="truncate text-xs text-slate-500">{row.detail}</p>}
+          {(row.detail || row.autoRouted) && (
+            <p className="truncate text-xs text-slate-500">{[row.detail, row.autoRouted ? "Auto-routed" : null].filter(Boolean).join(" · ")}</p>
+          )}
         </div>
         <p className="mt-1 text-xs tabular-nums text-slate-500 sm:hidden">{formatRelativeTime(row.timeLabel)}</p>
       </div>
+      {assignee && (
+        <span
+          title={`Assigned to ${assignee.name}`}
+          className="hidden h-6 w-6 shrink-0 items-center justify-center rounded-full bg-navy-950 text-[9px] font-bold text-white sm:flex"
+        >
+          {assignee.avatarInitials}
+        </span>
+      )}
       <span className="hidden shrink-0 whitespace-nowrap text-xs tabular-nums text-slate-500 sm:inline">
         {formatRelativeTime(row.timeLabel)}
       </span>

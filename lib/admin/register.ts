@@ -155,6 +155,8 @@ export type RegisterRow = {
   isStale?: boolean;
   /** Who owns this item today, if anyone — the reminder action's target for a lead row. */
   assignedToId?: string;
+  /** Lead-only: got its department from deriveDepartment automatically, never went through a human resolveTriage call. */
+  autoRouted?: boolean;
 };
 
 /**
@@ -186,6 +188,7 @@ export function buildRegister(leads: Lead[], pages: ServicePageMeta[], now: Date
     href: `/admin/leads/${lead.id}`,
     isStale: lead.status !== "won" && lead.status !== "lost" && isLeadStale(lead, now),
     assignedToId: lead.assignedToId,
+    autoRouted: lead.department !== undefined && !lead.wasManuallyTriaged,
   }));
 
   const pageRows: RegisterRow[] = pages.map((page) => {
@@ -202,6 +205,7 @@ export function buildRegister(leads: Lead[], pages: ServicePageMeta[], now: Date
       timestamp: page.lastReviewedAt,
       timeLabel: page.lastReviewedAt,
       href: page.url,
+      assignedToId: page.assignedToId,
     };
   });
 

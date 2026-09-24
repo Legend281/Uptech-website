@@ -184,7 +184,7 @@ export function LeadsProvider({ children }: { children: ReactNode }) {
       const next = prev.map((lead) => {
         if (lead.id !== id) return lead;
         const now = new Date().toISOString();
-        return { ...lead, department, status: "new" as LeadStatus, statusChangedAt: now };
+        return { ...lead, department, status: "new" as LeadStatus, statusChangedAt: now, wasManuallyTriaged: true };
       });
       saveLeads(next);
       return next;

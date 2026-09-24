@@ -125,4 +125,6 @@ export type Lead = {
    */
   firstContactedAt?: string;
   statusChangedAt: string;
+  /** True only when a human resolved this out of needs-triage via resolveTriage — everything else got its department from deriveDepartment automatically at creation. Distinct from `department` itself, which doesn't say how it got set. */
+  wasManuallyTriaged?: boolean;
 };

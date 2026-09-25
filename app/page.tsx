@@ -23,10 +23,13 @@ import { TextReveal } from "@/components/TextReveal";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 import { TrustStrip, type TrustStripItem } from "@/components/TrustStrip";
 import { FaqAccordion } from "@/components/FaqAccordion";
+import { getFaqs } from "@/lib/faqs";
 import { BridgeSection } from "@/components/home/BridgeSection";
 import { Reveal } from "@/components/Reveal";
 import { RotatingPromise, type PromiseStatement } from "@/components/home/RotatingPromise";
+import { TestimonialCard } from "@/components/TestimonialCard";
 import { images } from "@/lib/images";
+import { getPublishedTestimonials } from "@/lib/testimonials";
 
 export const metadata: Metadata = {
   title: {
@@ -183,45 +186,6 @@ const systems = [
   { code: "IRS", label: "US federal tax administration" },
 ];
 
-const faqItems = [
-  {
-    question: "How do you charge?",
-    answer:
-      "Engagements are scoped before they are quoted. We map your situation during the consultation, tell you plainly whether we are the right partner, and price the work from there. Contact us for a quote rather than a package rate.",
-  },
-  {
-    // Web research (2026-09) added the Cameroon half of this answer,
-    // corroborated across multiple independent sources on Cameroon
-    // business-formation procedure. Worth a quick confirmation with Uptech
-    // Consulting's own legal desk, since practice varies by bank.
-    question: "Do I have to travel to register a business?",
-    answer:
-      "For a US LLC or C-Corp, no — non-US residents can form and own one without a US visa, Social Security Number or American address, though the entity itself needs a registered agent with a physical in-state address. For Cameroon formalisation, the paperwork itself (Articles of Association, RCCM registration) can be handled remotely through a notarized power of attorney for a local representative. The step most likely to need your direct involvement is depositing share capital — some banks allow this remotely with power of attorney, but not all, so we confirm your specific bank's requirements early.",
-  },
-  {
-    question: "Can you handle both the registration and the filings that follow it?",
-    answer:
-      "Yes. Formalisation, tax standing, social insurance and licensing run as one accountable process rather than separate errands — registration hands straight over to the ongoing filing calendar.",
-  },
-  {
-    question: "Do I need a specific background for career placement?",
-    answer:
-      "No. Career Marketing & Placement Support is open to anyone looking for their next role, not restricted to a particular field.",
-  },
-  {
-    question: "Do you work in French as well as English?",
-    answer:
-      "Yes. Uptech Consulting operates bilingually in English and Français, which matters for Cameroonian regulatory work where official filings and correspondence are frequently in French.",
-  },
-  {
-    // Rewritten to avoid stating an unconfirmed fact — safe to publish
-    // as-is; replace with real figure once provided by the team.
-    question: "How quickly can you start?",
-    answer:
-      "Once you book a consultation, we move quickly to understand your situation and outline next steps — your dedicated point of contact will confirm a specific timeline for your case.",
-  },
-];
-
 /** Used sparingly — only where the label carries real navigational meaning. */
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -232,7 +196,11 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Dashboard-published FAQs when there are any, else the built-in list (lib/faqs.ts).
+  const faqItems = await getFaqs("general");
+  const testimonials = await getPublishedTestimonials("homepage");
+
   return (
     <>
       <Header />
@@ -629,6 +597,21 @@ export default function HomePage() {
                 </dl>
               </div>
             </Reveal>
+
+            {/* Only rendered once a real, fully named, signed-consent
+                testimonial is published to the Homepage from the admin
+                dashboard (lib/testimonials.ts). No placeholder here: the
+                Homepage never shows an illustrative quote. */}
+            {testimonials.length > 0 && (
+              <div className="mt-16">
+                <h3 className="mb-6 text-lg font-bold text-navy-950">In our clients&apos; words</h3>
+                <Reveal effect="stagger" className={`grid grid-cols-1 gap-6 ${testimonials.length > 1 ? "lg:grid-cols-2" : "max-w-3xl"}`}>
+                  {testimonials.map(({ id, ...card }) => (
+                    <TestimonialCard key={id} {...card} tone="light" />
+                  ))}
+                </Reveal>
+              </div>
+            )}
           </div>
         </section>
 

@@ -16,6 +16,7 @@ import { TiltCard } from "@/components/TiltCard";
 import { ScrollCue } from "@/components/home/ScrollCue";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 import { images } from "@/lib/images";
+import { getVisibleTeamMembers } from "@/lib/team";
 
 const WHATSAPP = "https://wa.me/237678597593";
 
@@ -51,13 +52,6 @@ function SpineNode({ tone = "light" }: { tone?: "light" | "dark" }) {
 }
 
 
-/*
- * Empty until the client supplies real names, roles and portraits. While it is
- * empty the page carries a single quiet line in the closing statement instead
- * of a whole section that says nothing; add one member and the full section
- * below renders itself.
- */
-const team: TeamMember[] = [];
 
 /*
  * The section argues that growth is *structural*, so the three supports are
@@ -149,7 +143,15 @@ const coreValues = [
   },
 ];
 
-export default function WhoWeArePage() {
+export default async function WhoWeArePage() {
+  /*
+   * From the admin dashboard's Team Members module (visible people only —
+   * lib/team.ts). Empty until real names, roles and portraits are added
+   * there, and while it is empty the Meet the team section is left out
+   * entirely; make one member visible and it renders itself.
+   */
+  const team: TeamMember[] = await getVisibleTeamMembers();
+
   return (
     <>
       <Header />

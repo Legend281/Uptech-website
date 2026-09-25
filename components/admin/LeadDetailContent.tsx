@@ -2,7 +2,6 @@
 
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { useLeadDetailActions, resolvableStatuses } from "@/components/admin/hooks/useLeadDetailActions";
-import { MOCK_ADMIN_USERS } from "@/lib/admin/mockData";
 import { departmentLabels, roleLabels } from "@/lib/admin/labels";
 import { getLeadServiceLabel } from "@/lib/admin/register";
 import { toWhatsAppHref } from "@/lib/admin/leads";
@@ -24,6 +23,9 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
     meta,
     assignedUser,
     responseClock,
+    windowHours,
+    windowIsCommitment,
+    assignableUsers,
     stageClock,
     languageMismatch,
     orphaned,
@@ -168,7 +170,7 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
                 className="rounded-md border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-700 focus-visible:border-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500/40"
               >
                 <option value="">Unassign</option>
-                {MOCK_ADMIN_USERS.map((user) => (
+                {assignableUsers.map((user) => (
                   <option key={user.id} value={user.id}>
                     {user.name}
                   </option>
@@ -219,7 +221,7 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
                 {responseClock.contacted
                   ? "First response within the 1-business-day commitment"
                   : responseClock.overdue
-                    ? `Not yet contacted — ${hoursOrDays(responseClock.hoursSinceCreated)} since inquiry, past the 1-business-day commitment`
+                    ? `Not yet contacted — ${hoursOrDays(responseClock.hoursSinceCreated)} since inquiry, ${windowIsCommitment ? "past the 1-business-day commitment" : `past the ${windowHours}h escalation window`}`
                     : `Not yet contacted — ${hoursOrDays(responseClock.hoursSinceCreated)} since inquiry`}
               </span>
             </div>

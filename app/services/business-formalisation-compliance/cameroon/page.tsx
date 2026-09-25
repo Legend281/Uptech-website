@@ -12,6 +12,7 @@ import { HeroIntro } from "@/components/services/HeroIntro";
 import { ScrollFillTrack } from "@/components/services/ScrollFillTrack";
 import { ScrollCue } from "@/components/home/ScrollCue";
 import { FaqAccordion } from "@/components/FaqAccordion";
+import { getFaqs } from "@/lib/faqs";
 import { ComplianceDisclaimer } from "@/components/ComplianceDisclaimer";
 import { WhatComesNext } from "@/components/WhatComesNext";
 import { Reveal } from "@/components/Reveal";
@@ -166,31 +167,9 @@ const personas = [
   },
 ];
 
-const faqItems = [
-  {
-    question: "Can this process be executed 100% remotely if I live in North America or Europe?",
-    answer:
-      "Yes. It can be done remotely. Uptech facilitates the creation of your company from wherever you are, stress-free.",
-  },
-  {
-    question: "What happens if my preferred trade name is already taken at the commercial registry?",
-    answer:
-      "Our intake protocol requires three (3) distinct name variants in order of priority. During Phase 1, our desk conducts an immediate database search at the Greffe / CFCE. If your primary choice conflicts with an existing entity, we pivot to your secondary approved name without halting the timeline.",
-  },
-  {
-    question: "Do I need a commercial real estate lease in Cameroon, or can I use a domiciliation address?",
-    answer:
-      "A verified registered address (Siège Social) is legally mandatory for both the RCCM court deposit and DGI tax localization certificate. OHADA rules permit legal corporate domiciliation agreements (Contrat de Domiciliation) through authorized providers during your initial startup phase.",
-  },
-  {
-    question:
-      "What is the key legal difference between an Individual Business (Établissement) and a Private Limited Company (SARL)?",
-    answer:
-      "An Établissement (Sole Proprietorship) does not create a distinct legal person; your personal assets remain exposed to business liabilities. A SARL creates an autonomous corporate entity where liability is restricted to contributed share capital — recommended for cross-border contracts and institutional partnerships.",
-  },
-];
-
-export default function BusinessFormalisationCameroonPage() {
+export default async function BusinessFormalisationCameroonPage() {
+  // Dashboard-published FAQs when there are any, else the built-in list (lib/faqs.ts).
+  const faqItems = await getFaqs("business-formalisation-cameroon");
   return (
     <>
       <Header activeService="business-formalisation-cameroon" />

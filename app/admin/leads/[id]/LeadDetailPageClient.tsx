@@ -3,9 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { toastResult } from "@/lib/admin/toastResult";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
-import { useLead, useLeadActions } from "@/components/admin/providers/LeadsProvider";
+import { useLead, useLeadActions, useLeadsLoading } from "@/components/admin/providers/LeadsProvider";
 import { LeadFormDialog } from "@/components/admin/LeadFormDialog";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { LeadDetailContent } from "@/components/admin/LeadDetailContent";
@@ -15,9 +15,12 @@ const CARD = "rounded-xl border border-slate-200 bg-white shadow-[0_1px_2px_rgba
 export function LeadDetailPageClient({ id }: { id: string }) {
   const router = useRouter();
   const lead = useLead(id);
+  const loading = useLeadsLoading();
   const { deleteLead } = useLeadActions();
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+
+  if (!lead && loading) return <p className="text-sm text-slate-500">Loading lead…</p>;
 
   if (!lead) {
     return (
@@ -76,10 +79,9 @@ export function LeadDetailPageClient({ id }: { id: string }) {
         description={`${lead.name}'s record will be permanently removed. This can't be undone.`}
         confirmLabel="Delete Lead"
         onCancel={() => setDeleteOpen(false)}
-        onConfirm={() => {
-          deleteLead(lead.id);
-          toast.success("Lead deleted");
-          router.push("/admin/leads");
+        onConfirm={async () => {
+          setDeleteOpen(false);
+          if (await toastResult(deleteLead(lead.id), "Lead deleted", "Not deleted")) router.push("/admin/leads");
         }}
       />
     </div>

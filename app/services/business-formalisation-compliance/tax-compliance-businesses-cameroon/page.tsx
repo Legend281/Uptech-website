@@ -11,6 +11,7 @@ import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { HeroIntro } from "@/components/services/HeroIntro";
 import { ScrollCue } from "@/components/home/ScrollCue";
 import { FaqAccordion } from "@/components/FaqAccordion";
+import { getFaqs } from "@/lib/faqs";
 import { ComplianceDisclaimer } from "@/components/ComplianceDisclaimer";
 import { TimelineNote } from "@/components/TimelineNote";
 import { WhatComesNext } from "@/components/WhatComesNext";
@@ -153,63 +154,9 @@ const individualDeliverables = [
   { icon: "workspace_premium", title: "Personal Tax Clearance (on request)", text: "Available when you need it for travel, visa, or cross-border matters." },
 ];
 
-const faqItems = [
-  {
-    question: "What happens if I've missed previous filings or past tax years?",
-    answer:
-      "Missed declarations are common, particularly for companies operating during rapid growth or informal transition phases. Uptech Consulting performs a discreet historical reconciliation: we recalculate statutory liabilities, assemble the back-filings, and interact directly with your attached Tax Center (Centre des Impôts) to negotiate manageable settlement structures and penalty remissions where permitted by the General Tax Code.",
-  },
-  {
-    question: "Do I need to worry about back-taxes if I'm just now formalising an informal business?",
-    answer:
-      "Your statutory tax existence typically commences upon RCCM registration and NIU issuance. If your business transacted through registered corporate accounts prior to formalisation, clear documentation of founding capital is crucial — we help structure your company inception so your opening balance sheet starts on solid, uncontested ground.",
-  },
-  {
-    question: "How often will our team need to provide accounting documents?",
-    answer:
-      "We recommend uploading bank summaries, payroll sheets, and customer invoices to your secure client folder between the 1st and 5th of each month. This gives our desk time to review ledgers, query any missing documentation, and lodge finalized returns ahead of the monthly cut-off.",
-  },
-  {
-    question: "What is the key difference between DGI tax compliance and CNPS labour compliance?",
-    answer:
-      "The Direction Générale des Impôts (DGI) falls under the Ministry of Finance and governs corporate income tax, withholding taxes (TSR), VAT/TVA, business licenses (Patente), and personal taxes at source. The Caisse Nationale de Prévoyance Sociale (CNPS) is Cameroon's national social security fund governing workplace insurance, pensions, and family welfare contributions. Both require monthly reporting but are enforced by distinct state authorities.",
-  },
-  // The four below came from the standalone "Tax Compliance for Individuals"
-  // page when it was merged into this one — personal tax (IRPP), not
-  // corporate tax.
-  {
-    // Web research (2026-09) confirmed this directly, citing Article 25 of
-    // Cameroon's General Tax Code (the "principe de mondialité" — tax
-    // residents are taxed on worldwide income, not just Cameroon-source
-    // income). Kept a lighter hedge on situation-specific treatment (double-
-    // tax treaty relief, specific income types), since that genuinely
-    // varies case by case and wasn't part of this research.
-    question: "Do I need to declare income I earn remotely from foreign clients?",
-    answer:
-      "Yes. Cameroon tax residents are taxed on worldwide income under Article 25 of the General Tax Code, including remote or foreign-client earnings — not just Cameroon-source income. Situation-specific details, like double-tax treaty relief, are confirmed with your consultant.",
-  },
-  {
-    question: "I don't have a registered company — do personal tax rules still apply to me?",
-    answer:
-      "Yes. Personal income tax (IRPP) applies to individuals regardless of whether they operate through a registered company. Freelancers, consultants, and independent earners are assessed as individual taxpayers.",
-  },
-  {
-    // Web research (2026-09) confirmed March 15 directly from DGI's own
-    // published guidance (impots.cm) — resolving the contradiction this
-    // answer used to have with the cadence card above (see that card's
-    // comment). DGI has administratively extended related deadlines in some
-    // years, so kept a note about confirming the current year specifically.
-    question: "When is the personal tax filing deadline?",
-    answer: "March 15 annually, per DGI's published deadline — though this has been administratively extended in some years, so it's worth confirming the current year's exact date with your consultant.",
-  },
-  {
-    question: "What documents do I need for my personal tax filing?",
-    answer:
-      "A valid national ID or passport, proof of income (contracts, pay slips, or invoices for the tax year being declared), and any previous year's IRPP declaration or tax identifier, if you have one.",
-  },
-];
-
-export default function TaxComplianceBusinessesCameroonPage() {
+export default async function TaxComplianceBusinessesCameroonPage() {
+  // Dashboard-published FAQs when there are any, else the built-in list (lib/faqs.ts).
+  const faqItems = await getFaqs("tax-compliance-businesses");
   return (
     <>
       <Header activeService="tax-compliance" />

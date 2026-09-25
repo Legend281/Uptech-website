@@ -49,14 +49,27 @@ const scriptSrc = isProd
   ? "script-src 'self' 'unsafe-inline'"
   : "script-src 'self' 'unsafe-eval' 'unsafe-inline'";
 
+/*
+ * The project's Supabase origin joins img-src (published photos come from
+ * Supabase Storage) and connect-src (the admin dashboard talks to Supabase
+ * directly from the browser, over https and, for auth, wss). Only that one
+ * origin, and only when it is actually configured.
+ */
+let supabaseOrigin = "";
+try {
+  supabaseOrigin = process.env.SUPABASE_URL ? new URL(process.env.SUPABASE_URL).origin : "";
+} catch {
+  supabaseOrigin = "";
+}
+
 const csp = [
   "default-src 'self'",
   scriptSrc,
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
   // `data:` covers the LQIP blur placeholders generated for each photo.
-  "img-src 'self' data:",
-  isProd ? "connect-src 'self'" : "connect-src 'self' ws:",
+  ["img-src 'self' data:", supabaseOrigin].filter(Boolean).join(" "),
+  ["connect-src 'self'", isProd ? "" : "ws:", supabaseOrigin, supabaseOrigin.replace(/^https:/, "wss:")].filter(Boolean).join(" "),
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

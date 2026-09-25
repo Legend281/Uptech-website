@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
-import { MOCK_ADMIN_USERS } from "@/lib/admin/mockData";
 import { departmentLabels, roleLabels } from "@/lib/admin/labels";
-import { useCurrentUser, useSetCurrentUserId } from "@/components/admin/providers/CurrentUserProvider";
+import { isActive, useAdminUsers, useCurrentUser, useSetCurrentUserId } from "@/components/admin/providers/CurrentUserProvider";
+import { useServicePages } from "@/components/admin/providers/SettingsProvider";
+import { getReviewStatus } from "@/lib/admin/staleness";
 
 /**
  * A slim instrument strip, not a hero banner — this is an Operate-mode
@@ -17,9 +19,25 @@ import { useCurrentUser, useSetCurrentUserId } from "@/components/admin/provider
  * standard placement for this kind of control (Linear, Vercel, Stripe), and
  * one that costs no vertical space when it isn't open.
  */
-export function AdminTopbar({ urgentCount, onOpenSidebar }: { urgentCount: number; onOpenSidebar: () => void }) {
+/** Section names for the strip, longest prefix first so /admin/leads/123 still reads "Leads". */
+const SECTION_TITLES: [prefix: string, title: string][] = [
+  ["/admin/testimonials", "Testimonials"],
+  ["/admin/team", "Team Members"],
+  ["/admin/faqs", "FAQ Items"],
+  ["/admin/settings", "Settings"],
+  ["/admin/leads", "Leads"],
+  ["/admin", "Dashboard"],
+];
+
+export function AdminTopbar({ onOpenSidebar }: { onOpenSidebar: () => void }) {
+  const pathname = usePathname();
+  const sectionTitle = SECTION_TITLES.find(([prefix]) => pathname.startsWith(prefix))?.[1] ?? "Dashboard";
   const currentUser = useCurrentUser();
   const setCurrentUserId = useSetCurrentUserId();
+  // Deactivated accounts can't be previewed as.
+  const activeUsers = useAdminUsers().filter(isActive);
+  // Review cycles come from Settings (spec 4.4), so this count follows them.
+  const urgentCount = useServicePages().filter((page) => getReviewStatus(page) === "overdue").length;
   const today = new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "numeric" }).format(new Date());
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -52,7 +70,7 @@ export function AdminTopbar({ urgentCount, onOpenSidebar }: { urgentCount: numbe
         <MaterialIcon name="menu" className="text-[20px]" />
       </button>
 
-      <h1 className="font-sans text-sm font-bold text-navy-950">Dashboard</h1>
+      <h1 className="font-sans text-sm font-bold text-navy-950">{sectionTitle}</h1>
 
       <div className="ml-auto flex items-center gap-4 text-sm">
         <span className="hidden text-slate-500 sm:inline">{today}</span>
@@ -100,7 +118,7 @@ export function AdminTopbar({ urgentCount, onOpenSidebar }: { urgentCount: numbe
                 Preview as
               </p>
               <ul className="max-h-96 overflow-y-auto py-1">
-                {MOCK_ADMIN_USERS.map((user) => {
+                {activeUsers.map((user) => {
                   const isCurrent = user.id === currentUser.id;
                   return (
                     <li key={user.id}>
@@ -134,7 +152,7 @@ export function AdminTopbar({ urgentCount, onOpenSidebar }: { urgentCount: numbe
               <button
                 type="button"
                 onClick={() => {
-                  setCurrentUserId(MOCK_ADMIN_USERS[0].id);
+                  setCurrentUserId(activeUsers[0].id);
                   setMenuOpen(false);
                 }}
                 className="flex w-full items-center gap-2 border-t border-slate-100 px-3 py-2.5 text-left text-sm font-semibold text-slate-500 transition-colors hover:bg-slate-50 hover:text-rose-600"

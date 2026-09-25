@@ -5,6 +5,7 @@
  * without rework.
  */
 import type { serviceOptions } from "@/lib/serviceOptions";
+import type { FaqCategory } from "@/lib/faqContent";
 
 export type Department = "career-services-operations" | "business-formalisation-compliance";
 export type AccessRole = "administrator" | "editor" | "viewer";
@@ -25,6 +26,14 @@ export type AdminUser = {
    * a French-preferring lead is claimed by someone who doesn't list French.
    */
   languages: ("English" | "French")[];
+  /** Where a sign-in invitation goes once Supabase Auth is wired. Optional for the seeded preview personas. */
+  email?: string;
+  /**
+   * Deactivated accounts keep their record (leads and the activity trail
+   * still point at them) but can't be switched to or assigned work.
+   * Undefined means active.
+   */
+  active?: boolean;
 };
 
 /** Mirrors the three page templates in CLAUDE.md Section 4. */
@@ -44,6 +53,8 @@ export type ServicePageMeta = {
   department: Department;
   lastReviewedAt: string;
   reviewCadenceDays: number;
+  /** How many days before a review falls due the page starts showing "due soon". Defaults to 30 (lib/admin/staleness.ts). */
+  dueSoonDays?: number;
   reviewedBy: string;
 };
 
@@ -123,4 +134,135 @@ export type Lead = {
    */
   firstContactedAt?: string;
   statusChangedAt: string;
+};
+
+/*
+ * Testimonials — Admin_Content_Pages_Spec.md Section 1. Mirrors
+ * supabase/002_testimonials.sql. Split into what can ever reach the public
+ * site and what stays internal; the public view in that migration exposes
+ * only the former.
+ */
+export type TestimonialStatus = "draft" | "published" | "archived";
+export type AttributionMode = "full_name" | "first_name_initial" | "anonymised";
+export type TestimonialAudience = "cameroon" | "us" | "diaspora";
+export type ConsentChannel = "whatsapp" | "email" | "signed-form";
+/** Pages that actually render a testimonial slot today. Keep in sync with the migration's CHECK list. */
+export type TestimonialPage = "homepage" | "career-marketing-placement";
+
+export type TestimonialPlacement = { page: TestimonialPage; displayOrder: number };
+
+export type Testimonial = {
+  id: string;
+
+  // Public
+  quoteEn: string;
+  quoteFr?: string;
+  /** True when the French is our translation, not the client's own French words. */
+  quoteFrIsTranslation: boolean;
+  outcomeLine?: string;
+  attributionMode: AttributionMode;
+  fullName?: string;
+  firstName?: string;
+  lastInitial?: string;
+  anonymisedDescriptor?: string;
+  roleTitle?: string;
+  company?: string;
+  audience?: TestimonialAudience;
+  /**
+   * What to display: the public Storage URL of a saved photo, or — while
+   * editing — the freshly resized JPEG data URL, which is uploaded on save.
+   */
+  photo?: string;
+  /** Where the saved photo lives in the testimonial-photos bucket. */
+  photoPath?: string;
+
+  // Internal
+  service: LeadServiceValue;
+  department: Department;
+  originalWording: string;
+  consentGiven: boolean;
+  consentDate?: string;
+  consentChannel?: ConsentChannel;
+  consentRecordedById?: string;
+  consentWithdrawnAt?: string;
+  leadId?: string;
+
+  status: TestimonialStatus;
+  placements: TestimonialPlacement[];
+  publishedAt?: string;
+  createdById: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+/*
+ * Team Members — Admin_Content_Pages_Spec.md Section 2. The public Who We
+ * Are roster: real people's names, faces and bios. Distinct from AdminUser
+ * (who can sign in to this dashboard), which Settings manages.
+ * Mirrors supabase/003_team_members.sql.
+ */
+export type TeamDepartment = "career-services" | "compliance" | "leadership" | "operations";
+export type TeamEntity = "cameroon" | "us";
+export type TeamMemberStatus = "visible" | "hidden";
+
+export type TeamMemberRecord = {
+  id: string;
+  name: string;
+  title: string;
+  department: TeamDepartment;
+  entity: TeamEntity;
+  /** Display URL (public Storage URL, or a fresh data URL while editing — uploaded on save). */
+  photo?: string;
+  /** Where the saved portrait lives in the team-photos bucket. */
+  photoPath?: string;
+  bio?: string;
+  linkedinUrl?: string;
+  displayOrder: number;
+  status: TeamMemberStatus;
+  /**
+   * Once someone has been on the public site, their record is only ever
+   * hidden, never deleted (spec 2.3) — other pages may reference them.
+   */
+  everVisible: boolean;
+  createdById: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+/** What a content module's write actions return: a refusal always says why, in words a staff member can act on. */
+export type ActionResult = { ok: true } | { ok: false; reasons: string[] };
+
+/*
+ * FAQ Items — Admin_Content_Pages_Spec.md Section 3. Mirrors
+ * supabase/004_faq_items.sql. Categories are defined alongside the site's
+ * built-in FAQ copy in lib/faqContent.ts.
+ */
+export type FaqStatus = "draft" | "published";
+
+export type FaqItemRecord = {
+  id: string;
+  question: string;
+  /** Light formatting — see components/FaqAnswer.tsx. */
+  answer: string;
+  category: FaqCategory;
+  displayOrder: number;
+  status: FaqStatus;
+  /**
+   * The legal-review gate (spec 3.2), for Tax and CNPS compliance only.
+   * Set by a second person; cleared automatically whenever the question or
+   * answer changes.
+   */
+  reviewedById?: string;
+  reviewedAt?: string;
+  /**
+   * Compliance FAQs that were already live on the site before this gate
+   * existed. Left published (they're on the site today) but flagged until
+   * someone gives them a first review — never silently treated as reviewed.
+   */
+  awaitingFirstReview?: boolean;
+  /** The last person to change the question or answer — the one who can't review it. */
+  lastEditedById: string;
+  createdById: string;
+  createdAt: string;
+  updatedAt: string;
 };

@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { TrustStrip } from "@/components/TrustStrip";
 import { FaqAccordion } from "@/components/FaqAccordion";
+import { getFaqs } from "@/lib/faqs";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { HeroIntro } from "@/components/services/career-marketing-placement/HeroIntro";
@@ -15,7 +16,9 @@ import { Button } from "@/components/Button";
 import { Reveal } from "@/components/Reveal";
 import { TextReveal } from "@/components/TextReveal";
 import { TiltCard } from "@/components/TiltCard";
+import { TestimonialCard } from "@/components/TestimonialCard";
 import { images } from "@/lib/images";
+import { getPublishedTestimonials } from "@/lib/testimonials";
 
 const arrowRightIcon = (
   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -140,36 +143,6 @@ const personaAccentClasses: Record<string, { iconBg: string; iconText: string; b
   emerald: { iconBg: "bg-emerald-50", iconText: "text-emerald-600", badgeBg: "bg-emerald-50", badgeText: "text-emerald-700" },
 };
 
-const faqItems = [
-  {
-    question: "What happens if I don't get placed right away?",
-    answer:
-      "Our active advocacy campaigns operate in continuous sprints. If an offer isn't finalized within the initial sprint, your account specialist recalibrates target criteria, adjusts keyword positioning, and continues daily outreach without interruption until you have signed an acceptable employment offer.",
-  },
-  {
-    question: "How is this different from doing it myself or using automated AI apply tools?",
-    answer:
-      "AI spam tools can trigger employer spam filters, hurting your reputation across LinkedIn and company databases. Doing it alone requires many hours of repetitive manual work each week while you're exhausted from your current routine. Uptech Consulting assigns a dedicated human worker who customizes every submission, completes employer screening questionnaires accurately, and personally follows up with hiring managers.",
-  },
-  {
-    question: "Do you guarantee a job?",
-    answer:
-      "No ethical firm can guarantee a hiring decision made by an independent third-party company. What we do guarantee is disciplined, auditable pipeline volume: tailored applications submitted regularly, continuous recruiter follow-ups, and transparent progress updates. You show up prepared; we ensure you get the meetings.",
-  },
-  {
-    // Rewritten to avoid stating an unconfirmed fact — safe to publish
-    // as-is; replace with real figure once provided by the team.
-    question: "How long does the campaign typically take from audit to first interview?",
-    answer:
-      "Every job search moves at its own pace depending on your field and experience level. Your dedicated career consultant will walk you through what to realistically expect once your profile is reviewed.",
-  },
-  {
-    question: "Is my personal data and employment confidentiality protected?",
-    answer:
-      "Strictly. If you are currently employed, we utilize stealth application protocols: suppressing your current employer from search vectors, avoiding internal company openings, and utilizing designated intermediary routing for outbound recruiter inquiries.",
-  },
-];
-
 /*
  * IT Consulting & Outsourcing removed: paused by leadership decision,
  * soft-hidden sitewide (see components/Header.tsx). No pillar numbers on
@@ -185,7 +158,11 @@ const otherPillars = [
   },
 ];
 
-export default function CareerMarketingPlacementPage() {
+export default async function CareerMarketingPlacementPage() {
+  // Dashboard-published FAQs when there are any, else the built-in list (lib/faqs.ts).
+  const faqItems = await getFaqs("career-marketing");
+  const testimonials = await getPublishedTestimonials("career-marketing-placement");
+
   return (
     <>
       <Header activeService="career-marketing" ctaLabel="Start Campaign" ctaHref="#start-campaign" />
@@ -410,16 +387,12 @@ export default function CareerMarketingPlacementPage() {
           </div>
         </section>
 
-        {/* Instructed to fill this rather than leave it visibly pending.
-            Written as an anonymized, illustrative quote grounded in the
-            service description already established and approved elsewhere
-            on this page (dedicated specialist, daily applications, recruiter
-            follow-up) — not attributed to a specific invented name, company,
-            or outcome figure, since presenting a fabricated person as a
-            verified endorsement would misrepresent it to visitors as a real
-            testimonial rather than an illustrative placeholder. Swap for a
-            real, named client story as soon as Uptech Consulting has one to
-            publish. */}
+        {/* Real testimonials come from the admin dashboard's Testimonials
+            module (published + consented only — see lib/testimonials.ts).
+            Until one is published for this page, the fallback below is the
+            original illustrative quote: anonymized, grounded in the service
+            description already approved on this page, and deliberately not
+            attributed to an invented name, company, or outcome figure. */}
         <section className="py-24 bg-navy-950 text-white relative overflow-hidden border-b border-slate-800/80">
           <div className="absolute right-0 top-0 w-full lg:w-3/4 h-full opacity-60 lg:opacity-75 pointer-events-none">
             <Image
@@ -442,18 +415,19 @@ export default function CareerMarketingPlacementPage() {
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-6">
                 <TextReveal text="From searching alone to someone working your case daily." />
               </h2>
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8">
-                <MaterialIcon name="format_quote" className="text-teal-400 text-[32px] mb-3" />
-                <p className="text-lg text-white leading-relaxed mb-5">
-                  I&apos;d been applying on my own for months with almost nothing back. Once my
-                  specialist took over, applications went out every day and someone was actually
-                  chasing recruiters on my behalf — not just me refreshing my inbox. For the first
-                  time, the search felt like it was moving instead of stalled.
-                </p>
-                <p className="text-sm font-semibold text-slate-400">
-                  Career Marketing &amp; Placement Support client
-                </p>
-              </div>
+              {testimonials.length > 0 ? (
+                <div className="space-y-4">
+                  {testimonials.map(({ id, ...card }) => (
+                    <TestimonialCard key={id} {...card} tone="dark" />
+                  ))}
+                </div>
+              ) : (
+                <TestimonialCard
+                  tone="dark"
+                  quote="I'd been applying on my own for months with almost nothing back. Once my specialist took over, applications went out every day and someone was actually chasing recruiters on my behalf — not just me refreshing my inbox. For the first time, the search felt like it was moving instead of stalled."
+                  displayName="Career Marketing & Placement Support client"
+                />
+              )}
             </div>
           </Reveal>
         </section>

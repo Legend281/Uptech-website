@@ -2,18 +2,18 @@
 
 import { useId, useState } from "react";
 import Link from "next/link";
-import { toast } from "sonner";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { useLeads, useLeadActions } from "@/components/admin/providers/LeadsProvider";
-import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
+import { useAdminUsers, useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
+import { useEscalationHours } from "@/components/admin/providers/SettingsProvider";
 import { LeadFormDialog } from "@/components/admin/LeadFormDialog";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { LeadRowActions } from "@/components/admin/LeadRowActions";
 import { LeadQuickViewModal } from "@/components/admin/LeadQuickViewModal";
 import { initialsOf, avatarTint } from "@/lib/admin/avatar";
 import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
+import { toastResult } from "@/lib/admin/toastResult";
 import { departmentLabels } from "@/lib/admin/labels";
-import { MOCK_ADMIN_USERS } from "@/lib/admin/mockData";
 import { severityMeta, leadStatusToSeverity, URGENCY_RANK, getLeadServiceLabel } from "@/lib/admin/register";
 import { getResponseClock, getStageClock, isLeadStale } from "@/lib/admin/leadStaleness";
 import type { Lead, LeadStatus, Department } from "@/lib/admin/types";
@@ -41,8 +41,9 @@ const departmentFilters: { value: Department | "unassigned" | "all"; label: stri
 
 const typeIcon: Record<Lead["type"], string> = { "job-seeker": "work", business: "apartment", general: "help" };
 
-function staleReason(lead: Lead): string | null {
-  const response = getResponseClock(lead);
+/** windowHours: the lead's department escalation window from Settings. */
+function staleReason(lead: Lead, windowHours: number): string | null {
+  const response = getResponseClock(lead, new Date(), windowHours);
   if (response.overdue) return "Overdue — not yet contacted";
   const stage = getStageClock(lead);
   if (stage.stale) return `Stuck ${Math.round(stage.daysInStatus)}d in "${severityMeta[leadStatusToSeverity[lead.status]].label}"`;
@@ -72,7 +73,7 @@ function LeadIdentity({ lead }: { lead: Lead }) {
 }
 
 function ActivityCell({ lead }: { lead: Lead }) {
-  const stale = staleReason(lead);
+  const stale = staleReason(lead, useEscalationHours()(lead.department));
   return stale ? (
     <span className="inline-flex items-center gap-1 whitespace-nowrap text-xs font-semibold text-amber-700">
       <MaterialIcon name="warning" className="text-[13px]" />
@@ -86,7 +87,7 @@ function ActivityCell({ lead }: { lead: Lead }) {
 /** Mobile card row — unchanged from the verified mobile pass; the table below is desktop/tablet only. */
 function LeadCard({ lead }: { lead: Lead }) {
   const meta = severityMeta[leadStatusToSeverity[lead.status]];
-  const stale = staleReason(lead);
+  const stale = staleReason(lead, useEscalationHours()(lead.department));
 
   return (
     <Link
@@ -135,6 +136,8 @@ export default function LeadsPage() {
   const leads = useLeads();
   const { claimLead, deleteLead } = useLeadActions();
   const currentUser = useCurrentUser();
+  const users = useAdminUsers();
+  const escalationHoursFor = useEscalationHours();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [quickViewLeadId, setQuickViewLeadId] = useState<string | null>(null);
@@ -149,7 +152,7 @@ export default function LeadsPage() {
 
   const needsTriageCount = leads.filter((lead) => lead.status === "needs-triage").length;
   const closedCount = leads.filter((lead) => CLOSED_STATUSES.includes(lead.status)).length;
-  const staleCount = leads.filter((lead) => isLeadStale(lead) && !CLOSED_STATUSES.includes(lead.status)).length;
+  const staleCount = leads.filter((lead) => isLeadStale(lead, new Date(), escalationHoursFor(lead.department)) && !CLOSED_STATUSES.includes(lead.status)).length;
 
   const statusCounts = statusFilters
     .filter((f) => f.value !== "all")
@@ -331,7 +334,7 @@ export default function LeadsPage() {
               <tbody>
                 {paged.map((lead) => {
                   const meta = severityMeta[leadStatusToSeverity[lead.status]];
-                  const assignedUser = MOCK_ADMIN_USERS.find((user) => user.id === lead.assignedToId);
+                  const assignedUser = users.find((user) => user.id === lead.assignedToId);
                   return (
                     <tr
                       key={lead.id}
@@ -360,8 +363,10 @@ export default function LeadsPage() {
                             type="button"
                             onClick={(event) => {
                               event.stopPropagation();
-                              claimLead(lead.id, currentUser.id);
-                              toast.success("Lead claimed", { description: `You're now the owner of ${lead.name}'s inquiry.` });
+                              void toastResult(claimLead(lead.id, currentUser.id), {
+                                title: "Lead claimed",
+                                description: `You're now the owner of ${lead.name}'s inquiry.`,
+                              });
                             }}
                             className="inline-flex items-center gap-1 rounded-md border border-teal-200 bg-teal-50 px-2 py-1 text-xs font-semibold text-teal-700 transition-colors hover:border-teal-300 hover:bg-teal-100"
                           >
@@ -442,8 +447,7 @@ export default function LeadsPage() {
         onCancel={() => setDeletingLead(null)}
         onConfirm={() => {
           if (deletingLead) {
-            deleteLead(deletingLead.id);
-            toast.success("Lead deleted");
+            void toastResult(deleteLead(deletingLead.id), "Lead deleted", "Not deleted");
           }
           setDeletingLead(null);
         }}

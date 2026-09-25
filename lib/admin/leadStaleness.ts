@@ -7,8 +7,13 @@ import type { Lead, LeadStatus } from "./types";
  * different failure modes and need different signals.
  */
 
-/** Confirmed, locked commitment — see app/contact/page.tsx's FAQ and lib/admin/register.ts. */
-const RESPONSE_SLA_HOURS = 24;
+/**
+ * Confirmed, locked commitment — see app/contact/page.tsx's FAQ and
+ * lib/admin/register.ts. Settings can set a department's escalation window
+ * SHORTER than this (flag earlier), never longer: the dashboard must never
+ * stop flagging a lead that has broken the public promise.
+ */
+export const RESPONSE_SLA_HOURS = 24;
 
 /**
  * No public commitment exists for these — genuinely a team call, not a
@@ -28,12 +33,13 @@ export type ResponseClock = {
   overdue: boolean;
 };
 
-export function getResponseClock(lead: Lead, now: Date = new Date()): ResponseClock {
+export function getResponseClock(lead: Lead, now: Date = new Date(), windowHours: number = RESPONSE_SLA_HOURS): ResponseClock {
   const hoursSinceCreated = (now.getTime() - new Date(lead.createdAt).getTime()) / 3_600_000;
+  const limit = Math.min(windowHours, RESPONSE_SLA_HOURS);
   return {
     contacted: Boolean(lead.firstContactedAt),
     hoursSinceCreated,
-    overdue: !lead.firstContactedAt && hoursSinceCreated > RESPONSE_SLA_HOURS,
+    overdue: !lead.firstContactedAt && hoursSinceCreated > limit,
   };
 }
 
@@ -49,6 +55,6 @@ export function getStageClock(lead: Lead, now: Date = new Date()): StageClock {
   return { daysInStatus, thresholdDays, stale: thresholdDays !== null && daysInStatus > thresholdDays };
 }
 
-export function isLeadStale(lead: Lead, now: Date = new Date()): boolean {
-  return getResponseClock(lead, now).overdue || getStageClock(lead, now).stale;
+export function isLeadStale(lead: Lead, now: Date = new Date(), windowHours: number = RESPONSE_SLA_HOURS): boolean {
+  return getResponseClock(lead, now, windowHours).overdue || getStageClock(lead, now).stale;
 }

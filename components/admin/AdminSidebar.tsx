@@ -30,12 +30,12 @@ function getNavGroups(leadsCount: number): NavGroup[] {
       items: [
         { label: "Service Pages", icon: "description", soon: true },
         { label: "Case Studies", icon: "auto_stories", soon: true },
-        { label: "Testimonials", icon: "format_quote", soon: true },
-        { label: "Team Members", icon: "groups", soon: true },
-        { label: "FAQ Items", icon: "quiz", soon: true },
+        { label: "Testimonials", icon: "format_quote", href: "/admin/testimonials" },
+        { label: "Team Members", icon: "groups", href: "/admin/team" },
+        { label: "FAQ Items", icon: "quiz", href: "/admin/faqs" },
       ],
     },
-    { label: "System", items: [{ label: "Settings", icon: "settings", soon: true, adminOnly: true }] },
+    { label: "System", items: [{ label: "Settings", icon: "settings", href: "/admin/settings" }] },
   ];
 }
 

@@ -1,10 +1,11 @@
-import { toast } from "sonner";
+import { toastResult } from "@/lib/admin/toastResult";
 import { useLeadActions } from "@/components/admin/providers/LeadsProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
-import { MOCK_ADMIN_USERS } from "@/lib/admin/mockData";
 import { departmentLabels } from "@/lib/admin/labels";
 import { severityMeta, leadStatusToSeverity } from "@/lib/admin/register";
-import { getResponseClock, getStageClock } from "@/lib/admin/leadStaleness";
+import { getResponseClock, getStageClock, RESPONSE_SLA_HOURS } from "@/lib/admin/leadStaleness";
+import { useAdminUsers } from "@/components/admin/providers/CurrentUserProvider";
+import { useEscalationHours } from "@/components/admin/providers/SettingsProvider";
 import type { Department, Lead, LeadStatus } from "@/lib/admin/types";
 
 export const resolvableStatuses: { value: Exclude<LeadStatus, "needs-triage">; label: string }[] = [
@@ -35,42 +36,45 @@ export const resolvableStatuses: { value: Exclude<LeadStatus, "needs-triage">; l
 export function useLeadDetailActions(lead: Lead) {
   const { claimLead, reassignLead, updateStatus, resolveTriage } = useLeadActions();
   const currentUser = useCurrentUser();
+  const users = useAdminUsers();
+  const escalationHoursFor = useEscalationHours();
 
   const meta = severityMeta[leadStatusToSeverity[lead.status]];
-  const assignedUser = MOCK_ADMIN_USERS.find((user) => user.id === lead.assignedToId);
-  const responseClock = getResponseClock(lead);
+  const assignedUser = users.find((user) => user.id === lead.assignedToId);
+  // The department's escalation window from Settings (never more than the public 24h promise).
+  const windowHours = escalationHoursFor(lead.department);
+  const responseClock = getResponseClock(lead, new Date(), windowHours);
+  const windowIsCommitment = windowHours >= RESPONSE_SLA_HOURS;
   const stageClock = getStageClock(lead);
   const languageMismatch = lead.language === "French" && Boolean(assignedUser) && !assignedUser?.languages.includes("French");
   const orphaned = !assignedUser && lead.status !== "needs-triage" && lead.status !== "new";
 
   function handleClaim() {
-    claimLead(lead.id, currentUser.id);
-    toast.success("Lead claimed", { description: `You're now the owner of ${lead.name}'s inquiry.` });
+    void toastResult(claimLead(lead.id, currentUser.id), { title: "Lead claimed", description: `You're now the owner of ${lead.name}'s inquiry.` });
   }
 
   function handleReassign(userId: string | undefined) {
-    reassignLead(lead.id, userId);
-    const user = MOCK_ADMIN_USERS.find((u) => u.id === userId);
-    toast.success(user ? `Reassigned to ${user.name}` : "Lead unassigned");
+    const user = users.find((u) => u.id === userId);
+    void toastResult(reassignLead(lead.id, userId), user ? `Reassigned to ${user.name}` : "Lead unassigned");
   }
 
   function handleStatusChange(status: LeadStatus) {
     const label = resolvableStatuses.find((s) => s.value === status)?.label ?? status;
     const shouldAutoClaim = !lead.assignedToId && status !== "new";
-    updateStatus(lead.id, status);
-    if (shouldAutoClaim) {
-      claimLead(lead.id, currentUser.id);
-      toast.success(`Claimed and marked as ${label}`, {
-        description: "An unclaimed lead is automatically claimed by whoever updates its status.",
-      });
-    } else {
-      toast.success(`Marked as ${label}`);
-    }
+    // One update, not two: the status change and the auto-claim land together or not at all.
+    void toastResult(
+      updateStatus(lead.id, status, shouldAutoClaim ? currentUser.id : undefined),
+      shouldAutoClaim
+        ? { title: `Claimed and marked as ${label}`, description: "An unclaimed lead is automatically claimed by whoever updates its status." }
+        : `Marked as ${label}`,
+    );
   }
 
   function handleResolveTriage(department: Department) {
-    resolveTriage(lead.id, department);
-    toast.success(`Routed to ${departmentLabels[department]}`, { description: "Now showing as a new lead in that queue." });
+    void toastResult(resolveTriage(lead.id, department), {
+      title: `Routed to ${departmentLabels[department]}`,
+      description: "Now showing as a new lead in that queue.",
+    });
   }
 
   return {
@@ -78,6 +82,10 @@ export function useLeadDetailActions(lead: Lead) {
     meta,
     assignedUser,
     responseClock,
+    windowHours,
+    windowIsCommitment,
+    /** People a lead can be handed to: active accounts only. */
+    assignableUsers: users.filter((u) => u.active !== false),
     stageClock,
     languageMismatch,
     orphaned,

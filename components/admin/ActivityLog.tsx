@@ -10,6 +10,13 @@ const dotColor: Record<string, string> = {
   person_add: "bg-blue-accent",
   work_history: "bg-slate-300",
   help: "bg-slate-300",
+  publish: "bg-emerald-500",
+  unpublished: "bg-slate-400",
+  block: "bg-rose-500",
+  archive: "bg-slate-300",
+  delete: "bg-rose-400",
+  how_to_reg: "bg-teal-400",
+  manage_accounts: "bg-blue-accent",
 };
 
 /**

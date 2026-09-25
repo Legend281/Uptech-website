@@ -1,13 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { toastResult } from "@/lib/admin/toastResult";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { useLead, useLeadActions } from "@/components/admin/providers/LeadsProvider";
 import { useLeadDetailActions, resolvableStatuses } from "@/components/admin/hooks/useLeadDetailActions";
 import { LeadFormDialog } from "@/components/admin/LeadFormDialog";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
-import { MOCK_ADMIN_USERS } from "@/lib/admin/mockData";
 import { departmentLabels, roleLabels } from "@/lib/admin/labels";
 import { getLeadServiceLabel } from "@/lib/admin/register";
 import { toWhatsAppHref } from "@/lib/admin/leads";
@@ -35,6 +34,7 @@ function QuickViewBody({ lead }: { lead: Lead }) {
     meta,
     assignedUser,
     responseClock,
+    assignableUsers,
     stageClock,
     languageMismatch,
     orphaned,
@@ -166,7 +166,7 @@ function QuickViewBody({ lead }: { lead: Lead }) {
                     className="shrink-0 rounded-md border border-slate-200 bg-white px-1.5 py-1 text-[11px] text-slate-700 focus-visible:border-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500/40"
                   >
                     <option value="">Unassign</option>
-                    {MOCK_ADMIN_USERS.map((user) => (
+                    {assignableUsers.map((user) => (
                       <option key={user.id} value={user.id}>
                         {user.name}
                       </option>
@@ -308,11 +308,9 @@ export function LeadQuickViewModal({ leadId, onClose }: { leadId: string | null;
         description={`${lead.name}'s record will be permanently removed. This can't be undone.`}
         confirmLabel="Delete Lead"
         onCancel={() => setDeleteOpen(false)}
-        onConfirm={() => {
-          deleteLead(lead.id);
-          toast.success("Lead deleted");
+        onConfirm={async () => {
           setDeleteOpen(false);
-          onClose();
+          if (await toastResult(deleteLead(lead.id), "Lead deleted", "Not deleted")) onClose();
         }}
       />
     </div>

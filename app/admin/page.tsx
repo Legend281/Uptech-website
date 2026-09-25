@@ -4,7 +4,8 @@ import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { RegisterList } from "@/components/admin/RegisterList";
 import { ActivityLog } from "@/components/admin/ActivityLog";
 import { useLeads } from "@/components/admin/providers/LeadsProvider";
-import { mockServicePages, mockActivity } from "@/lib/admin/mockData";
+import { useServicePages } from "@/components/admin/providers/SettingsProvider";
+import { useActivity } from "@/components/admin/providers/ActivityProvider";
 import { getReviewStatus } from "@/lib/admin/staleness";
 import { buildRegister, countCreatedWithinDays, countByStatusWithinDays } from "@/lib/admin/register";
 
@@ -44,11 +45,14 @@ function StatCard({
 
 export default function AdminDashboardPage() {
   const leads = useLeads();
+  const activity = useActivity();
+  // Review cycles come from Settings (spec 4.4).
+  const servicePages = useServicePages();
   const totalLeads = leads.length;
   const newLeadsThisWeek = countCreatedWithinDays(leads, 7);
   const bookedOrWonThisMonth = countByStatusWithinDays(leads, ["consultation-booked", "won"], 30);
-  const overdueCount = mockServicePages.filter((page) => getReviewStatus(page) === "overdue").length;
-  const dueSoonCount = mockServicePages.filter((page) => getReviewStatus(page) === "due-soon").length;
+  const overdueCount = servicePages.filter((page) => getReviewStatus(page) === "overdue").length;
+  const dueSoonCount = servicePages.filter((page) => getReviewStatus(page) === "due-soon").length;
   const needsReviewCount = overdueCount + dueSoonCount;
 
   const newLeadsSharePct = totalLeads > 0 ? Math.round((newLeadsThisWeek / totalLeads) * 100) : 0;
@@ -60,7 +64,7 @@ export default function AdminDashboardPage() {
           .filter(Boolean)
           .join(", ");
 
-  const rows = buildRegister(leads, mockServicePages);
+  const rows = buildRegister(leads, servicePages);
 
   return (
     <>
@@ -88,7 +92,7 @@ export default function AdminDashboardPage() {
           <RegisterList rows={rows} />
         </div>
         <div>
-          <ActivityLog entries={mockActivity} />
+          <ActivityLog entries={activity.slice(0, 8)} />
         </div>
       </div>
     </>

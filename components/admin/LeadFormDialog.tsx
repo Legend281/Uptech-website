@@ -35,6 +35,7 @@ export function LeadFormDialog(props: Props) {
   const [language, setLanguage] = useState<"English" | "French">("English");
   const [message, setMessage] = useState("");
   const [source, setSource] = useState<NewLeadInput["source"]>("manual-phone");
+  const [saving, setSaving] = useState(false);
 
   const canSubmit = name.trim() !== "" && email.trim() !== "" && phone.trim() !== "" && service !== "" && message.trim() !== "";
 
@@ -73,16 +74,22 @@ export function LeadFormDialog(props: Props) {
 
   if (!open) return null;
 
-  function handleSubmit(event: React.FormEvent) {
+  async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    if (!canSubmit) return;
-    if (props.mode === "edit") {
-      editLead(props.lead.id, { name, email, phone, company: company || undefined, service, language, message });
-      toast.success("Lead updated");
-    } else {
-      addLead({ name, email, phone, company: company || undefined, service, language, message, source });
-      toast.success("Lead logged", { description: `${name} was added to the register.` });
+    if (!canSubmit || saving) return;
+    setSaving(true);
+    const result =
+      props.mode === "edit"
+        ? await editLead(props.lead.id, { name, email, phone, company: company || undefined, service, language, message })
+        : await addLead({ name, email, phone, company: company || undefined, service, language, message, source });
+    setSaving(false);
+    if (!result.ok) {
+      toast.error("Not saved", { description: result.reasons[0] });
+      return;
     }
+    toast.success(props.mode === "edit" ? "Lead updated" : "Lead logged", {
+      description: props.mode === "edit" ? undefined : `${name} was added to the register.`,
+    });
     onClose();
   }
 
@@ -217,7 +224,7 @@ export function LeadFormDialog(props: Props) {
           <button
             type="submit"
             form={formId}
-            disabled={!canSubmit}
+            disabled={!canSubmit || saving}
             className="rounded-lg bg-navy-950 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-navy-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 disabled:cursor-not-allowed disabled:opacity-40"
           >
             {isEdit ? "Save Changes" : "Log Lead"}

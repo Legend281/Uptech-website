@@ -32,6 +32,9 @@ export function describeDbError(error: { message?: string; code?: string } | nul
     return "An outcome line needs a linked lead from the database and a signed consent form. Remove the outcome line to publish.";
   }
   if (/testimonials_attribution_fields/.test(error.message ?? "")) return "The name fields don't match the attribution you chose.";
+  if (/testimonials_consent_channel_check/.test(error.message ?? "")) {
+    return "The database hasn't been updated for the one-tick consent yet. Run supabase/014_testimonial_single_consent.sql in Supabase, then try again.";
+  }
   // Our own trigger messages (e.g. the review gate) are already written for people.
   return error.message || "Something went wrong.";
 }

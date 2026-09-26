@@ -1,10 +1,11 @@
 -- Uptech Consulting admin dashboard — let signed-in staff publish testimonials.
--- Run once in the Supabase SQL editor AFTER 001–005. Safe to re-run.
+-- Run once in the Supabase SQL editor AFTER 002_testimonials.sql and
+-- 012_profiles_active_and_update.sql. Safe to re-run.
 --
 -- Scope: testimonials only (the admin module that publishes to the live
--- Homepage and Career Marketing page). Staff sign-in itself is handled
--- elsewhere; this file only decides what a signed-in person may do with
--- testimonials, using the staff roles in public.staff_profiles (005).
+-- Homepage and Career Marketing page). Staff sign-in is 003_staff_auth.sql;
+-- this file only decides what a signed-in person may do with testimonials,
+-- using the staff roles in public.profiles (003, "active" from 012).
 --
 -- It also adds table GRANTs: newer Supabase projects don't grant table
 -- access to the API roles automatically, so without them every request is
@@ -15,30 +16,41 @@
 grant usage on schema public to anon, authenticated, service_role;
 
 -- The service role (server only: the page-refresh route and setup scripts).
-grant all on public.testimonials, public.testimonial_placements, public.staff_profiles to service_role;
+grant all on public.testimonials, public.testimonial_placements to service_role;
 
 -- Signed-in staff; row-level security below decides which rows.
 grant select, insert, update, delete on public.testimonials, public.testimonial_placements to authenticated;
-grant select on public.staff_profiles to authenticated;
 
 -- The public pages' read path (published, consented testimonials; public columns only).
 grant select on public.published_testimonials to anon, authenticated;
 
-grant execute on function public.current_staff_role() to authenticated;
-grant execute on function public.current_staff_department() to authenticated;
-
 -- 2. Helpers -----------------------------------------------------------------------
+-- The signed-in person's role and department from public.profiles, active
+-- accounts only. Named for testimonials so they can't collide with other
+-- modules' helpers.
+
+create or replace function public.testimonial_staff_role()
+returns text as $
+  select role from public.profiles where id = auth.uid() and active;
+$ language sql stable security definer set search_path = public;
+
+create or replace function public.testimonial_staff_department()
+returns text as $
+  select department from public.profiles where id = auth.uid() and active;
+$ language sql stable security definer set search_path = public;
 
 create or replace function public.is_staff_admin()
-returns boolean as $$
-  select coalesce(public.current_staff_role() = 'administrator', false);
-$$ language sql stable security definer set search_path = public;
+returns boolean as $
+  select coalesce(public.testimonial_staff_role() = 'administrator', false);
+$ language sql stable security definer set search_path = public;
 
 create or replace function public.is_staff_editor_of(dept text)
-returns boolean as $$
-  select coalesce(public.current_staff_role() = 'editor' and public.current_staff_department() = dept, false);
-$$ language sql stable security definer set search_path = public;
+returns boolean as $
+  select coalesce(public.testimonial_staff_role() = 'editor' and public.testimonial_staff_department() = dept, false);
+$ language sql stable security definer set search_path = public;
 
+grant execute on function public.testimonial_staff_role() to authenticated;
+grant execute on function public.testimonial_staff_department() to authenticated;
 grant execute on function public.is_staff_admin() to authenticated;
 grant execute on function public.is_staff_editor_of(text) to authenticated;
 
@@ -80,7 +92,7 @@ alter table public.testimonials enable row level security;
 
 drop policy if exists "Staff read testimonials" on public.testimonials;
 create policy "Staff read testimonials" on public.testimonials for select to authenticated
-  using (public.is_staff_admin() or department = public.current_staff_department());
+  using (public.is_staff_admin() or department = public.testimonial_staff_department());
 
 drop policy if exists "Staff add testimonials" on public.testimonials;
 create policy "Staff add testimonials" on public.testimonials for insert to authenticated
@@ -126,11 +138,11 @@ create policy "Staff manage placements" on public.testimonial_placements for all
 
 drop policy if exists "Staff upload testimonial photos" on storage.objects;
 create policy "Staff upload testimonial photos" on storage.objects for insert to authenticated
-  with check (bucket_id = 'testimonial-photos' and (public.is_staff_admin() or public.current_staff_role() = 'editor'));
+  with check (bucket_id = 'testimonial-photos' and (public.is_staff_admin() or public.testimonial_staff_role() = 'editor'));
 
 drop policy if exists "Staff remove testimonial photos" on storage.objects;
 create policy "Staff remove testimonial photos" on storage.objects for delete to authenticated
-  using (bucket_id = 'testimonial-photos' and (public.is_staff_admin() or public.current_staff_role() = 'editor'));
+  using (bucket_id = 'testimonial-photos' and (public.is_staff_admin() or public.testimonial_staff_role() = 'editor'));
 
 -- 6. Apply the new grants to the API immediately.
 notify pgrst, 'reload schema';

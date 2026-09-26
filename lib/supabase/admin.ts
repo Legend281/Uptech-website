@@ -1,17 +1,12 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
 
 /*
- * Server-only. The service-role key bypasses row-level security, so this
- * file is imported only by API routes under app/api/admin, and every one of
- * them calls requireStaff() first. Never import it from a "use client" file.
+ * Server-only caller check for app/api/admin routes. Deliberately uses the
+ * caller's OWN session (their bearer token + the anon key), never the
+ * service-role key: it can only see what that person could see anyway,
+ * which is their own row in public.profiles (supabase/003_staff_auth.sql).
  */
-export function getSupabaseServiceClient(): SupabaseClient {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) throw new Error("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set (see .env.local).");
-  return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
-}
 
 export type StaffCaller = { id: string; name: string; role: "administrator" | "editor" | "viewer"; department: string };
 
@@ -23,16 +18,24 @@ export async function requireStaff(request: NextRequest): Promise<StaffCaller | 
   const token = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
   if (!token) return NextResponse.json({ error: "Sign in first." }, { status: 401 });
 
-  const service = getSupabaseServiceClient();
-  const { data: userData, error: userError } = await service.auth.getUser(token);
+  const url = process.env.SUPABASE_URL;
+  const anonKey = process.env.SUPABASE_ANON_KEY;
+  if (!url || !anonKey) return NextResponse.json({ error: "The server isn't configured for Supabase." }, { status: 500 });
+
+  const asCaller = createClient(url, anonKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: { headers: { Authorization: `Bearer ${token}` } },
+  });
+
+  const { data: userData, error: userError } = await asCaller.auth.getUser(token);
   if (userError || !userData.user) return NextResponse.json({ error: "Your sign-in has expired. Sign in again." }, { status: 401 });
 
-  const { data: profile } = await service
-    .from("staff_profiles")
+  const { data: profile } = await asCaller
+    .from("profiles")
     .select("id, name, role, department, active")
     .eq("id", userData.user.id)
     .maybeSingle();
-  if (!profile || !profile.active) return NextResponse.json({ error: "This isn't an active staff account." }, { status: 403 });
+  if (!profile || profile.active === false) return NextResponse.json({ error: "This isn't an active staff account." }, { status: 403 });
 
   return { id: profile.id, name: profile.name, role: profile.role, department: profile.department };
 }

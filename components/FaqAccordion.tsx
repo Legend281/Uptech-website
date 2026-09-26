@@ -3,14 +3,16 @@
 import { useId, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { FaqAnswer } from "@/components/FaqAnswer";
 
 export type FaqItem = {
   question: string;
   answer: string;
 };
 
-export function FaqAccordion({ items }: { items: FaqItem[] }) {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+/** `defaultOpenIndex` is for previews (the admin dashboard opens its one item so staff see the answer). */
+export function FaqAccordion({ items, defaultOpenIndex = null }: { items: FaqItem[]; defaultOpenIndex?: number | null }) {
+  const [openIndex, setOpenIndex] = useState<number | null>(defaultOpenIndex);
   const baseId = useId();
   const reducedMotion = useReducedMotion();
 
@@ -22,7 +24,7 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
         const buttonId = `${baseId}-button-${index}`;
 
         return (
-          <div key={item.question}>
+          <div key={`${index}-${item.question}`}>
             <h3>
               <motion.button
                 type="button"
@@ -64,7 +66,7 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
               }`}
             >
               <div className="min-h-0">
-                <motion.p
+                <motion.div
                   animate={
                     reducedMotion
                       ? { opacity: isOpen ? 1 : 0 }
@@ -73,8 +75,8 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
                   transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                   className="pb-6 pr-6 text-sm leading-relaxed text-slate-600"
                 >
-                  {item.answer}
-                </motion.p>
+                  <FaqAnswer text={item.answer} />
+                </motion.div>
               </div>
             </div>
           </div>

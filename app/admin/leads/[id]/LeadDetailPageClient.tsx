@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
-import { useLead, useLeadActions } from "@/components/admin/providers/LeadsProvider";
+import { useLead, useLeadActions, useLeadsLoading } from "@/components/admin/providers/LeadsProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
 import { LeadFormDialog } from "@/components/admin/LeadFormDialog";
@@ -17,11 +17,14 @@ const CARD = "rounded-xl border border-slate-200 bg-white shadow-[0_1px_2px_rgba
 export function LeadDetailPageClient({ id }: { id: string }) {
   const router = useRouter();
   const lead = useLead(id);
+  const loading = useLeadsLoading();
   const { deleteLead } = useLeadActions();
   const currentUser = useCurrentUser();
   const logActivity = useLogActivity();
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+
+  if (!lead && loading) return <p className="text-sm text-slate-500">Loading lead…</p>;
 
   if (!lead) {
     return (

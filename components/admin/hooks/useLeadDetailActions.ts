@@ -3,9 +3,10 @@ import { useLeadActions } from "@/components/admin/providers/LeadsProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useStaff } from "@/components/admin/providers/StaffProvider";
 import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
+import { useEscalationHours } from "@/components/admin/providers/SettingsProvider";
 import { departmentLabels } from "@/lib/admin/labels";
 import { severityMeta, leadStatusToSeverity } from "@/lib/admin/register";
-import { getResponseClock, getStageClock } from "@/lib/admin/leadStaleness";
+import { getResponseClock, getStageClock, RESPONSE_SLA_HOURS } from "@/lib/admin/leadStaleness";
 import type { Department, Lead, LeadStatus } from "@/lib/admin/types";
 
 export const resolvableStatuses: { value: Exclude<LeadStatus, "needs-triage">; label: string }[] = [
@@ -54,11 +55,15 @@ export function useLeadDetailActions(lead: Lead) {
   const currentUser = useCurrentUser();
   const staff = useStaff();
   const logActivity = useLogActivity();
+  const escalationHoursFor = useEscalationHours();
   const leadHref = `/admin/leads/${lead.id}`;
 
   const meta = severityMeta[leadStatusToSeverity[lead.status]];
   const assignedUser = staff.find((user) => user.id === lead.assignedToId);
-  const responseClock = getResponseClock(lead);
+  // The department's escalation window from Settings (never more than the public 24h promise).
+  const windowHours = escalationHoursFor(lead.department);
+  const windowIsCommitment = windowHours >= RESPONSE_SLA_HOURS;
+  const responseClock = getResponseClock(lead, new Date(), windowHours);
   const stageClock = getStageClock(lead);
   const languageMismatch = lead.language === "French" && Boolean(assignedUser) && !assignedUser?.languages.includes("French");
   const orphaned = !assignedUser && lead.status !== "needs-triage" && lead.status !== "new";
@@ -136,6 +141,10 @@ export function useLeadDetailActions(lead: Lead) {
     meta,
     assignedUser,
     responseClock,
+    windowHours,
+    windowIsCommitment,
+    /** People a lead can be handed to: active accounts only, so a deactivated staff member can't be picked from the reassign dropdown. */
+    assignableUsers: staff.filter((u) => u.active !== false),
     stageClock,
     languageMismatch,
     orphaned,

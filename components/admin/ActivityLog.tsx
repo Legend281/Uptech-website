@@ -29,6 +29,12 @@ export const dotColor: Record<string, string> = {
   call: "bg-blue-accent",
   chat: "bg-emerald-500",
   delete: "bg-rose-500",
+  publish: "bg-emerald-500",
+  unpublished: "bg-slate-400",
+  block: "bg-rose-500",
+  archive: "bg-slate-300",
+  how_to_reg: "bg-teal-400",
+  manage_accounts: "bg-blue-accent",
 };
 
 /**

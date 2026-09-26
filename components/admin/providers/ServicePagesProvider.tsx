@@ -21,6 +21,7 @@ type ServicePageRow = {
   department: ServicePageMeta["department"];
   last_reviewed_at: string;
   review_cadence_days: number;
+  due_soon_days: number | null;
   reviewed_by: string;
   assigned_to_id: string | null;
 };
@@ -34,6 +35,7 @@ function fromRow(row: ServicePageRow): ServicePageMeta {
     department: row.department,
     lastReviewedAt: row.last_reviewed_at,
     reviewCadenceDays: row.review_cadence_days,
+    dueSoonDays: row.due_soon_days ?? undefined,
     reviewedBy: row.reviewed_by,
     assignedToId: row.assigned_to_id ?? undefined,
   };
@@ -49,6 +51,8 @@ type ServicePagesContextValue = {
   resolveReview: (pageId: string, input: ResolveReviewInput, resolvedByName: string) => void;
   escalateReview: (pageId: string, toUserId: string) => void;
   addServicePage: (input: NewServicePageInput) => Promise<ServicePageMeta>;
+  /** From Settings' "Review Cycle" screen — how often a page is re-checked and how far ahead its "due soon" warning starts. dueSoonDays undefined falls back to staleness.ts's flat default. */
+  updateReviewCadence: (pageId: string, input: { reviewCadenceDays: number; dueSoonDays?: number }) => void;
 };
 
 function slugify(title: string): string {
@@ -104,6 +108,17 @@ export function ServicePagesProvider({ children }: { children: ReactNode }) {
       });
   }
 
+  function updateReviewCadence(pageId: string, input: { reviewCadenceDays: number; dueSoonDays?: number }) {
+    updateLocal(pageId, { reviewCadenceDays: input.reviewCadenceDays, dueSoonDays: input.dueSoonDays });
+    getSupabaseBrowserClient()
+      .from("service_pages")
+      .update({ review_cadence_days: input.reviewCadenceDays, due_soon_days: input.dueSoonDays ?? null })
+      .eq("id", pageId)
+      .then(({ error }) => {
+        if (error) console.error(`[service-pages] Failed to update review cadence for ${pageId}:`, error);
+      });
+  }
+
   function escalateReview(pageId: string, toUserId: string) {
     updateLocal(pageId, { assignedToId: toUserId });
     getSupabaseBrowserClient()
@@ -150,7 +165,9 @@ export function ServicePagesProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <ServicePagesContext.Provider value={{ pages, resolveReview, escalateReview, addServicePage }}>{children}</ServicePagesContext.Provider>
+    <ServicePagesContext.Provider value={{ pages, resolveReview, escalateReview, addServicePage, updateReviewCadence }}>
+      {children}
+    </ServicePagesContext.Provider>
   );
 }
 
@@ -163,6 +180,6 @@ export function useServicePages(): ServicePageMeta[] {
 export function useServicePageActions(): Omit<ServicePagesContextValue, "pages"> {
   const ctx = useContext(ServicePagesContext);
   if (!ctx) throw new Error("useServicePageActions must be used within ServicePagesProvider");
-  const { resolveReview, escalateReview, addServicePage } = ctx;
-  return { resolveReview, escalateReview, addServicePage };
+  const { resolveReview, escalateReview, addServicePage, updateReviewCadence } = ctx;
+  return { resolveReview, escalateReview, addServicePage, updateReviewCadence };
 }

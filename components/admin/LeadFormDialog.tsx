@@ -42,6 +42,7 @@ export function LeadFormDialog(props: Props) {
   const [language, setLanguage] = useState<"English" | "French">("English");
   const [message, setMessage] = useState("");
   const [source, setSource] = useState<NewLeadInput["source"]>("manual-phone");
+  const [saving, setSaving] = useState(false);
 
   const canSubmit = name.trim() !== "" && email.trim() !== "" && phone.trim() !== "" && service !== "" && message.trim() !== "";
 
@@ -86,12 +87,13 @@ export function LeadFormDialog(props: Props) {
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    if (!canSubmit) return;
+    if (!canSubmit || saving) return;
     if (props.mode === "edit") {
       editLead(props.lead.id, { name, email, phone, company: company || undefined, service, language, message });
       logActivity({ icon: "edit_note", description: `${currentUser.name} updated ${name}'s lead record`, relatedHref: `/admin/leads/${props.lead.id}` });
       toast.success("Lead updated");
     } else {
+      setSaving(true);
       try {
         const newLead = await addLead({ name, email, phone, company: company || undefined, service, language, message, source });
         logActivity({ icon: "person_add", description: `${currentUser.name} logged a new lead: ${name}`, relatedHref: `/admin/leads/${newLead.id}` });
@@ -99,6 +101,8 @@ export function LeadFormDialog(props: Props) {
       } catch (error) {
         toast.error("Couldn't save this lead", { description: error instanceof Error ? error.message : "Please try again." });
         return;
+      } finally {
+        setSaving(false);
       }
     }
     onClose();
@@ -248,7 +252,7 @@ export function LeadFormDialog(props: Props) {
           <button
             type="submit"
             form={formId}
-            disabled={!canSubmit}
+            disabled={!canSubmit || saving}
             className="rounded-lg bg-navy-950 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-navy-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 disabled:cursor-not-allowed disabled:opacity-40"
           >
             {isEdit ? "Save Changes" : "Log Lead"}

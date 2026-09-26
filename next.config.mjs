@@ -50,15 +50,20 @@ const scriptSrc = isProd
   : "script-src 'self' 'unsafe-eval' 'unsafe-inline'";
 
 /*
- * The admin dashboard's auth/session/leads/resume code talks to Supabase
- * directly from the browser (lib/supabase/client.ts, middleware.ts) — a
- * bare `connect-src 'self'` blocks every one of those requests outright
- * (verified: signInWithPassword failed with "Failed to fetch" and a CSP
- * console error before this was added). Derived from the same env var the
- * client already uses, not hardcoded to one project's URL.
+ * The project's Supabase origin joins img-src (published photos come from
+ * Supabase Storage) and connect-src (the admin dashboard talks to Supabase
+ * directly from the browser, over https and, for auth, wss). Only that one
+ * origin, and only when it is actually configured. A bare `connect-src
+ * 'self'` blocks every Supabase request outright (verified:
+ * signInWithPassword failed with "Failed to fetch" and a CSP console error
+ * before this was added).
  */
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseOrigin = supabaseUrl ? new URL(supabaseUrl).origin : "";
+let supabaseOrigin = "";
+try {
+  supabaseOrigin = process.env.SUPABASE_URL ? new URL(process.env.SUPABASE_URL).origin : "";
+} catch {
+  supabaseOrigin = "";
+}
 
 const csp = [
   "default-src 'self'",
@@ -66,8 +71,8 @@ const csp = [
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
   // `data:` covers the LQIP blur placeholders generated for each photo.
-  "img-src 'self' data:",
-  ["connect-src 'self'", supabaseOrigin, ...(isProd ? [] : ["ws:"])].filter(Boolean).join(" "),
+  ["img-src 'self' data:", supabaseOrigin].filter(Boolean).join(" "),
+  ["connect-src 'self'", isProd ? "" : "ws:", supabaseOrigin, supabaseOrigin.replace(/^https:/, "wss:")].filter(Boolean).join(" "),
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

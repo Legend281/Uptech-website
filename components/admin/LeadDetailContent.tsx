@@ -30,6 +30,9 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
     meta,
     assignedUser,
     responseClock,
+    windowHours,
+    windowIsCommitment,
+    assignableUsers,
     stageClock,
     languageMismatch,
     orphaned,
@@ -256,7 +259,7 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
                 className="rounded-md border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-700 focus-visible:border-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500/40"
               >
                 <option value="">Unassign</option>
-                {staff.map((user) => (
+                {assignableUsers.map((user) => (
                   <option key={user.id} value={user.id}>
                     {user.name}
                   </option>
@@ -317,9 +320,9 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
                 {responseClock.contacted
                   ? "First response within the 1-business-day commitment"
                   : responseClock.overdue
-                    ? `Not yet contacted — ${hoursOrDays(responseClock.hoursSinceCreated)} since inquiry, past the 1-business-day commitment`
+                    ? `Not yet contacted — ${hoursOrDays(responseClock.hoursSinceCreated)} since inquiry, ${windowIsCommitment ? "past the 1-business-day commitment" : `past the ${windowHours}h escalation window`}`
                     : responseClock.dueSoon
-                      ? `Not yet contacted — ${hoursOrDays(responseClock.hoursSinceCreated)} since inquiry, approaching the 1-business-day commitment`
+                      ? `Not yet contacted — ${hoursOrDays(responseClock.hoursSinceCreated)} since inquiry, ${windowIsCommitment ? "approaching the 1-business-day commitment" : `approaching the ${windowHours}h escalation window`}`
                       : `Not yet contacted — ${hoursOrDays(responseClock.hoursSinceCreated)} since inquiry`}
               </span>
             </div>

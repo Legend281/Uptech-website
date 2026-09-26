@@ -61,7 +61,7 @@ function Breadcrumb({ segments }: { segments: Crumb[] }) {
  * (a visitor to convince). Date, operator, and the single most urgent fact
  * replace a greeting photo and a motivational tagline.
  *
- * The account identity, persona switcher, and log-out action live here as a
+ * The account identity, 2FA setup, and log-out action live here as a
  * single compact menu rather than a permanent card in the sidebar — the
  * standard placement for this kind of control (Linear, Vercel, Stripe), and
  * one that costs no vertical space when it isn't open.

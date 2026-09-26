@@ -3,6 +3,10 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { deriveLeadType } from "@/lib/admin/leads";
+import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
+import { useStaff } from "@/components/admin/providers/StaffProvider";
+import { useSettings } from "@/components/admin/providers/SettingsProvider";
+import { nextAssignee } from "@/lib/admin/settings";
 import type { Lead, LeadServiceValue, LeadSource, LeadStatus, LeadType, Department } from "@/lib/admin/types";
 
 /*
@@ -21,6 +25,12 @@ import type { Lead, LeadServiceValue, LeadSource, LeadStatus, LeadType, Departme
  * failed write leaves the local UI and the database disagreeing until the
  * next reload, which is a real, known gap — full rollback-on-failure is a
  * reasonable follow-up, not built here.
+ *
+ * Round-robin auto-assignment (from the Settings module) is layered on top
+ * of that real persistence: a new or newly-routed lead can be handed to the
+ * next eligible person in its department's pool automatically, same as it
+ * was on the branch this was merged from — just reading the real staff
+ * roster and Settings instead of mock data.
  */
 
 type LeadRow = {
@@ -92,6 +102,8 @@ export type EditableLeadFields = {
 
 type LeadsContextValue = {
   leads: Lead[];
+  /** False once the initial fetch settles (success or error) — lets a detail route distinguish "still loading" from "this id genuinely doesn't exist" instead of flashing the not-found state first. */
+  loading: boolean;
   addLead: (input: NewLeadInput) => Promise<Lead>;
   editLead: (id: string, input: EditableLeadFields) => void;
   deleteLead: (id: string) => void;
@@ -105,6 +117,10 @@ const LeadsContext = createContext<LeadsContextValue | null>(null);
 
 export function LeadsProvider({ children }: { children: ReactNode }) {
   const [leads, setLeads] = useState<Lead[]>([]);
+  const [loading, setLoading] = useState(true);
+  const logActivity = useLogActivity();
+  const staff = useStaff();
+  const { settings } = useSettings();
 
   useEffect(() => {
     const supabase = getSupabaseBrowserClient();
@@ -118,15 +134,26 @@ export function LeadsProvider({ children }: { children: ReactNode }) {
         if (cancelled) return;
         if (error) {
           console.error("[leads] Failed to load leads:", error);
+          setLoading(false);
           return;
         }
         setLeads((data as LeadRow[]).map(fromRow));
+        setLoading(false);
       });
 
     return () => {
       cancelled = true;
     };
   }, []);
+
+  /** Settings 4.1 round-robin: whoever comes after the owner of the department's most recent assigned lead in that pool. Undefined when round-robin isn't on for that department, or nobody's eligible. */
+  function autoAssigneeFor(department: Department): string | undefined {
+    const config = settings.assignment[department];
+    const last = [...leads]
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+      .find((l) => l.department === department && l.assignedToId && config.poolUserIds.includes(l.assignedToId));
+    return nextAssignee(config, staff, department, last?.assignedToId);
+  }
 
   function updateLead(id: string, patch: Partial<Lead>) {
     setLeads((prev) => prev.map((lead) => (lead.id === id ? { ...lead, ...patch } : lead)));
@@ -156,6 +183,12 @@ export function LeadsProvider({ children }: { children: ReactNode }) {
       });
   }
 
+  /** No external caller can know an auto-assignment happened before this action runs, so this is the one Leads action that logs its own extra activity note — everything else is logged by the calling component. */
+  function logAutoAssignee(leadName: string, assigneeId: string, leadId: string) {
+    const name = staff.find((u) => u.id === assigneeId)?.name ?? "someone";
+    logActivity({ icon: "manage_accounts", description: `${leadName}'s inquiry was auto-assigned to ${name} (round-robin).`, relatedHref: `/admin/leads/${leadId}` });
+  }
+
   async function addLead(input: NewLeadInput): Promise<Lead> {
     const supabase = getSupabaseBrowserClient();
     const type = deriveLeadType(input.service);
@@ -164,6 +197,7 @@ export function LeadsProvider({ children }: { children: ReactNode }) {
     // hand) — unlike a public-form submission, there's no ambiguous case to
     // route to needs-triage here.
     const department: Department = type === "job-seeker" ? "career-services-operations" : "business-formalisation-compliance";
+    const autoAssignee = autoAssigneeFor(department);
 
     const { data, error } = await supabase
       .from("leads")
@@ -179,6 +213,7 @@ export function LeadsProvider({ children }: { children: ReactNode }) {
         source: input.source,
         language: input.language,
         message: input.message.trim(),
+        assigned_to_id: autoAssignee ?? null,
       })
       .select()
       .single();
@@ -189,14 +224,13 @@ export function LeadsProvider({ children }: { children: ReactNode }) {
 
     const lead = fromRow(data as LeadRow);
     setLeads((prev) => [lead, ...prev]);
+    if (autoAssignee) logAutoAssignee(lead.name, autoAssignee, lead.id);
     return lead;
   }
 
   function editLead(id: string, input: EditableLeadFields) {
-    // Deliberately leaves department/status untouched — correcting a typo'd
-    // phone number shouldn't silently override a triage decision a human
-    // already made. Only `type` is safe to recompute from the (possibly
-    // changed) service, since it has no "manually resolved" state to protect.
+    // Leaves department/status untouched — correcting a typo'd phone number
+    // shouldn't silently override a triage decision a human already made.
     updateLead(id, {
       name: input.name.trim(),
       email: input.email.trim(),
@@ -241,11 +275,20 @@ export function LeadsProvider({ children }: { children: ReactNode }) {
   }
 
   function resolveTriage(id: string, department: Department) {
-    updateLead(id, { department, status: "new", statusChangedAt: new Date().toISOString(), wasManuallyTriaged: true });
+    const lead = leads.find((candidate) => candidate.id === id);
+    const autoAssignee = lead && !lead.assignedToId ? autoAssigneeFor(department) : undefined;
+    updateLead(id, {
+      department,
+      status: "new",
+      statusChangedAt: new Date().toISOString(),
+      wasManuallyTriaged: true,
+      ...(autoAssignee ? { assignedToId: autoAssignee } : {}),
+    });
+    if (autoAssignee && lead) logAutoAssignee(lead.name, autoAssignee, id);
   }
 
   return (
-    <LeadsContext.Provider value={{ leads, addLead, editLead, deleteLead, claimLead, reassignLead, updateStatus, resolveTriage }}>
+    <LeadsContext.Provider value={{ leads, loading, addLead, editLead, deleteLead, claimLead, reassignLead, updateStatus, resolveTriage }}>
       {children}
     </LeadsContext.Provider>
   );
@@ -255,6 +298,12 @@ export function useLeads(): Lead[] {
   const ctx = useContext(LeadsContext);
   if (!ctx) throw new Error("useLeads must be used within LeadsProvider");
   return ctx.leads;
+}
+
+export function useLeadsLoading(): boolean {
+  const ctx = useContext(LeadsContext);
+  if (!ctx) throw new Error("useLeadsLoading must be used within LeadsProvider");
+  return ctx.loading;
 }
 
 export function useLead(id: string): Lead | undefined {

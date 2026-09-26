@@ -6,7 +6,9 @@ import { MaterialIcon } from "@/components/icons/MaterialIcon";
 /**
  * A generic destructive-action confirmation — per the research this was
  * built against, an instant, silent delete on a dense list is how a
- * mis-click quietly destroys a record. Reusable beyond leads.
+ * mis-click quietly destroys a record. Reusable beyond leads. The "warning"
+ * tone is for a go-ahead check that isn't destructive (e.g. showing a team
+ * member without a photo).
  */
 export function ConfirmDialog({
   open,
@@ -15,6 +17,7 @@ export function ConfirmDialog({
   confirmLabel = "Delete",
   onConfirm,
   onCancel,
+  tone = "danger",
 }: {
   open: boolean;
   title: string;
@@ -22,7 +25,9 @@ export function ConfirmDialog({
   confirmLabel?: string;
   onConfirm: () => void;
   onCancel: () => void;
+  tone?: "danger" | "warning";
 }) {
+  const danger = tone === "danger";
   useEffect(() => {
     if (!open) return;
     function handleKeyDown(event: KeyboardEvent) {
@@ -38,7 +43,7 @@ export function ConfirmDialog({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="alertdialog" aria-modal="true">
       <div className="absolute inset-0 bg-navy-950/50" onClick={onCancel} aria-hidden="true" />
       <div className="relative w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-rose-50 text-rose-600">
+        <div className={`flex h-10 w-10 items-center justify-center rounded-full ${danger ? "bg-rose-50 text-rose-600" : "bg-amber-50 text-amber-600"}`}>
           <MaterialIcon name="warning" className="text-[20px]" />
         </div>
         <h2 className="mt-3 font-sans text-base font-bold text-navy-950">{title}</h2>
@@ -54,7 +59,9 @@ export function ConfirmDialog({
           <button
             type="button"
             onClick={onConfirm}
-            className="rounded-lg bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-rose-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-500"
+            className={`rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
+              danger ? "bg-rose-600 hover:bg-rose-700 focus-visible:outline-rose-500" : "bg-navy-950 hover:bg-navy-900 focus-visible:outline-teal-500"
+            }`}
           >
             {confirmLabel}
           </button>

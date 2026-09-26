@@ -9,10 +9,14 @@ import { AdminTopbar } from "@/components/admin/AdminTopbar";
 import { CurrentUserProvider, useCurrentUserStatus } from "@/components/admin/providers/CurrentUserProvider";
 import { MfaChallengeScreen } from "@/components/admin/MfaChallengeScreen";
 import { StaffProvider } from "@/components/admin/providers/StaffProvider";
+import { SettingsProvider } from "@/components/admin/providers/SettingsProvider";
 import { LeadsProvider } from "@/components/admin/providers/LeadsProvider";
 import { ActivityProvider } from "@/components/admin/providers/ActivityProvider";
 import { ServicePagesProvider } from "@/components/admin/providers/ServicePagesProvider";
 import { JobPostingsProvider } from "@/components/admin/providers/JobPostingsProvider";
+import { TestimonialsProvider } from "@/components/admin/providers/TestimonialsProvider";
+import { TeamMembersProvider } from "@/components/admin/providers/TeamMembersProvider";
+import { FaqItemsProvider } from "@/components/admin/providers/FaqItemsProvider";
 
 function FullPageSpinner() {
   return (
@@ -46,7 +50,14 @@ function NoProfileState() {
   );
 }
 
-/** Everything below the session gate — only mounts once a real, loaded AdminUser exists, so every consumer's useCurrentUser() call is guaranteed non-null. */
+/*
+ * Everything below the session gate — only mounts once a real, loaded
+ * AdminUser exists, so every consumer's useCurrentUser() call is guaranteed
+ * non-null. Provider order matters, outermost first: Staff (everyone reads
+ * the roster) -> Settings (assignment pools) -> the real data modules ->
+ * the four content modules your teammate built (Testimonials/Team
+ * Members/FAQ Items), which read Settings for their own assignment pools.
+ */
 function AuthenticatedShell({ children }: { children: ReactNode }) {
   const { currentUser, loading, mfaPending } = useCurrentUserStatus();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -57,25 +68,34 @@ function AuthenticatedShell({ children }: { children: ReactNode }) {
 
   return (
     <StaffProvider>
-      <LeadsProvider>
-        <ActivityProvider>
-          <ServicePagesProvider>
-            <JobPostingsProvider>
-              {/* reducedMotion="user" makes every motion.* / AnimatePresence animation in this section defer to the OS-level prefers-reduced-motion setting automatically. */}
-              <MotionConfig reducedMotion="user">
-                <div className="min-h-screen bg-[#F7F8FA]">
-                  <AdminSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-                  <div className="lg:pl-72">
-                    {/* Reads its own urgent count from ServicePagesProvider now, live — a server-computed prop here would freeze at build time and never reflect a Resolve action. */}
-                    <AdminTopbar onOpenSidebar={() => setSidebarOpen(true)} />
-                    <main className="px-4 py-6 sm:px-6 lg:px-8">{children}</main>
-                  </div>
-                </div>
-              </MotionConfig>
-            </JobPostingsProvider>
-          </ServicePagesProvider>
-        </ActivityProvider>
-      </LeadsProvider>
+      {/* ActivityProvider comes before Settings/Testimonials/TeamMembers/FaqItems — each of those logs into it internally via useLogActivity(), so it has to be an ancestor, not a sibling. */}
+      <ActivityProvider>
+        <SettingsProvider>
+          <LeadsProvider>
+            <ServicePagesProvider>
+              <JobPostingsProvider>
+                <TestimonialsProvider>
+                  <TeamMembersProvider>
+                    <FaqItemsProvider>
+                      {/* reducedMotion="user" makes every motion.* / AnimatePresence animation in this section defer to the OS-level prefers-reduced-motion setting automatically. */}
+                      <MotionConfig reducedMotion="user">
+                        <div className="min-h-screen bg-[#F7F8FA]">
+                          <AdminSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+                          <div className="lg:pl-72">
+                            {/* Reads its own urgent count from ServicePagesProvider now, live — a server-computed prop here would freeze at build time and never reflect a Resolve action. */}
+                            <AdminTopbar onOpenSidebar={() => setSidebarOpen(true)} />
+                            <main className="px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+                          </div>
+                        </div>
+                      </MotionConfig>
+                    </FaqItemsProvider>
+                  </TeamMembersProvider>
+                </TestimonialsProvider>
+              </JobPostingsProvider>
+            </ServicePagesProvider>
+          </LeadsProvider>
+        </SettingsProvider>
+      </ActivityProvider>
     </StaffProvider>
   );
 }

@@ -11,6 +11,7 @@ import { HeroIntro } from "@/components/services/HeroIntro";
 import { ScrollFillTrack } from "@/components/services/ScrollFillTrack";
 import { ScrollCue } from "@/components/home/ScrollCue";
 import { FaqAccordion } from "@/components/FaqAccordion";
+import { getFaqs } from "@/lib/faqs";
 import { ComplianceDisclaimer } from "@/components/ComplianceDisclaimer";
 import { WhatComesNext } from "@/components/WhatComesNext";
 import { Reveal } from "@/components/Reveal";
@@ -160,35 +161,9 @@ const personas = [
   },
 ];
 
-const faqItems = [
-  {
-    // Was stated as flat, unhedged legal fact — the one confident claim on
-    // this page with no qualification, unlike everything else here.
-    // Downgraded per the family-wide confidence-vs-pending audit fix.
-    question: "Do I need to be a US citizen or resident to form an LLC?",
-    answer:
-      "Generally, no — non-US residents can typically form and own a US LLC or C-Corp without a US visa, Social Security Number, or physical US address as a founder, though a registered agent with a physical in-state address is required for the entity itself. Confirm current requirements for your specific situation with your Uptech Consulting consultant.",
-  },
-  {
-    // Web research (2026-09) adds the well-established, factual trade-offs
-    // between the three states, corroborated across multiple sources — but
-    // stops short of asserting Uptech Consulting's own recommendation
-    // framework for specific founder profiles, since that's a genuine
-    // advisory judgment call for your consultant, not a researchable fact.
-    question: "Which state should I choose?",
-    answer:
-      "It depends on your goals. Delaware is the standard choice if you're raising outside investment — its courts and corporate law are what most US investors expect. Wyoming tends to suit founders prioritizing low ongoing cost and privacy (no franchise tax, member names aren't public). Texas has no personal state income tax but more ongoing reporting. Your consultant will help you weigh these against your specific situation.",
-  },
-  {
-    // Rewritten to avoid stating an unconfirmed fact — safe to publish
-    // as-is; replace with real figure once provided by the team.
-    question: "Can I open a US bank account remotely?",
-    answer:
-      "We can guide you through opening a US business bank account as part of formation — your consultant will walk you through the current options available to you.",
-  },
-];
-
-export default function BusinessFormalisationUnitedStatesPage() {
+export default async function BusinessFormalisationUnitedStatesPage() {
+  // Dashboard-published FAQs when there are any, else the built-in list (lib/faqs.ts).
+  const faqItems = await getFaqs("business-formalisation-us");
   return (
     <>
       <Header activeService="business-formalisation-us" />

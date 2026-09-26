@@ -12,6 +12,7 @@ import { HeroIntro } from "@/components/services/HeroIntro";
 import { ScrollFillTrack } from "@/components/services/ScrollFillTrack";
 import { ScrollCue } from "@/components/home/ScrollCue";
 import { FaqAccordion } from "@/components/FaqAccordion";
+import { getFaqs } from "@/lib/faqs";
 import { ComplianceDisclaimer } from "@/components/ComplianceDisclaimer";
 import { WhatComesNext } from "@/components/WhatComesNext";
 import { Reveal } from "@/components/Reveal";
@@ -152,40 +153,9 @@ const personaAccentClasses: Record<"teal" | "amber" | "sky", { chip: string; ico
   sky: { chip: "bg-sky-500/25 text-sky-300", icon: "bg-sky-500/25 text-sky-300", label: "text-sky-300" },
 };
 
-const faqItems = [
-  // RESOLVED via web research (2026-09), replacing the earlier generic
-  // hedge — corroborated across multiple independent sources on Cameroon
-  // CNPS procedure. Worth a quick confirmation with Uptech Consulting's own
-  // CNPS desk, since procedure specifics can be revised.
-  {
-    question: "How often do I need to file DPAE and other CNPS declarations?",
-    answer:
-      "DPAE is filed once per employee, within days of hiring — it's not a recurring filing. Separately, your CNPS contribution declaration (covering everyone on payroll) is filed every month, due by the 15th of the following month.",
-  },
-  {
-    question: "What happens if my business isn't registered with CNPS yet?",
-    answer:
-      "We conduct a review of your current employee register and help bring your CNPS registration and past declarations up to date, similar to how back-filings are handled for tax compliance.",
-  },
-  {
-    // Two independent sources disagreed specifically on the pension branch
-    // split (one: 4.2% total; another: 8.4% total, split evenly). Resolved
-    // in favor of CLEISS (cleiss.fr) — a French inter-governmental body
-    // whose actual mandate is documenting foreign social security systems
-    // accurately for cross-border administration, making it more
-    // institutionally reliable here than the blog/SEO sources — and it
-    // independently agreed with the other search results on both of the
-    // other two branches, which increases confidence in its pension figure
-    // too. Kept the "periodically revised" framing since CNPS does update
-    // these by decree; not the same as the unresolved [PENDING] this
-    // replaces.
-    question: "What are the current CNPS contribution rates?",
-    answer:
-      "Family benefits: 7%, employer-paid. Old-age/pension/invalidity/death insurance: 4.2% employer + 4.2% employee. Workplace accident insurance: 1.75%–5% employer-paid, depending on your sector's risk category. Family benefits and pension are calculated against a monthly salary ceiling; workplace accident insurance is not capped. CNPS revises these by decree periodically, so we confirm your business's exact current rates during onboarding.",
-  },
-];
-
-export default function CnpsComplianceCameroonPage() {
+export default async function CnpsComplianceCameroonPage() {
+  // Dashboard-published FAQs when there are any, else the built-in list (lib/faqs.ts).
+  const faqItems = await getFaqs("cnps-compliance");
   return (
     <>
       <Header activeService="cnps-compliance" />

@@ -27,16 +27,16 @@ export function getNavGroups(leadsCount: number, jobPostingsCount: number, servi
       items: [
         { label: "Service Pages", icon: "description", href: "/admin/service-pages", badge: servicePagesNeedingReviewCount },
         { label: "Case Studies", icon: "auto_stories", soon: true },
-        { label: "Testimonials", icon: "format_quote", soon: true },
-        { label: "Team Members", icon: "groups", soon: true },
-        { label: "FAQ Items", icon: "quiz", soon: true },
+        { label: "Testimonials", icon: "format_quote", href: "/admin/testimonials" },
+        { label: "Team Members", icon: "groups", href: "/admin/team" },
+        { label: "FAQ Items", icon: "quiz", href: "/admin/faqs" },
       ],
     },
     {
       label: "System",
       items: [
         { label: "Staff", icon: "badge", href: "/admin/staff", adminOnly: true },
-        { label: "Settings", icon: "settings", soon: true, adminOnly: true },
+        { label: "Settings", icon: "settings", href: "/admin/settings", adminOnly: true },
       ],
     },
   ];

@@ -7,8 +7,13 @@ import type { Lead, LeadStatus } from "./types";
  * different failure modes and need different signals.
  */
 
-/** Confirmed, locked commitment — see app/contact/page.tsx's FAQ and lib/admin/register.ts. */
-const RESPONSE_SLA_HOURS = 24;
+/**
+ * Confirmed, locked commitment — see app/contact/page.tsx's FAQ and
+ * lib/admin/register.ts. Settings can set a department's escalation window
+ * SHORTER than this (flag earlier), never longer: the dashboard must never
+ * stop flagging a lead that has broken the public promise.
+ */
+export const RESPONSE_SLA_HOURS = 24;
 
 /**
  * No public commitment exists for these — genuinely a team call, not a
@@ -38,11 +43,14 @@ export type ResponseClock = {
   dueSoon: boolean;
 };
 
-export function getResponseClock(lead: Lead, now: Date = new Date()): ResponseClock {
+export function getResponseClock(lead: Lead, now: Date = new Date(), windowHours: number = RESPONSE_SLA_HOURS): ResponseClock {
   const hoursSinceCreated = (now.getTime() - new Date(lead.createdAt).getTime()) / 3_600_000;
   const contacted = Boolean(lead.firstContactedAt);
-  const overdue = !contacted && hoursSinceCreated > RESPONSE_SLA_HOURS;
-  const dueSoon = !contacted && !overdue && hoursSinceCreated >= RESPONSE_SLA_HOURS * (1 - WARNING_RATIO);
+  // Settings can set a department's window shorter than the public promise
+  // (flag earlier), never longer — capped here regardless of what's passed in.
+  const limit = Math.min(windowHours, RESPONSE_SLA_HOURS);
+  const overdue = !contacted && hoursSinceCreated > limit;
+  const dueSoon = !contacted && !overdue && hoursSinceCreated >= limit * (1 - WARNING_RATIO);
   return { contacted, hoursSinceCreated, overdue, dueSoon };
 }
 
@@ -62,8 +70,8 @@ export function getStageClock(lead: Lead, now: Date = new Date()): StageClock {
   return { daysInStatus, thresholdDays, stale, dueSoon };
 }
 
-export function isLeadStale(lead: Lead, now: Date = new Date()): boolean {
-  return getResponseClock(lead, now).overdue || getStageClock(lead, now).stale;
+export function isLeadStale(lead: Lead, now: Date = new Date(), windowHours: number = RESPONSE_SLA_HOURS): boolean {
+  return getResponseClock(lead, now, windowHours).overdue || getStageClock(lead, now).stale;
 }
 
 /**

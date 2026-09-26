@@ -42,6 +42,9 @@ function QuickViewBody({ lead, onClose }: { lead: Lead; onClose: () => void }) {
     meta,
     assignedUser,
     responseClock,
+    windowHours,
+    windowIsCommitment,
+    assignableUsers,
     stageClock,
     languageMismatch,
     orphaned,
@@ -223,7 +226,7 @@ function QuickViewBody({ lead, onClose }: { lead: Lead; onClose: () => void }) {
                     className="shrink-0 rounded-md border border-slate-200 bg-white px-1.5 py-1 text-[11px] text-slate-700 focus-visible:border-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500/40"
                   >
                     <option value="">Unassign</option>
-                    {staff.map((user) => (
+                    {assignableUsers.map((user) => (
                       <option key={user.id} value={user.id}>
                         {user.name}
                       </option>
@@ -276,7 +279,7 @@ function QuickViewBody({ lead, onClose }: { lead: Lead; onClose: () => void }) {
                   {responseClock.contacted
                     ? "Responded within the 1-business-day commitment"
                     : responseClock.overdue
-                      ? `Not contacted — ${hoursOrDays(responseClock.hoursSinceCreated)} since inquiry, overdue`
+                      ? `Not contacted — ${hoursOrDays(responseClock.hoursSinceCreated)} since inquiry, ${windowIsCommitment ? "overdue" : `past the ${windowHours}h window`}`
                       : responseClock.dueSoon
                         ? `Not contacted — ${hoursOrDays(responseClock.hoursSinceCreated)} since inquiry, approaching due`
                         : `Not contacted — ${hoursOrDays(responseClock.hoursSinceCreated)} since inquiry`}

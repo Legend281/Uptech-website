@@ -27,7 +27,7 @@ import { getFaqs } from "@/lib/faqs";
 import { BridgeSection } from "@/components/home/BridgeSection";
 import { Reveal } from "@/components/Reveal";
 import { RotatingPromise, type PromiseStatement } from "@/components/home/RotatingPromise";
-import { TestimonialCard } from "@/components/TestimonialCard";
+import { TestimonialCarousel } from "@/components/home/TestimonialCarousel";
 import { images } from "@/lib/images";
 import { getPublishedTestimonials } from "@/lib/testimonials";
 
@@ -626,15 +626,12 @@ export default async function HomePage() {
                   <span className="inline-block h-[2px] w-7 bg-teal-400" />
                   <span className="text-xs font-bold uppercase tracking-wider text-teal-400">IN OUR CLIENTS&apos; WORDS</span>
                 </div>
-                <h2 className="mb-6 text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl">
+                <h2 className="mb-8 text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl">
                   <TextReveal text="What working with us is like." />
                 </h2>
-                <div className="space-y-4">
-                  {testimonials.map(({ id, ...card }) => (
-                    <TestimonialCard key={id} {...card} tone="dark" />
-                  ))}
-                </div>
               </div>
+              {/* Side by side and paged, with the same controls as RotatingPromise above. */}
+              <TestimonialCarousel items={testimonials} />
             </Reveal>
           </section>
         )}

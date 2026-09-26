@@ -17,7 +17,7 @@ export type NavGroup = { label: string; items: NavItem[] };
  * pairs, so the two can never drift into showing different names for the
  * same page.
  */
-export function getNavGroups(leadsCount: number, jobPostingsCount: number): NavGroup[] {
+export function getNavGroups(leadsCount: number, jobPostingsCount: number, servicePagesNeedingReviewCount: number): NavGroup[] {
   return [
     { label: "Overview", items: [{ label: "Dashboard", icon: "dashboard", href: "/admin" }] },
     { label: "Pipeline", items: [{ label: "Leads", icon: "inbox", href: "/admin/leads", badge: leadsCount }] },
@@ -25,20 +25,31 @@ export function getNavGroups(leadsCount: number, jobPostingsCount: number): NavG
     {
       label: "Site Content",
       items: [
-        { label: "Service Pages", icon: "description", soon: true },
+        { label: "Service Pages", icon: "description", href: "/admin/service-pages", badge: servicePagesNeedingReviewCount },
         { label: "Case Studies", icon: "auto_stories", soon: true },
         { label: "Testimonials", icon: "format_quote", soon: true },
         { label: "Team Members", icon: "groups", soon: true },
         { label: "FAQ Items", icon: "quiz", soon: true },
       ],
     },
-    { label: "System", items: [{ label: "Settings", icon: "settings", soon: true, adminOnly: true }] },
+    {
+      label: "System",
+      items: [
+        { label: "Staff", icon: "badge", href: "/admin/staff", adminOnly: true },
+        { label: "Settings", icon: "settings", soon: true, adminOnly: true },
+      ],
+    },
   ];
 }
 
 /** Flat href→label lookup for the topbar breadcrumb — undefined for a dynamic route (e.g. a lead detail page), which the caller handles separately. */
-export function getStaticPageLabel(pathname: string, leadsCount: number, jobPostingsCount: number): string | undefined {
-  for (const group of getNavGroups(leadsCount, jobPostingsCount)) {
+export function getStaticPageLabel(
+  pathname: string,
+  leadsCount: number,
+  jobPostingsCount: number,
+  servicePagesNeedingReviewCount: number,
+): string | undefined {
+  for (const group of getNavGroups(leadsCount, jobPostingsCount, servicePagesNeedingReviewCount)) {
     for (const item of group.items) {
       if (item.href === pathname) return item.label;
     }

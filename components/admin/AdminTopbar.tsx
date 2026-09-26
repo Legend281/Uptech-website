@@ -5,10 +5,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
-import { MOCK_ADMIN_USERS } from "@/lib/admin/mockData";
-import { departmentLabels, roleLabels } from "@/lib/admin/labels";
+import { roleLabels } from "@/lib/admin/labels";
 import { getStaticPageLabel } from "@/lib/admin/nav";
-import { useCurrentUser, useSetCurrentUserId } from "@/components/admin/providers/CurrentUserProvider";
+import { useCurrentUser, useCurrentUserStatus } from "@/components/admin/providers/CurrentUserProvider";
+import { TwoFactorSetupModal } from "@/components/admin/TwoFactorSetupModal";
 import { useLead, useLeads } from "@/components/admin/providers/LeadsProvider";
 import { useServicePages } from "@/components/admin/providers/ServicePagesProvider";
 import { useJobPostings } from "@/components/admin/providers/JobPostingsProvider";
@@ -21,13 +21,15 @@ function useBreadcrumb(): Crumb[] {
   const pathname = usePathname();
   const leadsCount = useLeads().length;
   const jobPostingsCount = useJobPostings().length;
+  const servicePages = useServicePages();
+  const servicePagesNeedingReviewCount = servicePages.filter((page) => getReviewStatus(page) !== "on-track").length;
   const leadIdMatch = pathname.match(/^\/admin\/leads\/(.+)$/);
   const lead = useLead(leadIdMatch?.[1] ?? "");
 
   if (leadIdMatch) {
     return [{ label: "Leads", href: "/admin/leads" }, { label: lead?.name ?? "Lead" }];
   }
-  return [{ label: getStaticPageLabel(pathname, leadsCount, jobPostingsCount) ?? "Dashboard" }];
+  return [{ label: getStaticPageLabel(pathname, leadsCount, jobPostingsCount, servicePagesNeedingReviewCount) ?? "Dashboard" }];
 }
 
 function Breadcrumb({ segments }: { segments: Crumb[] }) {
@@ -66,13 +68,14 @@ function Breadcrumb({ segments }: { segments: Crumb[] }) {
  */
 export function AdminTopbar({ onOpenSidebar }: { onOpenSidebar: () => void }) {
   const currentUser = useCurrentUser();
+  const { signOut } = useCurrentUserStatus();
   const servicePages = useServicePages();
   const urgentCount = servicePages.filter((page) => getReviewStatus(page) === "overdue").length;
-  const setCurrentUserId = useSetCurrentUserId();
   const breadcrumb = useBreadcrumb();
   const today = new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "numeric" }).format(new Date());
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [twoFactorOpen, setTwoFactorOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -92,6 +95,7 @@ export function AdminTopbar({ onOpenSidebar }: { onOpenSidebar: () => void }) {
   }, [menuOpen]);
 
   return (
+    <>
     <div className="sticky top-0 z-30 flex items-center gap-3 border-b border-slate-200 bg-white/85 px-4 py-3 shadow-[0_1px_2px_rgba(7,14,27,0.04)] backdrop-blur-md sm:px-6 lg:px-8">
       <button
         type="button"
@@ -159,46 +163,31 @@ export function AdminTopbar({ onOpenSidebar }: { onOpenSidebar: () => void }) {
                 style={{ transformOrigin: "top right" }}
                 className="absolute right-0 top-full z-40 mt-2 w-64 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg"
               >
-                <p className="border-b border-slate-100 px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                  Preview as
-                </p>
-                <ul className="max-h-96 overflow-y-auto py-1">
-                  {MOCK_ADMIN_USERS.map((user) => {
-                    const isCurrent = user.id === currentUser.id;
-                    return (
-                      <li key={user.id}>
-                        <button
-                          type="button"
-                          role="menuitemradio"
-                          aria-checked={isCurrent}
-                          onClick={() => {
-                            setCurrentUserId(user.id);
-                            setMenuOpen(false);
-                          }}
-                          className={`flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm transition-colors ${
-                            isCurrent ? "bg-teal-50" : "hover:bg-slate-50"
-                          }`}
-                        >
-                          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-navy-950 text-[10px] font-bold text-white">
-                            {user.avatarInitials}
-                          </span>
-                          <span className="min-w-0 flex-1">
-                            <span className="block truncate font-sans font-semibold text-navy-950">{user.name}</span>
-                            <span className="block truncate text-xs text-slate-500">
-                              {roleLabels[user.role]} · {departmentLabels[user.department]}
-                            </span>
-                          </span>
-                          {isCurrent && <MaterialIcon name="check" className="shrink-0 text-[16px] text-teal-600" />}
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
+                <div className="flex items-center gap-2.5 border-b border-slate-100 px-3 py-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-navy-950 text-[11px] font-bold text-white">
+                    {currentUser.avatarInitials}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate font-sans font-semibold text-navy-950">{currentUser.name}</span>
+                    <span className="block truncate text-xs text-slate-500">{roleLabels[currentUser.role]}</span>
+                  </span>
+                </div>
                 <button
                   type="button"
                   onClick={() => {
-                    setCurrentUserId(MOCK_ADMIN_USERS[0].id);
                     setMenuOpen(false);
+                    setTwoFactorOpen(true);
+                  }}
+                  className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm text-slate-700 transition-colors hover:bg-slate-50"
+                >
+                  <MaterialIcon name="shield_lock" className="text-[16px] text-slate-400" />
+                  Two-Factor Authentication
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    void signOut();
                   }}
                   className="flex w-full items-center gap-2 border-t border-slate-100 px-3 py-2.5 text-left text-sm font-semibold text-slate-500 transition-colors hover:bg-slate-50 hover:text-rose-600"
                 >
@@ -211,5 +200,9 @@ export function AdminTopbar({ onOpenSidebar }: { onOpenSidebar: () => void }) {
         </div>
       </div>
     </div>
+
+    {/* Rendered outside the topbar's own div (which has backdrop-blur-md) — a CSS filter/backdrop-filter on an ancestor creates a new containing block for `position: fixed` descendants, which silently confined this modal to the topbar's own slim box instead of the real viewport. */}
+    <TwoFactorSetupModal open={twoFactorOpen} onClose={() => setTwoFactorOpen(false)} />
+    </>
   );
 }

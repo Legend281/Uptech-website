@@ -8,6 +8,8 @@ import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useLeads } from "@/components/admin/providers/LeadsProvider";
 import { useJobPostings } from "@/components/admin/providers/JobPostingsProvider";
+import { useServicePages } from "@/components/admin/providers/ServicePagesProvider";
+import { getReviewStatus } from "@/lib/admin/staleness";
 import { getNavGroups, type NavItem } from "@/lib/admin/nav";
 
 function NavRow({ item, active }: { item: NavItem; active: boolean }) {
@@ -68,7 +70,9 @@ export function AdminSidebar({ open, onClose }: { open: boolean; onClose: () => 
   const currentUser = useCurrentUser();
   const leads = useLeads();
   const jobPostings = useJobPostings();
-  const navGroups = getNavGroups(leads.length, jobPostings.length);
+  const servicePages = useServicePages();
+  const servicePagesNeedingReviewCount = servicePages.filter((page) => getReviewStatus(page) !== "on-track").length;
+  const navGroups = getNavGroups(leads.length, jobPostings.length, servicePagesNeedingReviewCount);
 
   const content = (
     <div className="flex h-full flex-col bg-navy-950">

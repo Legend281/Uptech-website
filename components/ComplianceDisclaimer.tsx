@@ -10,38 +10,23 @@ type ComplianceDisclaimerProps = {
  * Mandatory Template C element per CLAUDE.md Section 4: visible disclaimer +
  * permanent "Last reviewed" date, since this content can go legally stale.
  *
- * FLAG FOR TEAM (raised during the CNPS Compliance page review, applies to
- * every page using this shared component, re-flagged during the 4-page
- * Business Formalisation & Compliance family audit): "Uptech Consulting
- * Legal & Corporate Administration Desk" is the default `reviewedBy`
- * attribution — confirm this is a real, existing internal department name
- * before it continues to appear on public pages. Not verified against any
- * company document; carried over from earlier page-building work without
- * confirmation. If it is NOT a real department/desk name, replace it with
- * accurate attribution (a real team name), or drop specific attribution
- * entirely and state "reviewed internally" instead — do not invent a
- * different-sounding name as a substitute guess. Left as-is until the team
- * answers; fixing it here resolves all 4 Template C pages at once.
+ * `reviewedBy` default is "Uptech Consulting Management" per
+ * Admin_Dashboard_Requirements.md Section 5's confirmed team answer — this
+ * replaced an earlier unverified "Uptech Consulting Legal & Corporate
+ * Administration Desk" placeholder that had never actually been confirmed
+ * against a real company document. None of the 4 Template C pages override
+ * this prop, so fixing the default here resolves all 4 at once. The field
+ * stays editable per-page (via this prop) in case a different department
+ * reviews a specific page in the future.
  *
- * FLAG FOR TEAM: the `lastReviewed` date passed into this component by every
- * Template C page is currently a hardcoded string literal in that page's own
- * source (see each page's <ComplianceDisclaimer lastReviewed="..." />
- * call) — there is no Supabase wiring or admin-dashboard field behind it in
- * this codebase (no Supabase client exists anywhere in the project as of
- * this review). CLAUDE.md Section 8 calls for compliance pages to carry a
- * review-cadence flag "in the admin schema" — confirm with whoever owns the
- * admin dashboard build whether/when this becomes a real editable field,
- * rather than assuming it already is one.
- *
- * All 4 dates were set to September 17, 2026 to reflect a real content
- * pass that day (web-research-backed fact corrections across all 4
- * Template C pages — see each page's own sourcing comments) — not a
- * placeholder guess. Update per page whenever its content is next
- * substantively reviewed.
+ * The `lastReviewed` date is being migrated to real Supabase-backed data as
+ * part of the Service Pages / Compliance Review admin module — until that
+ * lands, each page still passes it as a hardcoded string literal (see each
+ * page's own <ComplianceDisclaimer lastReviewed="..." /> call).
  */
 export function ComplianceDisclaimer({
   lastReviewed,
-  reviewedBy = "Uptech Consulting Legal & Corporate Administration Desk",
+  reviewedBy = "Uptech Consulting Management",
   extraNote,
 }: ComplianceDisclaimerProps) {
   return (

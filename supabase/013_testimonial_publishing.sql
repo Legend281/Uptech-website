@@ -30,24 +30,24 @@ grant select on public.published_testimonials to anon, authenticated;
 -- modules' helpers.
 
 create or replace function public.testimonial_staff_role()
-returns text as $
+returns text as $$
   select role from public.profiles where id = auth.uid() and active;
-$ language sql stable security definer set search_path = public;
+$$ language sql stable security definer set search_path = public;
 
 create or replace function public.testimonial_staff_department()
-returns text as $
+returns text as $$
   select department from public.profiles where id = auth.uid() and active;
-$ language sql stable security definer set search_path = public;
+$$ language sql stable security definer set search_path = public;
 
 create or replace function public.is_staff_admin()
-returns boolean as $
+returns boolean as $$
   select coalesce(public.testimonial_staff_role() = 'administrator', false);
-$ language sql stable security definer set search_path = public;
+$$ language sql stable security definer set search_path = public;
 
 create or replace function public.is_staff_editor_of(dept text)
-returns boolean as $
+returns boolean as $$
   select coalesce(public.testimonial_staff_role() = 'editor' and public.testimonial_staff_department() = dept, false);
-$ language sql stable security definer set search_path = public;
+$$ language sql stable security definer set search_path = public;
 
 grant execute on function public.testimonial_staff_role() to authenticated;
 grant execute on function public.testimonial_staff_department() to authenticated;

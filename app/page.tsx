@@ -597,23 +597,47 @@ export default async function HomePage() {
                 </dl>
               </div>
             </Reveal>
-
-            {/* Only rendered once a real, fully named, signed-consent
-                testimonial is published to the Homepage from the admin
-                dashboard (lib/testimonials.ts). No placeholder here: the
-                Homepage never shows an illustrative quote. */}
-            {testimonials.length > 0 && (
-              <div className="mt-16">
-                <h3 className="mb-6 text-lg font-bold text-navy-950">In our clients&apos; words</h3>
-                <Reveal effect="stagger" className={`grid grid-cols-1 gap-6 ${testimonials.length > 1 ? "lg:grid-cols-2" : "max-w-3xl"}`}>
-                  {testimonials.map(({ id, ...card }) => (
-                    <TestimonialCard key={id} {...card} tone="light" />
-                  ))}
-                </Reveal>
-              </div>
-            )}
           </div>
         </section>
+
+        {/* ---------------- Testimonials ---------------- */}
+        {/* Same dark treatment as the Career Marketing & Placement Support
+            page's testimonial section. Only rendered once a real, fully named,
+            consented testimonial is published to the Homepage from the admin
+            dashboard (lib/testimonials.ts). No placeholder here: the Homepage
+            never shows an illustrative quote. */}
+        {testimonials.length > 0 && (
+          <section className="relative overflow-hidden border-b border-slate-800/80 bg-navy-950 py-24 text-white">
+            <div className="pointer-events-none absolute right-0 top-0 h-full w-full opacity-60 lg:w-3/4 lg:opacity-75">
+              <Image
+                src={images["career-review"].src}
+                alt=""
+                fill
+                sizes="100vw"
+                placeholder="blur"
+                blurDataURL={images["career-review"].blurDataURL}
+                className="object-cover object-center"
+              />
+            </div>
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/70 to-transparent" />
+            <Reveal effect="rise" className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <div className="max-w-3xl">
+                <div className="mb-4 inline-flex items-center gap-2">
+                  <span className="inline-block h-[2px] w-7 bg-teal-400" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-teal-400">IN OUR CLIENTS&apos; WORDS</span>
+                </div>
+                <h2 className="mb-6 text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl">
+                  <TextReveal text="What working with us is like." />
+                </h2>
+                <div className="space-y-4">
+                  {testimonials.map(({ id, ...card }) => (
+                    <TestimonialCard key={id} {...card} tone="dark" />
+                  ))}
+                </div>
+              </div>
+            </Reveal>
+          </section>
+        )}
 
         {/* ---------------- FAQ ---------------- */}
         <section className="border-y border-slate-200/80 bg-slate-100/70 py-24">

@@ -211,7 +211,8 @@ export function TestimonialFormDialog(props: Props) {
   }
 
   const displayName = getDisplayName(normalized) || "Client name";
-  const previewTone = previewPage === "homepage" ? "light" : "dark";
+  // Both pages now show testimonials on the same dark band.
+  const previewTone = "dark";
 
   const footer = (
     <>

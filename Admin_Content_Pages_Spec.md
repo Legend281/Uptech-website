@@ -63,9 +63,9 @@ leadership sign-off.)*
 
 | Open question | Default |
 |---|---|
-| What counts as valid consent? | A WhatsApp/email "yes" is sufficient and should be logged (date, channel, who recorded it). Require a signed form only if the testimonial is (a) placed on the Homepage, or (b) includes an outcome line. |
+| What counts as valid consent? | **Decided (2026-09-26):** one tick on the form — "the client agreed to this being published" — recorded as confirmed by staff, dated that day, with who recorded it. No signed-form requirement (was: signed form for Homepage and outcome lines). |
 | Are anonymised testimonials allowed? | Yes — but anonymised and first-name-only entries are restricted to service pages, not the Homepage. Homepage placement requires a full name. |
-| Are outcome lines allowed? | Yes, but only if the testimonial has a linked Lead record — the outcome line must be checkable against that lead's own timeline, not a free-floating claim. |
+| Are outcome lines allowed? | Yes, but only if the testimonial has a linked Lead record — the outcome line must be checkable against that lead's own timeline, not a free-floating claim. (No signed form needed since the 2026-09-26 consent decision.) |
 | Who can publish to the Homepage? | Administrators only. Department Editors can publish to their own service pages. |
 
 ### 1.3 Guardrails

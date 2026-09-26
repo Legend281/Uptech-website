@@ -15,7 +15,6 @@ import {
   QUOTE_SOFT_LIMIT,
   attributionModeLabels,
   audienceLabels,
-  consentChannelLabels,
   getDisplayName,
   getPublishBlockers,
   getWarnings,
@@ -28,7 +27,6 @@ import {
 } from "@/lib/admin/testimonials";
 import type {
   AttributionMode,
-  ConsentChannel,
   LeadServiceValue,
   Testimonial,
   TestimonialAudience,
@@ -134,6 +132,20 @@ export function TestimonialFormDialog(props: Props) {
 
   function set<K extends keyof TestimonialInput>(key: K, value: TestimonialInput[K]) {
     setInput((prev) => ({ ...prev, [key]: value }));
+  }
+
+  /** One tick: records consent as confirmed by staff, dated today. An existing record keeps its original date and channel. */
+  function setConsent(given: boolean) {
+    setInput((prev) =>
+      given
+        ? {
+            ...prev,
+            consentGiven: true,
+            consentDate: prev.consentDate || new Date().toISOString().slice(0, 10),
+            consentChannel: prev.consentChannel ?? "confirmed",
+          }
+        : { ...prev, consentGiven: false, consentDate: "", consentChannel: undefined },
+    );
   }
 
   function togglePlacement(page: TestimonialPage, on: boolean) {
@@ -322,7 +334,7 @@ export function TestimonialFormDialog(props: Props) {
 
               <Field
                 label="Outcome line"
-                hint="Optional, e.g. “Placed within 8 weeks”. A factual claim: it needs a linked lead to check it against, and a signed consent form."
+                hint="Optional, e.g. “Placed within 8 weeks”. A factual claim: it needs a linked lead to check it against."
               >
                 <input type="text" value={input.outcomeLine ?? ""} onChange={(e) => set("outcomeLine", e.target.value)} className={inputClasses} />
               </Field>
@@ -463,53 +475,6 @@ export function TestimonialFormDialog(props: Props) {
               ) : (
                 <p className={hintClasses}>Photos are only used with a full name. A face undoes an initial or an anonymised description.</p>
               )}
-            </Section>
-
-            <Section step={3} title="Consent" description="Nothing goes live without a record of the client agreeing to it.">
-              <label className={`flex items-start gap-2.5 rounded-lg border p-3 ${input.consentGiven ? "border-emerald-300 bg-emerald-50" : "border-slate-300"}`}>
-                <input
-                  type="checkbox"
-                  checked={input.consentGiven}
-                  disabled={withdrawn}
-                  onChange={(e) => set("consentGiven", e.target.checked)}
-                  className="mt-0.5 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500/40"
-                />
-                <span className="text-sm text-slate-700">
-                  The client agreed to this quote being published with the attribution chosen above.
-                </span>
-              </label>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Field label="Date they agreed">
-                  <input
-                    type="date"
-                    value={input.consentDate ?? ""}
-                    max={new Date().toISOString().slice(0, 10)}
-                    disabled={withdrawn}
-                    onChange={(e) => set("consentDate", e.target.value)}
-                    className={inputClasses}
-                  />
-                </Field>
-                <Field label="How they agreed" hint="The Homepage and outcome lines need a signed form.">
-                  <select
-                    value={input.consentChannel ?? ""}
-                    disabled={withdrawn}
-                    onChange={(e) => set("consentChannel", (e.target.value || undefined) as ConsentChannel | undefined)}
-                    className={`${inputClasses} bg-white`}
-                  >
-                    <option value="">Select…</option>
-                    {(Object.keys(consentChannelLabels) as ConsentChannel[]).map((c) => (
-                      <option key={c} value={c}>
-                        {consentChannelLabels[c]}
-                      </option>
-                    ))}
-                  </select>
-                </Field>
-              </div>
-              {recordedBy && (
-                <p className={hintClasses}>
-                  Recorded by <span className="font-semibold text-slate-700">{recordedBy}</span>
-                </p>
-              )}
               {leads.length === 0 ? (
                 /* Nothing to pick from: say so plainly instead of showing an empty dropdown. */
                 <div className="flex flex-col gap-1.5">
@@ -551,8 +516,28 @@ export function TestimonialFormDialog(props: Props) {
               )}
             </Section>
 
-            <Section step={4} title="Placement" description="Where it appears. Only pages with a testimonial slot are listed.">
+            <Section step={3} title="Placement" description="Confirm the client agreed, then choose where it appears. Only pages with a testimonial slot are listed.">
               <div className="space-y-2">
+              {/* The one consent step: a tick, dated today and recorded as confirmed by staff.
+                  It sits here because it is what lets a testimonial go live; the database refuses to publish without it. */}
+              <label className={`flex items-start gap-2.5 rounded-lg border p-3 ${input.consentGiven ? "border-emerald-300 bg-emerald-50" : "border-slate-300"}`}>
+                <input
+                  type="checkbox"
+                  checked={input.consentGiven}
+                  disabled={withdrawn}
+                  onChange={(e) => setConsent(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500/40"
+                />
+                <span className="text-sm text-slate-700">
+                  The client agreed to this quote being published with the attribution chosen above.
+                </span>
+              </label>
+              {recordedBy && input.consentGiven && (
+                <p className={hintClasses}>
+                  Confirmed by <span className="font-semibold text-slate-700">{recordedBy}</span>
+                  {input.consentDate ? ` on ${input.consentDate}` : ""}
+                </p>
+              )}
                 {testimonialPages.map((page) => {
                   const placement = input.placements.find((p) => p.page === page.value);
                   const locked = page.adminOnly && currentUser.role !== "administrator";
@@ -579,8 +564,8 @@ export function TestimonialFormDialog(props: Props) {
                           <span className="block text-[11px] text-slate-500">
                             {page.value === "homepage"
                               ? locked
-                                ? "Administrators only. Needs a full name and a signed form."
-                                : "Needs a full name and a signed consent form."
+                                ? "Administrators only. Needs the client's full name."
+                                : "Needs the client's full name."
                               : wrongService
                                 ? "Only for Career Marketing & Placement Support testimonials."
                                 : "Any attribution; a WhatsApp or email yes is enough."}

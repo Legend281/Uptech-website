@@ -208,7 +208,7 @@ export type JobPosting = {
 export type TestimonialStatus = "draft" | "published" | "archived";
 export type AttributionMode = "full_name" | "first_name_initial" | "anonymised";
 export type TestimonialAudience = "cameroon" | "us" | "diaspora";
-export type ConsentChannel = "whatsapp" | "email" | "signed-form";
+export type ConsentChannel = "whatsapp" | "email" | "signed-form" | "confirmed";
 /** Pages that actually render a testimonial slot today. Keep in sync with the migration's CHECK list. */
 export type TestimonialPage = "homepage" | "career-marketing-placement";
 

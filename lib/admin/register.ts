@@ -1,7 +1,7 @@
 import { serviceOptions } from "@/lib/serviceOptions";
 import type { Lead, LeadStatus, LeadServiceValue, ServicePageMeta } from "./types";
 import { getReviewStatus, daysSinceReview, daysUntilReviewDue, type ReviewStatus } from "./staleness";
-import { isLeadStale } from "./leadStaleness";
+import { isLeadStale, isLeadDueSoon } from "./leadStaleness";
 import { leadTemperature, type LeadTemperature } from "./leadScore";
 
 const DAY_MS = 86_400_000;
@@ -154,6 +154,8 @@ export type RegisterRow = {
   href?: string;
   /** Only ever true for an open (non-won/lost) lead — see isLeadStale's two-clock model. Drives both sort order here and the stale badge/nudge in RegisterList. */
   isStale?: boolean;
+  /** Predictive counterpart to isStale — an open lead closing in on breaching a clock, but not there yet. Mutually exclusive with isStale by construction (see isLeadDueSoon). */
+  dueSoonSLA?: boolean;
   /** Who owns this item today, if anyone — the reminder action's target for a lead row. */
   assignedToId?: string;
   /** Lead-only: got its department from deriveDepartment automatically, never went through a human resolveTriage call. */
@@ -175,6 +177,7 @@ function rowUrgencyTier(row: RegisterRow): number {
   if (row.severity === "overdue") return 1;
   if (row.severity === "due-soon") return 2;
   if (row.kind === "lead" && row.isStale) return 3;
+  if (row.kind === "lead" && row.dueSoonSLA) return 3.5;
   const tier: Partial<Record<Severity, number>> = { new: 4, contacted: 5, qualified: 6, booked: 7, won: 8, lost: 10 };
   return tier[row.severity] ?? 9; // "on-track" (compliance) lands here
 }
@@ -190,6 +193,7 @@ export function buildRegister(leads: Lead[], pages: ServicePageMeta[], now: Date
     timeLabel: lead.createdAt,
     href: `/admin/leads/${lead.id}`,
     isStale: lead.status !== "won" && lead.status !== "lost" && isLeadStale(lead, now),
+    dueSoonSLA: lead.status !== "won" && lead.status !== "lost" && isLeadDueSoon(lead, now),
     assignedToId: lead.assignedToId,
     autoRouted: lead.department !== undefined && !lead.wasManuallyTriaged,
     temperature: lead.status === "won" || lead.status === "lost" ? undefined : leadTemperature(lead, now),

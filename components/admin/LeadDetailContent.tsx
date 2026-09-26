@@ -1,11 +1,16 @@
 "use client";
 
+import Link from "next/link";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { useLeadDetailActions, resolvableStatuses } from "@/components/admin/hooks/useLeadDetailActions";
-import { MOCK_ADMIN_USERS } from "@/lib/admin/mockData";
+import { ResumeDownloadButton } from "@/components/admin/ResumeDownloadButton";
+import { useLeads } from "@/components/admin/providers/LeadsProvider";
+import { useJobPostings } from "@/components/admin/providers/JobPostingsProvider";
 import { departmentLabels, roleLabels } from "@/lib/admin/labels";
 import { getLeadServiceLabel } from "@/lib/admin/register";
 import { toWhatsAppHref } from "@/lib/admin/leads";
+import { findDuplicateLeads } from "@/lib/admin/duplicateLeads";
+import { findMatchingPostings } from "@/lib/admin/jobMatch";
 import { initialsOf, avatarTint } from "@/lib/admin/avatar";
 import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
 import type { Department, Lead, LeadStatus } from "@/lib/admin/types";
@@ -21,6 +26,7 @@ function hoursOrDays(hours: number): string {
 export function LeadDetailContent({ lead }: { lead: Lead }) {
   const {
     currentUser,
+    staff,
     meta,
     assignedUser,
     responseClock,
@@ -35,8 +41,43 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
     handleContactChannelUsed,
   } = useLeadDetailActions(lead);
 
+  const allLeads = useLeads();
+  const duplicates = findDuplicateLeads(lead, allLeads);
+  const allPostings = useJobPostings();
+  const matchingPostings = findMatchingPostings(lead, allPostings).slice(0, 3);
+  const hasOpenPostings = allPostings.some((posting) => posting.status === "published");
+
   return (
     <>
+      {duplicates.length > 0 && (
+        <div className="mb-4 rounded-xl border border-violet-200 bg-violet-50 p-4">
+          <div className="flex items-start gap-2.5">
+            <MaterialIcon name="content_copy" className="mt-0.5 text-[18px] text-violet-600" />
+            <div className="min-w-0 flex-1">
+              <h2 className="font-sans text-sm font-bold text-violet-900">
+                Possible duplicate{duplicates.length > 1 ? "s" : ""}
+              </h2>
+              <p className="mt-0.5 text-xs text-violet-700">
+                Shares an email or phone number with {duplicates.length === 1 ? "another lead" : `${duplicates.length} other leads`} already in the register.
+              </p>
+              <ul className="mt-2 space-y-1.5">
+                {duplicates.map((dup) => (
+                  <li key={dup.id}>
+                    <Link
+                      href={`/admin/leads/${dup.id}`}
+                      className="flex items-center justify-between gap-2 rounded-lg border border-violet-200 bg-white px-3 py-2 text-xs transition-colors hover:border-violet-300 hover:bg-violet-50"
+                    >
+                      <span className="min-w-0 truncate font-semibold text-navy-950">{dup.name}</span>
+                      <span className="shrink-0 text-violet-600">{formatRelativeTime(dup.createdAt)} →</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Identity */}
       <div className={`${CARD} p-5`}>
         <div className="flex items-start gap-4">
@@ -135,6 +176,48 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
         <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-slate-700">{lead.message}</p>
       </div>
 
+      {/* Matching Open Roles — job-seeker leads only; a heuristic reading of their own message against what's currently published, not a verdict either way (see jobMatch.ts). */}
+      {lead.type === "job-seeker" && (
+        <div className={`${CARD} mt-4 p-5`}>
+          <h2 className="font-sans text-sm font-bold text-navy-950">Matching Open Roles</h2>
+          {matchingPostings.length > 0 ? (
+            <ul className="mt-2 space-y-2">
+              {matchingPostings.map((posting) => (
+                <li key={posting.id}>
+                  <Link
+                    href="/admin/job-postings"
+                    className="flex items-center justify-between gap-2 rounded-lg border border-slate-200 px-3 py-2.5 text-sm transition-colors hover:border-teal-300 hover:bg-teal-50/40"
+                  >
+                    <span className="min-w-0">
+                      <span className="block truncate font-semibold text-navy-950">{posting.title}</span>
+                      <span className="block truncate text-xs text-slate-500">
+                        {posting.department} · {posting.location}
+                      </span>
+                    </span>
+                    <MaterialIcon name="arrow_forward" className="shrink-0 text-[16px] text-slate-400" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-2 text-sm text-slate-500">
+              {hasOpenPostings
+                ? "Their message didn't clearly match a currently open role — worth a quick manual check against active postings."
+                : "No roles are currently published to match against."}
+            </p>
+          )}
+        </div>
+      )}
+
+      {lead.resumeUrl && (
+        <div className={`${CARD} mt-4 p-5`}>
+          <h2 className="font-sans text-sm font-bold text-navy-950">Resume</h2>
+          <div className="mt-2">
+            <ResumeDownloadButton resumeUrl={lead.resumeUrl} />
+          </div>
+        </div>
+      )}
+
       {/* Ownership */}
       <div className={`${CARD} mt-4 p-5`}>
         <h2 className="font-sans text-sm font-bold text-navy-950">Ownership</h2>
@@ -173,7 +256,7 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
                 className="rounded-md border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-700 focus-visible:border-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500/40"
               >
                 <option value="">Unassign</option>
-                {MOCK_ADMIN_USERS.map((user) => (
+                {staff.map((user) => (
                   <option key={user.id} value={user.id}>
                     {user.name}
                   </option>
@@ -223,26 +306,36 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
           <div className="mt-3 space-y-2 border-t border-slate-100 pt-3">
             <div className="flex items-center gap-2 text-xs">
               <MaterialIcon
-                name={responseClock.overdue ? "warning" : "check_circle"}
-                className={`text-[15px] ${responseClock.overdue ? "text-rose-600" : "text-emerald-600"}`}
+                name={responseClock.overdue ? "warning" : responseClock.dueSoon ? "schedule" : "check_circle"}
+                className={`text-[15px] ${responseClock.overdue ? "text-rose-600" : responseClock.dueSoon ? "text-sky-600" : "text-emerald-600"}`}
               />
-              <span className={responseClock.overdue ? "font-semibold text-rose-700" : "text-slate-500"}>
+              <span
+                className={
+                  responseClock.overdue ? "font-semibold text-rose-700" : responseClock.dueSoon ? "font-semibold text-sky-700" : "text-slate-500"
+                }
+              >
                 {responseClock.contacted
                   ? "First response within the 1-business-day commitment"
                   : responseClock.overdue
                     ? `Not yet contacted — ${hoursOrDays(responseClock.hoursSinceCreated)} since inquiry, past the 1-business-day commitment`
-                    : `Not yet contacted — ${hoursOrDays(responseClock.hoursSinceCreated)} since inquiry`}
+                    : responseClock.dueSoon
+                      ? `Not yet contacted — ${hoursOrDays(responseClock.hoursSinceCreated)} since inquiry, approaching the 1-business-day commitment`
+                      : `Not yet contacted — ${hoursOrDays(responseClock.hoursSinceCreated)} since inquiry`}
               </span>
             </div>
             {stageClock.thresholdDays !== null && (
               <div className="flex items-center gap-2 text-xs">
                 <MaterialIcon
                   name={stageClock.stale ? "hourglass_bottom" : "schedule"}
-                  className={`text-[15px] ${stageClock.stale ? "text-amber-600" : "text-slate-400"}`}
+                  className={`text-[15px] ${stageClock.stale ? "text-amber-600" : stageClock.dueSoon ? "text-sky-600" : "text-slate-400"}`}
                 />
-                <span className={stageClock.stale ? "font-semibold text-amber-700" : "text-slate-500"}>
+                <span className={stageClock.stale ? "font-semibold text-amber-700" : stageClock.dueSoon ? "font-semibold text-sky-700" : "text-slate-500"}>
                   In &quot;{meta.label}&quot; for {Math.round(stageClock.daysInStatus)}d
-                  {stageClock.stale ? ` — longer than the usual ${stageClock.thresholdDays}d for this stage` : ""}
+                  {stageClock.stale
+                    ? ` — longer than the usual ${stageClock.thresholdDays}d for this stage`
+                    : stageClock.dueSoon
+                      ? ` — approaching the usual ${stageClock.thresholdDays}d for this stage`
+                      : ""}
                 </span>
               </div>
             )}

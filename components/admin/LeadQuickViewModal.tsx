@@ -1,18 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { toast } from "sonner";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
-import { useLead, useLeadActions } from "@/components/admin/providers/LeadsProvider";
+import { useLead, useLeads, useLeadActions } from "@/components/admin/providers/LeadsProvider";
+import { useJobPostings } from "@/components/admin/providers/JobPostingsProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
 import { useLeadDetailActions, resolvableStatuses } from "@/components/admin/hooks/useLeadDetailActions";
 import { LeadFormDialog } from "@/components/admin/LeadFormDialog";
+import { ResumeDownloadButton } from "@/components/admin/ResumeDownloadButton";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
-import { MOCK_ADMIN_USERS } from "@/lib/admin/mockData";
 import { departmentLabels, roleLabels } from "@/lib/admin/labels";
 import { getLeadServiceLabel } from "@/lib/admin/register";
 import { toWhatsAppHref } from "@/lib/admin/leads";
+import { findDuplicateLeads } from "@/lib/admin/duplicateLeads";
+import { findMatchingPostings } from "@/lib/admin/jobMatch";
 import { initialsOf, avatarTint } from "@/lib/admin/avatar";
 import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
 import type { Department, Lead, LeadStatus } from "@/lib/admin/types";
@@ -31,9 +35,10 @@ const sectionLabel = "text-[11px] font-bold uppercase tracking-wider text-slate-
  * at all, with only the message given its own bounded, internally
  * scrollable area so one long message can never drag the whole modal tall.
  */
-function QuickViewBody({ lead }: { lead: Lead }) {
+function QuickViewBody({ lead, onClose }: { lead: Lead; onClose: () => void }) {
   const {
     currentUser,
+    staff,
     meta,
     assignedUser,
     responseClock,
@@ -47,6 +52,11 @@ function QuickViewBody({ lead }: { lead: Lead }) {
     handleResolveTriage,
     handleContactChannelUsed,
   } = useLeadDetailActions(lead);
+
+  const allLeads = useLeads();
+  const duplicates = findDuplicateLeads(lead, allLeads);
+  const allPostings = useJobPostings();
+  const matchingPostings = findMatchingPostings(lead, allPostings).slice(0, 3);
 
   return (
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -63,6 +73,17 @@ function QuickViewBody({ lead }: { lead: Lead }) {
                 <span className="shrink-0 rounded border border-slate-200 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-500">
                   FR
                 </span>
+              )}
+              {duplicates.length > 0 && (
+                <Link
+                  href={`/admin/leads/${duplicates[0].id}`}
+                  onClick={onClose}
+                  title={`Shares an email or phone with ${duplicates.length === 1 ? duplicates[0].name : `${duplicates.length} other leads`}`}
+                  className="flex shrink-0 items-center gap-1 rounded border border-violet-200 bg-violet-50 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-violet-700 hover:border-violet-300"
+                >
+                  <MaterialIcon name="content_copy" className="text-[11px]" />
+                  Duplicate
+                </Link>
               )}
             </div>
             <div className="mt-1 flex flex-wrap items-center gap-1.5">
@@ -115,6 +136,35 @@ function QuickViewBody({ lead }: { lead: Lead }) {
             {lead.message}
           </p>
         </div>
+
+        {lead.type === "job-seeker" && matchingPostings.length > 0 && (
+          <div className="mt-4">
+            <p className={sectionLabel}>Matching Open Roles</p>
+            <ul className="mt-1.5 space-y-1">
+              {matchingPostings.map((posting) => (
+                <li key={posting.id}>
+                  <Link
+                    href="/admin/job-postings"
+                    onClick={onClose}
+                    className="flex items-center justify-between gap-2 rounded-lg border border-slate-200 px-2.5 py-2 text-xs transition-colors hover:border-teal-300 hover:bg-teal-50/40"
+                  >
+                    <span className="min-w-0 truncate font-semibold text-navy-950">{posting.title}</span>
+                    <MaterialIcon name="arrow_forward" className="shrink-0 text-[13px] text-slate-400" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {lead.resumeUrl && (
+          <div className="mt-4">
+            <p className={sectionLabel}>Resume</p>
+            <div className="mt-1.5">
+              <ResumeDownloadButton resumeUrl={lead.resumeUrl} />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Right: needs-triage, ownership, status */}
@@ -173,7 +223,7 @@ function QuickViewBody({ lead }: { lead: Lead }) {
                     className="shrink-0 rounded-md border border-slate-200 bg-white px-1.5 py-1 text-[11px] text-slate-700 focus-visible:border-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500/40"
                   >
                     <option value="">Unassign</option>
-                    {MOCK_ADMIN_USERS.map((user) => (
+                    {staff.map((user) => (
                       <option key={user.id} value={user.id}>
                         {user.name}
                       </option>
@@ -215,26 +265,32 @@ function QuickViewBody({ lead }: { lead: Lead }) {
             <div className="mt-2 space-y-1.5">
               <div className="flex items-center gap-1.5 text-[11px]">
                 <MaterialIcon
-                  name={responseClock.overdue ? "warning" : "check_circle"}
-                  className={`shrink-0 text-[14px] ${responseClock.overdue ? "text-rose-600" : "text-emerald-600"}`}
+                  name={responseClock.overdue ? "warning" : responseClock.dueSoon ? "schedule" : "check_circle"}
+                  className={`shrink-0 text-[14px] ${responseClock.overdue ? "text-rose-600" : responseClock.dueSoon ? "text-sky-600" : "text-emerald-600"}`}
                 />
-                <span className={responseClock.overdue ? "font-semibold text-rose-700" : "text-slate-500"}>
+                <span
+                  className={
+                    responseClock.overdue ? "font-semibold text-rose-700" : responseClock.dueSoon ? "font-semibold text-sky-700" : "text-slate-500"
+                  }
+                >
                   {responseClock.contacted
                     ? "Responded within the 1-business-day commitment"
                     : responseClock.overdue
                       ? `Not contacted — ${hoursOrDays(responseClock.hoursSinceCreated)} since inquiry, overdue`
-                      : `Not contacted — ${hoursOrDays(responseClock.hoursSinceCreated)} since inquiry`}
+                      : responseClock.dueSoon
+                        ? `Not contacted — ${hoursOrDays(responseClock.hoursSinceCreated)} since inquiry, approaching due`
+                        : `Not contacted — ${hoursOrDays(responseClock.hoursSinceCreated)} since inquiry`}
                 </span>
               </div>
               {stageClock.thresholdDays !== null && (
                 <div className="flex items-center gap-1.5 text-[11px]">
                   <MaterialIcon
                     name={stageClock.stale ? "hourglass_bottom" : "schedule"}
-                    className={`shrink-0 text-[14px] ${stageClock.stale ? "text-amber-600" : "text-slate-400"}`}
+                    className={`shrink-0 text-[14px] ${stageClock.stale ? "text-amber-600" : stageClock.dueSoon ? "text-sky-600" : "text-slate-400"}`}
                   />
-                  <span className={stageClock.stale ? "font-semibold text-amber-700" : "text-slate-500"}>
+                  <span className={stageClock.stale ? "font-semibold text-amber-700" : stageClock.dueSoon ? "font-semibold text-sky-700" : "text-slate-500"}>
                     In &quot;{meta.label}&quot; {Math.round(stageClock.daysInStatus)}d
-                    {stageClock.stale ? ` — usual is ${stageClock.thresholdDays}d` : ""}
+                    {stageClock.stale ? ` — usual is ${stageClock.thresholdDays}d` : stageClock.dueSoon ? ` — approaching usual ${stageClock.thresholdDays}d` : ""}
                   </span>
                 </div>
               )}
@@ -312,7 +368,7 @@ export function LeadQuickViewModal({ leadId, onClose }: { leadId: string | null;
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto p-5">
-          <QuickViewBody lead={lead} />
+          <QuickViewBody lead={lead} onClose={onClose} />
         </div>
       </div>
 

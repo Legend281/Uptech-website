@@ -5,9 +5,11 @@ import { toast } from "sonner";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { serviceOptions } from "@/lib/serviceOptions";
 import type { Lead, LeadServiceValue } from "@/lib/admin/types";
-import { useLeadActions, type NewLeadInput } from "@/components/admin/providers/LeadsProvider";
+import { useLeads, useLeadActions, type NewLeadInput } from "@/components/admin/providers/LeadsProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
+import { findDuplicatesForInput } from "@/lib/admin/duplicateLeads";
+import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
 
 const sourceOptions: { value: NewLeadInput["source"]; label: string }[] = [
   { value: "manual-phone", label: "Phone call" },
@@ -29,6 +31,7 @@ export function LeadFormDialog(props: Props) {
   const { addLead, editLead } = useLeadActions();
   const currentUser = useCurrentUser();
   const logActivity = useLogActivity();
+  const allLeads = useLeads();
   const formId = useId();
 
   const [name, setName] = useState("");
@@ -41,6 +44,10 @@ export function LeadFormDialog(props: Props) {
   const [source, setSource] = useState<NewLeadInput["source"]>("manual-phone");
 
   const canSubmit = name.trim() !== "" && email.trim() !== "" && phone.trim() !== "" && service !== "" && message.trim() !== "";
+
+  // Live, non-blocking — a real returning contact is a legitimate second entry, not an error. This only helps staff notice before they create a second record for someone already in the system.
+  const selfId = props.mode === "edit" ? props.lead.id : null;
+  const duplicateMatches = findDuplicatesForInput(email, phone, allLeads).filter((other) => other.id !== selfId);
 
   useEffect(() => {
     if (!open) return;
@@ -77,7 +84,7 @@ export function LeadFormDialog(props: Props) {
 
   if (!open) return null;
 
-  function handleSubmit(event: React.FormEvent) {
+  async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     if (!canSubmit) return;
     if (props.mode === "edit") {
@@ -85,9 +92,14 @@ export function LeadFormDialog(props: Props) {
       logActivity({ icon: "edit_note", description: `${currentUser.name} updated ${name}'s lead record`, relatedHref: `/admin/leads/${props.lead.id}` });
       toast.success("Lead updated");
     } else {
-      const newLead = addLead({ name, email, phone, company: company || undefined, service, language, message, source });
-      logActivity({ icon: "person_add", description: `${currentUser.name} logged a new lead: ${name}`, relatedHref: `/admin/leads/${newLead.id}` });
-      toast.success("Lead logged", { description: `${name} was added to the register.` });
+      try {
+        const newLead = await addLead({ name, email, phone, company: company || undefined, service, language, message, source });
+        logActivity({ icon: "person_add", description: `${currentUser.name} logged a new lead: ${name}`, relatedHref: `/admin/leads/${newLead.id}` });
+        toast.success("Lead logged", { description: `${name} was added to the register.` });
+      } catch (error) {
+        toast.error("Couldn't save this lead", { description: error instanceof Error ? error.message : "Please try again." });
+        return;
+      }
     }
     onClose();
   }
@@ -141,6 +153,19 @@ export function LeadFormDialog(props: Props) {
               </span>
               <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required className={inputClasses} placeholder="+237 6XX XXX XXX" />
             </label>
+
+            {duplicateMatches.length > 0 && (
+              <div className="flex items-start gap-2 rounded-lg border border-violet-200 bg-violet-50 px-3 py-2.5 text-xs text-violet-800 sm:col-span-2">
+                <MaterialIcon name="content_copy" className="mt-0.5 shrink-0 text-[15px]" />
+                <span>
+                  This email or phone number already matches{" "}
+                  {duplicateMatches.length === 1
+                    ? `${duplicateMatches[0].name}'s lead (submitted ${formatRelativeTime(duplicateMatches[0].createdAt)})`
+                    : `${duplicateMatches.length} other leads`}{" "}
+                  — check it isn&apos;t already being worked before logging this as new.
+                </span>
+              </div>
+            )}
 
             <label className="flex flex-col gap-1.5">
               <span className={labelClasses}>Company / Organization</span>

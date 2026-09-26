@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { RegisterList } from "@/components/admin/RegisterList";
 import { ActivityLog } from "@/components/admin/ActivityLog";
+import { ActivityLogModal } from "@/components/admin/ActivityLogModal";
+import { TeamWorkload } from "@/components/admin/TeamWorkload";
 import { CompletionModal } from "@/components/admin/CompletionModal";
 import { LeadFormDialog } from "@/components/admin/LeadFormDialog";
 import { LeadQuickViewModal } from "@/components/admin/LeadQuickViewModal";
@@ -16,7 +18,7 @@ import { useLeads } from "@/components/admin/providers/LeadsProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useActivity, useLogActivity } from "@/components/admin/providers/ActivityProvider";
 import { useServicePages, useServicePageActions } from "@/components/admin/providers/ServicePagesProvider";
-import { MOCK_ADMIN_USERS } from "@/lib/admin/mockData";
+import { useStaff } from "@/components/admin/providers/StaffProvider";
 import { getReviewStatus, type ReviewStatus } from "@/lib/admin/staleness";
 import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
 import {
@@ -152,6 +154,7 @@ function StatCard({
 export default function AdminDashboardPage() {
   const leads = useLeads();
   const currentUser = useCurrentUser();
+  const staff = useStaff();
   const activity = useActivity();
   const logActivity = useLogActivity();
   const servicePages = useServicePages();
@@ -160,6 +163,7 @@ export default function AdminDashboardPage() {
   const [createLeadOpen, setCreateLeadOpen] = useState(false);
   const [severityFilter, setSeverityFilter] = useState<Severity | null>(null);
   const [quickViewLeadId, setQuickViewLeadId] = useState<string | null>(null);
+  const [activityModalOpen, setActivityModalOpen] = useState(false);
 
   const scopedLeads = scopeLeads(leads, scope, currentUser.department);
   const scopedPages = scopePages(servicePages, scope, currentUser.department);
@@ -184,7 +188,8 @@ export default function AdminDashboardPage() {
 
   const rows = buildRegister(scopedLeads, scopedPages);
   const staleCount = rows.filter((row) => row.kind === "lead" && row.isStale).length;
-  const insight = buildDashboardInsight(scopedLeads, newLeadsThisWeek, newLeadsLastWeek, staleCount);
+  const dueSoonLeadCount = rows.filter((row) => row.kind === "lead" && row.dueSoonSLA).length;
+  const insight = buildDashboardInsight(scopedLeads, newLeadsThisWeek, newLeadsLastWeek, staleCount, dueSoonLeadCount);
 
   /*
    * No real email/notification channel exists yet for this — no staff email
@@ -194,7 +199,7 @@ export default function AdminDashboardPage() {
    * spec asked for, plus a toast for the person who clicked it.
    */
   function handleSendReminder(row: RegisterRow) {
-    const assignee = MOCK_ADMIN_USERS.find((user) => user.id === row.assignedToId);
+    const assignee = staff.find((user) => user.id === row.assignedToId);
     const assigneeName = assignee?.name ?? "the assignee";
     const lead = leads.find((candidate) => candidate.id === row.id);
     const lastTouched = lead ? formatRelativeTime(lead.statusChangedAt) : "a while ago";
@@ -229,7 +234,11 @@ export default function AdminDashboardPage() {
   function handleEscalate(row: RegisterRow) {
     const page = scopedPages.find((candidate) => candidate.id === row.id);
     if (!page) return;
-    const lead = MOCK_ADMIN_USERS.find((user) => user.department === page.department && user.role === "administrator");
+    // Prefer an administrator in the same department (routes to "the right
+    // team's boss" when there are several), but fall back to any
+    // administrator — with a single admin overseeing everything, department
+    // shouldn't be able to make this silently find nobody.
+    const lead = staff.find((user) => user.department === page.department && user.role === "administrator") ?? staff.find((user) => user.role === "administrator");
     if (!lead) return;
     escalateReview(page.id, lead.id);
     logActivity({
@@ -387,11 +396,13 @@ export default function AdminDashboardPage() {
           />
         </div>
         <div>
-          <ActivityLog entries={activity} />
+          <ActivityLog entries={activity.slice(0, 8)} onViewAll={() => setActivityModalOpen(true)} />
+          {currentUser.role === "administrator" && <TeamWorkload staff={staff} leads={leads} servicePages={servicePages} />}
         </div>
       </div>
 
       <LeadFormDialog open={createLeadOpen} onClose={() => setCreateLeadOpen(false)} mode="create" />
+      <ActivityLogModal open={activityModalOpen} onClose={() => setActivityModalOpen(false)} />
 
       <LeadQuickViewModal leadId={quickViewLeadId} onClose={() => setQuickViewLeadId(null)} />
 

@@ -35,6 +35,7 @@ export function buildDashboardInsight(
   newLeadsThisWeek: number,
   newLeadsLastWeek: number,
   staleCount: number,
+  dueSoonCount: number,
   now: Date = new Date(),
 ): string | null {
   const clauses: string[] = [];
@@ -57,6 +58,12 @@ export function buildDashboardInsight(
 
   if (staleCount > 0) {
     clauses.push(`${staleCount} ${staleCount === 1 ? "lead has" : "leads have"} gone stale and need follow-up`);
+  } else if (dueSoonCount > 0) {
+    // Only surfaced when nothing has actually breached yet — a stale lead is
+    // the more urgent fact and shouldn't share the sentence with a
+    // still-on-track prediction.
+    const subject = dueSoonCount === 1 ? "lead is approaching its" : "leads are approaching their";
+    clauses.push(`${dueSoonCount} ${subject} SLA window and should be prioritized next`);
   }
 
   if (clauses.length === 0) return null;

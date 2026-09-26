@@ -1,8 +1,8 @@
 import { toast } from "sonner";
 import { useLeadActions } from "@/components/admin/providers/LeadsProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
+import { useStaff } from "@/components/admin/providers/StaffProvider";
 import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
-import { MOCK_ADMIN_USERS } from "@/lib/admin/mockData";
 import { departmentLabels } from "@/lib/admin/labels";
 import { severityMeta, leadStatusToSeverity } from "@/lib/admin/register";
 import { getResponseClock, getStageClock } from "@/lib/admin/leadStaleness";
@@ -52,11 +52,12 @@ const CHANNEL_NOUN: Record<"email" | "call" | "chat", string> = { email: "email"
 export function useLeadDetailActions(lead: Lead) {
   const { claimLead, reassignLead, updateStatus, resolveTriage } = useLeadActions();
   const currentUser = useCurrentUser();
+  const staff = useStaff();
   const logActivity = useLogActivity();
   const leadHref = `/admin/leads/${lead.id}`;
 
   const meta = severityMeta[leadStatusToSeverity[lead.status]];
-  const assignedUser = MOCK_ADMIN_USERS.find((user) => user.id === lead.assignedToId);
+  const assignedUser = staff.find((user) => user.id === lead.assignedToId);
   const responseClock = getResponseClock(lead);
   const stageClock = getStageClock(lead);
   const languageMismatch = lead.language === "French" && Boolean(assignedUser) && !assignedUser?.languages.includes("French");
@@ -71,7 +72,7 @@ export function useLeadDetailActions(lead: Lead) {
 
   function handleReassign(userId: string | undefined) {
     reassignLead(lead.id, userId);
-    const user = MOCK_ADMIN_USERS.find((u) => u.id === userId);
+    const user = staff.find((u) => u.id === userId);
     logActivity({
       icon: "person_add",
       description: user ? `${currentUser.name} reassigned ${lead.name} to ${user.name}` : `${currentUser.name} unassigned ${lead.name}`,
@@ -131,6 +132,7 @@ export function useLeadDetailActions(lead: Lead) {
 
   return {
     currentUser,
+    staff,
     meta,
     assignedUser,
     responseClock,

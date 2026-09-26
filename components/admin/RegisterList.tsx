@@ -8,7 +8,7 @@ import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
 import { severityMeta, type RegisterRow, type Severity } from "@/lib/admin/register";
 import { initialsOf, avatarTint } from "@/lib/admin/avatar";
-import { MOCK_ADMIN_USERS } from "@/lib/admin/mockData";
+import { useStaff } from "@/components/admin/providers/StaffProvider";
 
 type Filter = "all" | "lead" | "compliance";
 
@@ -41,7 +41,8 @@ function Row({ row, onSendReminder, onResolve, onEscalate, onOpenLead }: { row: 
   // Only a stale lead someone actually owns has anyone to nudge — an unassigned lead needs claiming first, not a reminder.
   const canRemind = row.kind === "lead" && row.isStale && Boolean(row.assignedToId) && Boolean(onSendReminder);
   const canResolve = row.kind === "compliance" && row.severity === "overdue" && Boolean(onResolve);
-  const assignee = row.assignedToId ? MOCK_ADMIN_USERS.find((user) => user.id === row.assignedToId) : undefined;
+  const staff = useStaff();
+  const assignee = row.assignedToId ? staff.find((user) => user.id === row.assignedToId) : undefined;
 
   const avatar =
     row.kind === "lead" ? (
@@ -58,18 +59,40 @@ function Row({ row, onSendReminder, onResolve, onEscalate, onOpenLead }: { row: 
       </span>
     );
 
+  // A resolvable compliance row's href points to the LIVE PUBLIC PAGE, not
+  // an admin route — when the whole row doubled as that link, clicking the
+  // title (the natural click target) silently left the dashboard instead of
+  // opening Resolve/Escalate. Scoping the link to just the title, with an
+  // explicit "opens the live page" icon, keeps that navigation available
+  // without it ambushing someone reaching for the buttons next to it.
+  const titleText = (
+    <>
+      <span className="truncate">{row.title}</span>
+      {row.temperature && (
+        <span title={temperatureMeta[row.temperature].label} className="shrink-0">
+          <MaterialIcon name={temperatureMeta[row.temperature].icon} className={`text-[14px] ${temperatureMeta[row.temperature].className}`} />
+        </span>
+      )}
+    </>
+  );
+
   const inner = (
     <>
       {avatar}
       <div className="min-w-0 flex-1">
-        <p className="flex items-center gap-1 truncate font-sans text-sm font-semibold text-navy-950">
-          <span className="truncate">{row.title}</span>
-          {row.temperature && (
-            <span title={temperatureMeta[row.temperature].label} className="shrink-0">
-              <MaterialIcon name={temperatureMeta[row.temperature].icon} className={`text-[14px] ${temperatureMeta[row.temperature].className}`} />
-            </span>
-          )}
-        </p>
+        {canResolve && row.href ? (
+          <Link
+            href={row.href}
+            onClick={(event) => event.stopPropagation()}
+            title="Open the live public page"
+            className="group/title flex w-fit max-w-full items-center gap-1 truncate font-sans text-sm font-semibold text-navy-950 hover:text-teal-700 hover:underline"
+          >
+            {titleText}
+            <MaterialIcon name="open_in_new" className="shrink-0 text-[12px] text-slate-400 group-hover/title:text-teal-600" />
+          </Link>
+        ) : (
+          <p className="flex items-center gap-1 truncate font-sans text-sm font-semibold text-navy-950">{titleText}</p>
+        )}
         <div className="mt-1 flex flex-wrap items-center gap-2">
           <span
             className={`shrink-0 truncate rounded-full border px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide ${meta.badge}`}
@@ -79,6 +102,14 @@ function Row({ row, onSendReminder, onResolve, onEscalate, onOpenLead }: { row: 
           {row.isStale && (
             <span className="shrink-0 truncate rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide text-amber-700">
               Stale
+            </span>
+          )}
+          {row.dueSoonSLA && (
+            <span
+              title="Approaching its SLA window — not overdue yet"
+              className="shrink-0 truncate rounded-full border border-sky-200 bg-sky-50 px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide text-sky-700"
+            >
+              Due Soon
             </span>
           )}
           {row.detail && (
@@ -147,7 +178,8 @@ function Row({ row, onSendReminder, onResolve, onEscalate, onOpenLead }: { row: 
           </button>
         </div>
       )}
-      {row.href && <MaterialIcon name="chevron_right" className="shrink-0 text-[18px] text-slate-300" />}
+      {/* Only a plain (non-resolvable) row's chevron implies "click anywhere to go" — a resolvable row's own navigation now lives on its title link instead, so the chevron would misrepresent the rest of the row as clickable too. */}
+      {row.href && !canResolve && <MaterialIcon name="chevron_right" className="shrink-0 text-[18px] text-slate-300" />}
     </>
   );
 
@@ -173,8 +205,15 @@ function Row({ row, onSendReminder, onResolve, onEscalate, onOpenLead }: { row: 
     );
   }
 
+  // A resolvable compliance row is never itself a link — its title carries
+  // its own real <Link> to the live page above, and Resolve/Escalate are
+  // plain buttons, so this is just a static container for the three.
+  if (canResolve) {
+    return <div className={rowClasses}>{inner}</div>;
+  }
+
   // A row with a nested real button can't also be a real <a> (invalid nested-interactive HTML) — it becomes a synthetic, keyboard-reachable click target instead. Every other row keeps a real Link, so ctrl/middle-click and "open in new tab" keep working there. (canRemind only reaches here when onOpenLead isn't wired in — otherwise the branch above already handled this row.)
-  if ((canRemind || canResolve) && row.href) {
+  if (canRemind && row.href) {
     const href = row.href;
     return (
       <div

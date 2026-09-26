@@ -104,14 +104,14 @@ export function TeamMemberFormDialog(props: Props) {
 
   return (
     <DialogShell titleId={`${formId}-title`} title={props.mode === "edit" ? "Edit Team Member" : "Add a Team Member"} onClose={onClose} footer={footer}>
-      <div className="min-h-0 flex-1 overflow-y-auto lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:overflow-hidden">
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:grid-rows-[minmax(0,1fr)] lg:overflow-hidden">
         <form
           id={formId}
           onSubmit={(event) => {
             event.preventDefault();
             void submit();
           }}
-          className="space-y-6 px-5 py-5 lg:overflow-y-auto"
+          className="space-y-6 px-5 py-5 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain"
         >
           <Section step={1} title="Identity" description="Who they are, as they'd introduce themselves.">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -235,7 +235,7 @@ export function TeamMemberFormDialog(props: Props) {
           </Section>
         </form>
 
-        <aside className="space-y-4 border-t border-slate-100 bg-slate-50/70 px-5 py-5 lg:overflow-y-auto lg:border-l lg:border-t-0">
+        <aside className="space-y-4 border-t border-slate-100 bg-slate-50/70 px-5 py-5 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:border-l lg:border-t-0">
           <div>
             <span className={labelClasses}>Preview</span>
             <div className="mt-2 max-w-[260px]">

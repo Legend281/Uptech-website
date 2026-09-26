@@ -239,14 +239,14 @@ export function TestimonialFormDialog(props: Props) {
 
   return (
     <DialogShell titleId={`${formId}-title`} title={props.mode === "edit" ? "Edit Testimonial" : "Add a Testimonial"} onClose={onClose} footer={footer}>
-        <div className="min-h-0 flex-1 overflow-y-auto lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:overflow-hidden">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:grid-rows-[minmax(0,1fr)] lg:overflow-hidden">
           <form
             id={formId}
             onSubmit={(event) => {
               event.preventDefault();
               void submit(false);
             }}
-            className="space-y-6 px-5 py-5 lg:overflow-y-auto"
+            className="space-y-6 px-5 py-5 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain"
           >
             {withdrawn && (
               <div className="flex gap-2 rounded-lg border border-rose-200 bg-rose-50 p-3 text-sm text-rose-800">
@@ -592,7 +592,7 @@ export function TestimonialFormDialog(props: Props) {
           </form>
 
           {/* Preview + publish readiness */}
-          <aside className="space-y-4 border-t border-slate-100 bg-slate-50/70 px-5 py-5 lg:overflow-y-auto lg:border-l lg:border-t-0">
+          <aside className="space-y-4 border-t border-slate-100 bg-slate-50/70 px-5 py-5 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:border-l lg:border-t-0">
             <div>
               <div className="mb-2 flex items-center justify-between">
                 <span className={labelClasses}>Preview</span>

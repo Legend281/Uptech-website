@@ -3,6 +3,7 @@
 import { useId, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
+import { ApplyModal } from "@/components/ApplyModal";
 
 export type JobPosting = {
   title: string;
@@ -11,73 +12,29 @@ export type JobPosting = {
   type: string;
   description: string;
   requirements?: string[];
+  /** When set, "Apply" links straight here (a new tab) instead of opening the site's own résumé-upload modal — for a posting whose applications go through an external form. */
+  applyUrl?: string;
 };
 
 // Exported so the admin's Job Postings module can use the exact same default rather than redefining it and risking drift.
 export const GENERAL_INTEREST_EMAIL = "infos@uptechconsulting.com";
 
-function applyMailto(roleTitle: string) {
-  const subject = `Application — ${roleTitle}`;
-  const body = `Hi Uptech Consulting,\n\nI'd like to apply for the ${roleTitle} role.\n\nName:\nLocation:\nLinkedIn / portfolio (optional):\n\nPlease attach your CV before sending this email.\n\n`;
-  return `mailto:${GENERAL_INTEREST_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-}
-
-const generalInterestHref = `mailto:${GENERAL_INTEREST_EMAIL}?subject=${encodeURIComponent(
-  "General Interest — Future Opportunities"
-)}&body=${encodeURIComponent(
-  "Hi Uptech Consulting,\n\nI don't see an open role that matches my background right now, but I'd like to be considered for future opportunities.\n\nName:\nArea of interest:\nLocation:\nLinkedIn / portfolio (optional):\n\nPlease attach your CV before sending this email.\n\n"
-)}`;
-
 /*
- * FIX 2 finding, worth keeping visible in code: "Send Us Your CV" / "Apply
- * for This Role" were already real working mailto: links (not a dead end) —
- * same client-side handoff pattern ContactForm.tsx uses for every other
- * lead-capture form on this site (no Next.js API route + Supabase/Resend
- * backend exists anywhere in this codebase to wire this into instead;
- * verified by search). A mailto link has no server round-trip, so there is
- * nothing to show a "Sending..." state for — the honest equivalent, and
- * what's implemented below, is the same inline guidance copy ContactForm.tsx
- * already uses ("this opens your email app — hit send yourself").
- *
- * What WAS genuinely missing (Fix 1): no consent checkbox gated either
- * apply action, unlike ContactForm.tsx's. Added below, mirroring that same
- * component's copy and disabled-state pattern exactly.
+ * "Send Us Your CV" / "Apply for This Role" now open ApplyModal, a real
+ * form that POSTs to /api/apply — Supabase Storage + a Lead record per
+ * Admin_Dashboard_Requirements.md Section 3.11 — instead of a mailto: link.
+ * The mailto builder that used to live here now only exists as ApplyModal's
+ * own error-state fallback, matching ContactForm.tsx's same pattern.
  */
 export function OpenPositions({ jobs }: { jobs: JobPosting[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const [consent, setConsent] = useState(false);
+  const [applyRole, setApplyRole] = useState<string | null | undefined>(undefined);
   const baseId = useId();
 
-  const consentCheckbox = (
-    <label className="flex items-start gap-2.5 max-w-xl mx-auto text-left mb-6">
-      <input
-        type="checkbox"
-        checked={consent}
-        onChange={(event) => setConsent(event.target.checked)}
-        className="mt-0.5 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500/40 shrink-0"
-      />
-      <span className="text-xs text-slate-500 leading-relaxed">
-        I agree to Uptech Consulting storing and reviewing my information as described in the{" "}
-        <a href="/privacy-policy" className="text-blue-accent underline hover:text-blue-700">
-          Privacy Policy
-        </a>
-        .
-      </span>
-    </label>
-  );
-
-  const applyLinkClasses = (enabled: boolean, size: "md" | "sm" = "md") =>
+  const applyLinkClasses = (size: "md" | "sm" = "md") =>
     `inline-flex items-center gap-2 rounded-lg font-semibold transition-all ${
       size === "md" ? "px-6 py-3 text-sm" : "px-5 py-2.5 text-xs uppercase tracking-wider"
-    } ${
-      enabled
-        ? "gradient-teal-blue text-white shadow-lg shadow-teal-950/40 hover:brightness-105 active:scale-[0.98]"
-        : "bg-slate-100 text-slate-400 cursor-not-allowed pointer-events-none"
-    }`;
-
-  const consentHint = consent
-    ? "This opens your email app with a pre-filled message — attach your CV, then hit send."
-    : "Check the box above to continue.";
+    } gradient-teal-blue text-white shadow-lg shadow-teal-950/40 hover:brightness-105 active:scale-[0.98]`;
 
   if (jobs.length === 0) {
     return (
@@ -91,23 +48,18 @@ export function OpenPositions({ jobs }: { jobs: JobPosting[] }) {
           exceptional people across every department above. Send us your CV and we&apos;ll reach
           out when something fits.
         </p>
-        {consentCheckbox}
-        <a
-          href={consent ? generalInterestHref : undefined}
-          aria-disabled={!consent}
-          className={applyLinkClasses(consent)}
-        >
+        <button type="button" onClick={() => setApplyRole(null)} className={applyLinkClasses()}>
           <MaterialIcon name="mail" className="text-[18px]" />
           <span>Send Us Your CV</span>
-        </a>
-        <p className="text-xs text-slate-400 mt-3">{consentHint}</p>
+        </button>
+        <ApplyModal open={applyRole !== undefined} onClose={() => setApplyRole(undefined)} roleTitle={applyRole ?? undefined} />
       </div>
     );
   }
 
   return (
     <div className="flex flex-col gap-4">
-      {consentCheckbox}
+      <ApplyModal open={applyRole !== undefined} onClose={() => setApplyRole(undefined)} roleTitle={applyRole ?? undefined} />
       {jobs.map((job, index) => {
         const isOpen = openIndex === index;
         const panelId = `${baseId}-panel-${index}`;
@@ -163,7 +115,7 @@ export function OpenPositions({ jobs }: { jobs: JobPosting[] }) {
             >
               <div className="min-h-0">
                 <div className="px-6 pb-6 border-t border-slate-100 pt-5">
-                  <p className="text-sm text-slate-600 leading-relaxed">{job.description}</p>
+                  <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap">{job.description}</p>
                   {job.requirements && job.requirements.length > 0 && (
                     <ul className="mt-4 flex flex-col gap-2">
                       {job.requirements.map((req) => (
@@ -177,15 +129,17 @@ export function OpenPositions({ jobs }: { jobs: JobPosting[] }) {
                       ))}
                     </ul>
                   )}
-                  <a
-                    href={consent ? applyMailto(job.title) : undefined}
-                    aria-disabled={!consent}
-                    className={`mt-5 ${applyLinkClasses(consent, "sm")}`}
-                  >
-                    <MaterialIcon name="send" className="text-[16px]" />
-                    <span>Apply for This Role</span>
-                  </a>
-                  <p className="text-xs text-slate-400 mt-2">{consentHint}</p>
+                  {job.applyUrl ? (
+                    <a href={job.applyUrl} target="_blank" rel="noopener noreferrer" className={`mt-5 ${applyLinkClasses("sm")}`}>
+                      <MaterialIcon name="open_in_new" className="text-[16px]" />
+                      <span>Apply for This Role</span>
+                    </a>
+                  ) : (
+                    <button type="button" onClick={() => setApplyRole(job.title)} className={`mt-5 ${applyLinkClasses("sm")}`}>
+                      <MaterialIcon name="send" className="text-[16px]" />
+                      <span>Apply for This Role</span>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

@@ -21,9 +21,9 @@ import {
   jobPostingStatusChartColor,
   isJobPostingStale,
   daysSincePosted,
+  daysUntilClosing,
 } from "@/lib/admin/jobPostings";
 import { buildJobPostingsInsight } from "@/lib/admin/jobPostingInsight";
-import { downloadPublishedPostingsJson } from "@/lib/admin/exportJobPostings";
 import type { JobPosting, JobPostingStatus } from "@/lib/admin/types";
 
 const PAGE_SIZE = 8;
@@ -41,6 +41,23 @@ const itemVariants: Variants = {
 
 function PostedCell({ posting }: { posting: JobPosting }) {
   const stale = isJobPostingStale(posting);
+
+  if (posting.closingDate) {
+    // Whether the date has passed is a plain fact, independent of status —
+    // a draft or closed posting can still have a past closingDate without
+    // that being "stale" (isJobPostingStale only warns on a still-published
+    // one), but the wording should reflect reality either way rather than
+    // showing a confusing negative day count.
+    const days = daysUntilClosing(posting);
+    const hasClosed = days < 0;
+    return (
+      <span className={`inline-flex items-center gap-1 whitespace-nowrap text-xs font-semibold ${stale ? "text-amber-700" : "text-slate-500"}`}>
+        {stale && <MaterialIcon name="warning" className="text-[13px]" />}
+        {hasClosed ? `Closed ${Math.abs(days)}d ago` : `Closes in ${days}d`}
+      </span>
+    );
+  }
+
   return stale ? (
     <span className="inline-flex items-center gap-1 whitespace-nowrap text-xs font-semibold text-amber-700">
       <MaterialIcon name="warning" className="text-[13px]" />
@@ -148,11 +165,6 @@ export default function JobPostingsPage() {
   const pageStart = (safePage - 1) * PAGE_SIZE;
   const paged = filtered.slice(pageStart, pageStart + PAGE_SIZE);
 
-  function handleExportAll() {
-    downloadPublishedPostingsJson(postings);
-    toast.success("Exported", { description: `${publishedCount} published posting${publishedCount === 1 ? "" : "s"} ready to hand off.` });
-  }
-
   return (
     <>
       <motion.div variants={containerVariants} initial="hidden" animate="show">
@@ -187,19 +199,10 @@ export default function JobPostingsPage() {
               </p>
             )}
             <p className="mt-1.5 text-xs text-slate-400">
-              Staged here, not synced automatically — Export produces a file for whoever updates the live site.
+              Publishing a posting puts it live on the public Careers page automatically, within about a minute.
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={handleExportAll}
-              disabled={publishedCount === 0}
-              className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              <MaterialIcon name="download" className="text-[16px]" />
-              Export Published
-            </button>
             <button
               type="button"
               onClick={() => setCreateOpen(true)}

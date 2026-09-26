@@ -78,7 +78,7 @@ export type LeadStatus =
   | "lost";
 
 /** "manual-*" values cover Phase A's hand-logged intake; the rest are real form/channel origins for Phase B. */
-export type LeadSource = "contact-form" | "referral" | "whatsapp" | "website" | "manual-phone" | "manual-email" | "manual-other";
+export type LeadSource = "contact-form" | "careers-apply" | "referral" | "whatsapp" | "website" | "manual-phone" | "manual-email" | "manual-other";
 
 /** Distinguishes the two audiences this dashboard's two departments actually serve, plus the genuinely-unsure case. */
 export type LeadType = "job-seeker" | "business" | "general";
@@ -127,18 +127,24 @@ export type Lead = {
   statusChangedAt: string;
   /** True only when a human resolved this out of needs-triage via resolveTriage — everything else got its department from deriveDepartment automatically at creation. Distinct from `department` itself, which doesn't say how it got set. */
   wasManuallyTriaged?: boolean;
+  /**
+   * A storage object path within the resumes bucket (e.g. "<uuid>-cv.pdf"),
+   * not a public URL — the bucket is private (see
+   * supabase/002_leads_applications.sql and 003_staff_auth.sql). Any
+   * authenticated staff member can turn this into a real download via
+   * ResumeDownloadButton, which generates a short-lived signed URL on click.
+   */
+  resumeUrl?: string;
 };
 
 export type JobPostingStatus = "draft" | "published" | "closed";
 
 /*
- * Not synced to the live public Careers page — this site is fully
- * static-exported, so there's no runtime path from this admin's localStorage
- * to app/careers/page.tsx's hardcoded array. "Published" here means "content
- * is finalized and export-ready," not "visible on the live site." Getting a
- * posting actually live still needs the Export action's JSON output hand-
- * carried into that page and redeployed — same Phase A limitation as every
- * other admin content type in this build (Leads, Service Pages).
+ * Real Supabase table (supabase/006_job_postings.sql), and "published" here
+ * really does mean "visible on the live site" — app/careers/page.tsx reads
+ * status = 'published' rows directly (a public anon-read RLS policy scoped
+ * to that status only), revalidated at most once a minute. No manual
+ * export/redeploy step anymore.
  *
  * `department` is a free-text value from HIRING_DEPARTMENT_NAMES (the six
  * real internal departments) — a different axis entirely from this file's
@@ -161,7 +167,23 @@ export type JobPosting = {
   postedById: string;
   /** Falls back to a hardcoded default (see jobPostings.ts) when unset — there's no Settings module yet to source a configurable default from. */
   contactEmail?: string;
+  /**
+   * When set, "Apply" on the public page links straight to this URL (a new
+   * tab) instead of opening the site's own résumé-upload flow — for a
+   * posting where applications are meant to go through an external form
+   * (e.g. a Google Form for a structured program with its own intake
+   * questions), not the standard job-application pipeline.
+   */
+  applyUrl?: string;
   /** Manually incremented by whoever checks the recruiting inbox — a deliberately cheap stand-in for a real ATS, not a start of one. */
   applicationsReceived: number;
   notes?: string;
+  /**
+   * A real, explicit deadline for a fixed-duration posting (e.g. a
+   * time-boxed trainee program with its own stated intake window) —
+   * distinct from JOB_POSTING_STALE_DAYS's generic "been open a while"
+   * heuristic, which only applies when this is unset. Optional because most
+   * roles are open-ended with no real closing date to record.
+   */
+  closingDate?: string;
 };

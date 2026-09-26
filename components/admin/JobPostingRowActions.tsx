@@ -7,13 +7,12 @@ import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
 import { useJobPostingActions } from "@/components/admin/providers/JobPostingsProvider";
-import { downloadPublishedPostingsJson } from "@/lib/admin/exportJobPostings";
 import type { JobPosting } from "@/lib/admin/types";
 
 /**
- * Status transitions, Duplicate, and Export happen right here rather than
- * being lifted to the parent page — none of them need a modal, so there's
- * nothing for the parent to own. Only Edit, Applications, and Delete open
+ * Status transitions and Duplicate happen right here rather than being
+ * lifted to the parent page — neither needs a modal, so there's nothing
+ * for the parent to own. Only Edit, Applications, and Delete open
  * something, which is why those three are still callback props.
  */
 export function JobPostingRowActions({
@@ -53,7 +52,7 @@ export function JobPostingRowActions({
   function publishNow() {
     setStatus(posting.id, "published");
     logActivity({ icon: "check_circle", description: `${currentUser.name} published ${posting.title}`, relatedHref: "/admin/job-postings" });
-    toast.success("Published", { description: "Marked ready — still needs Export + a manual step to go live on the site." });
+    toast.success("Published", { description: "Live on the public Careers page within about a minute." });
   }
 
   function handlePublish() {
@@ -77,15 +76,14 @@ export function JobPostingRowActions({
     toast.success("Reopened as Published");
   }
 
-  function handleDuplicate() {
-    const copy = clonePosting(posting.id, currentUser.id);
-    logActivity({ icon: "person_add", description: `${currentUser.name} duplicated ${posting.title} for a new posting`, relatedHref: "/admin/job-postings" });
-    toast.success("Duplicated", { description: `A new draft of "${copy.title}" was created.` });
-  }
-
-  function handleExportOne() {
-    downloadPublishedPostingsJson([posting], `${posting.id}.json`);
-    toast.success("Exported", { description: "Ready to hand to whoever updates the live site." });
+  async function handleDuplicate() {
+    try {
+      const copy = await clonePosting(posting.id, currentUser.id);
+      logActivity({ icon: "person_add", description: `${currentUser.name} duplicated ${posting.title} for a new posting`, relatedHref: "/admin/job-postings" });
+      toast.success("Duplicated", { description: `A new draft of "${copy.title}" was created.` });
+    } catch (error) {
+      toast.error("Couldn't duplicate this posting", { description: error instanceof Error ? error.message : "Please try again." });
+    }
   }
 
   return (
@@ -106,6 +104,10 @@ export function JobPostingRowActions({
             <MaterialIcon name="edit" className="text-[16px] text-slate-400" />
             Edit
           </button>
+          <button type="button" role="menuitem" onClick={() => { setOpen(false); onApplications(); }} className="flex w-full items-center gap-2 border-t border-slate-100 px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">
+            <MaterialIcon name="groups" className="text-[16px] text-slate-400" />
+            Applications
+          </button>
 
           {posting.status === "draft" && (
             <button type="button" role="menuitem" onClick={() => { setOpen(false); handlePublish(); }} className="flex w-full items-center gap-2 border-t border-slate-100 px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">
@@ -114,32 +116,16 @@ export function JobPostingRowActions({
             </button>
           )}
           {posting.status === "published" && (
-            <>
-              <button type="button" role="menuitem" onClick={() => { setOpen(false); onApplications(); }} className="flex w-full items-center gap-2 border-t border-slate-100 px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">
-                <MaterialIcon name="groups" className="text-[16px] text-slate-400" />
-                Applications
-              </button>
-              <button type="button" role="menuitem" onClick={() => { setOpen(false); handleExportOne(); }} className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">
-                <MaterialIcon name="download" className="text-[16px] text-slate-400" />
-                Export
-              </button>
-              <button type="button" role="menuitem" onClick={() => { setOpen(false); handleCloseRole(); }} className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">
-                <MaterialIcon name="block" className="text-[16px] text-slate-400" />
-                Close
-              </button>
-            </>
+            <button type="button" role="menuitem" onClick={() => { setOpen(false); handleCloseRole(); }} className="flex w-full items-center gap-2 border-t border-slate-100 px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">
+              <MaterialIcon name="block" className="text-[16px] text-slate-400" />
+              Close
+            </button>
           )}
           {posting.status === "closed" && (
-            <>
-              <button type="button" role="menuitem" onClick={() => { setOpen(false); onApplications(); }} className="flex w-full items-center gap-2 border-t border-slate-100 px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">
-                <MaterialIcon name="groups" className="text-[16px] text-slate-400" />
-                Applications
-              </button>
-              <button type="button" role="menuitem" onClick={() => { setOpen(false); handleReopen(); }} className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">
-                <MaterialIcon name="restart_alt" className="text-[16px] text-emerald-500" />
-                Reopen
-              </button>
-            </>
+            <button type="button" role="menuitem" onClick={() => { setOpen(false); handleReopen(); }} className="flex w-full items-center gap-2 border-t border-slate-100 px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">
+              <MaterialIcon name="restart_alt" className="text-[16px] text-emerald-500" />
+              Reopen
+            </button>
           )}
 
           <button type="button" role="menuitem" onClick={() => { setOpen(false); handleDuplicate(); }} className="flex w-full items-center gap-2 border-t border-slate-100 px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">

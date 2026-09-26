@@ -36,9 +36,9 @@ export type HiringDepartment = {
 
 export const HIRING_DEPARTMENTS: HiringDepartment[] = [
   {
-    icon: "terminal",
-    title: "IT Consulting & Outsourcing",
-    description: "Managed IT support, cloud migration, database administration, and cybersecurity delivery.",
+    icon: "trending_up",
+    title: "Career Marketing & Placement Support",
+    description: "Profile positioning, application management, and recruiter follow-up for job seekers.",
   },
   {
     icon: "gavel",
@@ -46,9 +46,9 @@ export const HIRING_DEPARTMENTS: HiringDepartment[] = [
     description: "Corporate formation, tax compliance, and regulatory filing across Cameroon and the US.",
   },
   {
-    icon: "trending_up",
-    title: "Career Marketing & Placement Support",
-    description: "Profile positioning, application management, and recruiter follow-up for job seekers.",
+    icon: "terminal",
+    title: "IT Consulting & Outsourcing",
+    description: "Managed IT support, cloud migration, database administration, and cybersecurity delivery.",
   },
   {
     icon: "groups",

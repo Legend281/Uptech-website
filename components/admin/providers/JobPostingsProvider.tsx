@@ -1,79 +1,155 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { mockJobPostings } from "@/lib/admin/mockData";
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { JobPosting, JobPostingStatus } from "@/lib/admin/types";
 
-const STORAGE_KEY = "uco-admin-job-postings-v1";
+/*
+ * Real Supabase reads/writes — replaces the old localStorage-only store.
+ * Publishing a posting here is what makes it live on the public Careers
+ * page (app/careers/page.tsx reads status = 'published' rows directly),
+ * so this is the one admin data type where "save" has a real, immediate
+ * public-facing effect, not just an internal record.
+ *
+ * Same optimistic-write posture as LeadsProvider: update local state
+ * immediately, fire the Supabase call after, log (don't retry/rollback) on
+ * failure — see that file's own comment for why.
+ */
+
+type JobPostingRow = {
+  id: string;
+  title: string;
+  department: string;
+  location: string;
+  employment_type: string;
+  description: string;
+  requirements: string[];
+  status: JobPostingStatus;
+  posted_at: string;
+  posted_by_id: string | null;
+  contact_email: string | null;
+  apply_url: string | null;
+  applications_received: number;
+  notes: string | null;
+  closing_date: string | null;
+};
+
+function fromRow(row: JobPostingRow): JobPosting {
+  return {
+    id: row.id,
+    title: row.title,
+    department: row.department,
+    location: row.location,
+    employmentType: row.employment_type,
+    description: row.description,
+    requirements: row.requirements,
+    status: row.status,
+    postedAt: row.posted_at,
+    postedById: row.posted_by_id ?? "",
+    contactEmail: row.contact_email ?? undefined,
+    applyUrl: row.apply_url ?? undefined,
+    applicationsReceived: row.applications_received,
+    notes: row.notes ?? undefined,
+    closingDate: row.closing_date ?? undefined,
+  };
+}
 
 /** Everything but id/status/postedAt/postedById/applicationsReceived — those are set by the provider, not typed in from the form. */
-export type NewJobPostingInput = Pick<JobPosting, "title" | "department" | "location" | "employmentType" | "description" | "requirements" | "contactEmail">;
+export type NewJobPostingInput = Pick<
+  JobPosting,
+  "title" | "department" | "location" | "employmentType" | "description" | "requirements" | "contactEmail" | "applyUrl" | "closingDate"
+>;
 
 type JobPostingsContextValue = {
   postings: JobPosting[];
-  addPosting: (input: NewJobPostingInput, postedById: string) => JobPosting;
+  addPosting: (input: NewJobPostingInput, postedById: string) => Promise<JobPosting>;
   editPosting: (id: string, input: NewJobPostingInput) => void;
   deletePosting: (id: string) => void;
   setStatus: (id: string, status: JobPostingStatus) => void;
-  clonePosting: (id: string, postedById: string) => JobPosting;
+  clonePosting: (id: string, postedById: string) => Promise<JobPosting>;
   updateApplications: (id: string, applicationsReceived: number, notes: string | undefined) => void;
 };
 
 const JobPostingsContext = createContext<JobPostingsContextValue | null>(null);
 
-function loadPostings(): JobPosting[] {
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return mockJobPostings;
-    const parsed = JSON.parse(raw) as unknown;
-    return Array.isArray(parsed) && parsed.length > 0 ? (parsed as JobPosting[]) : mockJobPostings;
-  } catch {
-    return mockJobPostings;
-  }
-}
-
-function savePostings(postings: JobPosting[]) {
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(postings));
-  } catch {
-    // Best-effort only — a private window or blocked storage shouldn't break the page.
-  }
-}
-
-function makePostingId(): string {
-  return `job-manual-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
-}
-
 export function JobPostingsProvider({ children }: { children: ReactNode }) {
-  // Seeded with the static mock set on first render so server and client markup match; the real localStorage read happens after mount, below.
-  const [postings, setPostings] = useState<JobPosting[]>(mockJobPostings);
+  const [postings, setPostings] = useState<JobPosting[]>([]);
 
   useEffect(() => {
-    setPostings(loadPostings());
+    const supabase = getSupabaseBrowserClient();
+    let cancelled = false;
+
+    supabase
+      .from("job_postings")
+      .select("*")
+      .order("posted_at", { ascending: false })
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error) {
+          console.error("[job-postings] Failed to load postings:", error);
+          return;
+        }
+        setPostings((data as JobPostingRow[]).map(fromRow));
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   function updatePosting(id: string, patch: Partial<JobPosting>) {
-    setPostings((prev) => {
-      const next = prev.map((posting) => (posting.id === id ? { ...posting, ...patch } : posting));
-      savePostings(next);
-      return next;
-    });
+    setPostings((prev) => prev.map((posting) => (posting.id === id ? { ...posting, ...patch } : posting)));
+
+    const row: Record<string, unknown> = {};
+    if ("title" in patch) row.title = patch.title;
+    if ("department" in patch) row.department = patch.department;
+    if ("location" in patch) row.location = patch.location;
+    if ("employmentType" in patch) row.employment_type = patch.employmentType;
+    if ("description" in patch) row.description = patch.description;
+    if ("requirements" in patch) row.requirements = patch.requirements;
+    if ("contactEmail" in patch) row.contact_email = patch.contactEmail ?? null;
+    if ("applyUrl" in patch) row.apply_url = patch.applyUrl ?? null;
+    if ("status" in patch) row.status = patch.status;
+    if ("applicationsReceived" in patch) row.applications_received = patch.applicationsReceived;
+    if ("notes" in patch) row.notes = patch.notes ?? null;
+    if ("closingDate" in patch) row.closing_date = patch.closingDate ?? null;
+
+    getSupabaseBrowserClient()
+      .from("job_postings")
+      .update(row)
+      .eq("id", id)
+      .then(({ error }) => {
+        if (error) console.error(`[job-postings] Failed to save update for posting ${id}:`, error);
+      });
   }
 
-  function addPosting(input: NewJobPostingInput, postedById: string): JobPosting {
-    const posting: JobPosting = {
-      id: makePostingId(),
-      ...input,
-      status: "draft",
-      postedAt: new Date().toISOString(),
-      postedById,
-      applicationsReceived: 0,
-    };
-    setPostings((prev) => {
-      const next = [posting, ...prev];
-      savePostings(next);
-      return next;
-    });
+  async function addPosting(input: NewJobPostingInput, postedById: string): Promise<JobPosting> {
+    const supabase = getSupabaseBrowserClient();
+    const { data, error } = await supabase
+      .from("job_postings")
+      .insert({
+        title: input.title,
+        department: input.department,
+        location: input.location,
+        employment_type: input.employmentType,
+        description: input.description,
+        requirements: input.requirements,
+        contact_email: input.contactEmail ?? null,
+        apply_url: input.applyUrl ?? null,
+        closing_date: input.closingDate ?? null,
+        status: "draft",
+        posted_by_id: postedById,
+        applications_received: 0,
+      })
+      .select()
+      .single();
+
+    if (error || !data) {
+      throw new Error(error?.message ?? "Failed to save the new posting.");
+    }
+
+    const posting = fromRow(data as JobPostingRow);
+    setPostings((prev) => [posting, ...prev]);
     return posting;
   }
 
@@ -82,11 +158,14 @@ export function JobPostingsProvider({ children }: { children: ReactNode }) {
   }
 
   function deletePosting(id: string) {
-    setPostings((prev) => {
-      const next = prev.filter((posting) => posting.id !== id);
-      savePostings(next);
-      return next;
-    });
+    setPostings((prev) => prev.filter((posting) => posting.id !== id));
+    getSupabaseBrowserClient()
+      .from("job_postings")
+      .delete()
+      .eq("id", id)
+      .then(({ error }) => {
+        if (error) console.error(`[job-postings] Failed to delete posting ${id}:`, error);
+      });
   }
 
   function setStatus(id: string, status: JobPostingStatus) {
@@ -99,28 +178,21 @@ export function JobPostingsProvider({ children }: { children: ReactNode }) {
    * again), postedAt reset to now, and applications/notes cleared rather
    * than carried over from the previous run.
    */
-  function clonePosting(id: string, postedById: string): JobPosting {
+  async function clonePosting(id: string, postedById: string): Promise<JobPosting> {
     const source = postings.find((posting) => posting.id === id);
-    const cloned: JobPosting = {
-      id: makePostingId(),
-      title: source?.title ?? "Untitled role",
-      department: source?.department ?? "",
-      location: source?.location ?? "",
-      employmentType: source?.employmentType ?? "",
-      description: source?.description ?? "",
-      requirements: source?.requirements ?? [],
-      contactEmail: source?.contactEmail,
-      status: "draft",
-      postedAt: new Date().toISOString(),
-      postedById,
-      applicationsReceived: 0,
-    };
-    setPostings((prev) => {
-      const next = [cloned, ...prev];
-      savePostings(next);
-      return next;
-    });
-    return cloned;
+    return addPosting(
+      {
+        title: source?.title ?? "Untitled role",
+        department: source?.department ?? "",
+        location: source?.location ?? "",
+        employmentType: source?.employmentType ?? "",
+        description: source?.description ?? "",
+        requirements: source?.requirements ?? [],
+        contactEmail: source?.contactEmail,
+        applyUrl: source?.applyUrl,
+      },
+      postedById
+    );
   }
 
   function updateApplications(id: string, applicationsReceived: number, notes: string | undefined) {

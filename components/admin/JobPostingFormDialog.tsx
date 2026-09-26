@@ -32,6 +32,8 @@ export function JobPostingFormDialog(props: Props) {
   const [description, setDescription] = useState("");
   const [requirementsText, setRequirementsText] = useState("");
   const [contactEmail, setContactEmail] = useState("");
+  const [applyUrl, setApplyUrl] = useState("");
+  const [closingDate, setClosingDate] = useState("");
 
   const canSubmit = title.trim() !== "" && department !== "" && location.trim() !== "" && employmentType !== "";
 
@@ -55,6 +57,8 @@ export function JobPostingFormDialog(props: Props) {
       setDescription(posting.description);
       setRequirementsText(posting.requirements.join("\n"));
       setContactEmail(posting.contactEmail ?? "");
+      setApplyUrl(posting.applyUrl ?? "");
+      setClosingDate(posting.closingDate ?? "");
     } else {
       setTitle("");
       setDepartment("");
@@ -63,13 +67,15 @@ export function JobPostingFormDialog(props: Props) {
       setDescription("");
       setRequirementsText("");
       setContactEmail("");
+      setApplyUrl("");
+      setClosingDate("");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   if (!open) return null;
 
-  function handleSubmit(event: FormEvent) {
+  async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     if (!canSubmit) return;
 
@@ -84,6 +90,8 @@ export function JobPostingFormDialog(props: Props) {
         .map((line) => line.trim())
         .filter(Boolean),
       contactEmail: contactEmail.trim() || undefined,
+      applyUrl: applyUrl.trim() || undefined,
+      closingDate: closingDate.trim() || undefined,
     };
 
     if (props.mode === "edit") {
@@ -91,9 +99,14 @@ export function JobPostingFormDialog(props: Props) {
       logActivity({ icon: "edit_note", description: `${currentUser.name} updated the ${input.title} posting`, relatedHref: "/admin/job-postings" });
       toast.success("Posting updated");
     } else {
-      const posting = addPosting(input, currentUser.id);
-      logActivity({ icon: "person_add", description: `${currentUser.name} drafted a new posting: ${posting.title}`, relatedHref: "/admin/job-postings" });
-      toast.success("Draft created", { description: "Publish it from the list once it's ready." });
+      try {
+        const posting = await addPosting(input, currentUser.id);
+        logActivity({ icon: "person_add", description: `${currentUser.name} drafted a new posting: ${posting.title}`, relatedHref: "/admin/job-postings" });
+        toast.success("Draft created", { description: "Publish it from the list once it's ready." });
+      } catch (error) {
+        toast.error("Couldn't save this posting", { description: error instanceof Error ? error.message : "Please try again." });
+        return;
+      }
     }
     onClose();
   }
@@ -121,8 +134,8 @@ export function JobPostingFormDialog(props: Props) {
         <form id={formId} onSubmit={handleSubmit} className="min-h-0 flex-1 overflow-y-auto px-5 py-5">
           {!isEdit && (
             <p className="mb-4 text-xs text-slate-500">
-              Saves as a Draft — nothing here is visible on the public site until you explicitly Publish it, and even
-              then it still needs a manual export step to actually go live.
+              Saves as a Draft — nothing here is visible on the public site until you explicitly Publish it, at which
+              point it appears on the live Careers page automatically within about a minute.
             </p>
           )}
 
@@ -170,6 +183,15 @@ export function JobPostingFormDialog(props: Props) {
             </label>
 
             <label className="flex flex-col gap-1.5 sm:col-span-2">
+              <span className={labelClasses}>Application Closing Date (optional)</span>
+              <input type="date" value={closingDate} onChange={(e) => setClosingDate(e.target.value)} className={inputClasses} />
+              <span className="text-xs text-slate-400">
+                Only for a fixed-duration posting with a real intake window (e.g. a trainee program) — leave blank for
+                an open-ended role, which uses a generic &quot;been open a while&quot; flag instead.
+              </span>
+            </label>
+
+            <label className="flex flex-col gap-1.5 sm:col-span-2">
               <span className={labelClasses}>Description</span>
               <textarea
                 value={description}
@@ -200,6 +222,20 @@ export function JobPostingFormDialog(props: Props) {
                 className={inputClasses}
                 placeholder={`Leave blank to use the default (${GENERAL_INTEREST_EMAIL})`}
               />
+            </label>
+
+            <label className="flex flex-col gap-1.5 sm:col-span-2">
+              <span className={labelClasses}>External Application Link (optional)</span>
+              <input
+                type="url"
+                value={applyUrl}
+                onChange={(e) => setApplyUrl(e.target.value)}
+                className={inputClasses}
+                placeholder="e.g. a Google Form URL — leave blank to use the site's own Apply flow"
+              />
+              <span className="text-xs text-slate-400">
+                When set, the public &quot;Apply&quot; button sends visitors here instead of opening the site&apos;s résumé-upload form.
+              </span>
             </label>
           </div>
         </form>

@@ -1,6 +1,6 @@
 import type { JobPosting, JobPostingStatus } from "./types";
 
-export const EMPLOYMENT_TYPES = ["Full-time", "Part-time", "Contract", "Internship"];
+export const EMPLOYMENT_TYPES = ["Full-time", "Part-time", "Contract", "Internship", "Traineeship"];
 
 export const JOB_POSTING_STATUS_ORDER: JobPostingStatus[] = ["draft", "published", "closed"];
 
@@ -39,7 +39,23 @@ export function daysSincePosted(posting: JobPosting, now: Date = new Date()): nu
   return Math.floor((now.getTime() - new Date(posting.postedAt).getTime()) / 86_400_000);
 }
 
-/** Only a still-open posting can go stale — a closed or draft one isn't sitting there failing to get attention. */
+/** Only meaningful when a real closingDate is set — negative once it's passed. */
+export function daysUntilClosing(posting: JobPosting, now: Date = new Date()): number {
+  if (!posting.closingDate) return NaN;
+  return Math.ceil((new Date(posting.closingDate).getTime() - now.getTime()) / 86_400_000);
+}
+
+/**
+ * Only a still-open posting can go stale — a closed or draft one isn't
+ * sitting there failing to get attention. A posting with a real closingDate
+ * (a fixed-duration program with its own stated intake window) is judged
+ * against that exact date instead of the generic 45-day guess, which would
+ * otherwise be wrong in both directions: falsely stale while the real
+ * program is still well within its window, or falsely fresh once its real
+ * deadline has already passed.
+ */
 export function isJobPostingStale(posting: JobPosting, now: Date = new Date()): boolean {
-  return posting.status === "published" && daysSincePosted(posting, now) > JOB_POSTING_STALE_DAYS;
+  if (posting.status !== "published") return false;
+  if (posting.closingDate) return now.getTime() > new Date(posting.closingDate).getTime();
+  return daysSincePosted(posting, now) > JOB_POSTING_STALE_DAYS;
 }

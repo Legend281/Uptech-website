@@ -50,3 +50,52 @@ export async function notifyNewLead(params: {
     console.error("[leads] Resend notification failed (the lead was still saved to Supabase):", error);
   }
 }
+
+/*
+ * Same best-effort posture as notifyNewLead. resumeSignedUrl is the one
+ * place a staff member can actually reach the uploaded file today — the
+ * admin dashboard can't read the leads table back yet (see Lead.resumeUrl's
+ * comment), so until real staff auth exists, this email IS the applicant
+ * pipeline, not just a notification of one.
+ */
+export async function notifyNewApplication(params: {
+  name: string;
+  email: string;
+  phone: string;
+  roleTitle?: string;
+  message?: string;
+  language: "English" | "French";
+  resumeSignedUrl?: string;
+}): Promise<void> {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.warn("[apply] RESEND_API_KEY not set — skipping email notification (the application was still saved).");
+    return;
+  }
+
+  const roleLine = params.roleTitle ? `Applying for: ${params.roleTitle}` : "General application (no specific open role selected)";
+
+  try {
+    const resend = new Resend(apiKey);
+    await resend.emails.send({
+      from: NOTIFY_FROM,
+      to: NOTIFY_TO,
+      subject: `New application: ${params.name}${params.roleTitle ? ` — ${params.roleTitle}` : ""}`,
+      text: [
+        roleLine,
+        `Name: ${params.name}`,
+        `Email: ${params.email}`,
+        `Phone / WhatsApp: ${params.phone}`,
+        `Preferred language: ${params.language}`,
+        "",
+        params.message?.trim() ? params.message : "(no additional message)",
+        "",
+        params.resumeSignedUrl
+          ? `Resume (link expires in 7 days): ${params.resumeSignedUrl}`
+          : "Resume was uploaded, but a signed download link couldn't be generated — check the resumes bucket directly in Supabase Storage.",
+      ].join("\n"),
+    });
+  } catch (error) {
+    console.error("[apply] Resend notification failed (the application was still saved):", error);
+  }
+}

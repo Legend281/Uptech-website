@@ -3,33 +3,13 @@ import { isServiceValue, serviceOptions } from "@/lib/serviceOptions";
 import { deriveDepartment, deriveLeadType } from "@/lib/admin/leads";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { notifyNewLead } from "@/lib/resend";
+import { isRateLimited, getClientIp } from "@/lib/rateLimit";
+import { verifyTurnstile } from "@/lib/turnstile";
 
 export const runtime = "nodejs";
 
-/*
- * Best-effort in-memory rate limit — CLAUDE.md Section 7 requires "rate
- * limiting on the lead-capture API route." This is a real limiter, not
- * nothing, but it's per-server-instance memory: fine for a single Node
- * process (Hostinger, per CLAUDE.md's actual hosting choice), but it
- * resets on redeploy and won't coordinate across multiple instances. A
- * real multi-instance deployment would need a shared store (e.g. Upstash
- * Redis) instead — flagging that rather than pretending this is bulletproof.
- */
 const RATE_LIMIT_WINDOW_MS = 10 * 60_000;
 const RATE_LIMIT_MAX = 5;
-const submissionsByIp = new Map<string, number[]>();
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const recent = (submissionsByIp.get(ip) ?? []).filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
-  recent.push(now);
-  submissionsByIp.set(ip, recent);
-  return recent.length > RATE_LIMIT_MAX;
-}
-
-function getClientIp(request: NextRequest): string {
-  return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
-}
 
 const MAX_TEXT_LENGTH = 200;
 const MAX_MESSAGE_LENGTH = 5000;
@@ -37,7 +17,7 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request);
-  if (isRateLimited(ip)) {
+  if (isRateLimited(ip, RATE_LIMIT_WINDOW_MS, RATE_LIMIT_MAX)) {
     return NextResponse.json({ error: "Too many submissions. Please try again later." }, { status: 429 });
   }
 
@@ -52,7 +32,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { name, email, phone, company, service, language, message, consent } = body as Record<string, unknown>;
+  const { name, email, phone, company, service, language, message, consent, turnstileToken } = body as Record<string, unknown>;
 
   // Server-side validation — CLAUDE.md Section 7: never trust client-side checks alone.
   if (typeof name !== "string" || name.trim() === "" || name.length > MAX_TEXT_LENGTH) {
@@ -78,6 +58,11 @@ export async function POST(request: NextRequest) {
   }
   if (consent !== true) {
     return NextResponse.json({ error: "Privacy Policy consent is required." }, { status: 400 });
+  }
+
+  const turnstileResult = await verifyTurnstile(typeof turnstileToken === "string" ? turnstileToken : null, ip);
+  if (!turnstileResult.ok) {
+    return NextResponse.json({ error: "Bot verification failed. Please try again." }, { status: 400 });
   }
 
   const department = deriveDepartment(service);

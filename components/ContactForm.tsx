@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
 import { serviceOptions, isServiceValue, type ServiceValue } from "@/lib/serviceOptions";
 
 const CONTACT_EMAIL = "infos@uptechconsulting.com";
@@ -35,6 +36,7 @@ export function ContactForm() {
   const [language, setLanguage] = useState<"English" | "French">("English");
   const [message, setMessage] = useState("");
   const [consent, setConsent] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -79,7 +81,7 @@ export function ContactForm() {
       const response = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, company, service, language, message, consent }),
+        body: JSON.stringify({ name, email, phone, company, service, language, message, consent, turnstileToken }),
       });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
@@ -240,6 +242,10 @@ export function ContactForm() {
           . My details are securely stored so a specialist can respond to this inquiry.
         </span>
       </label>
+
+      <div className="mt-5">
+        <TurnstileWidget onVerify={setTurnstileToken} />
+      </div>
 
       {status === "error" && (
         <div className="mt-5 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">

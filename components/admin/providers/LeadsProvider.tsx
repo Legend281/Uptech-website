@@ -1,24 +1,73 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { mockLeads } from "@/lib/admin/mockData";
-import { deriveDepartment, deriveLeadType } from "@/lib/admin/leads";
-import type { Lead, LeadServiceValue, LeadSource, LeadStatus, Department } from "@/lib/admin/types";
-
-const STORAGE_KEY = "uco-admin-leads-v2";
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { deriveLeadType } from "@/lib/admin/leads";
+import type { Lead, LeadServiceValue, LeadSource, LeadStatus, LeadType, Department } from "@/lib/admin/types";
 
 /*
- * Real persistence (Phase B's admin-read side) needs Supabase Auth and RLS
- * scoped to staff, which don't exist yet — the leads table's RLS
- * deliberately allows only anon INSERT (see supabase/001_leads_table.sql),
- * so the dashboard has no way to read real submitted leads without staff
- * auth in front of it. Until then, this store is the whole leads dataset —
- * seeded from mockLeads, then fully mutable and persisted to localStorage.
- * That's a genuine limitation: these edits (claims, status changes, newly
- * logged leads) only exist in the browser that made them, not shared
- * across staff or devices, until real auth + a server-side store replace
- * this.
+ * Real Supabase reads/writes — replaces what used to be a localStorage-only
+ * store (see this file's own prior history: "Real persistence needs
+ * Supabase Auth and RLS scoped to staff, which don't exist yet"). Those now
+ * exist (supabase/003_staff_auth.sql), so this reads whatever the signed-in
+ * user's RLS scope allows (their own department + needs-triage, or
+ * everything for an Administrator) and writes straight back to Postgres.
+ *
+ * Writes are optimistic (update local state immediately, fire the Supabase
+ * call after) with no rollback on failure — errors are logged, not silently
+ * retried or reverted. That matches this codebase's existing best-effort
+ * posture elsewhere (e.g. a failed localStorage write here used to just be a
+ * swallowed comment) rather than a new pattern invented for this file. A
+ * failed write leaves the local UI and the database disagreeing until the
+ * next reload, which is a real, known gap — full rollback-on-failure is a
+ * reasonable follow-up, not built here.
  */
+
+type LeadRow = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  company: string | null;
+  service: string;
+  type: string;
+  department: string | null;
+  status: string;
+  source: string;
+  language: string;
+  message: string;
+  assigned_to_id: string | null;
+  consent_at: string | null;
+  created_at: string;
+  first_contacted_at: string | null;
+  status_changed_at: string;
+  was_manually_triaged: boolean;
+  resume_url: string | null;
+};
+
+function fromRow(row: LeadRow): Lead {
+  return {
+    id: row.id,
+    name: row.name,
+    email: row.email,
+    phone: row.phone,
+    company: row.company ?? undefined,
+    service: row.service as LeadServiceValue,
+    type: row.type as LeadType,
+    department: (row.department as Department | null) ?? undefined,
+    status: row.status as LeadStatus,
+    source: row.source as LeadSource,
+    language: row.language as "English" | "French",
+    message: row.message,
+    createdAt: row.created_at,
+    assignedToId: row.assigned_to_id ?? undefined,
+    consentAt: row.consent_at ?? undefined,
+    firstContactedAt: row.first_contacted_at ?? undefined,
+    statusChangedAt: row.status_changed_at,
+    wasManuallyTriaged: row.was_manually_triaged,
+    resumeUrl: row.resume_url ?? undefined,
+  };
+}
 
 export type NewLeadInput = {
   name: string;
@@ -43,7 +92,7 @@ export type EditableLeadFields = {
 
 type LeadsContextValue = {
   leads: Lead[];
-  addLead: (input: NewLeadInput) => Lead;
+  addLead: (input: NewLeadInput) => Promise<Lead>;
   editLead: (id: string, input: EditableLeadFields) => void;
   deleteLead: (id: string) => void;
   claimLead: (id: string, userId: string) => void;
@@ -54,76 +103,92 @@ type LeadsContextValue = {
 
 const LeadsContext = createContext<LeadsContextValue | null>(null);
 
-function loadLeads(): Lead[] {
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return mockLeads;
-    const parsed = JSON.parse(raw) as unknown;
-    return Array.isArray(parsed) && parsed.length > 0 ? (parsed as Lead[]) : mockLeads;
-  } catch {
-    return mockLeads;
-  }
-}
-
-function saveLeads(leads: Lead[]) {
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(leads));
-  } catch {
-    // Best-effort only — a private window or blocked storage shouldn't break the page.
-  }
-}
-
-function makeLeadId(): string {
-  return `lead-manual-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
-}
-
 export function LeadsProvider({ children }: { children: ReactNode }) {
-  // Seeded with the static mock set on first render so server and client
-  // markup match exactly; the real localStorage read (which may include
-  // edits from a previous visit) happens after mount, below.
-  const [leads, setLeads] = useState<Lead[]>(mockLeads);
+  const [leads, setLeads] = useState<Lead[]>([]);
 
   useEffect(() => {
-    setLeads(loadLeads());
+    const supabase = getSupabaseBrowserClient();
+    let cancelled = false;
+
+    supabase
+      .from("leads")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error) {
+          console.error("[leads] Failed to load leads:", error);
+          return;
+        }
+        setLeads((data as LeadRow[]).map(fromRow));
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   function updateLead(id: string, patch: Partial<Lead>) {
-    setLeads((prev) => {
-      const next = prev.map((lead) => (lead.id === id ? { ...lead, ...patch } : lead));
-      saveLeads(next);
-      return next;
-    });
+    setLeads((prev) => prev.map((lead) => (lead.id === id ? { ...lead, ...patch } : lead)));
+
+    const row: Record<string, unknown> = {};
+    if ("name" in patch) row.name = patch.name;
+    if ("email" in patch) row.email = patch.email;
+    if ("phone" in patch) row.phone = patch.phone;
+    if ("company" in patch) row.company = patch.company ?? null;
+    if ("service" in patch) row.service = patch.service;
+    if ("type" in patch) row.type = patch.type;
+    if ("department" in patch) row.department = patch.department ?? null;
+    if ("status" in patch) row.status = patch.status;
+    if ("message" in patch) row.message = patch.message;
+    if ("language" in patch) row.language = patch.language;
+    if ("assignedToId" in patch) row.assigned_to_id = patch.assignedToId ?? null;
+    if ("firstContactedAt" in patch) row.first_contacted_at = patch.firstContactedAt ?? null;
+    if ("statusChangedAt" in patch) row.status_changed_at = patch.statusChangedAt;
+    if ("wasManuallyTriaged" in patch) row.was_manually_triaged = patch.wasManuallyTriaged;
+
+    getSupabaseBrowserClient()
+      .from("leads")
+      .update(row)
+      .eq("id", id)
+      .then(({ error }) => {
+        if (error) console.error(`[leads] Failed to save update for lead ${id}:`, error);
+      });
   }
 
-  function addLead(input: NewLeadInput): Lead {
-    const department = deriveDepartment(input.service);
-    const now = new Date().toISOString();
-    const lead: Lead = {
-      id: makeLeadId(),
-      name: input.name.trim(),
-      email: input.email.trim(),
-      phone: input.phone.trim(),
-      company: input.company?.trim() || undefined,
-      service: input.service,
-      type: deriveLeadType(input.service),
-      department,
-      // An ambiguous service (no derivable department) always lands in
-      // needs-triage, regardless of what a form might otherwise imply —
-      // never silently guessed.
-      status: department ? "new" : "needs-triage",
-      source: input.source,
-      language: input.language,
-      message: input.message.trim(),
-      createdAt: now,
-      statusChangedAt: now,
-      // No consent timestamp: a manually-logged lead never had a checkbox
-      // to tick — the visitor didn't go through the form.
-    };
-    setLeads((prev) => {
-      const next = [lead, ...prev];
-      saveLeads(next);
-      return next;
-    });
+  async function addLead(input: NewLeadInput): Promise<Lead> {
+    const supabase = getSupabaseBrowserClient();
+    const type = deriveLeadType(input.service);
+    // A manually-logged lead is always entered by staff who already know
+    // which department it belongs to (that's the point of logging it by
+    // hand) — unlike a public-form submission, there's no ambiguous case to
+    // route to needs-triage here.
+    const department: Department = type === "job-seeker" ? "career-services-operations" : "business-formalisation-compliance";
+
+    const { data, error } = await supabase
+      .from("leads")
+      .insert({
+        name: input.name.trim(),
+        email: input.email.trim(),
+        phone: input.phone.trim(),
+        company: input.company?.trim() || null,
+        service: input.service,
+        type,
+        department,
+        status: "new",
+        source: input.source,
+        language: input.language,
+        message: input.message.trim(),
+      })
+      .select()
+      .single();
+
+    if (error || !data) {
+      throw new Error(error?.message ?? "Failed to save the new lead.");
+    }
+
+    const lead = fromRow(data as LeadRow);
+    setLeads((prev) => [lead, ...prev]);
     return lead;
   }
 
@@ -145,11 +210,14 @@ export function LeadsProvider({ children }: { children: ReactNode }) {
   }
 
   function deleteLead(id: string) {
-    setLeads((prev) => {
-      const next = prev.filter((lead) => lead.id !== id);
-      saveLeads(next);
-      return next;
-    });
+    setLeads((prev) => prev.filter((lead) => lead.id !== id));
+    getSupabaseBrowserClient()
+      .from("leads")
+      .delete()
+      .eq("id", id)
+      .then(({ error }) => {
+        if (error) console.error(`[leads] Failed to delete lead ${id}:`, error);
+      });
   }
 
   function claimLead(id: string, userId: string) {
@@ -161,40 +229,23 @@ export function LeadsProvider({ children }: { children: ReactNode }) {
   }
 
   function updateStatus(id: string, status: LeadStatus) {
-    setLeads((prev) => {
-      const next = prev.map((lead) => {
-        if (lead.id !== id) return lead;
-        const now = new Date().toISOString();
-        const leavingUncontacted =
-          (lead.status === "new" || lead.status === "needs-triage") && status !== "new" && status !== "needs-triage";
-        return {
-          ...lead,
-          status,
-          statusChangedAt: now,
-          firstContactedAt: lead.firstContactedAt ?? (leavingUncontacted ? now : lead.firstContactedAt),
-        };
-      });
-      saveLeads(next);
-      return next;
+    const lead = leads.find((candidate) => candidate.id === id);
+    if (!lead) return;
+    const now = new Date().toISOString();
+    const leavingUncontacted = (lead.status === "new" || lead.status === "needs-triage") && status !== "new" && status !== "needs-triage";
+    updateLead(id, {
+      status,
+      statusChangedAt: now,
+      firstContactedAt: lead.firstContactedAt ?? (leavingUncontacted ? now : lead.firstContactedAt),
     });
   }
 
   function resolveTriage(id: string, department: Department) {
-    setLeads((prev) => {
-      const next = prev.map((lead) => {
-        if (lead.id !== id) return lead;
-        const now = new Date().toISOString();
-        return { ...lead, department, status: "new" as LeadStatus, statusChangedAt: now, wasManuallyTriaged: true };
-      });
-      saveLeads(next);
-      return next;
-    });
+    updateLead(id, { department, status: "new", statusChangedAt: new Date().toISOString(), wasManuallyTriaged: true });
   }
 
   return (
-    <LeadsContext.Provider
-      value={{ leads, addLead, editLead, deleteLead, claimLead, reassignLead, updateStatus, resolveTriage }}
-    >
+    <LeadsContext.Provider value={{ leads, addLead, editLead, deleteLead, claimLead, reassignLead, updateStatus, resolveTriage }}>
       {children}
     </LeadsContext.Provider>
   );

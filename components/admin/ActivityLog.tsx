@@ -1,4 +1,5 @@
 import { motion, type Variants } from "framer-motion";
+import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
 import type { ActivityEntry } from "@/lib/admin/types";
 
@@ -12,8 +13,8 @@ const entryVariants: Variants = {
   show: { opacity: 1, x: 0, transition: { duration: 0.3, ease: "easeOut" } },
 };
 
-/** What each activity actually means, not just decoration — a warning reads as a warning, a completed review reads as done. */
-const dotColor: Record<string, string> = {
+/** What each activity actually means, not just decoration — a warning reads as a warning, a completed review reads as done. Exported so /admin/activity's full list uses the identical mapping rather than a second copy that can drift. */
+export const dotColor: Record<string, string> = {
   warning: "bg-amber-500",
   check_circle: "bg-emerald-500",
   fact_check: "bg-teal-400",
@@ -37,10 +38,19 @@ const dotColor: Record<string, string> = {
  * itself. Deliberately calmer than the register: same hairline border, but
  * a much lighter shadow so it doesn't compete for the eye's attention first.
  */
-export function ActivityLog({ entries }: { entries: ActivityEntry[] }) {
+export function ActivityLog({ entries, onViewAll }: { entries: ActivityEntry[]; onViewAll?: () => void }) {
   return (
     <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-[0_1px_2px_rgba(7,14,27,0.03)] sm:p-5">
-      <h2 className="font-sans text-sm font-bold text-navy-950">Activity</h2>
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="font-sans text-sm font-bold text-navy-950">Activity</h2>
+        {onViewAll && (
+          <button type="button" onClick={onViewAll} className="flex items-center gap-1 text-xs font-semibold text-teal-700 hover:text-teal-800">
+            View all
+            <MaterialIcon name="chevron_right" className="text-[14px]" />
+          </button>
+        )}
+      </div>
+      {entries.length === 0 && <p className="mt-4 text-sm text-slate-500">Nothing logged yet.</p>}
       <div className="relative mt-4">
         <div className="absolute bottom-1 left-[7px] top-1 w-px bg-slate-200" aria-hidden="true" />
         <motion.ul variants={listVariants} initial="hidden" animate="show" className="space-y-4">

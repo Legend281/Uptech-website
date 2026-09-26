@@ -49,6 +49,17 @@ const scriptSrc = isProd
   ? "script-src 'self' 'unsafe-inline'"
   : "script-src 'self' 'unsafe-eval' 'unsafe-inline'";
 
+/*
+ * The admin dashboard's auth/session/leads/resume code talks to Supabase
+ * directly from the browser (lib/supabase/client.ts, middleware.ts) — a
+ * bare `connect-src 'self'` blocks every one of those requests outright
+ * (verified: signInWithPassword failed with "Failed to fetch" and a CSP
+ * console error before this was added). Derived from the same env var the
+ * client already uses, not hardcoded to one project's URL.
+ */
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseOrigin = supabaseUrl ? new URL(supabaseUrl).origin : "";
+
 const csp = [
   "default-src 'self'",
   scriptSrc,
@@ -56,7 +67,7 @@ const csp = [
   "font-src 'self' https://fonts.gstatic.com",
   // `data:` covers the LQIP blur placeholders generated for each photo.
   "img-src 'self' data:",
-  isProd ? "connect-src 'self'" : "connect-src 'self' ws:",
+  ["connect-src 'self'", supabaseOrigin, ...(isProd ? [] : ["ws:"])].filter(Boolean).join(" "),
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -80,6 +91,18 @@ const securityHeaders = [
 ];
 
 const nextConfig = {
+  /*
+   * next dev refuses cross-origin requests to a page/route by default unless
+   * the requesting origin is explicitly allowlisted — visiting the "Network"
+   * URL next dev itself prints (http://<LAN IP>:3000) triggers this and
+   * 404s every route, not just static assets, even though localhost:3000
+   * works fine for the exact same server. Verified directly: curl against
+   * http://192.168.11.1:3000/admin/login 404'd while http://localhost:3000/admin/login
+   * returned 200 from the same running process. Dev-only — allowedDevOrigins
+   * has no effect on a production build.
+   */
+  ...(isProd ? {} : { allowedDevOrigins: ["192.168.11.1"] }),
+
   /*
    * `next build` and `next dev` write incompatible output to the same folder.
    * Running a build while a dev server is up leaves the dev bundler resolving

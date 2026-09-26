@@ -7,7 +7,7 @@ import { TestimonialCard } from "@/components/TestimonialCard";
 import { DialogShell, Field, ReadinessList, Section, buttonClasses, hintClasses, inputClasses, labelClasses } from "@/components/admin/FormParts";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useStaff as useAdminUsers } from "@/components/admin/providers/StaffProvider";
-import { useLeads } from "@/components/admin/providers/LeadsProvider";
+import { useLeads, useLeadsLoading } from "@/components/admin/providers/LeadsProvider";
 import { useTestimonials } from "@/components/admin/providers/TestimonialsProvider";
 import { getLeadServiceLabel } from "@/lib/admin/register";
 import { resizeImageToDataUrl } from "@/lib/admin/resizeImage";
@@ -74,6 +74,7 @@ export function TestimonialFormDialog(props: Props) {
   const formId = useId();
   const currentUser = useCurrentUser();
   const leads = useLeads();
+  const leadsLoading = useLeadsLoading();
   const users = useAdminUsers();
   const { addTestimonial, updateTestimonial } = useTestimonials();
 
@@ -509,7 +510,18 @@ export function TestimonialFormDialog(props: Props) {
                   Recorded by <span className="font-semibold text-slate-700">{recordedBy}</span>
                 </p>
               )}
-              <Field label="Linked lead" hint="Usually the Won lead this client came from. Required for an outcome line.">
+              {leads.length === 0 ? (
+                /* Nothing to pick from: say so plainly instead of showing an empty dropdown. */
+                <div className="flex flex-col gap-1.5">
+                  <span className={labelClasses}>Linked lead</span>
+                  <p className="rounded-lg border border-dashed border-slate-300 px-3.5 py-2.5 text-sm text-slate-500">
+                    {leadsLoading
+                      ? "Loading leads…"
+                      : "No leads to link yet. Optional: you only need one for an outcome line. Leads from the Leads page and the contact form appear here."}
+                  </p>
+                </div>
+              ) : (
+              <Field label="Linked lead" hint="Optional. Pick the lead this client came from, usually a Won one. Needed only for an outcome line.">
                 <select
                   value={input.leadId ?? ""}
                   onChange={(e) => set("leadId", e.target.value || undefined)}
@@ -525,15 +537,18 @@ export function TestimonialFormDialog(props: Props) {
                       ))}
                     </optgroup>
                   )}
-                  <optgroup label="Other leads">
-                    {otherLeads.map((lead) => (
-                      <option key={lead.id} value={lead.id}>
-                        {lead.name}: {getLeadServiceLabel(lead.service)}
-                      </option>
-                    ))}
-                  </optgroup>
+                  {otherLeads.length > 0 && (
+                    <optgroup label={wonLeads.length > 0 ? "Other leads" : "Leads"}>
+                      {otherLeads.map((lead) => (
+                        <option key={lead.id} value={lead.id}>
+                          {lead.name}: {getLeadServiceLabel(lead.service)}
+                        </option>
+                      ))}
+                    </optgroup>
+                  )}
                 </select>
               </Field>
+              )}
             </Section>
 
             <Section step={4} title="Placement" description="Where it appears. Only pages with a testimonial slot are listed.">

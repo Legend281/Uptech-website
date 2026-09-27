@@ -4,7 +4,10 @@
 -- Scope: testimonials only (the admin module that publishes to the live
 -- Homepage and Career Marketing page). Staff sign-in itself is handled
 -- elsewhere; this file only decides what a signed-in person may do with
--- testimonials, using the staff roles in public.staff_profiles (005).
+-- testimonials, using the staff roles in public.profiles (003), read via
+-- current_staff_role()/current_staff_department() (016 — these used to
+-- read from public.staff_profiles, a table 016 dropped as dead weight; the
+-- two grants below were never updated to match until now).
 --
 -- It also adds table GRANTs: newer Supabase projects don't grant table
 -- access to the API roles automatically, so without them every request is
@@ -15,11 +18,10 @@
 grant usage on schema public to anon, authenticated, service_role;
 
 -- The service role (server only: the page-refresh route and setup scripts).
-grant all on public.testimonials, public.testimonial_placements, public.staff_profiles to service_role;
+grant all on public.testimonials, public.testimonial_placements to service_role;
 
 -- Signed-in staff; row-level security below decides which rows.
 grant select, insert, update, delete on public.testimonials, public.testimonial_placements to authenticated;
-grant select on public.staff_profiles to authenticated;
 
 -- The public pages' read path (published, consented testimonials; public columns only).
 grant select on public.published_testimonials to anon, authenticated;

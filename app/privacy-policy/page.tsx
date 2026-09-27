@@ -68,12 +68,9 @@ export default function PrivacyPolicyPage() {
               <section>
                 <h2 className="text-lg font-bold text-navy-950 mb-3">How Your Information Reaches Us</h2>
                 <p>
-                  The Book a Consultation form submits your information directly and securely to
-                  our systems, so a specialist can respond. Careers applications currently work
-                  differently: they prepare a pre-filled email addressed to Uptech Consulting,
-                  which <strong>you send yourself</strong> from your own device — nothing is stored
-                  on our systems through that form until you send it.{" "}
-                  <PendingBadge>PENDING: confirm this description stays accurate once Careers applications also submit directly</PendingBadge>
+                  The Book a Consultation form and career applications both submit your
+                  information, and your CV/resume if you attach one, directly and securely to our
+                  systems, so a specialist can respond or evaluate your application.
                 </p>
               </section>
 

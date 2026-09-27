@@ -7,6 +7,7 @@ import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
 import { useJobPostingActions } from "@/components/admin/providers/JobPostingsProvider";
+import { canManageContent } from "@/lib/admin/permissions";
 import type { JobPosting } from "@/lib/admin/types";
 
 /**
@@ -48,6 +49,8 @@ export function JobPostingRowActions({
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [open]);
+
+  if (!canManageContent(currentUser)) return null;
 
   function publishNow() {
     setStatus(posting.id, "published");

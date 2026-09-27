@@ -35,7 +35,7 @@ export function JobPostingFormDialog(props: Props) {
   const [applyUrl, setApplyUrl] = useState("");
   const [closingDate, setClosingDate] = useState("");
 
-  const canSubmit = title.trim() !== "" && department !== "" && location.trim() !== "" && employmentType !== "";
+  const canSubmit = title.trim() !== "" && location.trim() !== "" && employmentType !== "";
 
   useEffect(() => {
     if (!open) return;
@@ -51,7 +51,7 @@ export function JobPostingFormDialog(props: Props) {
     if (props.mode === "edit") {
       const { posting } = props;
       setTitle(posting.title);
-      setDepartment(posting.department);
+      setDepartment(posting.department ?? "");
       setLocation(posting.location);
       setEmploymentType(posting.employmentType);
       setDescription(posting.description);
@@ -81,7 +81,7 @@ export function JobPostingFormDialog(props: Props) {
 
     const input: NewJobPostingInput = {
       title: title.trim(),
-      department,
+      department: department || undefined,
       location: location.trim(),
       employmentType,
       description: description.trim(),
@@ -148,11 +148,9 @@ export function JobPostingFormDialog(props: Props) {
             </label>
 
             <label className="flex flex-col gap-1.5">
-              <span className={labelClasses}>
-                Department <span className="text-rose-500">*</span>
-              </span>
-              <select value={department} onChange={(e) => setDepartment(e.target.value)} required className={`${inputClasses} bg-white`}>
-                <option value="">Select a department</option>
+              <span className={labelClasses}>Department</span>
+              <select value={department} onChange={(e) => setDepartment(e.target.value)} className={`${inputClasses} bg-white`}>
+                <option value="">Not department-specific</option>
                 {HIRING_DEPARTMENT_NAMES.map((name) => (
                   <option key={name} value={name}>
                     {name}

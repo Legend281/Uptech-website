@@ -12,7 +12,6 @@ const labelClasses = "text-xs font-bold uppercase tracking-wider text-slate-500"
 
 const ROLE_OPTIONS: AccessRole[] = ["administrator", "editor", "viewer"];
 const DEPARTMENT_OPTIONS: Department[] = ["career-services-operations", "business-formalisation-compliance"];
-const LANGUAGE_OPTIONS = ["English", "French"] as const;
 
 /**
  * Posts to /api/admin/staff — a real Supabase Auth invite, no password ever
@@ -30,15 +29,10 @@ export function StaffInviteDialog({ open, onClose }: { open: boolean; onClose: (
   const [department, setDepartment] = useState<Department>("career-services-operations");
   const [avatarInitials, setAvatarInitials] = useState("");
   const [location, setLocation] = useState("");
-  const [languages, setLanguages] = useState<string[]>(["English"]);
   const [status, setStatus] = useState<"idle" | "submitting" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const canSubmit = name.trim() !== "" && email.trim() !== "" && avatarInitials.trim() !== "" && location.trim() !== "" && languages.length > 0;
-
-  function toggleLanguage(lang: string) {
-    setLanguages((prev) => (prev.includes(lang) ? prev.filter((l) => l !== lang) : [...prev, lang]));
-  }
+  const canSubmit = name.trim() !== "" && email.trim() !== "" && avatarInitials.trim() !== "" && location.trim() !== "";
 
   function resetForm() {
     setName("");
@@ -47,7 +41,6 @@ export function StaffInviteDialog({ open, onClose }: { open: boolean; onClose: (
     setDepartment("career-services-operations");
     setAvatarInitials("");
     setLocation("");
-    setLanguages(["English"]);
     setStatus("idle");
     setErrorMessage(null);
   }
@@ -62,7 +55,7 @@ export function StaffInviteDialog({ open, onClose }: { open: boolean; onClose: (
       const response = await fetch("/api/admin/staff", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, role, department, avatarInitials, location, languages }),
+        body: JSON.stringify({ name, email, role, department, avatarInitials, location }),
       });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
@@ -164,29 +157,12 @@ export function StaffInviteDialog({ open, onClose }: { open: boolean; onClose: (
               />
             </label>
 
-            <label className="flex flex-col gap-1.5">
+            <label className="flex flex-col gap-1.5 sm:col-span-2">
               <span className={labelClasses}>
                 Location <span className="text-rose-500">*</span>
               </span>
               <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} required className={inputClasses} placeholder="e.g. Buea, Cameroon" />
             </label>
-
-            <fieldset className="flex flex-col gap-1.5 sm:col-span-2">
-              <legend className={labelClasses}>Languages Spoken</legend>
-              <div className="flex gap-3">
-                {LANGUAGE_OPTIONS.map((lang) => (
-                  <label
-                    key={lang}
-                    className={`flex-1 flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-semibold cursor-pointer transition-colors ${
-                      languages.includes(lang) ? "border-teal-500 bg-teal-50 text-teal-700" : "border-slate-300 text-slate-600 hover:border-slate-400"
-                    }`}
-                  >
-                    <input type="checkbox" checked={languages.includes(lang)} onChange={() => toggleLanguage(lang)} className="sr-only" />
-                    {lang}
-                  </label>
-                ))}
-              </div>
-            </fieldset>
           </div>
 
           {status === "error" && (

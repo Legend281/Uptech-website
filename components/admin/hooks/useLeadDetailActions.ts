@@ -65,7 +65,6 @@ export function useLeadDetailActions(lead: Lead) {
   const windowIsCommitment = windowHours >= RESPONSE_SLA_HOURS;
   const responseClock = getResponseClock(lead, new Date(), windowHours);
   const stageClock = getStageClock(lead);
-  const languageMismatch = lead.language === "French" && Boolean(assignedUser) && !assignedUser?.languages.includes("French");
   const orphaned = !assignedUser && lead.status !== "needs-triage" && lead.status !== "new";
   const nextStepHint = NEXT_STEP_HINT[lead.status] ?? null;
 
@@ -146,7 +145,6 @@ export function useLeadDetailActions(lead: Lead) {
     /** People a lead can be handed to: active accounts only, so a deactivated staff member can't be picked from the reassign dropdown. */
     assignableUsers: staff.filter((u) => u.active !== false),
     stageClock,
-    languageMismatch,
     orphaned,
     nextStepHint,
     handleClaim,

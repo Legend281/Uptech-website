@@ -31,7 +31,6 @@ export function ApplyModal({ open, onClose, roleTitle }: { open: boolean; onClos
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
-  const [language, setLanguage] = useState<"English" | "French">("English");
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [consent, setConsent] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
@@ -44,7 +43,6 @@ export function ApplyModal({ open, onClose, roleTitle }: { open: boolean; onClos
     setEmail("");
     setPhone("");
     setMessage("");
-    setLanguage("English");
     setResumeFile(null);
     setConsent(false);
     setTurnstileToken(null);
@@ -75,7 +73,6 @@ export function ApplyModal({ open, onClose, roleTitle }: { open: boolean; onClos
     formData.set("name", name);
     formData.set("email", email);
     formData.set("phone", phone);
-    formData.set("language", language);
     if (roleTitle) formData.set("roleTitle", roleTitle);
     if (message.trim()) formData.set("message", message.trim());
     formData.set("consent", "true");
@@ -171,23 +168,6 @@ export function ApplyModal({ open, onClose, roleTitle }: { open: boolean; onClos
                     className="rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-navy-950 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-500"
                   />
                 </label>
-
-                <fieldset className="flex flex-col gap-1.5 sm:col-span-2">
-                  <legend className="mb-1 text-xs font-bold uppercase tracking-wider text-slate-500">Preferred language</legend>
-                  <div className="flex gap-3">
-                    {(["English", "French"] as const).map((lang) => (
-                      <label
-                        key={lang}
-                        className={`flex-1 flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-semibold cursor-pointer transition-colors ${
-                          language === lang ? "border-teal-500 bg-teal-50 text-teal-700" : "border-slate-300 text-slate-600 hover:border-slate-400"
-                        }`}
-                      >
-                        <input type="radio" name="language" value={lang} checked={language === lang} onChange={() => setLanguage(lang)} className="sr-only" />
-                        {lang}
-                      </label>
-                    ))}
-                  </div>
-                </fieldset>
 
                 <label className="flex flex-col gap-1.5 sm:col-span-2">
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-500">

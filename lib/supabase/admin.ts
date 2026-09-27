@@ -28,11 +28,11 @@ export async function requireStaff(request: NextRequest): Promise<StaffCaller | 
   if (userError || !userData.user) return NextResponse.json({ error: "Your sign-in has expired. Sign in again." }, { status: 401 });
 
   const { data: profile } = await service
-    .from("staff_profiles")
+    .from("profiles")
     .select("id, name, role, department, active")
     .eq("id", userData.user.id)
     .maybeSingle();
-  if (!profile || !profile.active) return NextResponse.json({ error: "This isn't an active staff account." }, { status: 403 });
+  if (!profile || profile.active === false) return NextResponse.json({ error: "This isn't an active staff account." }, { status: 403 });
 
   return { id: profile.id, name: profile.name, role: profile.role, department: profile.department };
 }

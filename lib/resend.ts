@@ -20,7 +20,6 @@ export async function notifyNewLead(params: {
   phone: string;
   company?: string;
   serviceLabel: string;
-  language: "English" | "French";
   message: string;
 }): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
@@ -41,7 +40,6 @@ export async function notifyNewLead(params: {
         `Phone / WhatsApp: ${params.phone}`,
         `Company: ${params.company || "—"}`,
         `Interested in: ${params.serviceLabel}`,
-        `Preferred language: ${params.language}`,
         "",
         params.message,
       ].join("\n"),
@@ -64,7 +62,6 @@ export async function notifyNewApplication(params: {
   phone: string;
   roleTitle?: string;
   message?: string;
-  language: "English" | "French";
   resumeSignedUrl?: string;
 }): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
@@ -86,7 +83,6 @@ export async function notifyNewApplication(params: {
         `Name: ${params.name}`,
         `Email: ${params.email}`,
         `Phone / WhatsApp: ${params.phone}`,
-        `Preferred language: ${params.language}`,
         "",
         params.message?.trim() ? params.message : "(no additional message)",
         "",

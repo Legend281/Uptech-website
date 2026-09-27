@@ -30,6 +30,7 @@ import { RotatingPromise, type PromiseStatement } from "@/components/home/Rotati
 import { TestimonialCard } from "@/components/TestimonialCard";
 import { images } from "@/lib/images";
 import { getPublishedTestimonials } from "@/lib/testimonials";
+import { getPublishedAdditionalServices } from "@/lib/additionalServices";
 
 export const metadata: Metadata = {
   title: {
@@ -200,6 +201,10 @@ export default async function HomePage() {
   // Dashboard-published FAQs when there are any, else the built-in list (lib/faqs.ts).
   const faqItems = await getFaqs("general");
   const testimonials = await getPublishedTestimonials("homepage");
+  // Anything Uptech has added beyond the 5 core services below — see
+  // lib/additionalServices.ts. Empty today is the normal, expected case.
+  const additionalServices = await getPublishedAdditionalServices();
+  const totalServiceCount = pillars.length + additionalServices.length;
 
   return (
     <>
@@ -397,7 +402,7 @@ export default async function HomePage() {
               <div className="lg:col-span-5">
                 <div className="lg:sticky lg:top-28">
                   <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-navy-950 sm:text-4xl">
-                    <TextReveal text="Five services. Pick exactly what you need." />
+                    <TextReveal text={`${totalServiceCount} services. Pick exactly what you need.`} />
                   </h2>
                   <p className="mb-8 text-sm leading-relaxed text-slate-600">
                     No bundling, no guesswork — we map what you actually need
@@ -426,7 +431,15 @@ export default async function HomePage() {
               </div>
 
               <Reveal effect="stagger" className="divide-y divide-slate-200/80 lg:col-span-7">
-                {pillars.map((pillar) => (
+                {[
+                  ...pillars,
+                  ...additionalServices.map((service, index) => ({
+                    number: String(pillars.length + index + 1).padStart(2, "0"),
+                    title: service.title,
+                    href: service.href ?? "/contact",
+                    description: service.description,
+                  })),
+                ].map((pillar) => (
                   <Link
                     key={pillar.number}
                     href={pillar.href}

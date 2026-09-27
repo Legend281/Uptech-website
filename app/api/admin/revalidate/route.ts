@@ -14,6 +14,7 @@ export const runtime = "nodejs";
 const ALLOWED_PATHS = new Set([
   "/",
   "/who-we-are",
+  "/services",
   "/services/career-marketing-placement",
   "/services/business-formalisation-compliance/cameroon",
   "/services/business-formalisation-compliance/united-states",

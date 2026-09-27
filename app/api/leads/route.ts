@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { name, email, phone, company, service, language, message, consent, turnstileToken } = body as Record<string, unknown>;
+  const { name, email, phone, company, service, message, consent, turnstileToken } = body as Record<string, unknown>;
 
   // Server-side validation — CLAUDE.md Section 7: never trust client-side checks alone.
   if (typeof name !== "string" || name.trim() === "" || name.length > MAX_TEXT_LENGTH) {
@@ -49,9 +49,6 @@ export async function POST(request: NextRequest) {
   }
   if (typeof service !== "string" || !isServiceValue(service)) {
     return NextResponse.json({ error: "A valid service selection is required." }, { status: 400 });
-  }
-  if (language !== "English" && language !== "French") {
-    return NextResponse.json({ error: "A valid language selection is required." }, { status: 400 });
   }
   if (typeof message !== "string" || message.trim() === "" || message.length > MAX_MESSAGE_LENGTH) {
     return NextResponse.json({ error: "A message is required." }, { status: 400 });
@@ -82,7 +79,6 @@ export async function POST(request: NextRequest) {
     // needs-triage — never silently guessed. Mirrors LeadsProvider.addLead.
     status: department ? "new" : "needs-triage",
     source: "contact-form",
-    language,
     message: message.trim(),
     consent_at: consentAt,
   });
@@ -93,7 +89,7 @@ export async function POST(request: NextRequest) {
   }
 
   const serviceLabel = serviceOptions.find((option) => option.value === service)?.label ?? service;
-  await notifyNewLead({ name: name.trim(), email: email.trim(), phone: phone.trim(), company: typeof company === "string" ? company.trim() : undefined, serviceLabel, language, message: message.trim() });
+  await notifyNewLead({ name: name.trim(), email: email.trim(), phone: phone.trim(), company: typeof company === "string" ? company.trim() : undefined, serviceLabel, message: message.trim() });
 
   return NextResponse.json({ ok: true }, { status: 201 });
 }

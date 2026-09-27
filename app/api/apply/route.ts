@@ -45,7 +45,6 @@ export async function POST(request: NextRequest) {
   const phone = formData.get("phone");
   const roleTitle = formData.get("roleTitle");
   const message = formData.get("message");
-  const language = formData.get("language");
   const consent = formData.get("consent");
   const turnstileToken = formData.get("turnstileToken");
   const resume = formData.get("resume");
@@ -65,9 +64,6 @@ export async function POST(request: NextRequest) {
   }
   if (message !== null && (typeof message !== "string" || message.length > MAX_MESSAGE_LENGTH)) {
     return NextResponse.json({ error: "Message is too long." }, { status: 400 });
-  }
-  if (language !== "English" && language !== "French") {
-    return NextResponse.json({ error: "A valid language selection is required." }, { status: 400 });
   }
   if (consent !== "true") {
     return NextResponse.json({ error: "Privacy Policy consent is required." }, { status: 400 });
@@ -120,7 +116,6 @@ export async function POST(request: NextRequest) {
     department: department ?? null,
     status: department ? "new" : "needs-triage",
     source: "careers-apply",
-    language,
     message: fullMessage,
     resume_url: resumePath,
     consent_at: consentAt,
@@ -148,7 +143,6 @@ export async function POST(request: NextRequest) {
     phone: phone.trim(),
     roleTitle: typeof roleTitle === "string" ? roleTitle : undefined,
     message: typeof message === "string" ? message : undefined,
-    language,
     resumeSignedUrl,
   });
 

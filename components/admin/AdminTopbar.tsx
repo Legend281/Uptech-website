@@ -9,9 +9,12 @@ import { roleLabels } from "@/lib/admin/labels";
 import { getStaticPageLabel } from "@/lib/admin/nav";
 import { useCurrentUser, useCurrentUserStatus } from "@/components/admin/providers/CurrentUserProvider";
 import { TwoFactorSetupModal } from "@/components/admin/TwoFactorSetupModal";
+import { ChangePasswordModal } from "@/components/admin/ChangePasswordModal";
 import { useLead, useLeads } from "@/components/admin/providers/LeadsProvider";
 import { useServicePages } from "@/components/admin/providers/ServicePagesProvider";
 import { useJobPostings } from "@/components/admin/providers/JobPostingsProvider";
+import { useAdditionalServices } from "@/components/admin/providers/AdditionalServicesProvider";
+import { useOnboardingSubmissions } from "@/components/admin/providers/OnboardingProvider";
 import { getReviewStatus } from "@/lib/admin/staleness";
 
 type Crumb = { label: string; href?: string };
@@ -23,13 +26,15 @@ function useBreadcrumb(): Crumb[] {
   const jobPostingsCount = useJobPostings().length;
   const servicePages = useServicePages();
   const servicePagesNeedingReviewCount = servicePages.filter((page) => getReviewStatus(page) !== "on-track").length;
+  const additionalServicesCount = useAdditionalServices().length;
+  const onboardingCount = useOnboardingSubmissions().submissions.length;
   const leadIdMatch = pathname.match(/^\/admin\/leads\/(.+)$/);
   const lead = useLead(leadIdMatch?.[1] ?? "");
 
   if (leadIdMatch) {
     return [{ label: "Leads", href: "/admin/leads" }, { label: lead?.name ?? "Lead" }];
   }
-  return [{ label: getStaticPageLabel(pathname, leadsCount, jobPostingsCount, servicePagesNeedingReviewCount) ?? "Dashboard" }];
+  return [{ label: getStaticPageLabel(pathname, leadsCount, jobPostingsCount, servicePagesNeedingReviewCount, additionalServicesCount, onboardingCount) ?? "Dashboard" }];
 }
 
 function Breadcrumb({ segments }: { segments: Crumb[] }) {
@@ -76,6 +81,7 @@ export function AdminTopbar({ onOpenSidebar }: { onOpenSidebar: () => void }) {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [twoFactorOpen, setTwoFactorOpen] = useState(false);
+  const [changePasswordOpen, setChangePasswordOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -176,9 +182,20 @@ export function AdminTopbar({ onOpenSidebar }: { onOpenSidebar: () => void }) {
                   type="button"
                   onClick={() => {
                     setMenuOpen(false);
-                    setTwoFactorOpen(true);
+                    setChangePasswordOpen(true);
                   }}
                   className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm text-slate-700 transition-colors hover:bg-slate-50"
+                >
+                  <MaterialIcon name="password" className="text-[16px] text-slate-400" />
+                  Change Password
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setTwoFactorOpen(true);
+                  }}
+                  className="flex w-full items-center gap-2 border-t border-slate-100 px-3 py-2.5 text-left text-sm text-slate-700 transition-colors hover:bg-slate-50"
                 >
                   <MaterialIcon name="shield_lock" className="text-[16px] text-slate-400" />
                   Two-Factor Authentication
@@ -203,6 +220,7 @@ export function AdminTopbar({ onOpenSidebar }: { onOpenSidebar: () => void }) {
 
     {/* Rendered outside the topbar's own div (which has backdrop-blur-md) — a CSS filter/backdrop-filter on an ancestor creates a new containing block for `position: fixed` descendants, which silently confined this modal to the topbar's own slim box instead of the real viewport. */}
     <TwoFactorSetupModal open={twoFactorOpen} onClose={() => setTwoFactorOpen(false)} />
+    <ChangePasswordModal open={changePasswordOpen} onClose={() => setChangePasswordOpen(false)} />
     </>
   );
 }

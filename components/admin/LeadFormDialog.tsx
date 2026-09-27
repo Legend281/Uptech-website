@@ -39,7 +39,6 @@ export function LeadFormDialog(props: Props) {
   const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
   const [service, setService] = useState<LeadServiceValue | "">("");
-  const [language, setLanguage] = useState<"English" | "French">("English");
   const [message, setMessage] = useState("");
   const [source, setSource] = useState<NewLeadInput["source"]>("manual-phone");
   const [saving, setSaving] = useState(false);
@@ -68,7 +67,6 @@ export function LeadFormDialog(props: Props) {
       setPhone(lead.phone);
       setCompany(lead.company ?? "");
       setService(lead.service);
-      setLanguage(lead.language);
       setMessage(lead.message);
     } else {
       setName("");
@@ -76,7 +74,6 @@ export function LeadFormDialog(props: Props) {
       setPhone("");
       setCompany("");
       setService("");
-      setLanguage("English");
       setMessage("");
       setSource("manual-phone");
     }
@@ -89,13 +86,13 @@ export function LeadFormDialog(props: Props) {
     event.preventDefault();
     if (!canSubmit || saving) return;
     if (props.mode === "edit") {
-      editLead(props.lead.id, { name, email, phone, company: company || undefined, service, language, message });
+      editLead(props.lead.id, { name, email, phone, company: company || undefined, service, message });
       logActivity({ icon: "edit_note", description: `${currentUser.name} updated ${name}'s lead record`, relatedHref: `/admin/leads/${props.lead.id}` });
       toast.success("Lead updated");
     } else {
       setSaving(true);
       try {
-        const newLead = await addLead({ name, email, phone, company: company || undefined, service, language, message, source });
+        const newLead = await addLead({ name, email, phone, company: company || undefined, service, message, source });
         logActivity({ icon: "person_add", description: `${currentUser.name} logged a new lead: ${name}`, relatedHref: `/admin/leads/${newLead.id}` });
         toast.success("Lead logged", { description: `${name} was added to the register.` });
       } catch (error) {
@@ -207,23 +204,6 @@ export function LeadFormDialog(props: Props) {
                 </select>
               </label>
             )}
-
-            <fieldset className={`flex flex-col gap-1.5 ${isEdit ? "sm:col-span-2" : ""}`}>
-              <legend className={`${labelClasses} mb-1`}>Preferred language</legend>
-              <div className="flex gap-2">
-                {(["English", "French"] as const).map((lang) => (
-                  <label
-                    key={lang}
-                    className={`flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg border px-3 py-2.5 text-sm font-semibold transition-colors ${
-                      language === lang ? "border-teal-500 bg-teal-50 text-teal-700" : "border-slate-300 text-slate-600 hover:border-slate-400"
-                    }`}
-                  >
-                    <input type="radio" name="lead-language" value={lang} checked={language === lang} onChange={() => setLanguage(lang)} className="sr-only" />
-                    {lang}
-                  </label>
-                ))}
-              </div>
-            </fieldset>
 
             <label className="flex flex-col gap-1.5 sm:col-span-2">
               <span className={labelClasses}>

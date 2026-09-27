@@ -36,7 +36,7 @@ export const revalidate = 60;
 
 type JobPostingRow = {
   title: string;
-  department: string;
+  department: string | null;
   location: string;
   employment_type: string;
   description: string;
@@ -59,7 +59,7 @@ async function getPublishedJobPostings(): Promise<JobPosting[]> {
 
   return (data as JobPostingRow[]).map((row) => ({
     title: row.title,
-    department: row.department,
+    department: row.department ?? undefined,
     location: row.location,
     type: row.employment_type,
     description: row.description,

@@ -54,9 +54,14 @@ export function NotYetConnected({ children }: { children: React.ReactNode }) {
 export function NotificationSettings() {
   const currentUser = useCurrentUser();
   const saved = useNotificationPrefs(currentUser.id);
-  const { saveNotifications } = useSettings();
+  const { saveNotifications, loaded } = useSettings();
   const [draft, setDraft] = useState<NotificationPrefs>(saved);
   const dirty = JSON.stringify(draft) !== JSON.stringify(saved);
+
+  useEffect(() => {
+    if (loaded) setDraft(saved);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loaded]);
 
   function toggle(event: NotificationEvent, channel: NotificationChannel, on: boolean) {
     setDraft((prev) => ({ ...prev, [event]: { ...prev[event], [channel]: on } }));
@@ -211,12 +216,19 @@ const companyFields: { key: keyof CompanyDetails; label: string; hint?: string; 
 
 export function CompanySettings() {
   const currentUser = useCurrentUser();
-  const { settings, saveCompany } = useSettings();
+  const { settings, saveCompany, loaded } = useSettings();
   const [draft, setDraft] = useState<CompanyDetails>(settings.company);
   const dirty = JSON.stringify(draft) !== JSON.stringify(settings.company);
   const errors = validateCompany(draft);
   const editable = canEditSystemSettings(currentUser);
   const groups = [...new Set(companyFields.map((f) => f.group))];
+
+  // Same reasoning as AssignmentSettings' DepartmentCard: resync once, the
+  // moment the real fetch actually lands, never again after.
+  useEffect(() => {
+    if (loaded) setDraft(settings.company);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loaded]);
 
   return (
     <section className={`${CARD_SURFACE} p-5`}>

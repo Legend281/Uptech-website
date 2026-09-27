@@ -7,7 +7,8 @@ import { ApplyModal } from "@/components/ApplyModal";
 
 export type JobPosting = {
   title: string;
-  department: string;
+  /** Optional — a general-interest or cross-department opening won't cleanly belong to one of the six departments. */
+  department?: string;
   location: string;
   type: string;
   description: string;
@@ -82,10 +83,12 @@ export function OpenPositions({ jobs }: { jobs: JobPosting[] }) {
                 <div>
                   <span className="text-base font-bold text-navy-950 block">{job.title}</span>
                   <span className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5 text-xs text-slate-500 font-medium">
-                    <span className="inline-flex items-center gap-1">
-                      <MaterialIcon name="apartment" className="text-[14px]" />
-                      {job.department}
-                    </span>
+                    {job.department && (
+                      <span className="inline-flex items-center gap-1">
+                        <MaterialIcon name="apartment" className="text-[14px]" />
+                        {job.department}
+                      </span>
+                    )}
                     <span className="inline-flex items-center gap-1">
                       <MaterialIcon name="location_on" className="text-[14px]" />
                       {job.location}

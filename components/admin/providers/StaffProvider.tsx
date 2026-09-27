@@ -9,9 +9,9 @@ import type { UserPatch } from "@/components/admin/providers/CurrentUserProvider
  * Replaces MOCK_ADMIN_USERS — every call site that used to do
  * MOCK_ADMIN_USERS.find(...) / .map(...) now does the exact same thing
  * against useStaff()'s array, unchanged, since this returns the identical
- * AdminUser[] shape. Fetched once per admin session: assignee pickers,
- * "who's covering this," and the language-mismatch check all need the full
- * staff list, not just the signed-in user (CurrentUserProvider's job).
+ * AdminUser[] shape. Fetched once per admin session: assignee pickers and
+ * "who's covering this" both need the full staff list, not just the
+ * signed-in user (CurrentUserProvider's job).
  *
  * updateUser (added alongside components/admin/settings/UsersSettings.tsx)
  * writes real changes to the profiles table — see
@@ -42,7 +42,6 @@ type ProfileRow = {
   department: string;
   avatar_initials: string;
   location: string;
-  languages: string[];
   active: boolean | null;
 };
 
@@ -54,7 +53,6 @@ function fromRow(row: ProfileRow): AdminUser {
     department: row.department as AdminUser["department"],
     avatarInitials: row.avatar_initials,
     location: row.location,
-    languages: row.languages as AdminUser["languages"],
     active: row.active ?? true,
   };
 }
@@ -119,7 +117,6 @@ export function StaffProvider({ children }: { children: ReactNode }) {
     const row: Record<string, unknown> = {};
     if (patch.role !== undefined) row.role = patch.role;
     if (patch.department !== undefined) row.department = patch.department;
-    if (patch.languages !== undefined) row.languages = patch.languages;
     if (patch.location !== undefined) row.location = patch.location;
     if (patch.active !== undefined) row.active = patch.active;
 

@@ -37,13 +37,13 @@ export function describeDbError(error: { message?: string; code?: string } | nul
 }
 
 /** Public URL for a file in one of the public photo buckets. */
-export function publicPhotoUrl(bucket: "testimonial-photos" | "team-photos", path: string | null | undefined): string | undefined {
+export function publicPhotoUrl(bucket: "testimonial-photos" | "team-photos" | "service-photos", path: string | null | undefined): string | undefined {
   if (!path) return undefined;
   return getSupabaseBrowserClient().storage.from(bucket).getPublicUrl(path).data.publicUrl;
 }
 
 /** Uploads a resized data-URL image and returns its storage path. */
-export async function uploadDataUrl(bucket: "testimonial-photos" | "team-photos", dataUrl: string, prefix: string): Promise<string> {
+export async function uploadDataUrl(bucket: "testimonial-photos" | "team-photos" | "service-photos", dataUrl: string, prefix: string): Promise<string> {
   // Decoded by hand rather than fetch(dataUrl), which the CSP's connect-src would block.
   const [header, base64] = dataUrl.split(",");
   const bytes = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));

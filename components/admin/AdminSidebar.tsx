@@ -11,6 +11,8 @@ import { useJobPostings } from "@/components/admin/providers/JobPostingsProvider
 import { useServicePages } from "@/components/admin/providers/ServicePagesProvider";
 import { getReviewStatus } from "@/lib/admin/staleness";
 import { getNavGroups, type NavItem } from "@/lib/admin/nav";
+import { useAdditionalServices } from "@/components/admin/providers/AdditionalServicesProvider";
+import { useOnboardingSubmissions } from "@/components/admin/providers/OnboardingProvider";
 
 function NavRow({ item, active }: { item: NavItem; active: boolean }) {
   const rowClasses =
@@ -72,7 +74,9 @@ export function AdminSidebar({ open, onClose }: { open: boolean; onClose: () => 
   const jobPostings = useJobPostings();
   const servicePages = useServicePages();
   const servicePagesNeedingReviewCount = servicePages.filter((page) => getReviewStatus(page) !== "on-track").length;
-  const navGroups = getNavGroups(leads.length, jobPostings.length, servicePagesNeedingReviewCount);
+  const additionalServices = useAdditionalServices();
+  const onboardingSubmissions = useOnboardingSubmissions();
+  const navGroups = getNavGroups(leads.length, jobPostings.length, servicePagesNeedingReviewCount, additionalServices.length, onboardingSubmissions.submissions.length);
 
   const content = (
     <div className="flex h-full flex-col bg-navy-950">
@@ -96,7 +100,14 @@ export function AdminSidebar({ open, onClose }: { open: boolean; onClose: () => 
         className="scrollbar-dark min-h-0 flex-1 space-y-8 overflow-y-auto px-3 py-8"
       >
         {navGroups.map((group) => {
-          const items = group.items.filter((item) => !item.adminOnly || currentUser.role === "administrator");
+          const items = group.items.filter((item) => {
+            if (item.adminOnly && currentUser.role !== "administrator") return false;
+            if (item.restrictedToDepartment) {
+              if (currentUser.role === "viewer") return false;
+              if (currentUser.role !== "administrator" && currentUser.department !== item.restrictedToDepartment) return false;
+            }
+            return true;
+          });
           if (items.length === 0) return null;
           return (
             <div key={group.label}>

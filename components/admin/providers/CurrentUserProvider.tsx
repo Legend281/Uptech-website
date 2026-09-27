@@ -28,7 +28,7 @@ import type { AdminUser } from "@/lib/admin/types";
  * emailed invite, not this file).
  */
 
-export type UserPatch = Partial<Pick<AdminUser, "role" | "department" | "languages" | "location" | "active">>;
+export type UserPatch = Partial<Pick<AdminUser, "role" | "department" | "location" | "active">>;
 
 type CurrentUserContextValue = {
   currentUser: AdminUser | null;
@@ -46,7 +46,6 @@ function toAdminUser(id: string, row: {
   department: string;
   avatar_initials: string;
   location: string;
-  languages: string[];
 }): AdminUser {
   return {
     id,
@@ -55,7 +54,6 @@ function toAdminUser(id: string, row: {
     department: row.department as AdminUser["department"],
     avatarInitials: row.avatar_initials,
     location: row.location,
-    languages: row.languages as AdminUser["languages"],
   };
 }
 

@@ -7,6 +7,7 @@ import { ResumeDownloadButton } from "@/components/admin/ResumeDownloadButton";
 import { useLeads } from "@/components/admin/providers/LeadsProvider";
 import { useJobPostings } from "@/components/admin/providers/JobPostingsProvider";
 import { departmentLabels, roleLabels } from "@/lib/admin/labels";
+import { canManageContent } from "@/lib/admin/permissions";
 import { getLeadServiceLabel } from "@/lib/admin/register";
 import { toWhatsAppHref } from "@/lib/admin/leads";
 import { findDuplicateLeads } from "@/lib/admin/duplicateLeads";
@@ -34,7 +35,6 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
     windowIsCommitment,
     assignableUsers,
     stageClock,
-    languageMismatch,
     orphaned,
     nextStepHint,
     handleClaim,
@@ -90,11 +90,6 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="font-sans text-lg font-bold text-navy-950">{lead.name}</h1>
-              {lead.language === "French" && (
-                <span className="rounded border border-slate-200 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-500">
-                  FR
-                </span>
-              )}
             </div>
             <div className="mt-1.5 flex flex-wrap items-center gap-2">
               <span className={`rounded-full border px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide ${meta.badge}`}>
@@ -146,7 +141,7 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
       </div>
 
       {/* Needs-triage: a distinct resolution path, not a generic status dropdown */}
-      {lead.status === "needs-triage" && (
+      {lead.status === "needs-triage" && canManageContent(currentUser) && (
         <div className="mt-4 rounded-xl border border-violet-200 bg-violet-50 p-5">
           <div className="flex items-start gap-2.5">
             <MaterialIcon name="fork_right" className="mt-0.5 text-[20px] text-violet-600" />
@@ -194,7 +189,8 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
                     <span className="min-w-0">
                       <span className="block truncate font-semibold text-navy-950">{posting.title}</span>
                       <span className="block truncate text-xs text-slate-500">
-                        {posting.department} · {posting.location}
+                        {posting.department ? `${posting.department} · ` : ""}
+                        {posting.location}
                       </span>
                     </span>
                     <MaterialIcon name="arrow_forward" className="shrink-0 text-[16px] text-slate-400" />
@@ -224,15 +220,6 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
       {/* Ownership */}
       <div className={`${CARD} mt-4 p-5`}>
         <h2 className="font-sans text-sm font-bold text-navy-950">Ownership</h2>
-        {languageMismatch && (
-          <div className="mt-2 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
-            <MaterialIcon name="translate" className="mt-0.5 text-[16px] shrink-0" />
-            <span>
-              This lead prefers French, but {assignedUser?.name} doesn&apos;t list French among their languages. Worth
-              a heads-up or a reassignment.
-            </span>
-          </div>
-        )}
         {orphaned && (
           <div className="mt-2 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
             <MaterialIcon name="person_off" className="mt-0.5 text-[16px] shrink-0" />
@@ -270,14 +257,16 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
         ) : (
           <div className="mt-3">
             <p className="text-sm text-slate-500">Unclaimed — nobody owns this lead yet.</p>
-            <button
-              type="button"
-              onClick={handleClaim}
-              className="mt-2.5 flex items-center gap-2 rounded-lg bg-navy-950 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-navy-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
-            >
-              <MaterialIcon name="how_to_reg" className="text-[18px]" />
-              Claim This Lead
-            </button>
+            {canManageContent(currentUser) && (
+              <button
+                type="button"
+                onClick={handleClaim}
+                className="mt-2.5 flex items-center gap-2 rounded-lg bg-navy-950 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-navy-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
+              >
+                <MaterialIcon name="how_to_reg" className="text-[18px]" />
+                Claim This Lead
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -287,17 +276,21 @@ export function LeadDetailContent({ lead }: { lead: Lead }) {
         <div className={`${CARD} mt-4 p-5`}>
           <div className="flex items-center justify-between gap-3">
             <h2 className="font-sans text-sm font-bold text-navy-950">Status</h2>
-            <select
-              value={lead.status}
-              onChange={(e) => handleStatusChange(e.target.value as LeadStatus)}
-              className="rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-semibold text-slate-700 focus-visible:border-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500/40"
-            >
-              {resolvableStatuses.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            {canManageContent(currentUser) ? (
+              <select
+                value={lead.status}
+                onChange={(e) => handleStatusChange(e.target.value as LeadStatus)}
+                className="rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-semibold text-slate-700 focus-visible:border-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-teal-500/40"
+              >
+                {resolvableStatuses.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <span className={`rounded-full border px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide ${meta.badge}`}>{meta.label}</span>
+            )}
           </div>
           {nextStepHint && (
             <p className="mt-2 flex items-start gap-1.5 text-xs text-slate-500">

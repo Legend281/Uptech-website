@@ -158,7 +158,7 @@ export function ServicePageFormDialog({ open, onClose }: { open: boolean; onClos
             <label className="flex flex-col gap-1.5">
               <span className={labelClasses}>Reviewed By</span>
               <input type="text" value={reviewedBy} onChange={(e) => setReviewedBy(e.target.value)} className={inputClasses} />
-              <span className="text-xs text-slate-400">Who's establishing this page's baseline review, starting today.</span>
+              <span className="text-xs text-slate-400">Who&apos;s establishing this page&apos;s baseline review, starting today.</span>
             </label>
           </div>
         </form>

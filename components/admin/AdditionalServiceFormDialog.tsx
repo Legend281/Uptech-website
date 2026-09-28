@@ -118,7 +118,7 @@ export function AdditionalServiceFormDialog(props: Props) {
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-6" role="dialog" aria-modal="true" aria-labelledby={`${formId}-title`}>
       <div className="absolute inset-0 bg-navy-950/50" onClick={onClose} aria-hidden="true" />
-      <div className="relative flex max-h-[92vh] w-full flex-col rounded-t-2xl border border-slate-200 bg-white shadow-2xl sm:max-w-3xl sm:rounded-2xl">
+      <div className="relative flex max-h-[92dvh] w-full flex-col rounded-t-2xl border border-slate-200 bg-white shadow-2xl sm:max-w-3xl sm:rounded-2xl">
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
           <h2 id={`${formId}-title`} className="font-sans text-base font-bold text-navy-950">
             {isEdit ? "Edit Service" : "Add a Service"}
@@ -133,8 +133,8 @@ export function AdditionalServiceFormDialog(props: Props) {
           </button>
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:overflow-hidden">
-        <form id={formId} onSubmit={handleSubmit} className="min-h-0 overflow-y-auto px-5 py-5 lg:flex-1">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:grid-rows-[minmax(0,1fr)] lg:overflow-hidden">
+        <form id={formId} onSubmit={handleSubmit} className="px-5 py-5 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain">
           {!isEdit && (
             <p className="mb-4 text-xs text-slate-500">
               Saves as a Draft — appears on the Homepage and /services, after the 5 core services, only once you
@@ -207,7 +207,7 @@ export function AdditionalServiceFormDialog(props: Props) {
           </div>
         </form>
 
-        <aside className="space-y-2 border-t border-slate-100 bg-slate-50/70 px-5 py-5 lg:overflow-y-auto lg:border-l lg:border-t-0">
+        <aside className="space-y-2 border-t border-slate-100 bg-slate-50/70 px-5 py-5 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:border-l lg:border-t-0">
           <span className={labelClasses}>Live Preview</span>
           <p className="text-xs text-slate-400">Exactly how this appears on the Homepage and /services once published.</p>
           <div className="group mx-auto mt-3 max-w-[240px]">

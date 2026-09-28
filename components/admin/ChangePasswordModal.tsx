@@ -86,7 +86,7 @@ export function ChangePasswordModal({ open, onClose }: { open: boolean; onClose:
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby={`${formId}-title`}>
       <div className="absolute inset-0 bg-navy-950/50" onClick={onClose} aria-hidden="true" />
-      <div className="relative w-full max-w-sm rounded-2xl border border-slate-200 bg-white shadow-2xl">
+      <div className="relative flex max-h-[90dvh] w-full max-w-sm flex-col rounded-2xl border border-slate-200 bg-white shadow-2xl">
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
           <h2 id={`${formId}-title`} className="font-sans text-base font-bold text-navy-950">
             Change Password
@@ -96,7 +96,7 @@ export function ChangePasswordModal({ open, onClose }: { open: boolean; onClose:
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-5 py-5">
+        <form onSubmit={handleSubmit} className="min-h-0 flex-1 overflow-y-auto overscroll-contain flex flex-col gap-4 px-5 py-5">
           <label className="flex flex-col gap-1.5">
             <span className={labelClasses}>Current Password</span>
             <input

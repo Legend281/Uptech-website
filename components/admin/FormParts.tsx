@@ -133,7 +133,7 @@ export function DialogShell({
           otherwise swallows the mouse wheel, so nothing inside the dialog would scroll. */}
       <div
         data-lenis-prevent
-        className={`relative flex max-h-[94vh] w-full flex-col rounded-t-2xl border border-slate-200 bg-white shadow-2xl sm:rounded-2xl ${
+        className={`relative flex max-h-[94dvh] w-full flex-col rounded-t-2xl border border-slate-200 bg-white shadow-2xl sm:rounded-2xl ${
           size === "wide" ? "sm:max-w-5xl" : "sm:max-w-3xl"
         }`}
       >

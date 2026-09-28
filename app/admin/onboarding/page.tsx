@@ -94,7 +94,7 @@ function DetailModal({ submission, onClose }: { submission: OnboardingSubmission
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
       <div className="absolute inset-0 bg-navy-950/50" onClick={onClose} aria-hidden="true" />
-      <div className="relative flex max-h-[88vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+      <div className="relative flex max-h-[88dvh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-teal-600">Case #{submission.caseNumber}</span>
@@ -106,7 +106,7 @@ function DetailModal({ submission, onClose }: { submission: OnboardingSubmission
             <MaterialIcon name="close" className="text-[20px]" />
           </button>
         </div>
-        <div className="overflow-y-auto px-5 py-5">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5">
           <div className="mb-4">
             <span className={labelClasses}>Account Manager</span>
             <select

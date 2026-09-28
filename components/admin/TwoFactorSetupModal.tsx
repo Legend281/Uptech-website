@@ -95,7 +95,7 @@ export function TwoFactorSetupModal({ open, onClose }: { open: boolean; onClose:
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby={`${formId}-title`}>
       <div className="absolute inset-0 bg-navy-950/50" onClick={onClose} aria-hidden="true" />
-      <div className="relative w-full max-w-sm rounded-2xl border border-slate-200 bg-white shadow-2xl">
+      <div className="relative flex max-h-[90dvh] w-full max-w-sm flex-col rounded-2xl border border-slate-200 bg-white shadow-2xl">
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
           <h2 id={`${formId}-title`} className="font-sans text-base font-bold text-navy-950">
             Two-Factor Authentication
@@ -105,7 +105,7 @@ export function TwoFactorSetupModal({ open, onClose }: { open: boolean; onClose:
           </button>
         </div>
 
-        <div className="px-5 py-5">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5">
           {state.status === "loading" && (
             <div className="flex justify-center py-6">
               <MaterialIcon name="progress_activity" className="animate-spin text-[24px] text-slate-400" />

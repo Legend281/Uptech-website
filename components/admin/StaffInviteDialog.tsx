@@ -82,7 +82,7 @@ export function StaffInviteDialog({ open, onClose }: { open: boolean; onClose: (
         }}
         aria-hidden="true"
       />
-      <div className="relative flex max-h-[92vh] w-full max-w-lg flex-col rounded-2xl border border-slate-200 bg-white shadow-2xl">
+      <div className="relative flex max-h-[92dvh] w-full max-w-lg flex-col rounded-2xl border border-slate-200 bg-white shadow-2xl">
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
           <h2 id={`${formId}-title`} className="font-sans text-base font-bold text-navy-950">
             Invite Staff Member

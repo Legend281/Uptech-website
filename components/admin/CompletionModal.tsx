@@ -76,7 +76,7 @@ export function CompletionModal({
       aria-labelledby={`${formId}-title`}
     >
       <div className="absolute inset-0 bg-navy-950/50" onClick={onCancel} aria-hidden="true" />
-      <div className="relative w-full max-w-md rounded-t-2xl border border-slate-200 bg-white shadow-2xl sm:rounded-2xl">
+      <div className="relative flex max-h-[90dvh] w-full max-w-md flex-col rounded-t-2xl border border-slate-200 bg-white shadow-2xl sm:rounded-2xl">
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
           <h2 id={`${formId}-title`} className="font-sans text-base font-bold text-navy-950">
             {title}
@@ -91,7 +91,7 @@ export function CompletionModal({
           </button>
         </div>
 
-        <form id={formId} onSubmit={handleSubmit} className="px-5 py-5">
+        <form id={formId} onSubmit={handleSubmit} className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5">
           {description && <p className="mb-4 text-sm text-slate-500">{description}</p>}
 
           <div className="flex flex-col gap-4">

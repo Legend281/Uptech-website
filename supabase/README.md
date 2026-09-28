@@ -49,7 +49,8 @@ not filename order:
 021_settings_real_data.sql
 022_onboarding_submissions.sql   <- change the case_number restart value first, see that file's own comment
 023_security_advisor_fixes.sql
+024_testimonial_single_consent.sql
 ```
 
-Every new migration from here on should just get the next number after `023`
+Every new migration from here on should just get the next number after `024`
 — the duplicates are a closed, historical problem, not an ongoing one.

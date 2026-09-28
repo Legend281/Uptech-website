@@ -107,6 +107,8 @@ export const consentChannelLabels: Record<ConsentChannel, string> = {
   whatsapp: "WhatsApp message",
   email: "Email",
   "signed-form": "Signed consent form",
+  // The admin form's single consent tick: a staff member confirmed the client agreed.
+  confirmed: "Confirmed by staff",
 };
 
 export function getDisplayName(t: Pick<Testimonial, "attributionMode" | "fullName" | "firstName" | "lastInitial" | "anonymisedDescriptor">): string {
@@ -173,12 +175,11 @@ export function getPublishBlockers(t: Checkable, user: AdminUser): string[] {
   if (t.consentWithdrawnAt) {
     blockers.push("The client withdrew consent. This testimonial can't be published again.");
   } else if (!t.consentGiven || !t.consentDate || !t.consentChannel) {
-    blockers.push("Record the client's consent: tick it, and add the date and how they gave it.");
+    blockers.push("Tick that the client agreed to this being published.");
   }
 
   if (t.outcomeLine?.trim()) {
     if (!t.leadId) blockers.push("An outcome line needs a linked lead, so the claim can be checked against that lead's record.");
-    if (t.consentChannel !== "signed-form") blockers.push("An outcome line needs a signed consent form.");
   }
 
   if (t.placements.length === 0) blockers.push("Choose at least one page to show it on.");
@@ -193,7 +194,6 @@ export function getPublishBlockers(t: Checkable, user: AdminUser): string[] {
   if (onHomepage) {
     if (user.role !== "administrator") blockers.push("Only an Administrator can publish to the Homepage.");
     if (t.attributionMode !== "full_name") blockers.push("The Homepage needs a full name, not an initial or an anonymised description.");
-    if (t.consentChannel !== "signed-form") blockers.push("The Homepage needs a signed consent form.");
   }
 
   return blockers;

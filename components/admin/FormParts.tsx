@@ -129,7 +129,10 @@ export function DialogShell({
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-6" role="dialog" aria-modal="true" aria-labelledby={titleId}>
       <div className="absolute inset-0 bg-navy-950/50" onClick={onClose} aria-hidden="true" />
+      {/* data-lenis-prevent: the site-wide smooth scroller (components/SmoothScroll.tsx)
+          otherwise swallows the mouse wheel, so nothing inside the dialog would scroll. */}
       <div
+        data-lenis-prevent
         className={`relative flex max-h-[94vh] w-full flex-col rounded-t-2xl border border-slate-200 bg-white shadow-2xl sm:rounded-2xl ${
           size === "wide" ? "sm:max-w-5xl" : "sm:max-w-3xl"
         }`}

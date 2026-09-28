@@ -31,6 +31,8 @@ export type UserUpdateResult = { ok: true; changed: string[] } | { ok: false; re
 type StaffContextValue = {
   staff: AdminUser[];
   updateUser: (id: string, patch: UserPatch, actor: AdminUser) => Promise<UserUpdateResult>;
+  resendInvite: (id: string) => Promise<UserUpdateResult>;
+  deleteUser: (id: string, actor: AdminUser) => Promise<UserUpdateResult>;
 };
 
 const StaffContext = createContext<StaffContextValue | null>(null);
@@ -131,7 +133,28 @@ export function StaffProvider({ children }: { children: ReactNode }) {
     return { ok: true, changed: changes };
   }
 
-  return <StaffContext.Provider value={{ staff, updateUser }}>{children}</StaffContext.Provider>;
+  /** A fresh set-password link for an account that never finished signing in — same underlying mechanism as "Forgot password?", triggered by an Administrator instead. */
+  async function resendInvite(id: string): Promise<UserUpdateResult> {
+    const response = await fetch(`/api/admin/staff/${id}`, { method: "POST" });
+    const body = (await response.json().catch(() => ({}))) as { error?: string };
+    if (!response.ok) return { ok: false, reason: body.error ?? "Couldn't send the link." };
+    return { ok: true, changed: ["invite resent"] };
+  }
+
+  /** Permanently removes the account (real Auth user, not just the profiles row) — distinct from deactivating, see app/api/admin/staff/[id]/route.ts's own comment for when to use which. */
+  async function deleteUser(id: string, actor: AdminUser): Promise<UserUpdateResult> {
+    if (actor.role !== "administrator") return { ok: false, reason: "Only an Administrator can delete accounts." };
+    if (id === actor.id) return { ok: false, reason: "You can't delete your own account." };
+
+    const response = await fetch(`/api/admin/staff/${id}`, { method: "DELETE" });
+    const body = (await response.json().catch(() => ({}))) as { error?: string };
+    if (!response.ok) return { ok: false, reason: body.error ?? "Couldn't delete the account." };
+
+    setStaff((prev) => prev.filter((u) => u.id !== id));
+    return { ok: true, changed: ["deleted"] };
+  }
+
+  return <StaffContext.Provider value={{ staff, updateUser, resendInvite, deleteUser }}>{children}</StaffContext.Provider>;
 }
 
 export function useStaff(): AdminUser[] {
@@ -140,8 +163,8 @@ export function useStaff(): AdminUser[] {
   return ctx.staff;
 }
 
-export function useStaffActions(): { updateUser: StaffContextValue["updateUser"] } {
+export function useStaffActions(): { updateUser: StaffContextValue["updateUser"]; resendInvite: StaffContextValue["resendInvite"]; deleteUser: StaffContextValue["deleteUser"] } {
   const ctx = useContext(StaffContext);
   if (!ctx) throw new Error("useStaffActions must be used within StaffProvider");
-  return { updateUser: ctx.updateUser };
+  return { updateUser: ctx.updateUser, resendInvite: ctx.resendInvite, deleteUser: ctx.deleteUser };
 }

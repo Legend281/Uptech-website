@@ -8,6 +8,7 @@ import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider
 import { isActive, useStaff, useStaffActions } from "@/components/admin/providers/StaffProvider";
 import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
 import { StaffInviteDialog } from "@/components/admin/StaffInviteDialog";
+import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { departmentLabels, roleLabels } from "@/lib/admin/labels";
 import type { AccessRole, AdminUser, Department } from "@/lib/admin/types";
 
@@ -92,7 +93,7 @@ function RoleFields({
 function EditUserDialog({ user, onClose }: { user: AdminUser; onClose: () => void }) {
   const formId = useId();
   const currentUser = useCurrentUser();
-  const { updateUser } = useStaffActions();
+  const { updateUser, resendInvite, deleteUser } = useStaffActions();
   const logActivity = useLogActivity();
   const isSelf = user.id === currentUser.id;
   const [draft, setDraft] = useState<Draft>({
@@ -101,6 +102,29 @@ function EditUserDialog({ user, onClose }: { user: AdminUser; onClose: () => voi
     location: user.location,
     active: isActive(user),
   });
+  const [resending, setResending] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+
+  async function handleResend() {
+    setResending(true);
+    const result = await resendInvite(user.id);
+    setResending(false);
+    if (!result.ok) return toast.error("Couldn't send the link", { description: result.reason });
+    logActivity({ icon: "mail", description: `${currentUser.name} resent a sign-in link to ${user.name}.`, relatedHref: "/admin/settings" });
+    toast.success("Link sent", { description: `${user.name} will get a fresh link by email.` });
+  }
+
+  async function handleDelete() {
+    setDeleting(true);
+    const result = await deleteUser(user.id, currentUser);
+    setDeleting(false);
+    setConfirmingDelete(false);
+    if (!result.ok) return toast.error("Couldn't delete the account", { description: result.reason });
+    logActivity({ icon: "delete", description: `${currentUser.name} deleted ${user.name}'s account.`, relatedHref: "/admin/settings" });
+    toast.success("Account deleted");
+    onClose();
+  }
 
   // Spelled out before saving: permission changes deserve a second look (spec 4 — "review it more carefully").
   const changes = [
@@ -152,7 +176,8 @@ function EditUserDialog({ user, onClose }: { user: AdminUser; onClose: () => voi
           <span className="text-sm text-slate-700">
             <span className="block font-semibold">Deactivate this account</span>
             <span className="block text-xs text-slate-500">
-              They can&apos;t sign in or be assigned leads. Their name stays on past work. Accounts are deactivated, never deleted.
+              They can&apos;t sign in or be assigned leads. Their name stays on past work — the right choice for a real former
+              colleague.
             </span>
           </span>
         </label>
@@ -166,7 +191,52 @@ function EditUserDialog({ user, onClose }: { user: AdminUser; onClose: () => voi
             </ul>
           </div>
         )}
+
+        <div className="rounded-lg border border-slate-200 p-3">
+          <p className="text-sm font-semibold text-navy-950">Sign-in link not working for them?</p>
+          <p className="mt-0.5 text-xs text-slate-500">
+            Sends a fresh set-password link by email — the same one &quot;Forgot password?&quot; sends, just triggered on
+            their behalf. Safe to use as many times as needed.
+          </p>
+          <button
+            type="button"
+            onClick={() => void handleResend()}
+            disabled={resending}
+            className="mt-2.5 inline-flex items-center gap-1.5 rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-slate-400 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            <MaterialIcon name="mail" className="text-[14px]" />
+            {resending ? "Sending…" : "Resend Sign-In Link"}
+          </button>
+        </div>
+
+        {!isSelf && (
+          <div className="rounded-lg border border-rose-200 bg-rose-50/50 p-3">
+            <p className="text-sm font-semibold text-rose-900">Delete this account</p>
+            <p className="mt-0.5 text-xs text-rose-700">
+              Permanently removes their sign-in — not the same as deactivating. Use this for a mistaken invite, a
+              duplicate, or a test account, not a real former colleague (deactivate keeps their name on past work; this
+              doesn&apos;t).
+            </p>
+            <button
+              type="button"
+              onClick={() => setConfirmingDelete(true)}
+              className="mt-2.5 inline-flex items-center gap-1.5 rounded-lg border border-rose-300 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:border-rose-400 hover:bg-rose-100"
+            >
+              <MaterialIcon name="delete" className="text-[14px]" />
+              Delete Account
+            </button>
+          </div>
+        )}
       </div>
+
+      <ConfirmDialog
+        open={confirmingDelete}
+        title={`Delete ${user.name}'s account?`}
+        description="This permanently removes their sign-in. It can't be undone — consider Deactivate instead if this is a real former colleague."
+        confirmLabel={deleting ? "Deleting…" : "Delete Account"}
+        onCancel={() => setConfirmingDelete(false)}
+        onConfirm={() => void handleDelete()}
+      />
     </DialogShell>
   );
 }

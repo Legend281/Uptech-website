@@ -1,15 +1,21 @@
 -- Uptech Consulting admin dashboard — let signed-in staff publish testimonials.
--- Run once in the Supabase SQL editor AFTER 002_testimonials.sql and
--- 012_profiles_active_and_update.sql. Safe to re-run.
+-- Run once in the Supabase SQL editor, after 002_testimonials.sql. Safe to
+-- re-run — see supabase/README.md for the real cross-branch run order this
+-- number alone doesn't capture.
 --
 -- Scope: testimonials only (the admin module that publishes to the live
 -- Homepage and Career Marketing page). Staff sign-in is 003_staff_auth.sql;
 -- this file only decides what a signed-in person may do with testimonials,
--- using the staff roles in public.profiles (003, "active" from 012), read
--- via the shared current_staff_role()/current_staff_department() (016) —
--- the same two functions every other module in this project uses, not a
--- testimonial-specific pair. An earlier draft of this file reintroduced
--- testimonial-specific duplicates of these (testimonial_staff_role()/
+-- using the staff roles in public.profiles (003), read via the shared
+-- current_staff_role()/current_staff_department() — the same two functions
+-- every other module in this project uses, not a testimonial-specific
+-- pair. Those two aren't fully correct until 016 and 012 have also run
+-- (016 redefines them to read profiles.active, which 012 adds) — nothing
+-- here fails before that, since the function still resolves to whatever
+-- definition exists at the time this runs, but department/active-aware
+-- scoping is only fully right once the full sequence in the README has
+-- run. An earlier draft of this file reintroduced testimonial-specific
+-- duplicates of these functions (testimonial_staff_role()/
 -- testimonial_staff_department()); those are exactly the two functions
 -- 023_security_advisor_fixes.sql identified as orphaned leftovers from an
 -- old naming scheme and deleted, after they turned out to still be wired

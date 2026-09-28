@@ -32,11 +32,10 @@ const trustStripItems = [
     description: "Every inquiry handled in the language you're most comfortable in.",
   },
   {
-    // Was "Direct WhatsApp Access" — no longer true on this page specifically:
-    // the form's WhatsApp option was removed (email-only now) and this page
-    // has no floating WhatsApp button either (unlike the service pages).
-    // Reusing the hero's own "no ticket queue, no automated replies" wording
-    // rather than inventing a new claim.
+    // The form itself stays email-only (no in-form WhatsApp option), but a
+    // WhatsAppButton now sits in the hero (HeroIntro) — CLAUDE.md Section 6.8
+    // treats click-to-chat as core infrastructure everywhere, not an
+    // optional extra this page was previously the one exception to.
     icon: "mail",
     title: "Direct Email Intake",
     badgeText: "Real Person, Not a Bot",

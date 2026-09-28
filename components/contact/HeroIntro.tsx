@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 const container: Variants = {
   hidden: {},
@@ -48,6 +49,9 @@ export function HeroIntro() {
         No ticket queue, no automated replies. Fill in a few details below and a specialist
         will respond by email.
       </motion.p>
+      <motion.div variants={item} className="mt-8 flex justify-center">
+        <WhatsAppButton phone="237678597593" label="Or Chat on WhatsApp" />
+      </motion.div>
     </motion.div>
   );
 }

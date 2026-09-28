@@ -131,7 +131,7 @@ export default function TeamMembersPage() {
       />
 
       <InfoNotice>
-        The roster is saved in this browser only for now, and changes here don&apos;t reach the Who We Are page yet.
+        Marking someone Visible puts them on the public Who We Are page immediately — no separate publish step.
         {!canManage && " Only Administrators can change the roster."}
       </InfoNotice>
 

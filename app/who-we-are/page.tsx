@@ -493,12 +493,26 @@ export default async function WhoWeArePage() {
         {team.length > 0 ? (
           <section className="border-b border-slate-200 bg-[#F8FAFC]">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <Reveal className={`${SPINE_LIGHT} py-16 sm:py-20`}>
+              <Reveal className={`${SPINE_LIGHT} py-16 sm:py-20 lg:py-24`}>
                 <SpineNode />
-                <h2 className="mb-10 text-[26px] font-extrabold leading-[34px] tracking-[-0.02em] text-navy-950 sm:text-[32px] sm:leading-[40px] sm:tracking-[-0.025em]">
-                  Meet the team
+                <h2 className="max-w-3xl text-[26px] font-extrabold leading-[34px] tracking-[-0.02em] text-navy-950 sm:text-[34px] sm:leading-[42px] sm:tracking-[-0.025em]">
+                  <TextReveal text="Meet the team" />
                 </h2>
-                <TeamGrid members={team} />
+                <Reveal effect="fade" delay={100}>
+                  <p className="mt-5 max-w-2xl text-[18px] leading-[28px] tracking-[-0.01em] text-slate-600">
+                    The people actually doing the work described above — real names, real roles, not a stock photo.
+                  </p>
+                </Reveal>
+                {/* Not effect="stagger" here — that animates direct children in
+                    sequence, but TeamGrid is a separate component rendering
+                    its own grid div, so "direct child" would just be that one
+                    div, not each card. TeamGrid stays a simple, reusable
+                    "give it members, get a grid" component rather than
+                    entangling it with this page's specific scroll-reveal
+                    system. */}
+                <Reveal effect="fade" delay={200} className="mt-11 lg:mt-12">
+                  <TeamGrid members={team} />
+                </Reveal>
               </Reveal>
             </div>
           </section>

@@ -3,6 +3,9 @@ import Image from "next/image";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbJsonLd, faqPageJsonLd } from "@/lib/structuredData";
+import { SITE_URL } from "@/lib/siteUrl";
 import { TrustStrip } from "@/components/TrustStrip";
 import { Button } from "@/components/Button";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
@@ -24,6 +27,7 @@ export const metadata: Metadata = {
   title: "Business Formalisation — United States",
   description:
     "LLC and C-Corp formation in the United States for international founders, including Registered Agent service and IRS EIN acquisition.",
+  alternates: { canonical: `${SITE_URL}/services/business-formalisation-compliance/united-states` },
 };
 
 const trustStripItems = [
@@ -164,16 +168,19 @@ const personas = [
 export default async function BusinessFormalisationUnitedStatesPage() {
   // Dashboard-published FAQs when there are any, else the built-in list (lib/faqs.ts).
   const faqItems = await getFaqs("business-formalisation-us");
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Services", href: "/services" },
+    { label: "Business Formalisation & Compliance", href: "/services/business-formalisation-compliance" },
+    { label: "United States" },
+  ];
   return (
     <>
+      <JsonLd data={breadcrumbJsonLd(breadcrumbItems)} />
+      <JsonLd data={faqPageJsonLd(faqItems)} />
       <Header activeService="business-formalisation-us" />
       <Breadcrumb
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Services", href: "/services" },
-          { label: "Business Formalisation & Compliance", href: "/services/business-formalisation-compliance" },
-          { label: "United States" },
-        ]}
+        items={breadcrumbItems}
         tag="SUB-SERVICE 02/04 • US LLC / C-CORP FORMATION"
       />
 

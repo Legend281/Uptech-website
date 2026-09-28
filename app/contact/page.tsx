@@ -5,6 +5,9 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbJsonLd, faqPageJsonLd } from "@/lib/structuredData";
+import { SITE_URL } from "@/lib/siteUrl";
 import { TrustStrip } from "@/components/TrustStrip";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { ContactForm } from "@/components/ContactForm";
@@ -21,7 +24,10 @@ export const metadata: Metadata = {
   title: "Book a Consultation",
   description:
     "Tell us what you need. A specialist reviews your request and responds directly by email.",
+  alternates: { canonical: `${SITE_URL}/contact` },
 };
+
+const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Book a Consultation" }];
 
 const trustStripItems = [
   {
@@ -139,8 +145,10 @@ const otherServices = [
 export default function ContactPage() {
   return (
     <>
+      <JsonLd data={breadcrumbJsonLd(breadcrumbItems)} />
+      <JsonLd data={faqPageJsonLd(faqItems)} />
       <Header />
-      <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Book a Consultation" }]} />
+      <Breadcrumb items={breadcrumbItems} />
 
       <main>
         {/* Hero */}

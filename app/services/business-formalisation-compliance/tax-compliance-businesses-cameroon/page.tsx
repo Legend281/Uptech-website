@@ -4,6 +4,9 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbJsonLd, faqPageJsonLd } from "@/lib/structuredData";
+import { SITE_URL } from "@/lib/siteUrl";
 import { TrustStrip } from "@/components/TrustStrip";
 import { Button } from "@/components/Button";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
@@ -34,6 +37,7 @@ export const metadata: Metadata = {
   title: "Tax Compliance — Cameroon",
   description:
     "Predictable DGI tax compliance for Cameroon — monthly corporate filings and certified fiscal schedules for businesses, and personal income tax (IRPP) declarations for individuals.",
+  alternates: { canonical: `${SITE_URL}/services/business-formalisation-compliance/tax-compliance-businesses-cameroon` },
 };
 
 const trustStripItems = [
@@ -157,16 +161,19 @@ const individualDeliverables = [
 export default async function TaxComplianceBusinessesCameroonPage() {
   // Dashboard-published FAQs when there are any, else the built-in list (lib/faqs.ts).
   const faqItems = await getFaqs("tax-compliance-businesses");
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Services", href: "/services" },
+    { label: "Business Formalisation & Compliance", href: "/services/business-formalisation-compliance" },
+    { label: "Tax Compliance (Cameroon)" },
+  ];
   return (
     <>
+      <JsonLd data={breadcrumbJsonLd(breadcrumbItems)} />
+      <JsonLd data={faqPageJsonLd(faqItems)} />
       <Header activeService="tax-compliance" />
       <Breadcrumb
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Services", href: "/services" },
-          { label: "Business Formalisation & Compliance", href: "/services/business-formalisation-compliance" },
-          { label: "Tax Compliance (Cameroon)" },
-        ]}
+        items={breadcrumbItems}
         tag="SUB-SERVICE 03/04 • CAMEROON DGI & IRPP TAX"
       />
 

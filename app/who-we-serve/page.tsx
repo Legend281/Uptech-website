@@ -6,6 +6,9 @@ import { ArrowRight, Building2, User } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbJsonLd } from "@/lib/structuredData";
+import { SITE_URL } from "@/lib/siteUrl";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { Button } from "@/components/Button";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
@@ -18,7 +21,10 @@ export const metadata: Metadata = {
   title: "Who We Serve",
   description:
     "Uptech Consulting works with individuals building their careers or personal ventures, and with businesses and institutions that need technology run and compliance kept — in Cameroon and the United States.",
+  alternates: { canonical: `${SITE_URL}/who-we-serve` },
 };
+
+const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Who We Serve" }];
 
 const audiences = [
   {
@@ -43,8 +49,9 @@ const audiences = [
 export default function WhoWeServePage() {
   return (
     <>
+      <JsonLd data={breadcrumbJsonLd(breadcrumbItems)} />
       <Header />
-      <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Who We Serve" }]} />
+      <Breadcrumb items={breadcrumbItems} />
 
       <main>
         {/* Hero */}

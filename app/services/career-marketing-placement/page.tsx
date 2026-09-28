@@ -4,6 +4,9 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbJsonLd, faqPageJsonLd } from "@/lib/structuredData";
+import { SITE_URL } from "@/lib/siteUrl";
 import { TrustStrip } from "@/components/TrustStrip";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { getFaqs } from "@/lib/faqs";
@@ -30,6 +33,7 @@ export const metadata: Metadata = {
   title: "Career Marketing & Placement Support",
   description:
     "A dedicated human specialist takes over your CV, your LinkedIn, your daily applications, and your recruiter follow-up — so you can focus on showing up to interview.",
+  alternates: { canonical: `${SITE_URL}/services/career-marketing-placement` },
 };
 
 const trustStripItems = [
@@ -162,16 +166,19 @@ export default async function CareerMarketingPlacementPage() {
   // Dashboard-published FAQs when there are any, else the built-in list (lib/faqs.ts).
   const faqItems = await getFaqs("career-marketing");
   const testimonials = await getPublishedTestimonials("career-marketing-placement");
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Services", href: "/services" },
+    { label: "Career Marketing & Placement Support" },
+  ];
 
   return (
     <>
+      <JsonLd data={breadcrumbJsonLd(breadcrumbItems)} />
+      <JsonLd data={faqPageJsonLd(faqItems)} />
       <Header activeService="career-marketing" ctaLabel="Start Campaign" ctaHref="#start-campaign" />
       <Breadcrumb
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Services", href: "/services" },
-          { label: "Career Marketing & Placement Support" },
-        ]}
+        items={breadcrumbItems}
         tag="INDIVIDUAL CAREER ADVANCEMENT"
       />
 

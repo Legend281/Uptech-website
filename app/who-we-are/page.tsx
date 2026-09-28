@@ -6,6 +6,9 @@ import { ArrowRight } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbJsonLd } from "@/lib/structuredData";
+import { SITE_URL } from "@/lib/siteUrl";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { HeroIntro } from "@/components/who-we-are/HeroIntro";
 import { PresidentMessage } from "@/components/home/PresidentMessage";
@@ -24,7 +27,10 @@ export const metadata: Metadata = {
   title: "Who We Are",
   description:
     "How Uptech Consulting actually operates: good people, good systems and good technology working together, and the four values that govern behaviour when nobody is watching.",
+  alternates: { canonical: `${SITE_URL}/who-we-are` },
 };
+
+const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Who We Are" }];
 
 /*
  * A continuous hairline runs down the left of every content section, with a
@@ -154,8 +160,9 @@ export default async function WhoWeArePage() {
 
   return (
     <>
+      <JsonLd data={breadcrumbJsonLd(breadcrumbItems)} />
       <Header />
-      <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Who We Are" }]} />
+      <Breadcrumb items={breadcrumbItems} />
 
       <main>
         {/* ---------------- Hero ---------------- */}

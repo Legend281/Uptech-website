@@ -3,6 +3,9 @@ import Image from "next/image";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbJsonLd, faqPageJsonLd, jobPostingJsonLd } from "@/lib/structuredData";
+import { SITE_URL } from "@/lib/siteUrl";
 import { TrustStrip } from "@/components/TrustStrip";
 import { Button } from "@/components/Button";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
@@ -23,6 +26,7 @@ export const metadata: Metadata = {
   title: "Careers at Uptech Consulting",
   description:
     "Join the team building Uptech Consulting's cross-border practice across Buea and Stafford, Texas.",
+  alternates: { canonical: `${SITE_URL}/careers` },
 };
 
 /*
@@ -43,13 +47,18 @@ type JobPostingRow = {
   description: string;
   requirements: string[];
   apply_url: string | null;
+  posted_at: string;
+  closing_date: string | null;
 };
 
-async function getPublishedJobPostings(): Promise<JobPosting[]> {
+// posted_at/closing_date are only needed for the JobPosting structured data
+// below, not the visible OpenPositions card — kept on the raw row rather
+// than added to that display type.
+async function getPublishedJobPostingRows(): Promise<JobPostingRow[]> {
   const supabase = getSupabaseServerClient();
   const { data, error } = await supabase
     .from("job_postings")
-    .select("title, department, location, employment_type, description, requirements, apply_url")
+    .select("title, department, location, employment_type, description, requirements, apply_url, posted_at, closing_date")
     .eq("status", "published")
     .order("posted_at", { ascending: false });
 
@@ -58,7 +67,11 @@ async function getPublishedJobPostings(): Promise<JobPosting[]> {
     return [];
   }
 
-  return (data as JobPostingRow[]).map((row) => ({
+  return data as JobPostingRow[];
+}
+
+function toDisplayJobPosting(row: JobPostingRow): JobPosting {
+  return {
     title: row.title,
     department: row.department ?? undefined,
     location: row.location,
@@ -66,7 +79,7 @@ async function getPublishedJobPostings(): Promise<JobPosting[]> {
     description: row.description,
     requirements: row.requirements.length > 0 ? row.requirements : undefined,
     applyUrl: row.apply_url ?? undefined,
-  }));
+  };
 }
 
 const trustStripItems = [
@@ -172,12 +185,29 @@ const faqItems = [
 ];
 
 export default async function CareersPage() {
-  const jobPostings = await getPublishedJobPostings();
+  const jobPostingRows = await getPublishedJobPostingRows();
+  const jobPostings = jobPostingRows.map(toDisplayJobPosting);
+  const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Careers" }];
 
   return (
     <>
+      <JsonLd data={breadcrumbJsonLd(breadcrumbItems)} />
+      <JsonLd data={faqPageJsonLd(faqItems)} />
+      {jobPostingRows.map((row, index) => (
+        <JsonLd
+          key={index}
+          data={jobPostingJsonLd({
+            title: row.title,
+            description: row.description,
+            location: row.location,
+            employmentType: row.employment_type,
+            datePosted: row.posted_at,
+            validThrough: row.closing_date ?? undefined,
+          })}
+        />
+      ))}
       <Header />
-      <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Careers" }]} />
+      <Breadcrumb items={breadcrumbItems} />
 
       <main>
         {/* Hero */}

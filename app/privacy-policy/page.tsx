@@ -2,11 +2,17 @@ import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbJsonLd } from "@/lib/structuredData";
+import { SITE_URL } from "@/lib/siteUrl";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "How Uptech Consulting handles your personal data.",
+  alternates: { canonical: `${SITE_URL}/privacy-policy` },
 };
+
+const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Privacy Policy" }];
 
 const PendingBadge = ({ children }: { children: React.ReactNode }) => (
   <span className="inline-block px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded uppercase tracking-wider border border-amber-300 align-middle">
@@ -17,8 +23,9 @@ const PendingBadge = ({ children }: { children: React.ReactNode }) => (
 export default function PrivacyPolicyPage() {
   return (
     <>
+      <JsonLd data={breadcrumbJsonLd(breadcrumbItems)} />
       <Header />
-      <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Privacy Policy" }]} />
+      <Breadcrumb items={breadcrumbItems} />
 
       <main>
         <section className="py-20 sm:py-24 bg-white">

@@ -4,6 +4,9 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbJsonLd, faqPageJsonLd } from "@/lib/structuredData";
+import { SITE_URL } from "@/lib/siteUrl";
 import { TrustStrip } from "@/components/TrustStrip";
 import { Button } from "@/components/Button";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
@@ -25,6 +28,7 @@ export const metadata: Metadata = {
   title: "CNPS Compliance — Cameroon",
   description:
     "Employer social insurance registration, employee declarations (DPAE), payroll withholding, and CNPS Clearance Certificates.",
+  alternates: { canonical: `${SITE_URL}/services/business-formalisation-compliance/cnps-compliance-cameroon` },
 };
 
 const trustStripItems = [
@@ -156,16 +160,19 @@ const personaAccentClasses: Record<"teal" | "amber" | "sky", { chip: string; ico
 export default async function CnpsComplianceCameroonPage() {
   // Dashboard-published FAQs when there are any, else the built-in list (lib/faqs.ts).
   const faqItems = await getFaqs("cnps-compliance");
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Services", href: "/services" },
+    { label: "Business Formalisation & Compliance", href: "/services/business-formalisation-compliance" },
+    { label: "CNPS Compliance (Cameroon)" },
+  ];
   return (
     <>
+      <JsonLd data={breadcrumbJsonLd(breadcrumbItems)} />
+      <JsonLd data={faqPageJsonLd(faqItems)} />
       <Header activeService="cnps-compliance" />
       <Breadcrumb
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Services", href: "/services" },
-          { label: "Business Formalisation & Compliance", href: "/services/business-formalisation-compliance" },
-          { label: "CNPS Compliance (Cameroon)" },
-        ]}
+        items={breadcrumbItems}
         // FLAG FOR TEAM: this page has no actual labour-law content
         // (contracts, termination, working conditions, etc.) — only
         // CNPS/social-insurance content. Either rename this tag's "LABOUR"

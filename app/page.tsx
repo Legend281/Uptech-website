@@ -14,6 +14,9 @@ import {
 
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { JsonLd } from "@/components/JsonLd";
+import { organizationJsonLd, faqPageJsonLd } from "@/lib/structuredData";
+import { SITE_URL } from "@/lib/siteUrl";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
 import { HeroIntro } from "@/components/home/HeroIntro";
 import { ScrollCue } from "@/components/home/ScrollCue";
@@ -39,6 +42,7 @@ export const metadata: Metadata = {
   },
   description:
     "Technology-driven consulting, outsourcing and business support for individuals and organisations operating across Cameroon and the United States.",
+  alternates: { canonical: SITE_URL },
 };
 
 const WHATSAPP = "https://wa.me/237678597593";
@@ -208,6 +212,8 @@ export default async function HomePage() {
 
   return (
     <>
+      <JsonLd data={organizationJsonLd()} />
+      <JsonLd data={faqPageJsonLd(faqItems)} />
       <Header />
 
       <main>

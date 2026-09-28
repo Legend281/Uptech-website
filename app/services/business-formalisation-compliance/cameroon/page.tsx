@@ -4,6 +4,9 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbJsonLd, faqPageJsonLd } from "@/lib/structuredData";
+import { SITE_URL } from "@/lib/siteUrl";
 import { TrustStrip } from "@/components/TrustStrip";
 import { Button } from "@/components/Button";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
@@ -25,6 +28,7 @@ export const metadata: Metadata = {
   title: "Business Formalisation — Cameroon",
   description:
     "Clear, compliant corporate formation under OHADA standards — from trade name reservation to RCCM registration and Tax Identification (NIU).",
+  alternates: { canonical: `${SITE_URL}/services/business-formalisation-compliance/cameroon` },
 };
 
 const trustStripItems = [
@@ -170,16 +174,19 @@ const personas = [
 export default async function BusinessFormalisationCameroonPage() {
   // Dashboard-published FAQs when there are any, else the built-in list (lib/faqs.ts).
   const faqItems = await getFaqs("business-formalisation-cameroon");
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Services", href: "/services" },
+    { label: "Business Formalisation & Compliance", href: "/services/business-formalisation-compliance" },
+    { label: "Cameroon" },
+  ];
   return (
     <>
+      <JsonLd data={breadcrumbJsonLd(breadcrumbItems)} />
+      <JsonLd data={faqPageJsonLd(faqItems)} />
       <Header activeService="business-formalisation-cameroon" />
       <Breadcrumb
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Services", href: "/services" },
-          { label: "Business Formalisation & Compliance", href: "/services/business-formalisation-compliance" },
-          { label: "Cameroon" },
-        ]}
+        items={breadcrumbItems}
         tag="SUB-SERVICE 01/04 • RCCM & OHADA UNIFORM ACT"
       />
 

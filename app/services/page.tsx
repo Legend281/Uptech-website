@@ -4,6 +4,9 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbJsonLd } from "@/lib/structuredData";
+import { SITE_URL } from "@/lib/siteUrl";
 import { TrustStrip } from "@/components/TrustStrip";
 import { Button } from "@/components/Button";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
@@ -19,7 +22,10 @@ import { getPublishedAdditionalServices } from "@/lib/additionalServices";
 export const metadata: Metadata = {
   title: "Services",
   description: "Everything Uptech Consulting offers — for careers and for business.",
+  alternates: { canonical: `${SITE_URL}/services` },
 };
+
+const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Services" }];
 
 const trustStripItems = [
   {
@@ -118,9 +124,10 @@ export default async function ServicesHubPage() {
 
   return (
     <>
+      <JsonLd data={breadcrumbJsonLd(breadcrumbItems)} />
       <Header />
       <Breadcrumb
-        items={[{ label: "Home", href: "/" }, { label: "Services" }]}
+        items={breadcrumbItems}
         tag="COMPLETE SERVICE DIRECTORY"
       />
 

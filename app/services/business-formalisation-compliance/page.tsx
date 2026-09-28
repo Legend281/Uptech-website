@@ -4,6 +4,9 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbJsonLd } from "@/lib/structuredData";
+import { SITE_URL } from "@/lib/siteUrl";
 import { TrustStrip } from "@/components/TrustStrip";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Button } from "@/components/Button";
@@ -20,7 +23,14 @@ export const metadata: Metadata = {
   title: "Business Formalisation & Compliance",
   description:
     "Cross-border entity formation and statutory compliance across Cameroon (OHADA) and US jurisdictions — guided to the exact pathway for your situation.",
+  alternates: { canonical: `${SITE_URL}/services/business-formalisation-compliance` },
 };
+
+const breadcrumbItems = [
+  { label: "Home", href: "/" },
+  { label: "Services", href: "/services" },
+  { label: "Business Formalisation & Compliance" },
+];
 
 const trustStripItems = [
   {
@@ -155,13 +165,10 @@ export default function BusinessFormalisationCompliancePage() {
       {/* No activeService: this page is no longer one of the 5 individual
           nav destinations (see components/Header.tsx) — it's an optional
           guided finder pointed to from the dropdown, not a primary one. */}
+      <JsonLd data={breadcrumbJsonLd(breadcrumbItems)} />
       <Header />
       <Breadcrumb
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Services", href: "/services" },
-          { label: "Business Formalisation & Compliance" },
-        ]}
+        items={breadcrumbItems}
         tag="BILATERAL LEGAL & REGULATORY COMPLIANCE"
       />
 

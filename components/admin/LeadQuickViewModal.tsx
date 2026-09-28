@@ -335,7 +335,7 @@ export function LeadQuickViewModal({ leadId, onClose }: { leadId: string | null;
   return (
     <div className="fixed inset-0 z-40 flex items-end justify-center sm:items-center sm:p-6" role="dialog" aria-modal="true" aria-label={`${lead.name} — quick view`}>
       <div className="absolute inset-0 bg-navy-950/50" onClick={onClose} aria-hidden="true" />
-      <div className="relative flex max-h-[88dvh] w-full flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white shadow-2xl sm:max-w-2xl sm:rounded-2xl">
+      <div data-lenis-prevent className="relative flex max-h-[88dvh] w-full flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white shadow-2xl sm:max-w-2xl sm:rounded-2xl">
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3.5">
           <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Quick View</span>
           <div className="flex items-center gap-1">

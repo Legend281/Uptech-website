@@ -186,7 +186,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-[12dvh]" role="dialog" aria-modal="true" aria-label="Search">
       <div className="absolute inset-0 bg-navy-950/50" onClick={onClose} aria-hidden="true" />
-      <div className="relative flex w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+      <div data-lenis-prevent className="relative flex w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
         <div className="flex items-center gap-2.5 border-b border-slate-100 px-4 py-3">
           <MaterialIcon name="search" className="shrink-0 text-[18px] text-slate-400" />
           <input

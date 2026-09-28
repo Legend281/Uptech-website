@@ -41,7 +41,7 @@ export function WithdrawConsentDialog({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="alertdialog" aria-modal="true" aria-labelledby="withdraw-consent-title">
       <div className="absolute inset-0 bg-navy-950/50" onClick={onCancel} aria-hidden="true" />
-      <div className="relative max-h-[90dvh] w-full max-w-md overflow-y-auto overscroll-contain rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
+      <div data-lenis-prevent className="relative max-h-[90dvh] w-full max-w-md overflow-y-auto overscroll-contain rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-rose-50 text-rose-600">
           <MaterialIcon name="block" className="text-[20px]" />
         </div>

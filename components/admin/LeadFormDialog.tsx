@@ -110,7 +110,7 @@ export function LeadFormDialog(props: Props) {
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-6" role="dialog" aria-modal="true" aria-labelledby={`${formId}-title`}>
       <div className="absolute inset-0 bg-navy-950/50" onClick={onClose} aria-hidden="true" />
-      <div className="relative flex max-h-[92dvh] w-full flex-col rounded-t-2xl border border-slate-200 bg-white shadow-2xl sm:max-w-xl sm:rounded-2xl">
+      <div data-lenis-prevent className="relative flex max-h-[92dvh] w-full flex-col rounded-t-2xl border border-slate-200 bg-white shadow-2xl sm:max-w-xl sm:rounded-2xl">
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
           <h2 id={`${formId}-title`} className="font-sans text-base font-bold text-navy-950">
             {isEdit ? "Edit Lead" : "Log a New Lead"}

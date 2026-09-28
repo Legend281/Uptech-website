@@ -88,7 +88,7 @@ function extractKeywords(text: string): Set<string> {
  */
 export function matchScore(lead: Lead, posting: JobPosting): number {
   const leadWords = extractKeywords(lead.message);
-  const postingWords = extractKeywords(`${posting.title} ${posting.department} ${posting.description}`);
+  const postingWords = extractKeywords(`${posting.title} ${posting.department ?? ""} ${posting.description}`);
   let score = 0;
   for (const word of leadWords) {
     if (postingWords.has(word)) score += 1;

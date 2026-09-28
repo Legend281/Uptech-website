@@ -17,10 +17,9 @@ const roleDescriptions: Record<AccessRole, string> = {
   viewer: "Read-only, within their own department.",
 };
 
-const LANGUAGES = ["English", "French"] as const;
 const LOCATIONS = ["Buea, Cameroon", "Stafford, TX"];
 
-type Draft = { role: AccessRole; department: Department; languages: ("English" | "French")[]; location: string; active: boolean };
+type Draft = { role: AccessRole; department: Department; location: string; active: boolean };
 
 function RoleFields({
   draft,
@@ -86,28 +85,6 @@ function RoleFields({
           </select>
         </Field>
       </div>
-      <fieldset>
-        <legend className={`${labelClasses} mb-1.5`}>Works in</legend>
-        <div className="flex gap-4">
-          {LANGUAGES.map((lang) => (
-            <label key={lang} className="flex items-center gap-2 text-sm text-slate-700">
-              <input
-                type="checkbox"
-                checked={draft.languages.includes(lang)}
-                onChange={(e) =>
-                  setDraft((prev) => ({
-                    ...prev,
-                    languages: e.target.checked ? [...prev.languages, lang] : prev.languages.filter((l) => l !== lang),
-                  }))
-                }
-                className="h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500/40"
-              />
-              {lang}
-            </label>
-          ))}
-        </div>
-        <p className={`${hintClasses} mt-1`}>Used to flag a French-speaking lead claimed by someone who doesn&apos;t work in French.</p>
-      </fieldset>
     </>
   );
 }
@@ -121,7 +98,6 @@ function EditUserDialog({ user, onClose }: { user: AdminUser; onClose: () => voi
   const [draft, setDraft] = useState<Draft>({
     role: user.role,
     department: user.department,
-    languages: user.languages,
     location: user.location,
     active: isActive(user),
   });
@@ -132,13 +108,11 @@ function EditUserDialog({ user, onClose }: { user: AdminUser; onClose: () => voi
     draft.department !== user.department && `Department: ${departmentLabels[user.department]} → ${departmentLabels[draft.department]}`,
     draft.active !== isActive(user) && (draft.active ? "Reactivate the account" : "Deactivate the account"),
     draft.location !== user.location && `Office: ${user.location} → ${draft.location}`,
-    draft.languages.join() !== user.languages.join() && `Languages: ${draft.languages.join(" & ") || "none"}`,
   ].filter(Boolean) as string[];
 
   const [saving, setSaving] = useState(false);
 
   async function save() {
-    if (draft.languages.length === 0) return toast.error("Not saved", { description: "Pick at least one language." });
     setSaving(true);
     const result = await updateUser(user.id, draft, currentUser);
     setSaving(false);
@@ -244,9 +218,7 @@ export function UsersSettings() {
                         {user.id === currentUser.id && <span className="rounded bg-teal-50 px-1.5 py-px text-[10px] font-bold uppercase text-teal-700">You</span>}
                         {!isActive(user) && <span className="rounded bg-slate-200 px-1.5 py-px text-[10px] font-bold uppercase text-slate-600">Deactivated</span>}
                       </span>
-                      <span className="block truncate text-xs text-slate-500">
-                        {user.location} · {user.languages.join(" & ")}
-                      </span>
+                      <span className="block truncate text-xs text-slate-500">{user.location}</span>
                     </span>
                   </div>
                 </td>

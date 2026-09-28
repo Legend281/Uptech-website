@@ -11,8 +11,10 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Reveal } from "@/components/Reveal";
 import { TextReveal } from "@/components/TextReveal";
 import { TiltCard } from "@/components/TiltCard";
+import { ServiceCard } from "@/components/ServiceCard";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { images, type ImageKey } from "@/lib/images";
+import { getPublishedAdditionalServices } from "@/lib/additionalServices";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -108,7 +110,12 @@ const services: Array<{
   },
 ];
 
-export default function ServicesHubPage() {
+export default async function ServicesHubPage() {
+  // Anything Uptech has added beyond the 5 core services above — see
+  // lib/additionalServices.ts. Empty today is the normal, expected case.
+  const additionalServices = await getPublishedAdditionalServices();
+  const totalServiceCount = services.length + additionalServices.length;
+
   return (
     <>
       <Header />
@@ -142,7 +149,7 @@ export default function ServicesHubPage() {
                 <span className="w-7 h-[2px] bg-teal-400 inline-block" />
               </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] mb-6">
-                Five services, <span className="gradient-teal-blue-text">one accountable standard.</span>
+                {totalServiceCount} services, <span className="gradient-teal-blue-text">one accountable standard.</span>
               </h1>
               <p className="mx-auto text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
                 No bundling, no guesswork. Explore exactly the service you need — business
@@ -168,7 +175,7 @@ export default function ServicesHubPage() {
                 </span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight leading-tight">
-                <TextReveal text="Five services. Pick exactly what you need." />
+                <TextReveal text={`${totalServiceCount} services. Pick exactly what you need.`} />
               </h2>
             </Reveal>
 
@@ -206,6 +213,15 @@ export default function ServicesHubPage() {
                       <MaterialIcon name="arrow_forward" className="text-[16px]" />
                     </span>
                   </div>
+                </Link>
+              ))}
+
+              {/* Anything Uptech has added beyond the 5 core services — same
+                  shared ServiceCard the admin dialog previews live from, so
+                  the two can never drift. */}
+              {additionalServices.map((service) => (
+                <Link key={service.id} href={service.href ?? "/contact"} className="group block">
+                  <ServiceCard title={service.title} description={service.description} href={service.href} flag={service.flag} photoUrl={service.photoUrl} />
                 </Link>
               ))}
             </Reveal>

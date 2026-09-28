@@ -12,6 +12,8 @@ type ResizeOptions = { width: number; height: number; quality?: number };
 export const AVATAR_SIZE: ResizeOptions = { width: 320, height: 320 };
 /** Team portraits: 4:5, matching TeamMemberCard's frame, sized for a 4-column desktop grid. */
 export const PORTRAIT_SIZE: ResizeOptions = { width: 480, height: 600 };
+/** Additional-service cards: 4:3, matching the existing 5 services' hub-page card image. */
+export const SERVICE_CARD_SIZE: ResizeOptions = { width: 800, height: 600 };
 
 export async function resizeImageToDataUrl(file: File, { width, height, quality = 0.82 }: ResizeOptions = AVATAR_SIZE): Promise<string> {
   if (!file.type.startsWith("image/")) throw new Error("That file isn't an image.");

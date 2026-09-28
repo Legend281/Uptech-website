@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { TrustStrip } from "@/components/TrustStrip";
 import { Button } from "@/components/Button";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { OpenPositions, type JobPosting } from "@/components/OpenPositions";
 import { HeroImageCarousel } from "@/components/HeroImageCarousel";
@@ -36,7 +37,7 @@ export const revalidate = 60;
 
 type JobPostingRow = {
   title: string;
-  department: string;
+  department: string | null;
   location: string;
   employment_type: string;
   description: string;
@@ -59,7 +60,7 @@ async function getPublishedJobPostings(): Promise<JobPosting[]> {
 
   return (data as JobPostingRow[]).map((row) => ({
     title: row.title,
-    department: row.department,
+    department: row.department ?? undefined,
     location: row.location,
     type: row.employment_type,
     description: row.description,
@@ -381,6 +382,7 @@ export default async function CareersPage() {
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Button href="#open-positions">View Open Positions</Button>
+              <WhatsAppButton phone="237678597593" label="Chat with HR" />
             </div>
           </Reveal>
         </section>

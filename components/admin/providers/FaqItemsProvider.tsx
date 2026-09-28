@@ -1,38 +1,78 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
-import { siteFaqs, type FaqCategory } from "@/lib/faqContent";
+import { revalidatePublicPages } from "@/lib/admin/revalidate";
+import { type FaqCategory } from "@/lib/faqContent";
 import {
-  EXISTING_SITE_AUTHOR,
   canManageFaqCategory,
   canReviewFaq,
-  faqCategories,
   getFaqCategory,
   getFaqPublishBlockers,
   getFaqSaveErrors,
   needsLegalReview,
   type FaqInput,
 } from "@/lib/admin/faqs";
+import { describeDbError, getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { ActionResult, AdminUser, FaqItemRecord } from "@/lib/admin/types";
 
-const STORAGE_KEY = "uco-admin-faqs-v1";
-
 /*
- * Browser-only for now (supabase/004_faq_items.sql holds the real table,
- * but this module doesn't write to it yet). Seeded from lib/faqContent.ts —
- * the FAQs the site already shows. That's real, approved copy, not invented
- * demo data, and starting empty would hide from staff what is actually live.
+ * FAQ Items, stored in Supabase (supabase/004_faq_items.sql +
+ * 018_faq_items_staff_policies.sql) — real writes now, reaching the same
+ * published_faq_items view lib/faqs.ts already reads for every public FAQ
+ * section (category "replace, never merge" against the built-in copy —
+ * see that file's own comment).
+ *
+ * The review gate (spec 3.2 — a review-gated category can't stay published
+ * without a current review, and nobody approves their own wording) is
+ * enforced a SECOND time by a real database trigger
+ * (enforce_faq_review_gate, 004_faq_items.sql), which is stricter in one
+ * way the old browser-only mock wasn't: it raises a hard error rather than
+ * silently downgrading status if an update would leave a review-gated FAQ
+ * published without a review. So this provider pre-computes the same
+ * mustUnpublish the mock used to and sends status: "draft" itself when
+ * needed — the trigger then just confirms rather than ever having to object.
  */
+
+type Row = {
+  id: string;
+  question: string;
+  answer: string;
+  category: FaqCategory;
+  display_order: number;
+  status: FaqItemRecord["status"];
+  reviewed_by: string | null;
+  reviewed_at: string | null;
+  awaiting_first_review: boolean;
+  last_edited_by: string;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+};
+
+function rowToFaq(row: Row): FaqItemRecord {
+  return {
+    id: row.id,
+    question: row.question,
+    answer: row.answer,
+    category: row.category,
+    displayOrder: row.display_order,
+    status: row.status,
+    reviewedById: row.reviewed_by ?? undefined,
+    reviewedAt: row.reviewed_at ?? undefined,
+    awaitingFirstReview: row.awaiting_first_review || undefined,
+    lastEditedById: row.last_edited_by,
+    createdById: row.created_by,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
 
 type UpdateResult = ActionResult & { unpublished?: boolean };
 
 type FaqContextValue = {
   items: FaqItemRecord[];
   loading: boolean;
-  /** Always true here: the browser store seeds itself from the site's FAQs. */
-  imported: boolean;
-  importSiteFaqs: (user: AdminUser) => Promise<ActionResult>;
   addFaq: (input: FaqInput, user: AdminUser, publish: boolean) => Promise<ActionResult>;
   updateFaq: (id: string, input: FaqInput, user: AdminUser) => Promise<UpdateResult>;
   publishFaq: (id: string, user: AdminUser) => Promise<ActionResult>;
@@ -45,50 +85,10 @@ type FaqContextValue = {
 
 const FaqContext = createContext<FaqContextValue | null>(null);
 
-function seed(): FaqItemRecord[] {
-  const now = new Date().toISOString();
-  return faqCategories.flatMap((category) =>
-    siteFaqs[category.value].map((faq, index) => ({
-      id: `faq-site-${category.value}-${index + 1}`,
-      question: faq.question,
-      answer: faq.answer,
-      category: category.value,
-      displayOrder: index + 1,
-      status: "published" as const,
-      awaitingFirstReview: category.legalReview || undefined,
-      lastEditedById: EXISTING_SITE_AUTHOR,
-      createdById: EXISTING_SITE_AUTHOR,
-      createdAt: now,
-      updatedAt: now,
-    })),
-  );
-}
-
-function load(): FaqItemRecord[] {
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return seed();
-    const parsed = JSON.parse(raw) as unknown;
-    return Array.isArray(parsed) ? (parsed as FaqItemRecord[]) : seed();
-  } catch {
-    return seed();
-  }
-}
-
-function save(items: FaqItemRecord[]) {
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  } catch {
-    // Best-effort only.
-  }
-}
-
 const denied = (category: FaqCategory): ActionResult => ({
   ok: false,
   reasons: [`You can't change ${getFaqCategory(category).label} FAQs. That's the owning department's or an Administrator's call.`],
 });
-
-const OK: ActionResult = { ok: true };
 
 function short(question: string): string {
   return question.length > 70 ? `${question.slice(0, 67)}…` : question;
@@ -99,15 +99,32 @@ export function FaqItemsProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const logActivity = useLogActivity();
 
-  useEffect(() => {
-    setItems(load());
+  async function revalidate(category: FaqCategory) {
+    const { data } = await getSupabaseBrowserClient().auth.getSession();
+    if (data.session) await revalidatePublicPages([getFaqCategory(category).url], data.session.access_token);
+  }
+
+  const refresh = useCallback(async () => {
+    const { data, error } = await getSupabaseBrowserClient().from("faq_items").select("*").order("category").order("display_order", { ascending: true });
+    if (!error && data) setItems((data as Row[]).map(rowToFaq));
     setLoading(false);
   }, []);
 
-  function commit(next: FaqItemRecord[]) {
-    setItems(next);
-    save(next);
-  }
+  useEffect(() => {
+    const supabase = getSupabaseBrowserClient();
+    function apply(hasSession: boolean) {
+      if (hasSession) void refresh();
+      else {
+        setItems([]);
+        setLoading(false);
+      }
+    }
+    supabase.auth.getSession().then(({ data }) => apply(Boolean(data.session)));
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event !== "TOKEN_REFRESHED") apply(Boolean(session));
+    });
+    return () => sub.subscription.unsubscribe();
+  }, [refresh]);
 
   function log(icon: string, description: string) {
     logActivity({ icon, description, relatedHref: "/admin/faqs" });
@@ -117,29 +134,31 @@ export function FaqItemsProvider({ children }: { children: ReactNode }) {
     return list.filter((i) => i.category === category).reduce((max, i) => Math.max(max, i.displayOrder), 0) + 1;
   }
 
-  async function importSiteFaqs(): Promise<ActionResult> {
-    return OK;
-  }
-
   async function addFaq(input: FaqInput, user: AdminUser, publish: boolean): Promise<ActionResult> {
     if (!canManageFaqCategory(user, input.category)) return denied(input.category);
     const clean = { question: input.question.trim(), answer: input.answer.trim(), category: input.category };
     const errors = publish ? getFaqPublishBlockers(clean) : getFaqSaveErrors(clean);
     if (errors.length) return { ok: false, reasons: errors };
-    const now = new Date().toISOString();
-    const item: FaqItemRecord = {
-      ...clean,
-      id: `faq-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`,
-      displayOrder: nextOrder(clean.category),
-      status: publish ? "published" : "draft",
-      lastEditedById: user.id,
-      createdById: user.id,
-      createdAt: now,
-      updatedAt: now,
-    };
-    commit([...items, item]);
+
+    const { data, error } = await getSupabaseBrowserClient()
+      .from("faq_items")
+      .insert({
+        question: clean.question,
+        answer: clean.answer,
+        category: clean.category,
+        display_order: nextOrder(clean.category),
+        status: publish ? "published" : "draft",
+        last_edited_by: user.id,
+        created_by: user.id,
+      })
+      .select()
+      .single();
+    if (error || !data) return { ok: false, reasons: [describeDbError(error)] };
+
+    await refresh();
+    if (publish) void revalidate(clean.category);
     log(publish ? "publish" : "edit_note", `${user.name} ${publish ? "published" : "drafted"} a ${getFaqCategory(clean.category).label} FAQ: “${short(clean.question)}”`);
-    return OK;
+    return { ok: true };
   }
 
   async function updateFaq(id: string, input: FaqInput, user: AdminUser): Promise<UpdateResult> {
@@ -153,32 +172,31 @@ export function FaqItemsProvider({ children }: { children: ReactNode }) {
 
     const wordingChanged = clean.question !== existing.question || clean.answer !== existing.answer;
     const categoryChanged = clean.category !== existing.category;
-    // Spec 3.2: any change to the words clears the review.
-    const review = wordingChanged ? { reviewedById: undefined, reviewedAt: undefined } : {};
     const stillReviewed = !wordingChanged && Boolean(existing.reviewedById);
-    // A legal-review answer can't stay live unreviewed once anyone changes
-    // it. Grandfathered (pre-gate) answers keep their place only while
-    // nobody edits them.
-    const mustUnpublish =
-      existing.status === "published" && needsLegalReview(clean.category) && (wordingChanged || categoryChanged) && !stillReviewed;
+    // Pre-empt the database trigger's own hard block: it raises an error
+    // rather than downgrading status itself, so this sends the row already
+    // in the state the trigger would insist on.
+    const mustUnpublish = existing.status === "published" && needsLegalReview(clean.category) && (wordingChanged || categoryChanged) && !stillReviewed;
 
-    const now = new Date().toISOString();
-    commit(
-      items.map((i) =>
-        i.id === id
-          ? {
-              ...i,
-              ...clean,
-              ...review,
-              awaitingFirstReview: wordingChanged || categoryChanged ? undefined : i.awaitingFirstReview,
-              lastEditedById: wordingChanged ? user.id : i.lastEditedById,
-              displayOrder: categoryChanged ? nextOrder(clean.category) : i.displayOrder,
-              status: mustUnpublish ? "draft" : i.status,
-              updatedAt: now,
-            }
-          : i,
-      ),
-    );
+    const { error } = await getSupabaseBrowserClient()
+      .from("faq_items")
+      .update({
+        question: clean.question,
+        answer: clean.answer,
+        category: clean.category,
+        display_order: categoryChanged ? nextOrder(clean.category) : existing.displayOrder,
+        status: mustUnpublish ? "draft" : existing.status,
+        last_edited_by: wordingChanged ? user.id : existing.lastEditedById,
+      })
+      .eq("id", id);
+    if (error) return { ok: false, reasons: [describeDbError(error)] };
+
+    await refresh();
+    if (existing.status === "published" || mustUnpublish) {
+      void revalidate(existing.category);
+      if (categoryChanged) void revalidate(clean.category);
+    }
+
     if (categoryChanged) {
       log("edit_note", `${user.name} moved “${short(clean.question)}” from ${getFaqCategory(existing.category).pageLabel} to ${getFaqCategory(clean.category).pageLabel}.`);
     } else {
@@ -194,18 +212,28 @@ export function FaqItemsProvider({ children }: { children: ReactNode }) {
     if (!canManageFaqCategory(user, existing.category)) return denied(existing.category);
     const blockers = getFaqPublishBlockers(existing);
     if (blockers.length) return { ok: false, reasons: blockers };
-    commit(items.map((i) => (i.id === id ? { ...i, status: "published", updatedAt: new Date().toISOString() } : i)));
+
+    const { error } = await getSupabaseBrowserClient().from("faq_items").update({ status: "published" }).eq("id", id);
+    if (error) return { ok: false, reasons: [describeDbError(error)] };
+
+    await refresh();
+    void revalidate(existing.category);
     log("publish", `${user.name} published the FAQ “${short(existing.question)}”.`);
-    return OK;
+    return { ok: true };
   }
 
   async function unpublishFaq(id: string, user: AdminUser): Promise<ActionResult> {
     const existing = items.find((i) => i.id === id);
     if (!existing) return { ok: false, reasons: ["This FAQ no longer exists."] };
     if (!canManageFaqCategory(user, existing.category)) return denied(existing.category);
-    commit(items.map((i) => (i.id === id ? { ...i, status: "draft", updatedAt: new Date().toISOString() } : i)));
+
+    const { error } = await getSupabaseBrowserClient().from("faq_items").update({ status: "draft" }).eq("id", id);
+    if (error) return { ok: false, reasons: [describeDbError(error)] };
+
+    await refresh();
+    void revalidate(existing.category);
     log("unpublished", `${user.name} unpublished the FAQ “${short(existing.question)}”.`);
-    return OK;
+    return { ok: true };
   }
 
   async function reviewFaq(id: string, user: AdminUser): Promise<ActionResult> {
@@ -217,33 +245,46 @@ export function FaqItemsProvider({ children }: { children: ReactNode }) {
         reasons: [user.id === existing.lastEditedById ? "You wrote the current wording, so someone else has to review it." : "You can't review this category's FAQs."],
       };
     }
-    const now = new Date().toISOString();
-    commit(items.map((i) => (i.id === id ? { ...i, reviewedById: user.id, reviewedAt: now, awaitingFirstReview: undefined, updatedAt: now } : i)));
+
+    const { error } = await getSupabaseBrowserClient()
+      .from("faq_items")
+      .update({ reviewed_by: user.id, reviewed_at: new Date().toISOString() })
+      .eq("id", id);
+    if (error) return { ok: false, reasons: [describeDbError(error)] };
+
+    await refresh();
     log("fact_check", `${user.name} reviewed the ${getFaqCategory(existing.category).label} FAQ “${short(existing.question)}”.`);
-    return OK;
+    return { ok: true };
   }
 
   async function reorder(category: FaqCategory, orderedIds: string[], user: AdminUser): Promise<ActionResult> {
     if (!canManageFaqCategory(user, category)) return denied(category);
-    const position = new Map(orderedIds.map((id, index) => [id, index + 1]));
-    commit(items.map((i) => (i.category === category && position.has(i.id) ? { ...i, displayOrder: position.get(i.id)! } : i)));
-    return OK;
+    const supabase = getSupabaseBrowserClient();
+    const results = await Promise.all(
+      orderedIds.map((id, index) => supabase.from("faq_items").update({ display_order: index + 1 }).eq("id", id)),
+    );
+    const failed = results.find((r) => r.error);
+    if (failed?.error) return { ok: false, reasons: [describeDbError(failed.error)] };
+    await refresh();
+    return { ok: true };
   }
 
   async function deleteFaq(id: string, user: AdminUser): Promise<ActionResult> {
     const existing = items.find((i) => i.id === id);
-    if (!existing) return OK;
+    if (!existing) return { ok: true };
     if (!canManageFaqCategory(user, existing.category)) return denied(existing.category);
     if (existing.status === "published") return { ok: false, reasons: ["Unpublish it first."] };
-    commit(items.filter((i) => i.id !== id));
+
+    const { error } = await getSupabaseBrowserClient().from("faq_items").delete().eq("id", id);
+    if (error) return { ok: false, reasons: [describeDbError(error)] };
+
+    await refresh();
     log("delete", `${user.name} deleted the draft FAQ “${short(existing.question)}”.`);
-    return OK;
+    return { ok: true };
   }
 
   return (
-    <FaqContext.Provider
-      value={{ items, loading, imported: true, importSiteFaqs, addFaq, updateFaq, publishFaq, unpublishFaq, reviewFaq, reorder, deleteFaq }}
-    >
+    <FaqContext.Provider value={{ items, loading, addFaq, updateFaq, publishFaq, unpublishFaq, reviewFaq, reorder, deleteFaq }}>
       {children}
     </FaqContext.Provider>
   );

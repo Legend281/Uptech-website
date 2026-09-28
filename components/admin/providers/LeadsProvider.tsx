@@ -44,7 +44,6 @@ type LeadRow = {
   department: string | null;
   status: string;
   source: string;
-  language: string;
   message: string;
   assigned_to_id: string | null;
   consent_at: string | null;
@@ -67,7 +66,6 @@ function fromRow(row: LeadRow): Lead {
     department: (row.department as Department | null) ?? undefined,
     status: row.status as LeadStatus,
     source: row.source as LeadSource,
-    language: row.language as "English" | "French",
     message: row.message,
     createdAt: row.created_at,
     assignedToId: row.assigned_to_id ?? undefined,
@@ -85,7 +83,6 @@ export type NewLeadInput = {
   phone: string;
   company?: string;
   service: LeadServiceValue;
-  language: "English" | "French";
   message: string;
   source: Extract<LeadSource, "manual-phone" | "manual-email" | "manual-other">;
 };
@@ -96,7 +93,6 @@ export type EditableLeadFields = {
   phone: string;
   company?: string;
   service: LeadServiceValue;
-  language: "English" | "French";
   message: string;
 };
 
@@ -168,7 +164,6 @@ export function LeadsProvider({ children }: { children: ReactNode }) {
     if ("department" in patch) row.department = patch.department ?? null;
     if ("status" in patch) row.status = patch.status;
     if ("message" in patch) row.message = patch.message;
-    if ("language" in patch) row.language = patch.language;
     if ("assignedToId" in patch) row.assigned_to_id = patch.assignedToId ?? null;
     if ("firstContactedAt" in patch) row.first_contacted_at = patch.firstContactedAt ?? null;
     if ("statusChangedAt" in patch) row.status_changed_at = patch.statusChangedAt;
@@ -211,7 +206,6 @@ export function LeadsProvider({ children }: { children: ReactNode }) {
         department,
         status: "new",
         source: input.source,
-        language: input.language,
         message: input.message.trim(),
         assigned_to_id: autoAssignee ?? null,
       })
@@ -238,7 +232,6 @@ export function LeadsProvider({ children }: { children: ReactNode }) {
       company: input.company?.trim() || undefined,
       service: input.service,
       type: deriveLeadType(input.service),
-      language: input.language,
       message: input.message.trim(),
     });
   }

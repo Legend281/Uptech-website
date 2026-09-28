@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { CARD_SURFACE, buttonClasses, hintClasses, inputClasses, labelClasses } from "@/components/admin/FormParts";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
@@ -18,11 +18,24 @@ const departments: Department[] = ["career-services-operations", "business-forma
 function DepartmentCard({ department }: { department: Department }) {
   const currentUser = useCurrentUser();
   const users = useAdminUsers();
-  const { settings, saveAssignment } = useSettings();
+  const { settings, saveAssignment, loaded } = useSettings();
   const leads = useLeads();
   const saved = settings.assignment[department];
   const [draft, setDraft] = useState<DepartmentAssignment>(saved);
   const editable = canEditSystemSettings(currentUser);
+
+  // The real, shared config arrives asynchronously now (Supabase, not
+  // localStorage) — this component can mount and initialize `draft` from
+  // the placeholder defaults before that real fetch resolves. Re-sync once,
+  // the moment real data actually lands, so a save that happens to fire in
+  // that window can't overwrite the real pool with an empty default. Keyed
+  // on `loaded` alone (not `saved`) so it never re-fires — and clobbers an
+  // in-progress edit here — just because a save somewhere else replaced the
+  // shared settings object.
+  useEffect(() => {
+    if (loaded) setDraft(saved);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loaded]);
 
   const eligible = users.filter((u) => isPoolEligible(u, department));
   // People saved in the pool who no longer qualify (moved, deactivated, made a Viewer): shown so nobody wonders why they get no leads.
@@ -120,9 +133,7 @@ function DepartmentCard({ department }: { department: Department }) {
                   />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-semibold text-slate-800">{user.name}</span>
-                    <span className="block text-[11px] text-slate-500">
-                      {roleLabels[user.role]} · {user.languages.join(" & ")}
-                    </span>
+                    <span className="block text-[11px] text-slate-500">{roleLabels[user.role]}</span>
                   </span>
                   {draft.enabled && upNext === user.id && (
                     <span className="rounded-full border border-teal-200 bg-teal-50 px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide text-teal-700">Next up</span>

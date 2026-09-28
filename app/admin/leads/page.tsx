@@ -8,6 +8,7 @@ import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { useLeads, useLeadActions } from "@/components/admin/providers/LeadsProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
+import { canManageContent } from "@/lib/admin/permissions";
 import { LeadFormDialog } from "@/components/admin/LeadFormDialog";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { LeadRowActions } from "@/components/admin/LeadRowActions";
@@ -63,11 +64,6 @@ function LeadIdentity({ lead, isDuplicate }: { lead: Lead; isDuplicate?: boolean
         <div className="flex items-center gap-1.5">
           <MaterialIcon name={typeIcon[lead.type]} className="shrink-0 text-[13px] text-slate-400" />
           <p className="truncate font-sans text-sm font-semibold text-navy-950">{lead.name}</p>
-          {lead.language === "French" && (
-            <span className="shrink-0 rounded border border-slate-200 px-1 py-px text-[9px] font-bold uppercase tracking-wide text-slate-500">
-              FR
-            </span>
-          )}
           {isDuplicate && (
             <span title="Shares an email or phone number with another lead" className="shrink-0">
               <MaterialIcon name="content_copy" className="text-[13px] text-violet-500" />
@@ -114,11 +110,6 @@ function LeadCard({ lead, isDuplicate }: { lead: Lead; isDuplicate?: boolean }) 
             {lead.name}
             {lead.company && <span className="font-normal text-slate-500"> · {lead.company}</span>}
           </p>
-          {lead.language === "French" && (
-            <span className="shrink-0 rounded border border-slate-200 px-1 py-px text-[9.5px] font-bold uppercase tracking-wide text-slate-500">
-              FR
-            </span>
-          )}
           {isDuplicate && (
             <span title="Shares an email or phone number with another lead" className="shrink-0">
               <MaterialIcon name="content_copy" className="text-[13px] text-violet-500" />
@@ -151,6 +142,7 @@ export default function LeadsPage() {
   const leads = useLeads();
   const { claimLead, deleteLead } = useLeadActions();
   const currentUser = useCurrentUser();
+  const canManage = canManageContent(currentUser);
   const staff = useStaff();
   const logActivity = useLogActivity();
 
@@ -257,16 +249,18 @@ export default function LeadsPage() {
               )}
             </p>
           </div>
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-            type="button"
-            onClick={() => setDialogOpen(true)}
-            className="flex items-center justify-center gap-2 rounded-lg bg-navy-950 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-navy-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
-          >
-            <MaterialIcon name="add" className="text-[18px]" />
-            Log a New Lead
-          </motion.button>
+          {canManage && (
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              type="button"
+              onClick={() => setDialogOpen(true)}
+              className="flex items-center justify-center gap-2 rounded-lg bg-navy-950 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-navy-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
+            >
+              <MaterialIcon name="add" className="text-[18px]" />
+              Log a New Lead
+            </motion.button>
+          )}
         </motion.div>
 
         {/* Same chart language as the Dashboard's Pipeline Breakdown — clicking a segment or legend entry filters the table below exactly like the old status pills did, just sharing one visual system across both pages instead of two. */}

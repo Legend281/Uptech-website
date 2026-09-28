@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
+import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
+import { canManageContent } from "@/lib/admin/permissions";
 
 /** Visible by default (not hover-only) — a hover-gated action is invisible to keyboard and touch. */
 export function LeadRowActions({
@@ -15,6 +17,9 @@ export function LeadRowActions({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const currentUser = useCurrentUser();
+  const canManage = canManageContent(currentUser);
+  const canDelete = currentUser.role === "administrator";
 
   useEffect(() => {
     if (!open) return;
@@ -58,30 +63,34 @@ export function LeadRowActions({
             <MaterialIcon name="visibility" className="text-[16px] text-slate-400" />
             View
           </button>
-          <button
-            type="button"
-            role="menuitem"
-            onClick={() => {
-              setOpen(false);
-              onEdit();
-            }}
-            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50"
-          >
-            <MaterialIcon name="edit" className="text-[16px] text-slate-400" />
-            Edit
-          </button>
-          <button
-            type="button"
-            role="menuitem"
-            onClick={() => {
-              setOpen(false);
-              onDelete();
-            }}
-            className="flex w-full items-center gap-2 border-t border-slate-100 px-3 py-2 text-left text-sm text-rose-600 hover:bg-rose-50"
-          >
-            <MaterialIcon name="delete" className="text-[16px]" />
-            Delete
-          </button>
+          {canManage && (
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                setOpen(false);
+                onEdit();
+              }}
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50"
+            >
+              <MaterialIcon name="edit" className="text-[16px] text-slate-400" />
+              Edit
+            </button>
+          )}
+          {canDelete && (
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                setOpen(false);
+                onDelete();
+              }}
+              className="flex w-full items-center gap-2 border-t border-slate-100 px-3 py-2 text-left text-sm text-rose-600 hover:bg-rose-50"
+            >
+              <MaterialIcon name="delete" className="text-[16px]" />
+              Delete
+            </button>
+          )}
         </div>
       )}
     </div>

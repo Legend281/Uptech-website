@@ -383,7 +383,7 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <RegisterList
             rows={rows}
@@ -396,7 +396,7 @@ export default function AdminDashboardPage() {
           />
         </div>
         <div>
-          <ActivityLog entries={activity.slice(0, 8)} onViewAll={() => setActivityModalOpen(true)} />
+          <ActivityLog entries={activity.slice(0, 5)} onViewAll={() => setActivityModalOpen(true)} />
           {currentUser.role === "administrator" && <TeamWorkload staff={staff} leads={leads} servicePages={servicePages} />}
         </div>
       </div>

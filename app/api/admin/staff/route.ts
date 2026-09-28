@@ -8,7 +8,6 @@ const MAX_TEXT_LENGTH = 200;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const VALID_ROLES = ["administrator", "editor", "viewer"];
 const VALID_DEPARTMENTS = ["career-services-operations", "business-formalisation-compliance"];
-const VALID_LANGUAGES = ["English", "French"];
 
 /*
  * Admin_Dashboard_Requirements.md Section 2: only an Administrator can
@@ -49,7 +48,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { name, email, role, department, avatarInitials, location, languages } = body as Record<string, unknown>;
+  const { name, email, role, department, avatarInitials, location } = body as Record<string, unknown>;
 
   if (typeof name !== "string" || name.trim() === "" || name.length > MAX_TEXT_LENGTH) {
     return NextResponse.json({ error: "A valid name is required." }, { status: 400 });
@@ -68,9 +67,6 @@ export async function POST(request: NextRequest) {
   }
   if (typeof location !== "string" || location.trim() === "") {
     return NextResponse.json({ error: "A location is required." }, { status: 400 });
-  }
-  if (!Array.isArray(languages) || languages.length === 0 || !languages.every((l) => VALID_LANGUAGES.includes(l))) {
-    return NextResponse.json({ error: "At least one valid language is required." }, { status: 400 });
   }
 
   const serviceRoleClient = getSupabaseServiceRoleClient();
@@ -94,7 +90,6 @@ export async function POST(request: NextRequest) {
     department,
     avatar_initials: avatarInitials.trim().toUpperCase(),
     location: location.trim(),
-    languages,
   });
 
   if (profileError) {

@@ -13,6 +13,7 @@ import { SegmentedBar, BarLegend, type BarSegment } from "@/components/admin/Seg
 import { useJobPostings, useJobPostingActions } from "@/components/admin/providers/JobPostingsProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
+import { canManageContent } from "@/lib/admin/permissions";
 import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
 import { HIRING_DEPARTMENT_NAMES } from "@/lib/hiringDepartments";
 import {
@@ -82,6 +83,7 @@ function JobPostingCard({
 }) {
   const meta = jobPostingStatusMeta[posting.status];
   const stale = isJobPostingStale(posting);
+  const canManage = canManageContent(useCurrentUser());
 
   return (
     <div className={`flex items-start gap-3 border-b border-l-[3px] border-slate-100 px-4 py-3.5 last:border-b-0 ${stale ? "border-l-amber-400" : "border-l-transparent"}`}>
@@ -91,7 +93,8 @@ function JobPostingCard({
       <div className="min-w-0 flex-1">
         <p className="truncate font-sans text-sm font-semibold text-navy-950">{posting.title}</p>
         <p className="truncate text-xs text-slate-500">
-          {posting.department} · {posting.location}
+          {posting.department ? `${posting.department} · ` : ""}
+          {posting.location}
         </p>
         <div className="mt-1.5 flex flex-wrap items-center gap-2">
           <span className={`shrink-0 truncate rounded-full border px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide ${meta.badge}`}>{meta.label}</span>
@@ -99,9 +102,15 @@ function JobPostingCard({
         </div>
         <div className="mt-1.5 flex items-center justify-between gap-2">
           <PostedCell posting={posting} />
-          <button type="button" onClick={onOpenApplications} className="text-xs font-semibold text-teal-600 hover:text-teal-700">
-            {posting.applicationsReceived} application{posting.applicationsReceived === 1 ? "" : "s"}
-          </button>
+          {canManage ? (
+            <button type="button" onClick={onOpenApplications} className="text-xs font-semibold text-teal-600 hover:text-teal-700">
+              {posting.applicationsReceived} application{posting.applicationsReceived === 1 ? "" : "s"}
+            </button>
+          ) : (
+            <span className="text-xs font-semibold text-slate-500">
+              {posting.applicationsReceived} application{posting.applicationsReceived === 1 ? "" : "s"}
+            </span>
+          )}
         </div>
       </div>
       <JobPostingRowActions posting={posting} onEdit={onOpenEdit} onApplications={onOpenApplications} onDelete={onDelete} />
@@ -113,6 +122,7 @@ export default function JobPostingsPage() {
   const postings = useJobPostings();
   const { deletePosting } = useJobPostingActions();
   const currentUser = useCurrentUser();
+  const canManage = canManageContent(currentUser);
   const logActivity = useLogActivity();
 
   const [createOpen, setCreateOpen] = useState(false);
@@ -150,7 +160,7 @@ export default function JobPostingsPage() {
     .filter((p) => departmentFilter === "all" || p.department === departmentFilter)
     .filter((p) => {
       if (!query.trim()) return true;
-      const haystack = `${p.title} ${p.department} ${p.location} ${p.description}`.toLowerCase();
+      const haystack = `${p.title} ${p.department ?? ""} ${p.location} ${p.description}`.toLowerCase();
       return haystack.includes(query.trim().toLowerCase());
     })
     .sort((a, b) => {
@@ -202,16 +212,18 @@ export default function JobPostingsPage() {
               Publishing a posting puts it live on the public Careers page automatically, within about a minute.
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setCreateOpen(true)}
-              className="flex items-center gap-1.5 rounded-lg bg-navy-950 px-3.5 py-2 text-sm font-semibold text-white transition-colors hover:bg-navy-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
-            >
-              <MaterialIcon name="add" className="text-[18px]" />
-              New Posting
-            </button>
-          </div>
+          {canManage && (
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setCreateOpen(true)}
+                className="flex items-center gap-1.5 rounded-lg bg-navy-950 px-3.5 py-2 text-sm font-semibold text-white transition-colors hover:bg-navy-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
+              >
+                <MaterialIcon name="add" className="text-[18px]" />
+                New Posting
+              </button>
+            </div>
+          )}
         </motion.div>
 
         <motion.div variants={itemVariants} className={`mb-4 rounded-xl border border-slate-200 bg-white p-4 sm:p-5 ${CARD_ELEVATION}`}>
@@ -316,7 +328,8 @@ export default function JobPostingsPage() {
                           <td className="px-4 py-3 sm:px-5">
                             <p className="truncate font-sans text-sm font-semibold text-navy-950">{posting.title}</p>
                             <p className="truncate text-xs text-slate-500">
-                              {posting.department} · {posting.location}
+                              {posting.department ? `${posting.department} · ` : ""}
+                              {posting.location}
                             </p>
                           </td>
                           <td className="px-3 py-3 text-xs text-slate-500">{posting.employmentType}</td>
@@ -324,14 +337,21 @@ export default function JobPostingsPage() {
                             <span className={`inline-block whitespace-nowrap rounded-full border px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide ${meta.badge}`}>{meta.label}</span>
                           </td>
                           <td className="px-3 py-3">
-                            <button
-                              type="button"
-                              onClick={() => setApplicationsPosting(posting)}
-                              className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-600 hover:text-teal-700"
-                            >
-                              <MaterialIcon name="groups" className="text-[14px]" />
-                              {posting.applicationsReceived}
-                            </button>
+                            {canManage ? (
+                              <button
+                                type="button"
+                                onClick={() => setApplicationsPosting(posting)}
+                                className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-600 hover:text-teal-700"
+                              >
+                                <MaterialIcon name="groups" className="text-[14px]" />
+                                {posting.applicationsReceived}
+                              </button>
+                            ) : (
+                              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500">
+                                <MaterialIcon name="groups" className="text-[14px]" />
+                                {posting.applicationsReceived}
+                              </span>
+                            )}
                           </td>
                           <td className="px-3 py-3 text-right">
                             <PostedCell posting={posting} />

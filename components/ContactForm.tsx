@@ -33,7 +33,6 @@ export function ContactForm() {
   const [service, setService] = useState<ServiceValue | "">(
     initialService && isServiceValue(initialService) ? initialService : ""
   );
-  const [language, setLanguage] = useState<"English" | "French">("English");
   const [message, setMessage] = useState("");
   const [consent, setConsent] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
@@ -54,12 +53,11 @@ export function ContactForm() {
       `Phone / WhatsApp: ${phone || "—"}`,
       `Company / Organization: ${company || "—"}`,
       `Interested in: ${serviceLabel}`,
-      `Preferred language: ${language}`,
       "",
       message || "—",
     ];
     return lines.join("\n");
-  }, [name, email, phone, company, serviceLabel, language, message]);
+  }, [name, email, phone, company, serviceLabel, message]);
 
   const mailtoHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
     `Consultation request — ${serviceLabel}`
@@ -81,7 +79,7 @@ export function ContactForm() {
       const response = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, company, service, language, message, consent, turnstileToken }),
+        body: JSON.stringify({ name, email, phone, company, service, message, consent, turnstileToken }),
       });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
@@ -183,34 +181,6 @@ export function ContactForm() {
             ))}
           </select>
         </label>
-
-        <fieldset className="flex flex-col gap-1.5 sm:col-span-2">
-          <legend className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
-            Preferred language
-          </legend>
-          <div className="flex gap-3">
-            {(["English", "French"] as const).map((lang) => (
-              <label
-                key={lang}
-                className={`flex-1 flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-semibold cursor-pointer transition-colors ${
-                  language === lang
-                    ? "border-teal-500 bg-teal-50 text-teal-700"
-                    : "border-slate-300 text-slate-600 hover:border-slate-400"
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="language"
-                  value={lang}
-                  checked={language === lang}
-                  onChange={() => setLanguage(lang)}
-                  className="sr-only"
-                />
-                {lang}
-              </label>
-            ))}
-          </div>
-        </fieldset>
 
         <label className="flex flex-col gap-1.5 sm:col-span-2">
           <span className="text-xs font-bold uppercase tracking-wider text-slate-500">

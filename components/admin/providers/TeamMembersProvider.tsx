@@ -1,21 +1,76 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
-import { canManageTeam, getTeamSaveErrors, normalizeTeamInput, sortTeam, type TeamMemberInput } from "@/lib/admin/team";
+import { revalidatePublicPages } from "@/lib/admin/revalidate";
+import { canManageTeam, getTeamSaveErrors, normalizeTeamInput, type TeamMemberInput } from "@/lib/admin/team";
+import { describeDbError, getSupabaseBrowserClient, publicPhotoUrl, uploadDataUrl } from "@/lib/supabase/client";
 import type { ActionResult, AdminUser, TeamMemberRecord, TeamMemberStatus } from "@/lib/admin/types";
 
-const STORAGE_KEY = "uco-admin-team-v1";
-
 /*
- * Browser-only for now: supabase/003_team_members.sql defines the real
- * table, but this module doesn't write to it yet. Until then this is the
- * whole roster, in this browser's localStorage, and the Who We Are page
- * (which reads Supabase) is unaffected by edits here.
+ * Team Members, stored in Supabase (supabase/003_team_members.sql +
+ * 017_team_members_staff_policies.sql) — the admin module behind the Who We
+ * Are page's "Meet the Team" section (lib/team.ts reads the
+ * visible_team_members view directly). Real writes now, replacing what used
+ * to be a localStorage-only store that the public page could never see.
  *
- * Seeded EMPTY: no real names, roles or portraits have been supplied, and
- * CLAUDE.md Section 6.4 rules out inventing them, even as demo data.
+ * Same posture as TestimonialsProvider: every write goes through the
+ * signed-in staff session, so the database's policies and triggers (RLS
+ * plus the "hide, never delete once ever_visible" guard) have the final
+ * say; lib/admin/team.ts's checks just give a clear message before the
+ * round trip.
  */
+
+type Row = {
+  id: string;
+  name: string;
+  title: string;
+  department: TeamMemberRecord["department"];
+  entity: TeamMemberRecord["entity"];
+  photo_path: string | null;
+  bio: string | null;
+  profile_url: string | null;
+  display_order: number;
+  status: TeamMemberStatus;
+  ever_visible: boolean;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+function rowToMember(row: Row): TeamMemberRecord {
+  return {
+    id: row.id,
+    name: row.name,
+    title: row.title,
+    department: row.department,
+    entity: row.entity,
+    photoPath: row.photo_path ?? undefined,
+    photo: publicPhotoUrl("team-photos", row.photo_path),
+    bio: row.bio ?? undefined,
+    linkedinUrl: row.profile_url ?? undefined,
+    displayOrder: row.display_order,
+    status: row.status,
+    everVisible: row.ever_visible,
+    createdById: row.created_by ?? "",
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+function inputToColumns(input: TeamMemberInput, photoPath: string | null) {
+  return {
+    name: input.name,
+    title: input.title,
+    department: input.department,
+    entity: input.entity,
+    photo_path: photoPath,
+    bio: input.bio ?? null,
+    profile_url: input.linkedinUrl ?? null,
+    display_order: input.displayOrder,
+    status: input.status,
+  };
+}
 
 type TeamContextValue = {
   members: TeamMemberRecord[];
@@ -30,42 +85,48 @@ type TeamContextValue = {
 
 const TeamContext = createContext<TeamContextValue | null>(null);
 
-function load(): TeamMemberRecord[] {
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    const parsed = raw ? (JSON.parse(raw) as unknown) : [];
-    return Array.isArray(parsed) ? (parsed as TeamMemberRecord[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-function save(members: TeamMemberRecord[]) {
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(members));
-  } catch {
-    // Best-effort only; portraits are resized small on upload to stay well under quota.
-  }
-}
-
 const denied: ActionResult = { ok: false, reasons: ["Only an Administrator can change the team roster."] };
-const OK: ActionResult = { ok: true };
 
 export function TeamMembersProvider({ children }: { children: ReactNode }) {
   const [members, setMembers] = useState<TeamMemberRecord[]>([]);
+  const [loading, setLoading] = useState(true);
   const logActivity = useLogActivity();
 
-  useEffect(() => {
-    setMembers(load());
+  async function revalidate() {
+    const { data } = await getSupabaseBrowserClient().auth.getSession();
+    if (data.session) await revalidatePublicPages(["/who-we-are"], data.session.access_token);
+  }
+
+  const refresh = useCallback(async () => {
+    const { data, error } = await getSupabaseBrowserClient().from("team_members").select("*").order("display_order", { ascending: true });
+    if (!error && data) setMembers((data as Row[]).map(rowToMember));
+    setLoading(false);
   }, []);
 
-  function commit(next: TeamMemberRecord[]) {
-    setMembers(next);
-    save(next);
-  }
+  useEffect(() => {
+    const supabase = getSupabaseBrowserClient();
+    function apply(hasSession: boolean) {
+      if (hasSession) void refresh();
+      else {
+        setMembers([]);
+        setLoading(false);
+      }
+    }
+    supabase.auth.getSession().then(({ data }) => apply(Boolean(data.session)));
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event !== "TOKEN_REFRESHED") apply(Boolean(session));
+    });
+    return () => sub.subscription.unsubscribe();
+  }, [refresh]);
 
   function log(icon: string, description: string) {
     logActivity({ icon, description, relatedHref: "/admin/team" });
+  }
+
+  async function savePhoto(input: TeamMemberInput, currentPath?: string): Promise<string | null> {
+    if (!input.photo) return null;
+    if (input.photo.startsWith("data:")) return uploadDataUrl("team-photos", input.photo, "team");
+    return currentPath ?? null;
   }
 
   async function addMember(input: TeamMemberInput, user: AdminUser): Promise<ActionResult> {
@@ -73,23 +134,28 @@ export function TeamMembersProvider({ children }: { children: ReactNode }) {
     const clean = normalizeTeamInput(input);
     const errors = getTeamSaveErrors(clean);
     if (errors.length) return { ok: false, reasons: errors };
-    const now = new Date().toISOString();
-    const member: TeamMemberRecord = {
-      ...clean,
-      id: `team-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`,
-      everVisible: clean.status === "visible",
-      createdById: user.id,
-      createdAt: now,
-      updatedAt: now,
-    };
-    commit([...members, member]);
+
+    let photoPath: string | null;
+    try {
+      photoPath = await savePhoto(clean);
+    } catch (error) {
+      return { ok: false, reasons: [error instanceof Error ? error.message : "The photo couldn't be uploaded."] };
+    }
+
+    const { data, error } = await getSupabaseBrowserClient()
+      .from("team_members")
+      .insert({ ...inputToColumns(clean, photoPath), created_by: user.id })
+      .select()
+      .single();
+    if (error || !data) return { ok: false, reasons: [describeDbError(error)] };
+
+    await refresh();
+    if (clean.status === "visible") void revalidate();
     log(
       clean.status === "visible" ? "person_add" : "edit_note",
-      clean.status === "visible"
-        ? `${user.name} added ${member.name} to the Who We Are team.`
-        : `${user.name} added ${member.name} to the team roster (hidden for now).`,
+      clean.status === "visible" ? `${user.name} added ${clean.name} to the Who We Are team.` : `${user.name} added ${clean.name} to the team roster (hidden for now).`,
     );
-    return OK;
+    return { ok: true };
   }
 
   async function updateMember(id: string, input: TeamMemberInput, user: AdminUser): Promise<ActionResult> {
@@ -99,52 +165,83 @@ export function TeamMembersProvider({ children }: { children: ReactNode }) {
     const clean = normalizeTeamInput(input);
     const errors = getTeamSaveErrors(clean);
     if (errors.length) return { ok: false, reasons: errors };
-    const now = new Date().toISOString();
-    commit(members.map((m) => (m.id === id ? { ...m, ...clean, everVisible: m.everVisible || clean.status === "visible", updatedAt: now } : m)));
+
+    let photoPath: string | null;
+    try {
+      photoPath = await savePhoto(clean, existing.photoPath);
+    } catch (error) {
+      return { ok: false, reasons: [error instanceof Error ? error.message : "The photo couldn't be uploaded."] };
+    }
+
+    const { error } = await getSupabaseBrowserClient().from("team_members").update(inputToColumns(clean, photoPath)).eq("id", id);
+    if (error) return { ok: false, reasons: [describeDbError(error)] };
+
+    await refresh();
+    if (existing.photoPath && existing.photoPath !== photoPath) void getSupabaseBrowserClient().storage.from("team-photos").remove([existing.photoPath]);
+    if (existing.status === "visible" || clean.status === "visible") void revalidate();
+
     if (clean.status !== existing.status) {
       log(clean.status === "visible" ? "publish" : "unpublished", `${user.name} ${clean.status === "visible" ? "showed" : "hid"} ${clean.name} on the Who We Are page.`);
     } else {
       log("edit_note", `${user.name} edited ${clean.name}'s team profile.`);
     }
-    return OK;
+    return { ok: true };
   }
 
   async function setStatus(id: string, status: TeamMemberStatus, user: AdminUser): Promise<ActionResult> {
     if (!canManageTeam(user)) return denied;
     const existing = members.find((m) => m.id === id);
-    if (!existing || existing.status === status) return OK;
-    const now = new Date().toISOString();
-    commit(members.map((m) => (m.id === id ? { ...m, status, everVisible: m.everVisible || status === "visible", updatedAt: now } : m)));
+    if (!existing || existing.status === status) return { ok: true };
+
+    const { error } = await getSupabaseBrowserClient().from("team_members").update({ status }).eq("id", id);
+    if (error) return { ok: false, reasons: [describeDbError(error)] };
+
+    await refresh();
+    void revalidate();
     log(status === "visible" ? "publish" : "unpublished", `${user.name} ${status === "visible" ? "showed" : "hid"} ${existing.name} on the Who We Are page.`);
-    return OK;
+    return { ok: true };
   }
 
   async function move(id: string, direction: -1 | 1, user: AdminUser): Promise<ActionResult> {
     if (!canManageTeam(user)) return denied;
-    // Renumber 1..n in current order first, so duplicate order numbers can't make a swap a no-op.
-    const ordered = sortTeam(members).map((m, index) => ({ ...m, displayOrder: index + 1 }));
+    const ordered = [...members].sort((a, b) => a.displayOrder - b.displayOrder);
     const index = ordered.findIndex((m) => m.id === id);
-    const target = index + direction;
-    if (index < 0 || target < 0 || target >= ordered.length) return OK;
-    [ordered[index].displayOrder, ordered[target].displayOrder] = [ordered[target].displayOrder, ordered[index].displayOrder];
-    commit(ordered);
-    return OK;
+    const targetIndex = index + direction;
+    if (index < 0 || targetIndex < 0 || targetIndex >= ordered.length) return { ok: true };
+
+    const a = ordered[index];
+    const b = ordered[targetIndex];
+    const supabase = getSupabaseBrowserClient();
+    const [{ error: errorA }, { error: errorB }] = await Promise.all([
+      supabase.from("team_members").update({ display_order: b.displayOrder }).eq("id", a.id),
+      supabase.from("team_members").update({ display_order: a.displayOrder }).eq("id", b.id),
+    ]);
+    if (errorA || errorB) return { ok: false, reasons: [describeDbError(errorA ?? errorB)] };
+
+    await refresh();
+    if (a.status === "visible" || b.status === "visible") void revalidate();
+    return { ok: true };
   }
 
   async function deleteMember(id: string, user: AdminUser): Promise<ActionResult> {
     if (!canManageTeam(user)) return denied;
     const existing = members.find((m) => m.id === id);
-    if (!existing) return OK;
+    if (!existing) return { ok: true };
     if (existing.everVisible) {
       return { ok: false, reasons: ["They've been on the public site, so hide them instead. Other pages may still refer to them."] };
     }
-    commit(members.filter((m) => m.id !== id));
+
+    const { error } = await getSupabaseBrowserClient().from("team_members").delete().eq("id", id);
+    if (error) return { ok: false, reasons: [describeDbError(error)] };
+
+    if (existing.photoPath) void getSupabaseBrowserClient().storage.from("team-photos").remove([existing.photoPath]);
+    await refresh();
     log("delete", `${user.name} deleted ${existing.name}'s draft team profile.`);
-    return OK;
+    return { ok: true };
   }
 
   return (
-    <TeamContext.Provider value={{ members, loading: false, addMember, updateMember, setStatus, move, deleteMember }}>{children}</TeamContext.Provider>
+    <TeamContext.Provider value={{ members, loading, addMember, updateMember, setStatus, move, deleteMember }}>{children}</TeamContext.Provider>
   );
 }
 

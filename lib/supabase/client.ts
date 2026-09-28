@@ -33,20 +33,20 @@ export function describeDbError(error: { message?: string; code?: string } | nul
   }
   if (/testimonials_attribution_fields/.test(error.message ?? "")) return "The name fields don't match the attribution you chose.";
   if (/testimonials_consent_channel_check/.test(error.message ?? "")) {
-    return "The database hasn't been updated for the one-tick consent yet. Run supabase/014_testimonial_single_consent.sql in Supabase, then try again.";
+    return "The database hasn't been updated for the one-tick consent yet. Run supabase/024_testimonial_single_consent.sql in Supabase, then try again.";
   }
   // Our own trigger messages (e.g. the review gate) are already written for people.
   return error.message || "Something went wrong.";
 }
 
 /** Public URL for a file in one of the public photo buckets. */
-export function publicPhotoUrl(bucket: "testimonial-photos" | "team-photos", path: string | null | undefined): string | undefined {
+export function publicPhotoUrl(bucket: "testimonial-photos" | "team-photos" | "service-photos", path: string | null | undefined): string | undefined {
   if (!path) return undefined;
   return getSupabaseBrowserClient().storage.from(bucket).getPublicUrl(path).data.publicUrl;
 }
 
 /** Uploads a resized data-URL image and returns its storage path. */
-export async function uploadDataUrl(bucket: "testimonial-photos" | "team-photos", dataUrl: string, prefix: string): Promise<string> {
+export async function uploadDataUrl(bucket: "testimonial-photos" | "team-photos" | "service-photos", dataUrl: string, prefix: string): Promise<string> {
   // Decoded by hand rather than fetch(dataUrl), which the CSP's connect-src would block.
   const [header, base64] = dataUrl.split(",");
   const bytes = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));

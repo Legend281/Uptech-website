@@ -8,6 +8,7 @@ import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { useLead, useLeadActions, useLeadsLoading } from "@/components/admin/providers/LeadsProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
+import { canManageContent } from "@/lib/admin/permissions";
 import { LeadFormDialog } from "@/components/admin/LeadFormDialog";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { LeadDetailContent } from "@/components/admin/LeadDetailContent";
@@ -50,22 +51,26 @@ export function LeadDetailPageClient({ id }: { id: string }) {
           Back to Leads
         </Link>
         <div className="flex items-center gap-1">
-          <button
-            type="button"
-            onClick={() => setEditOpen(true)}
-            aria-label="Edit lead"
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-navy-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
-          >
-            <MaterialIcon name="edit" className="text-[18px]" />
-          </button>
-          <button
-            type="button"
-            onClick={() => setDeleteOpen(true)}
-            aria-label="Delete lead"
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-rose-50 hover:text-rose-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-500"
-          >
-            <MaterialIcon name="delete" className="text-[18px]" />
-          </button>
+          {canManageContent(currentUser) && (
+            <button
+              type="button"
+              onClick={() => setEditOpen(true)}
+              aria-label="Edit lead"
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-navy-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
+            >
+              <MaterialIcon name="edit" className="text-[18px]" />
+            </button>
+          )}
+          {currentUser.role === "administrator" && (
+            <button
+              type="button"
+              onClick={() => setDeleteOpen(true)}
+              aria-label="Delete lead"
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-rose-50 hover:text-rose-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-500"
+            >
+              <MaterialIcon name="delete" className="text-[18px]" />
+            </button>
+          )}
         </div>
       </div>
 

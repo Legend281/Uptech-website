@@ -216,8 +216,8 @@ export function Header({
           <Image
             src="/UPTECH_LOG.png"
             alt="Uptech Consulting & Outsourcing"
-            width={572}
-            height={233}
+            width={587}
+            height={224}
             priority
             className="h-12 w-auto sm:h-14"
           />

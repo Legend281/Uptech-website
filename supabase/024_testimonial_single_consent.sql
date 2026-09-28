@@ -1,5 +1,5 @@
 -- Uptech Consulting admin dashboard — one-tick testimonial consent.
--- Run once in the Supabase SQL editor AFTER 013_testimonial_publishing.sql.
+-- Run once in the Supabase SQL editor AFTER 006_testimonial_publishing.sql.
 -- Safe to re-run.
 --
 -- Leadership decision: the Add a Testimonial form's consent section is now

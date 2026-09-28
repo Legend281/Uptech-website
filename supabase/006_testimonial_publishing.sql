@@ -5,7 +5,9 @@
 -- Scope: testimonials only (the admin module that publishes to the live
 -- Homepage and Career Marketing page). Staff sign-in is 003_staff_auth.sql;
 -- this file only decides what a signed-in person may do with testimonials,
--- using the staff roles in public.profiles (003, "active" from 012).
+-- using the staff roles in public.profiles (003, "active" from 012), read
+-- through this file's own testimonial_staff_role()/testimonial_staff_department()
+-- helpers. (It once used public.staff_profiles, which 016 dropped.)
 --
 -- It also adds table GRANTs: newer Supabase projects don't grant table
 -- access to the API roles automatically, so without them every request is

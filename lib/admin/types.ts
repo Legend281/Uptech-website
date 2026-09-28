@@ -18,14 +18,6 @@ export type AdminUser = {
   avatarInitials: string;
   /** Buea, Cameroon or Stafford, TX — the company's two real offices (CLAUDE.md Section 1). */
   location: string;
-  /**
-   * Per Admin_Dashboard_Requirements.md Section 3.11's language-aware
-   * assignment requirement: a distinct field from the public-facing Team
-   * Members content (CLAUDE.md Section 3.5) — this is internal staff
-   * account data, used only to flag (not block) a language mismatch when
-   * a French-preferring lead is claimed by someone who doesn't list French.
-   */
-  languages: ("English" | "French")[];
   /** Where a sign-in invitation goes once Supabase Auth is wired. Optional for the seeded preview personas. */
   email?: string;
   /**
@@ -114,8 +106,6 @@ export type Lead = {
   department?: Department;
   status: LeadStatus;
   source: LeadSource;
-  /** The visitor's (or, for a manually-logged lead, the caller's) stated preference — must reach staff, not be dropped. */
-  language: "English" | "French";
   message: string;
   createdAt: string;
   assignedToId?: string;
@@ -167,7 +157,8 @@ export type JobPostingStatus = "draft" | "published" | "closed";
 export type JobPosting = {
   id: string;
   title: string;
-  department: string;
+  /** Optional — some postings (a general-interest opening, a cross-department role) don't cleanly belong to one of the six HIRING_DEPARTMENT_NAMES. */
+  department?: string;
   location: string;
   employmentType: string;
   description: string;
@@ -326,6 +317,91 @@ export type FaqItemRecord = {
   /** The last person to change the question or answer — the one who can't review it. */
   lastEditedById: string;
   createdById: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+/**
+ * A service Uptech starts offering beyond the current 5 real, hardcoded
+ * ones (Career Marketing, Business Formalisation CM/US, Tax Compliance,
+ * CNPS Compliance) — see supabase/013_additional_services.sql. Those 5
+ * stay exactly as hardcoded on the Homepage and /services; this only ever
+ * adds more, appended after them in the identical card/list design.
+ */
+export type AdditionalServiceStatus = "draft" | "published";
+
+export type AdditionalService = {
+  id: string;
+  title: string;
+  description: string;
+  /** A dedicated page for this service, if one exists yet — undefined means the public card falls back to "Get in touch" instead of "Explore." */
+  href?: string;
+  /** An optional country-flag emoji, matching the existing cards' style. */
+  flag?: string;
+  /** Path inside the service-photos storage bucket, never a full URL. */
+  photoPath: string;
+  displayOrder: number;
+  status: AdditionalServiceStatus;
+  createdById?: string;
+  createdAt: string;
+};
+
+/** One of the 3 fixed reference slots on the onboarding form. */
+export type OnboardingReference = {
+  name?: string;
+  titleAndCompany?: string;
+  relationship?: string;
+  email?: string;
+  phone?: string;
+};
+
+/**
+ * A client onboarding submission from the external Google Form (Profile
+ * Marketing intake) — supabase/022_onboarding_submissions.sql. Everything
+ * except accountManagerId and applicationPassword arrives via the webhook
+ * (app/api/onboarding-webhook/route.ts); there's no "add" action in the
+ * dashboard itself. Those two fields are the only ones staff set directly,
+ * after the fact — the account manager assignment, and the application
+ * password Uptech generates for the client (never something the client
+ * typed into the form themselves).
+ *
+ * Deliberately more sensitive than anything else this dashboard holds —
+ * see that migration's own comment for why access here is stricter than
+ * every other table (no Viewer access at all, regardless of department).
+ */
+export type OnboardingSubmission = {
+  id: string;
+  /** Continues Uptech's own existing case numbering — see the migration's own comment. */
+  caseNumber: number;
+  /** The staff member managing this client's case. Undefined until someone claims it. */
+  accountManagerId?: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  contact: string;
+  email: string;
+  /** Optional on the form itself — only given if the client wants that email address used for marketing. */
+  emailPassword?: string;
+  linkedinEmail: string;
+  linkedinPassword: string;
+  /** Set later by staff once Uptech has created it for the client — never part of the client's own submission. */
+  applicationPassword?: string;
+  address: string;
+  dateOfBirth: string;
+  nationality: string;
+  ethnicity: string;
+  residencyStatus: string;
+  securityClearance: string;
+  preferredJobTitles: string;
+  preferredJobLocation: string;
+  expectedSalaryRange: string;
+  /** Google Drive share links from the form's file-upload questions. */
+  resumeUrl?: string;
+  linkedinPhotoUrl?: string;
+  references: OnboardingReference[];
+  /** The Google account the form response was collected under — may differ from the client's own "Email" answer above. */
+  googleResponseEmail?: string;
+  submittedAt: string;
   createdAt: string;
   updatedAt: string;
 };

@@ -19,7 +19,7 @@ import type { JobPosting, JobPostingStatus } from "@/lib/admin/types";
 type JobPostingRow = {
   id: string;
   title: string;
-  department: string;
+  department: string | null;
   location: string;
   employment_type: string;
   description: string;
@@ -38,7 +38,7 @@ function fromRow(row: JobPostingRow): JobPosting {
   return {
     id: row.id,
     title: row.title,
-    department: row.department,
+    department: row.department ?? undefined,
     location: row.location,
     employmentType: row.employment_type,
     description: row.description,
@@ -102,7 +102,7 @@ export function JobPostingsProvider({ children }: { children: ReactNode }) {
 
     const row: Record<string, unknown> = {};
     if ("title" in patch) row.title = patch.title;
-    if ("department" in patch) row.department = patch.department;
+    if ("department" in patch) row.department = patch.department ?? null;
     if ("location" in patch) row.location = patch.location;
     if ("employmentType" in patch) row.employment_type = patch.employmentType;
     if ("description" in patch) row.description = patch.description;
@@ -129,7 +129,7 @@ export function JobPostingsProvider({ children }: { children: ReactNode }) {
       .from("job_postings")
       .insert({
         title: input.title,
-        department: input.department,
+        department: input.department ?? null,
         location: input.location,
         employment_type: input.employmentType,
         description: input.description,
@@ -183,7 +183,7 @@ export function JobPostingsProvider({ children }: { children: ReactNode }) {
     return addPosting(
       {
         title: source?.title ?? "Untitled role",
-        department: source?.department ?? "",
+        department: source?.department,
         location: source?.location ?? "",
         employmentType: source?.employmentType ?? "",
         description: source?.description ?? "",

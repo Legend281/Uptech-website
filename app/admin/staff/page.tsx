@@ -62,9 +62,6 @@ export default function StaffPage() {
               <th scope="col" className="px-3 py-2.5">
                 Location
               </th>
-              <th scope="col" className="px-3 py-2.5">
-                Languages
-              </th>
             </tr>
           </thead>
           <tbody>
@@ -81,7 +78,6 @@ export default function StaffPage() {
                 <td className="px-3 py-3 text-sm text-slate-600">{roleLabels[user.role]}</td>
                 <td className="px-3 py-3 text-sm text-slate-600">{departmentLabels[user.department]}</td>
                 <td className="px-3 py-3 text-sm text-slate-600">{user.location}</td>
-                <td className="px-3 py-3 text-sm text-slate-600">{user.languages.join(", ")}</td>
               </tr>
             ))}
           </tbody>

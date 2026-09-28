@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { SITE_URL } from "@/lib/siteUrl";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -53,13 +54,27 @@ const inter = Inter({
  */
 const fontsBasePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
+const description =
+  "IT consulting, business formalisation & compliance, and career marketing & placement — bridging Cameroon and the United States.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Uptech Consulting & Outsourcing",
     template: "%s — Uptech Consulting & Outsourcing",
   },
-  description:
-    "IT consulting, business formalisation & compliance, and career marketing & placement — bridging Cameroon and the United States.",
+  description,
+  openGraph: {
+    type: "website",
+    siteName: "Uptech Consulting & Outsourcing",
+    title: "Uptech Consulting & Outsourcing",
+    description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Uptech Consulting & Outsourcing",
+    description,
+  },
 };
 
 export default function RootLayout({

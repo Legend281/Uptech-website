@@ -3,7 +3,6 @@
 import { useEffect, useId, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
-import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 const inputClasses =
@@ -22,7 +21,6 @@ const labelClasses = "text-xs font-bold uppercase tracking-wider text-slate-500"
  */
 export function ChangePasswordModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const formId = useId();
-  const currentUser = useCurrentUser();
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -53,15 +51,21 @@ export function ChangePasswordModal({ open, onClose }: { open: boolean; onClose:
       setErrorMessage("New passwords don't match.");
       return;
     }
-    if (!currentUser.email) {
-      setErrorMessage("Your account has no email on file — ask an Administrator to check your profile.");
-      return;
-    }
 
     setSaving(true);
     const supabase = getSupabaseBrowserClient();
 
-    const { error: reauthError } = await supabase.auth.signInWithPassword({ email: currentUser.email, password: currentPassword });
+    // currentUser (from the profiles table) never carries an email — email
+    // only lives in Supabase's own Auth system, by design (003_staff_auth.sql).
+    // The already-active session is the real source for it.
+    const { data: authData, error: authError } = await supabase.auth.getUser();
+    if (authError || !authData.user?.email) {
+      setSaving(false);
+      setErrorMessage("Couldn't confirm your signed-in session — try signing out and back in.");
+      return;
+    }
+
+    const { error: reauthError } = await supabase.auth.signInWithPassword({ email: authData.user.email, password: currentPassword });
     if (reauthError) {
       setSaving(false);
       setErrorMessage("Current password is incorrect.");

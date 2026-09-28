@@ -1,5 +1,10 @@
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+// withSentryConfig lives under the package's separate /config subpath
+// (build-time only), not the main entry (runtime SDK) — importing it from
+// "@sentry/nextjs" directly resolves to undefined even though the type
+// definitions make it look like a top-level export.
+import { withSentryConfig } from "@sentry/nextjs/config";
 
 /** @type {import('next').NextConfig} */
 
@@ -65,6 +70,16 @@ try {
   supabaseOrigin = "";
 }
 
+// Same pattern as supabaseOrigin above — only added when a DSN is actually
+// configured, so error reports aren't silently dropped by our own CSP the
+// moment Sentry gets turned on (instrumentation-client.ts/instrumentation.ts).
+let sentryOrigin = "";
+try {
+  sentryOrigin = process.env.NEXT_PUBLIC_SENTRY_DSN ? new URL(process.env.NEXT_PUBLIC_SENTRY_DSN).origin : "";
+} catch {
+  sentryOrigin = "";
+}
+
 const csp = [
   "default-src 'self'",
   scriptSrc,
@@ -72,7 +87,7 @@ const csp = [
   "font-src 'self' https://fonts.gstatic.com",
   // `data:` covers the LQIP blur placeholders generated for each photo.
   ["img-src 'self' data:", supabaseOrigin].filter(Boolean).join(" "),
-  ["connect-src 'self'", isProd ? "" : "ws:", supabaseOrigin, supabaseOrigin.replace(/^https:/, "wss:")].filter(Boolean).join(" "),
+  ["connect-src 'self'", isProd ? "" : "ws:", supabaseOrigin, supabaseOrigin.replace(/^https:/, "wss:"), sentryOrigin].filter(Boolean).join(" "),
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -153,4 +168,28 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+/*
+ * Skipped entirely for the GitHub Pages static-export preview — there's no
+ * server for Sentry's server/edge instrumentation to attach to there, and
+ * source-map upload needs a real build step this branch doesn't have
+ * reason to run. Real deployment (Hostinger) always takes this path.
+ *
+ * withSentryConfig itself is safe to leave active with no DSN configured:
+ * it only affects the build (source map handling, a thin request-tracing
+ * wrapper) — actual error reporting is gated separately in
+ * instrumentation-client.ts / instrumentation.ts. org/project/authToken
+ * are only needed for source map upload (readable stack traces in Sentry's
+ * dashboard instead of minified ones); without them this silently skips
+ * that step rather than failing the build.
+ */
+export default isStaticExport
+  ? nextConfig
+  : withSentryConfig(nextConfig, {
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      silent: true,
+      widenClientFileUpload: true,
+      disableLogger: true,
+      automaticVercelMonitors: false,
+    });

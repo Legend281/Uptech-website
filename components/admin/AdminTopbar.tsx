@@ -10,6 +10,7 @@ import { getStaticPageLabel } from "@/lib/admin/nav";
 import { useCurrentUser, useCurrentUserStatus } from "@/components/admin/providers/CurrentUserProvider";
 import { TwoFactorSetupModal } from "@/components/admin/TwoFactorSetupModal";
 import { ChangePasswordModal } from "@/components/admin/ChangePasswordModal";
+import { CommandPalette } from "@/components/admin/CommandPalette";
 import { useLead, useLeads } from "@/components/admin/providers/LeadsProvider";
 import { useServicePages } from "@/components/admin/providers/ServicePagesProvider";
 import { useJobPostings } from "@/components/admin/providers/JobPostingsProvider";
@@ -82,7 +83,21 @@ export function AdminTopbar({ onOpenSidebar }: { onOpenSidebar: () => void }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [twoFactorOpen, setTwoFactorOpen] = useState(false);
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
+  const [paletteOpen, setPaletteOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  // Global, not scoped to any one element — Cmd+K (Mac) / Ctrl+K (everyone
+  // else) should work from wherever focus happens to be on the page.
+  useEffect(() => {
+    function handleGlobalKeyDown(event: KeyboardEvent) {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setPaletteOpen((open) => !open);
+      }
+    }
+    document.addEventListener("keydown", handleGlobalKeyDown);
+    return () => document.removeEventListener("keydown", handleGlobalKeyDown);
+  }, []);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -113,6 +128,24 @@ export function AdminTopbar({ onOpenSidebar }: { onOpenSidebar: () => void }) {
       </button>
 
       <Breadcrumb segments={breadcrumb} />
+
+      <button
+        type="button"
+        onClick={() => setPaletteOpen(true)}
+        className="ml-2 hidden items-center gap-2 rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-400 transition-colors hover:border-slate-300 hover:text-slate-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 sm:flex"
+      >
+        <MaterialIcon name="search" className="text-[16px]" />
+        Search
+        <kbd className="ml-1 rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-semibold text-slate-400">⌘K</kbd>
+      </button>
+      <button
+        type="button"
+        onClick={() => setPaletteOpen(true)}
+        aria-label="Search"
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 sm:hidden"
+      >
+        <MaterialIcon name="search" className="text-[20px]" />
+      </button>
 
       <div className="ml-auto flex shrink-0 items-center gap-4 text-sm">
         <span className="hidden items-center gap-1.5 text-slate-500 sm:flex">
@@ -221,6 +254,7 @@ export function AdminTopbar({ onOpenSidebar }: { onOpenSidebar: () => void }) {
     {/* Rendered outside the topbar's own div (which has backdrop-blur-md) — a CSS filter/backdrop-filter on an ancestor creates a new containing block for `position: fixed` descendants, which silently confined this modal to the topbar's own slim box instead of the real viewport. */}
     <TwoFactorSetupModal open={twoFactorOpen} onClose={() => setTwoFactorOpen(false)} />
     <ChangePasswordModal open={changePasswordOpen} onClose={() => setChangePasswordOpen(false)} />
+    <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
     </>
   );
 }

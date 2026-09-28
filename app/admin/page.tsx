@@ -35,7 +35,7 @@ import {
   type Severity,
 } from "@/lib/admin/register";
 import { leadStatusChartColor, reviewStatusChartColor, LEAD_PIPELINE_ORDER } from "@/lib/admin/chartColors";
-import { buildDashboardInsight } from "@/lib/admin/insight";
+import { buildDashboardInsights, type DashboardInsight } from "@/lib/admin/insight";
 import { departmentLabels } from "@/lib/admin/labels";
 import type { Lead, ServicePageMeta, Department } from "@/lib/admin/types";
 
@@ -189,7 +189,17 @@ export default function AdminDashboardPage() {
   const rows = buildRegister(scopedLeads, scopedPages);
   const staleCount = rows.filter((row) => row.kind === "lead" && row.isStale).length;
   const dueSoonLeadCount = rows.filter((row) => row.kind === "lead" && row.dueSoonSLA).length;
-  const insight = buildDashboardInsight(scopedLeads, newLeadsThisWeek, newLeadsLastWeek, staleCount, dueSoonLeadCount);
+  const insights = buildDashboardInsights({
+    scopedLeads,
+    newLeadsThisWeek,
+    newLeadsLastWeek,
+    staleCount,
+    dueSoonLeadCount,
+    overdueComplianceCount: overdueCount,
+    dueSoonComplianceCount: dueSoonCount,
+    bookedOrWonThisMonth,
+    bookedOrWonLastMonth,
+  });
 
   /*
    * No real email/notification channel exists yet for this — no staff email
@@ -249,6 +259,12 @@ export default function AdminDashboardPage() {
     toast.success("Escalated", { description: `${lead.name} has been assigned and notified.` });
   }
 
+  /** Every insight leads back to the register below it — set its matching filter when the concept maps to one, always scroll there. A chip that didn't move you toward the thing it's warning about wouldn't be worth clicking. */
+  function handleInsightClick(insight: DashboardInsight) {
+    if (insight.severityFilter) setSeverityFilter(insight.severityFilter);
+    document.getElementById("register")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   const pipelineSegments: BarSegment[] = LEAD_PIPELINE_ORDER.map((status) => ({
     key: status,
     label: severityMeta[leadStatusToSeverity[status]].label,
@@ -273,11 +289,27 @@ export default function AdminDashboardPage() {
           <p className="mt-1 text-sm text-slate-500">
             Here&apos;s what&apos;s moving {scope === "all" ? "across both departments" : `in ${departmentLabels[currentUser.department]}`} today.
           </p>
-          {insight && (
-            <p className="mt-1.5 flex items-center gap-1.5 text-sm font-medium text-teal-700">
-              <MaterialIcon name="auto_awesome" className="text-[14px]" />
-              {insight}
-            </p>
+          {insights.length > 0 && (
+            <div className="mt-2 flex flex-col gap-1.5">
+              {insights.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => handleInsightClick(item)}
+                  className={`flex w-fit items-center gap-1.5 rounded-md px-1.5 py-0.5 text-left text-sm font-medium transition-colors hover:underline ${
+                    {
+                      urgent: "text-rose-700",
+                      warning: "text-amber-700",
+                      positive: "text-emerald-700",
+                      neutral: "text-teal-700",
+                    }[item.tone]
+                  }`}
+                >
+                  <MaterialIcon name={item.icon} className="shrink-0 text-[14px]" />
+                  {item.text}
+                </button>
+              ))}
+            </div>
           )}
         </div>
         <div className="flex items-center gap-3 self-start sm:self-auto">

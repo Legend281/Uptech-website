@@ -1,5 +1,5 @@
 import type { Lead } from "./types";
-import { getLeadServiceLabel } from "./register";
+import { getLeadServiceLabel, type Severity } from "./register";
 
 const DAY_MS = 86_400_000;
 
@@ -68,4 +68,120 @@ export function buildDashboardInsight(
 
   if (clauses.length === 0) return null;
   return `${clauses.join(" — ")}.`;
+}
+
+export type DashboardInsight = {
+  id: string;
+  icon: string;
+  tone: "urgent" | "warning" | "positive" | "neutral";
+  text: string;
+  /** Clicking the insight sets this as the register's severity filter, when the concept maps cleanly to one (compliance overdue/due-soon share Severity's namespace with lead statuses — see register.ts). Omitted where it doesn't (e.g. "stale" and "SLA due-soon" are per-row flags, not severities), and the insight just scrolls to the register instead. */
+  severityFilter?: Severity;
+};
+
+/**
+ * The ranked, multi-fact successor to buildDashboardInsight (kept above,
+ * unused now but harmless — the single-sentence version this replaced).
+ * Same rule: every clause must be something the data actually supports, in
+ * priority order (most urgent first), capped so the header never turns
+ * into a wall of chips. Returns [] rather than one vacuous "all quiet"
+ * card — the caller hides the whole feed when this is empty.
+ */
+export function buildDashboardInsights(input: {
+  scopedLeads: Lead[];
+  newLeadsThisWeek: number;
+  newLeadsLastWeek: number;
+  staleCount: number;
+  dueSoonLeadCount: number;
+  overdueComplianceCount: number;
+  dueSoonComplianceCount: number;
+  bookedOrWonThisMonth: number;
+  bookedOrWonLastMonth: number;
+  now?: Date;
+}): DashboardInsight[] {
+  const {
+    scopedLeads,
+    newLeadsThisWeek,
+    newLeadsLastWeek,
+    staleCount,
+    dueSoonLeadCount,
+    overdueComplianceCount,
+    dueSoonComplianceCount,
+    bookedOrWonThisMonth,
+    bookedOrWonLastMonth,
+    now = new Date(),
+  } = input;
+
+  const insights: DashboardInsight[] = [];
+
+  if (staleCount > 0) {
+    insights.push({
+      id: "stale-leads",
+      icon: "warning",
+      tone: "urgent",
+      text: `${staleCount} ${staleCount === 1 ? "lead has" : "leads have"} gone stale and need follow-up.`,
+    });
+  }
+
+  if (overdueComplianceCount > 0) {
+    insights.push({
+      id: "compliance-overdue",
+      icon: "gavel",
+      tone: "urgent",
+      text: `${overdueComplianceCount} compliance ${overdueComplianceCount === 1 ? "review is" : "reviews are"} overdue.`,
+      severityFilter: "overdue",
+    });
+  }
+
+  if (dueSoonComplianceCount > 0) {
+    insights.push({
+      id: "compliance-due-soon",
+      icon: "schedule",
+      tone: "warning",
+      text: `${dueSoonComplianceCount} compliance ${dueSoonComplianceCount === 1 ? "review" : "reviews"} due soon — plan ahead of the deadline.`,
+      severityFilter: "due-soon",
+    });
+  }
+
+  if (dueSoonLeadCount > 0) {
+    insights.push({
+      id: "lead-sla-due-soon",
+      icon: "hourglass_top",
+      tone: "warning",
+      text: `${dueSoonLeadCount} ${dueSoonLeadCount === 1 ? "lead is" : "leads are"} approaching its SLA window — prioritize next.`,
+    });
+  }
+
+  if (newLeadsThisWeek > 0) {
+    let volumeClause: string;
+    if (newLeadsLastWeek === 0) {
+      volumeClause = `New leads are picking up — ${newLeadsThisWeek} this week`;
+    } else {
+      const pct = Math.round(((newLeadsThisWeek - newLeadsLastWeek) / newLeadsLastWeek) * 100);
+      if (pct > 0) volumeClause = `New leads are up ${pct}% this week`;
+      else if (pct < 0) volumeClause = `New leads are down ${Math.abs(pct)}% this week`;
+      else volumeClause = "New lead volume is flat this week";
+    }
+    const weeklyLeads = scopedLeads.filter((lead) => now.getTime() - new Date(lead.createdAt).getTime() < 7 * DAY_MS);
+    const dominant = dominantServiceLabel(weeklyLeads);
+    insights.push({
+      id: "lead-volume",
+      icon: "trending_up",
+      tone: "neutral",
+      text: `${dominant ? `${volumeClause}, mostly ${dominant}` : volumeClause}.`,
+    });
+  }
+
+  if (bookedOrWonThisMonth > 0 && bookedOrWonThisMonth > bookedOrWonLastMonth) {
+    insights.push({
+      id: "booked-won",
+      icon: "task_alt",
+      tone: "positive",
+      text: `${bookedOrWonThisMonth} booked or won this month — ahead of last month's ${bookedOrWonLastMonth}.`,
+    });
+  }
+
+  // Most urgent first (push order above already does this), capped so the
+  // header stays scannable instead of becoming a second register.
+  return insights.slice(0, 4);
 }

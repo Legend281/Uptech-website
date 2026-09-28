@@ -62,6 +62,6 @@ begin
 
   return null;
 end;
-$$ language plpgsql;
+$$ language plpgsql set search_path = public;
 
 notify pgrst, 'reload schema';

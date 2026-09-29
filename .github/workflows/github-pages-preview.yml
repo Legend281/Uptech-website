@@ -74,6 +74,15 @@ jobs:
           # leak into the real deployment.
           STATIC_EXPORT: "true"
           NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          # /careers (and any other page reading Supabase at build time, e.g.
+          # for real job postings) needs these to prerender at all — output:
+          # export has no server, so every page must fully resolve during
+          # this build, not per-request. The ANON key only, never the
+          # service-role key: it's already shipped client-side in the real
+          # site's own bundle (NEXT_PUBLIC_SUPABASE_ANON_KEY) and RLS, not
+          # this key's secrecy, is what actually protects the data.
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: npm run build
 
       - name: Upload artifact

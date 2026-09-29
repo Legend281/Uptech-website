@@ -13,6 +13,10 @@ import { SITE_URL } from "@/lib/siteUrl";
  * All /admin/* routes are excluded entirely — private, and already
  * disallowed in robots.ts.
  */
+// Same reasoning as robots.ts: no real per-request dynamism, and
+// `output: "export"` refuses to build this route without it.
+export const dynamic = "force-static";
+
 const routes = [
   "",
   "/contact",

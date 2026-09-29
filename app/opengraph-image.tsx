@@ -3,6 +3,10 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
 export const runtime = "nodejs";
+// Same content on every build, no per-request dynamism — and
+// `output: "export"` (the GitHub Pages preview build) refuses to build
+// this route without it.
+export const dynamic = "force-static";
 export const alt = "Uptech Consulting & Outsourcing";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";

@@ -40,6 +40,31 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # app/api/* are real backend routes (POST/PATCH/DELETE, Supabase writes,
+      # signed uploads) — `output: "export"` has no server to run them on, and
+      # Next.js refuses to build a static export with a non-GET Route Handler
+      # present at all.
+      #
+      # app/admin/* is excluded for a different, more important reason:
+      # middleware.ts is the ONLY thing gating those routes behind login
+      # (CurrentUserProvider has no client-side redirect of its own — a
+      # deliberate choice documented in middleware.ts's own comment, since
+      # THAT'S what middleware was built to fix). Middleware requires a
+      # server to run, which a static export served from GitHub Pages does
+      # not have, so it would silently never run there — every admin page
+      # would ship publicly reachable with no login gate at all on a public
+      # URL, right as this link is about to be shown outside the team.
+      # Supabase RLS would likely still block real data from loading for an
+      # unauthenticated visitor, but shipping the page shells un-gated at
+      # all isn't worth the risk for a link going to someone outside the
+      # team, especially with how sensitive the Onboarding data is.
+      #
+      # Both removals happen on THIS RUNNER'S CHECKOUT ONLY, right before the
+      # static build — the committed source in the repo is untouched, and the
+      # real Hostinger build never sets STATIC_EXPORT so never takes this path.
+      - name: Remove server-only and auth-gated routes (unsupported by static export)
+        run: rm -rf app/api app/admin
+
       - name: Build static export
         env:
           NODE_ENV: production

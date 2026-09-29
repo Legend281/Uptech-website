@@ -1,0 +1,21 @@
+-- Uptech Consulting admin dashboard — missing service_role GRANT on
+-- service_pages. Run this once in the Supabase SQL editor.
+--
+-- Same class of bug 004_grants.sql already fixed once for `authenticated`
+-- on profiles/leads: an RLS policy controls WHICH rows a role can see, but
+-- Postgres separately requires a baseline GRANT before that role can query
+-- the table at all. 009_service_pages.sql granted select/insert/update to
+-- `authenticated` only — nothing in this project ever queried service_pages
+-- as `service_role` until the daily-digest route (app/api/admin/daily-
+-- digest/route.ts) did, which is what surfaced this: a live test against
+-- the real database failed with "permission denied for table service_pages"
+-- (42501), Postgres's own hint being this exact GRANT statement. `leads`
+-- never hit this because it's already readable by service_role (confirmed
+-- directly against the live database, not just inferred from migration
+-- history — whatever granted it isn't in a tracked migration file).
+--
+-- service_role bypasses RLS policies, but NOT ordinary GRANT privileges —
+-- the two are independent, which is exactly what caught this project out
+-- twice now.
+
+grant select on public.service_pages to service_role;

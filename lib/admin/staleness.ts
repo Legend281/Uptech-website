@@ -9,7 +9,10 @@ export type ReviewStatus = "on-track" | "due-soon" | "overdue";
  */
 export const DEFAULT_DUE_SOON_DAYS = 30;
 
-export function getReviewStatus(page: ServicePageMeta, now: Date = new Date()): ReviewStatus {
+/** Narrowed the same way leadStaleness.ts narrows Lead — the daily digest route only has these three fields to build from a raw Supabase row. */
+type ReviewStatusInput = Pick<ServicePageMeta, "lastReviewedAt" | "reviewCadenceDays" | "dueSoonDays">;
+
+export function getReviewStatus(page: ReviewStatusInput, now: Date = new Date()): ReviewStatus {
   const daysSince = Math.floor((now.getTime() - new Date(page.lastReviewedAt).getTime()) / 86_400_000);
   if (daysSince >= page.reviewCadenceDays) return "overdue";
   if (daysSince >= page.reviewCadenceDays - (page.dueSoonDays ?? DEFAULT_DUE_SOON_DAYS)) return "due-soon";

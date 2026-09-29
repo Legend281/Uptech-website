@@ -1,5 +1,14 @@
 import type { Lead, LeadStatus } from "./types";
 
+/**
+ * Every function below only ever reads these four fields — narrowed from
+ * the full Lead so server-side-only callers (the daily digest route, which
+ * has no use for a lead's name/email/message) can build a minimal object
+ * instead of faking placeholder values just to satisfy the full Lead type.
+ * Any real Lead already satisfies this.
+ */
+type StalenessInput = Pick<Lead, "status" | "createdAt" | "firstContactedAt" | "statusChangedAt">;
+
 /*
  * Two independent clocks, not one — see the "two-clock" discussion this is
  * built from. A lead can pass the response-time test on day one and still
@@ -43,7 +52,7 @@ export type ResponseClock = {
   dueSoon: boolean;
 };
 
-export function getResponseClock(lead: Lead, now: Date = new Date(), windowHours: number = RESPONSE_SLA_HOURS): ResponseClock {
+export function getResponseClock(lead: StalenessInput, now: Date = new Date(), windowHours: number = RESPONSE_SLA_HOURS): ResponseClock {
   const hoursSinceCreated = (now.getTime() - new Date(lead.createdAt).getTime()) / 3_600_000;
   const contacted = Boolean(lead.firstContactedAt);
   // Settings can set a department's window shorter than the public promise
@@ -62,7 +71,7 @@ export type StageClock = {
   dueSoon: boolean;
 };
 
-export function getStageClock(lead: Lead, now: Date = new Date()): StageClock {
+export function getStageClock(lead: StalenessInput, now: Date = new Date()): StageClock {
   const daysInStatus = (now.getTime() - new Date(lead.statusChangedAt).getTime()) / 86_400_000;
   const thresholdDays = STAGE_AGING_THRESHOLD_DAYS[lead.status] ?? null;
   const stale = thresholdDays !== null && daysInStatus > thresholdDays;
@@ -70,7 +79,7 @@ export function getStageClock(lead: Lead, now: Date = new Date()): StageClock {
   return { daysInStatus, thresholdDays, stale, dueSoon };
 }
 
-export function isLeadStale(lead: Lead, now: Date = new Date(), windowHours: number = RESPONSE_SLA_HOURS): boolean {
+export function isLeadStale(lead: StalenessInput, now: Date = new Date(), windowHours: number = RESPONSE_SLA_HOURS): boolean {
   return getResponseClock(lead, now, windowHours).overdue || getStageClock(lead, now).stale;
 }
 
@@ -81,13 +90,13 @@ export function isLeadStale(lead: Lead, now: Date = new Date(), windowHours: num
  * too late to hit the commitment. Never true at the same time as
  * isLeadStale: each clock's own dueSoon is defined as "not yet overdue/stale."
  */
-export function isLeadDueSoon(lead: Lead, now: Date = new Date()): boolean {
+export function isLeadDueSoon(lead: StalenessInput, now: Date = new Date()): boolean {
   return getResponseClock(lead, now).dueSoon || getStageClock(lead, now).dueSoon;
 }
 
 export type LeadUrgency = "on-track" | "due-soon" | "overdue";
 
-export function getLeadUrgency(lead: Lead, now: Date = new Date()): LeadUrgency {
+export function getLeadUrgency(lead: StalenessInput, now: Date = new Date()): LeadUrgency {
   if (isLeadStale(lead, now)) return "overdue";
   if (isLeadDueSoon(lead, now)) return "due-soon";
   return "on-track";
@@ -102,7 +111,7 @@ export function getLeadUrgency(lead: Lead, now: Date = new Date()): LeadUrgency 
  * imports isLeadStale from this file, so reaching back for it here would be
  * a circular import.
  */
-export function leadUrgencyReason(lead: Lead, statusLabel: string, now: Date = new Date()): string | null {
+export function leadUrgencyReason(lead: StalenessInput, statusLabel: string, now: Date = new Date()): string | null {
   const response = getResponseClock(lead, now);
   if (response.overdue) return "Overdue — not yet contacted";
   if (response.dueSoon) {

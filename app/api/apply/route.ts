@@ -4,6 +4,7 @@ import { getSupabaseServerClient, getSupabaseServiceRoleClient } from "@/lib/sup
 import { notifyNewApplication } from "@/lib/resend";
 import { isRateLimited, getClientIp } from "@/lib/rateLimit";
 import { verifyTurnstile } from "@/lib/turnstile";
+import { isDisposableEmail, looksLikeGibberishName, isLinkHeavyMessage } from "@/lib/spamFilter";
 
 export const runtime = "nodejs";
 
@@ -78,6 +79,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Resume must be a PDF or Word document." }, { status: 400 });
   }
 
+  // Cheap, local spam signals — checked before the Turnstile round-trip
+  // since they need no network call. Conservative on purpose: never
+  // rejects a real name or a message that just happens to include a link.
+  if (looksLikeGibberishName(name)) {
+    return NextResponse.json({ error: "Please enter your full name." }, { status: 400 });
+  }
+  if (isDisposableEmail(email)) {
+    return NextResponse.json({ error: "Please use a permanent email address so we can reach you." }, { status: 400 });
+  }
+  if (typeof message === "string" && isLinkHeavyMessage(message)) {
+    return NextResponse.json({ error: "Please remove links and describe your request in your own words." }, { status: 400 });
+  }
+
   const turnstileResult = await verifyTurnstile(typeof turnstileToken === "string" ? turnstileToken : null, ip);
   if (!turnstileResult.ok) {
     return NextResponse.json({ error: "Bot verification failed. Please try again." }, { status: 400 });
@@ -144,6 +158,7 @@ export async function POST(request: NextRequest) {
     roleTitle: typeof roleTitle === "string" ? roleTitle : undefined,
     message: typeof message === "string" ? message : undefined,
     resumeSignedUrl,
+    department,
   });
 
   return NextResponse.json({ ok: true }, { status: 201 });

@@ -1,7 +1,31 @@
 import { Resend } from "resend";
+import type { Department } from "@/lib/admin/types";
 
-const NOTIFY_TO = "infos@uptechconsulting.com";
+const NOTIFY_TO_FALLBACK = "infos@uptechconsulting.com";
 const NOTIFY_FROM = "Uptech Consulting Website <onboarding@resend.dev>";
+
+/*
+ * Department → dedicated inbox, so a career application and a business
+ * lead stop landing in the exact same shared inbox. Env-var driven, same
+ * optional-with-graceful-fallback posture as every other key in this file:
+ * a department without its own address configured (or an ambiguous lead
+ * with no department at all) falls back to NOTIFY_EMAIL_DEFAULT, or the
+ * hardcoded shared address if that isn't set either. Nothing breaks if
+ * these are never configured — behavior is identical to before this
+ * existed.
+ */
+const DEPARTMENT_NOTIFY_ENV: Record<Department, string> = {
+  "career-services-operations": "NOTIFY_EMAIL_CAREER_SERVICES",
+  "business-formalisation-compliance": "NOTIFY_EMAIL_BUSINESS_FORMALISATION",
+};
+
+export function getNotifyRecipient(department?: Department | null): string {
+  if (department) {
+    const configured = process.env[DEPARTMENT_NOTIFY_ENV[department]];
+    if (configured) return configured;
+  }
+  return process.env.NOTIFY_EMAIL_DEFAULT || NOTIFY_TO_FALLBACK;
+}
 
 /*
  * Best-effort email notification alongside the real database write — per
@@ -21,6 +45,7 @@ export async function notifyNewLead(params: {
   company?: string;
   serviceLabel: string;
   message: string;
+  department?: Department | null;
 }): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
@@ -32,7 +57,7 @@ export async function notifyNewLead(params: {
     const resend = new Resend(apiKey);
     await resend.emails.send({
       from: NOTIFY_FROM,
-      to: NOTIFY_TO,
+      to: getNotifyRecipient(params.department),
       subject: `New lead: ${params.name} — ${params.serviceLabel}`,
       text: [
         `Name: ${params.name}`,
@@ -63,6 +88,7 @@ export async function notifyNewApplication(params: {
   roleTitle?: string;
   message?: string;
   resumeSignedUrl?: string;
+  department?: Department | null;
 }): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
@@ -76,7 +102,7 @@ export async function notifyNewApplication(params: {
     const resend = new Resend(apiKey);
     await resend.emails.send({
       from: NOTIFY_FROM,
-      to: NOTIFY_TO,
+      to: getNotifyRecipient(params.department),
       subject: `New application: ${params.name}${params.roleTitle ? ` — ${params.roleTitle}` : ""}`,
       text: [
         roleLine,
@@ -93,5 +119,30 @@ export async function notifyNewApplication(params: {
     });
   } catch (error) {
     console.error("[apply] Resend notification failed (the application was still saved):", error);
+  }
+}
+
+/**
+ * Sends one daily-digest email to a resolved recipient (already computed by
+ * the caller — this function doesn't know about departments, just sends
+ * what it's given). Same best-effort posture as the two notify functions:
+ * a missing key or send error is logged and swallowed, never thrown, since
+ * this always runs from a scheduled job with nobody watching for a thrown
+ * error to surface.
+ */
+export async function sendDigestEmail(to: string, subject: string, body: string): Promise<boolean> {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.warn("[digest] RESEND_API_KEY not set — skipping digest email.");
+    return false;
+  }
+
+  try {
+    const resend = new Resend(apiKey);
+    await resend.emails.send({ from: NOTIFY_FROM, to, subject, text: body });
+    return true;
+  } catch (error) {
+    console.error("[digest] Resend send failed:", error);
+    return false;
   }
 }

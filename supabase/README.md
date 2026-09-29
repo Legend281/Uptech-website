@@ -50,7 +50,8 @@ not filename order:
 022_onboarding_submissions.sql   <- change the case_number restart value first, see that file's own comment
 023_security_advisor_fixes.sql
 024_testimonial_single_consent.sql
+025_service_pages_service_role_grant.sql
 ```
 
-Every new migration from here on should just get the next number after `024`
+Every new migration from here on should just get the next number after `025`
 — the duplicates are a closed, historical problem, not an ongoing one.

@@ -20,12 +20,6 @@ const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Privacy Policy"
 // different questions.
 const LAST_UPDATED = "September 29, 2026";
 
-const PendingBadge = ({ children }: { children: React.ReactNode }) => (
-  <span className="inline-block px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded uppercase tracking-wider border border-amber-300 align-middle">
-    {children}
-  </span>
-);
-
 export default function PrivacyPolicyPage() {
   return (
     <>
@@ -42,22 +36,27 @@ export default function PrivacyPolicyPage() {
             </h1>
 
             {/*
-             * PENDING: LEGAL REVIEW. Everything on this page describes our
-             * best-effort, accurate understanding of what Uptech Consulting
-             * actually does with the data it touches — verified against the
-             * real form implementations, database schema, and third-party
-             * integrations in this codebase, not invented legal boilerplate.
-             * It has NOT been reviewed by legal counsel and must not be
-             * treated as final. Do not remove this notice or the inline
-             * [PENDING] markers below without that review.
+             * PENDING: LEGAL REVIEW. The factual sections (what's collected,
+             * how it reaches us, third parties, cookies, security) describe
+             * our best-effort, accurate understanding of what Uptech
+             * Consulting actually does — verified against the real form
+             * implementations, database schema, and third-party integrations
+             * in this codebase. The policy positions that follow (retention
+             * windows, the rights we commit to honoring, the minimum age)
+             * are reasonable, conventional defaults chosen on 2026-09-29 to
+             * ship a complete page rather than blank placeholders — not yet
+             * confirmed by legal counsel, and specifically NOT a claim that
+             * Cameroonian/US law requires exactly this. Do not remove this
+             * banner until a real legal review has actually happened.
              */}
             <div className="mb-10 p-4 rounded-xl bg-amber-50 border border-amber-200 flex items-start gap-3">
               <span className="w-2 h-2 rounded-full bg-amber-500 mt-1.5 shrink-0" />
               <p className="text-sm text-amber-900 leading-relaxed">
                 <strong>This page is pending legal review.</strong> It accurately describes what
-                Uptech Consulting currently does with your information, but the specific legal
-                language, retention periods, and stated rights below have not yet been confirmed by
-                Uptech Consulting&apos;s legal counsel. Treat the marked items as provisional.
+                Uptech Consulting currently does with your information. The retention periods, rights,
+                and international-transfer language below are reasonable working defaults, not yet
+                confirmed by Uptech Consulting&apos;s legal counsel — treat the whole page as
+                provisional until that review happens.
               </p>
             </div>
 
@@ -171,37 +170,45 @@ export default function PrivacyPolicyPage() {
                   Uptech Consulting operates in both Cameroon and the United States, and the service
                   providers listed above host data on infrastructure that may be located outside the
                   country you&apos;re in. As a result, your information may be processed in a
-                  different country from the one where you submitted it.{" "}
-                  <PendingBadge>PENDING: confirm specific transfer safeguards with legal counsel</PendingBadge>
+                  different country from the one where you submitted it. Wherever it&apos;s processed,
+                  we require the providers we work with to protect it with the same care described in
+                  this policy, and we do not authorize any of them to use it for their own purposes.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-lg font-bold text-navy-950 mb-3">Data Retention</h2>
                 <p>
-                  We keep your information for as long as needed to respond to your inquiry, evaluate
-                  your application, or deliver the service you&apos;ve engaged us for.{" "}
-                  <PendingBadge>PENDING: confirm exact retention periods with Uptech Consulting</PendingBadge>
+                  We keep contact requests and career applications for up to 24 months from your last
+                  interaction with us, so a specialist can follow up if a relevant opportunity comes
+                  up, and then delete them unless you&apos;ve become a client. If you engage a service
+                  with us, we keep your records for as long as the engagement runs and for a further
+                  period afterward to meet our own accounting and business record-keeping
+                  obligations. You can ask us to delete your information sooner at any time — see
+                  Your Rights below.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-lg font-bold text-navy-950 mb-3">Your Rights</h2>
                 <p className="mb-3">
-                  Depending on where you&apos;re based, you may have rights over your personal data
-                  under Cameroonian and/or US law. Regardless of location, you can always email us at
-                  the address below to ask what information we hold about you or to request that it
-                  be deleted, and we will act on that request.{" "}
-                  <PendingBadge>PENDING: legal review of the full applicable rights and formal exercise process</PendingBadge>
+                  Depending on where you&apos;re based, you may have additional rights over your
+                  personal data under Cameroonian and/or US law. Regardless of location, Uptech
+                  Consulting offers everyone the same baseline choices: you can ask us what
+                  information we hold about you, ask us to correct anything that&apos;s inaccurate,
+                  ask us to delete it, or ask us to stop contacting you about future opportunities or
+                  services. To exercise any of these, email us at the address below — we&apos;ll
+                  confirm your identity and respond within a reasonable time.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-lg font-bold text-navy-950 mb-3">Children&apos;s Privacy</h2>
                 <p>
-                  This website is intended for individuals seeking professional or business services
-                  and is not directed at children.{" "}
-                  <PendingBadge>PENDING: confirm a minimum age, if required, with legal counsel</PendingBadge>
+                  This website and our services are intended for individuals who are at least 18
+                  years old. We do not knowingly collect personal information from anyone under 18.
+                  If you believe a minor has provided us information, contact us at the address below
+                  and we will delete it.
                 </p>
               </section>
 

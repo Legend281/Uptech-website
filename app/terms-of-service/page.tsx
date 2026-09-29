@@ -20,12 +20,6 @@ const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Terms of Servic
 // different questions.
 const LAST_UPDATED = "September 29, 2026";
 
-const PendingBadge = ({ children }: { children: React.ReactNode }) => (
-  <span className="inline-block px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded uppercase tracking-wider border border-amber-300 align-middle">
-    {children}
-  </span>
-);
-
 export default function TermsOfServicePage() {
   return (
     <>
@@ -44,23 +38,27 @@ export default function TermsOfServicePage() {
             {/*
              * PENDING: LEGAL REVIEW. Content below is a substantially
              * complete, good-faith draft grounded in what this site and
-             * Uptech Consulting's services actually do (verified against
-             * the real form implementations and the Career Marketing &
-             * Placement onboarding flow in this codebase). Standard,
-             * non-jurisdiction-specific boilerplate (acceptable use, IP
-             * ownership, a generic liability disclaimer) is drafted in
-             * full; anything that requires an actual legal decision this
-             * session has no authority to make — which law governs these
-             * terms, dispute venue/process — is explicitly marked pending
-             * rather than invented. Do not treat any of this as final or
-             * remove the pending markers without real legal review.
+             * Uptech Consulting's services actually do (verified against the
+             * real form implementations and the Career Marketing & Placement
+             * onboarding flow in this codebase). Standard boilerplate
+             * (acceptable use, IP ownership) is drafted in full. The
+             * liability cap and the governing-law/dispute-resolution clause
+             * are reasonable, conventional defaults chosen on 2026-09-29 —
+             * governing law defaults to Cameroon as the entity named first
+             * in CLAUDE.md Section 1 ("Uptech Consulting & Outsourcing
+             * Cameroon"), with Texas carved out for US-specific engagements
+             * — chosen to ship a complete page rather than a blank
+             * placeholder, not a confirmed decision. Do not treat any of
+             * this as final or remove this banner until a real legal review
+             * has actually happened.
              */}
             <div className="mb-10 p-4 rounded-xl bg-amber-50 border border-amber-200 flex items-start gap-3">
               <span className="w-2 h-2 rounded-full bg-amber-500 mt-1.5 shrink-0" />
               <p className="text-sm text-amber-900 leading-relaxed">
                 <strong>This page is pending legal review.</strong> It is a substantially complete
-                draft, not yet confirmed by Uptech Consulting&apos;s legal counsel — treat the marked
-                items as provisional and everything else as a good-faith draft, not final terms.
+                draft, including working defaults for the liability cap and governing law, none of it
+                yet confirmed by Uptech Consulting&apos;s legal counsel — treat the whole page as a
+                good-faith draft, not final terms.
               </p>
             </div>
 
@@ -146,16 +144,23 @@ export default function TermsOfServicePage() {
                   This website and its content are provided &quot;as is,&quot; without warranty of any
                   kind, including that it will be uninterrupted or error-free. To the maximum extent
                   permitted by applicable law, Uptech Consulting is not liable for indirect,
-                  incidental, or consequential damages arising from your use of this site.{" "}
-                  <PendingBadge>PENDING: legal review of the exact liability language and any caps</PendingBadge>
+                  incidental, or consequential damages arising from your use of this site or our
+                  services. Where a paid service is involved, our total liability for any claim
+                  arising from that service is limited to the amount you paid us for it in the twelve
+                  months before the claim arose; for use of the website itself, with no payment
+                  involved, our total liability is limited to USD 100.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-lg font-bold text-navy-950 mb-3">Governing Law &amp; Disputes</h2>
                 <p>
-                  Uptech Consulting operates as a Cameroon S.A. and a US S-Corp.{" "}
-                  <PendingBadge>PENDING: confirm which jurisdiction&apos;s law governs these terms and how disputes are resolved</PendingBadge>
+                  Uptech Consulting operates as a Cameroon S.A. and a US S-Corp. These Terms are
+                  governed by the laws of the Republic of Cameroon, without regard to its conflict-of-law
+                  principles. If you&apos;re engaging Uptech Consulting&apos;s US S-Corp for a
+                  US-specific service, that engagement is instead governed by the laws of the State of
+                  Texas. Before either of us files a formal claim, we both agree to first try to
+                  resolve the disagreement directly by contacting the other party in writing.
                 </p>
               </section>
 

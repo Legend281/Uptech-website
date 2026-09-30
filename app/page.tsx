@@ -5,8 +5,6 @@ import {
   ArrowRight,
   ArrowUpRight,
   Check,
-  FileCheck2,
-  Lock,
   Plus,
 } from "lucide-react";
 
@@ -126,23 +124,6 @@ const pillars = [
     description:
       "Employer and employee registration, monthly compliance filings, clearance follow-ups, and social benefits follow-ups — pensions, allowances and more.",
   },
-];
-
-const handover = [
-  "A written scope naming owners, deadlines and the standard being worked to",
-  "Transparent progress reporting for as long as the engagement runs",
-  "Original certificates, filings and clearances collected and handed to you",
-  "Systems and documentation your own team can keep running afterwards",
-];
-
-// Verifiable, specific, and impossible to mistake for filler — these are the
-// registries and authorities the compliance work actually runs through.
-const systems = [
-  { code: "RCCM", label: "Trade & Personal Property Credit Register" },
-  { code: "OHADA", label: "Uniform Acts on commercial companies" },
-  { code: "DGI", label: "Directorate General of Taxation" },
-  { code: "CNPS", label: "National Social Insurance Fund" },
-  { code: "IRS", label: "US federal tax administration" },
 ];
 
 /** Used sparingly — only where the label carries real navigational meaning. */
@@ -436,76 +417,6 @@ export default async function HomePage() {
         </section>
 
         <BridgeSection />
-
-        {/* ---------------- Real Results ---------------- */}
-        <section className="bg-white py-24">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-14 max-w-2xl">
-              <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-navy-950 sm:text-4xl">
-                What a completed engagement looks like.
-              </h2>
-              <p className="text-sm leading-relaxed text-slate-600 sm:text-base">
-                Every engagement ends the same way: you hold the documents, and
-                you know what happens next.
-              </p>
-            </div>
-
-            <Reveal effect="stagger" className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-14">
-              <div className="lg:col-span-7">
-                <h3 className="mb-6 text-lg font-bold text-navy-950">
-                  What you are holding at handover
-                </h3>
-                <ul className="space-y-5">
-                  {handover.map((item) => (
-                    <li key={item} className="flex items-start gap-4">
-                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-teal-200/70 bg-teal-50">
-                        <FileCheck2 className="h-3 w-3 text-teal-600" strokeWidth={2.4} />
-                      </span>
-                      <span className="text-sm leading-relaxed text-slate-700">
-                        {item}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="mt-9 flex items-start gap-3 rounded-xl border border-slate-200/80 bg-slate-50 p-5">
-                  <Lock className="mt-0.5 h-4 w-4 shrink-0 text-slate-500" strokeWidth={1.9} />
-                  <p className="text-xs leading-relaxed text-slate-600">
-                    <span className="font-bold text-slate-900">
-                      Confidentiality.
-                    </span>{" "}
-                    Client files are not published. Named references and full
-                    engagement records are reviewed under mutual NDA during
-                    consultation.
-                  </p>
-                </div>
-              </div>
-
-              <div className="lg:col-span-5">
-                <h3 className="mb-6 text-lg font-bold text-navy-950">
-                  The systems this work runs through
-                </h3>
-                <dl className="space-y-3">
-                  {systems.map((system, index) => (
-                    <Reveal
-                      key={system.code}
-                      effect="rise"
-                      delay={index * 70}
-                      className="flex items-center gap-4 rounded-xl border border-slate-200/80 bg-slate-50/60 p-4 transition-colors hover:bg-slate-50"
-                    >
-                      <dt className="flex h-10 w-16 shrink-0 items-center justify-center rounded-lg bg-navy-900 text-xs font-extrabold tracking-tight text-teal-400">
-                        {system.code}
-                      </dt>
-                      <dd className="text-xs leading-relaxed text-slate-600">
-                        {system.label}
-                      </dd>
-                    </Reveal>
-                  ))}
-                </dl>
-              </div>
-            </Reveal>
-          </div>
-        </section>
 
         {/* ---------------- Testimonials ---------------- */}
         {/* Same dark treatment as the Career Marketing & Placement Support

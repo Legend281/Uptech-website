@@ -51,7 +51,8 @@ not filename order:
 023_security_advisor_fixes.sql
 024_testimonial_single_consent.sql
 025_service_pages_service_role_grant.sql
+026_blog_posts.sql
 ```
 
-Every new migration from here on should just get the next number after `025`
+Every new migration from here on should just get the next number after `026`
 — the duplicates are a closed, historical problem, not an ongoing one.

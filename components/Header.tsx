@@ -427,6 +427,13 @@ export function Header({
           >
             Careers
           </Link>
+
+          <Link
+            href="/blog"
+            className="px-3 py-1.5 rounded-lg text-slate-300 hover:text-teal-400 transition-colors text-sm font-semibold"
+          >
+            Blog
+          </Link>
         </nav>
 
         {/* Right actions */}
@@ -583,6 +590,15 @@ export function Header({
             >
               <MaterialIcon name="work" className="text-[20px] text-teal-400" />
               Careers
+            </Link>
+
+            <Link
+              href="/blog"
+              onClick={closeMobileMenu}
+              className="flex items-center gap-3 rounded-xl border border-slate-800/70 bg-white/[0.02] px-3.5 py-3.5 text-[15px] font-semibold text-white hover:text-teal-400"
+            >
+              <MaterialIcon name="article" className="text-[20px] text-teal-400" />
+              Blog
             </Link>
 
             <Link

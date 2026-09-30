@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getPublishedBlogPosts } from "@/lib/blog";
 
 /*
  * Deliberately excludes two real routes:
@@ -34,13 +35,28 @@ const routes = [
   "/services/business-formalisation-compliance/cnps-compliance-cameroon",
   "/privacy-policy",
   "/terms-of-service",
+  "/blog",
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  return routes.map((route) => ({
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const staticEntries: MetadataRoute.Sitemap = routes.map((route) => ({
     url: `${SITE_URL}${route}`,
     lastModified: new Date(),
     changeFrequency: "weekly",
     priority: route === "" ? 1 : 0.8,
   }));
+
+  // Real published posts only — this runs at build time (force-static
+  // above), so a post added after the last build won't appear here until
+  // the next one. Acceptable for a sitemap; the post itself is still
+  // reachable and indexable via its own page and the /blog listing.
+  const posts = await getPublishedBlogPosts();
+  const postEntries: MetadataRoute.Sitemap = posts.map((post) => ({
+    url: `${SITE_URL}/blog/${post.slug}`,
+    lastModified: new Date(post.publishedAt),
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
+  return [...staticEntries, ...postEntries];
 }

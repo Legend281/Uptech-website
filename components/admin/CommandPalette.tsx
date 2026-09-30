@@ -62,7 +62,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
 
   const navResults: ResultItem[] = useMemo(() => {
     const items: ResultItem[] = [];
-    for (const group of getNavGroups(0, 0, 0, 0, 0)) {
+    for (const group of getNavGroups(0, 0, 0, 0, 0, 0)) {
       for (const item of group.items) {
         if (item.soon || !item.href) continue;
         if (item.adminOnly && currentUser.role !== "administrator") continue;

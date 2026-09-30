@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 /*
  * Canonical design tokens — see CLAUDE.md Section 3.
@@ -26,6 +27,18 @@
   --color-uco-cyan: #38bdf8;
   --color-uco-green: #25d366;
   --color-uco-green-hover: #1ebe5d;
+}
+
+/* Blog post body copy (app/blog/[slug]/page.tsx, and the admin rich text
+   editor) — brand navy headings and blue-accent links instead of the
+   typography plugin's neutral-gray defaults, so long-form content reads
+   as part of this site, not a generic article template. */
+.prose {
+  --tw-prose-headings: var(--color-navy-950);
+  --tw-prose-bold: var(--color-navy-950);
+  --tw-prose-links: var(--color-blue-accent);
+  --tw-prose-quotes: var(--color-navy-700);
+  --tw-prose-quote-borders: var(--color-cyan-accent);
 }
 
 body {

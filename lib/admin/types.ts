@@ -405,3 +405,33 @@ export type OnboardingSubmission = {
   createdAt: string;
   updatedAt: string;
 };
+
+/*
+ * Blog — mirrors supabase/026_blog_posts.sql. Flat Administrator/Editor
+ * management like Job Postings (no department split — a post isn't Career
+ * Services' or Business Formalisation's), draft/published like every other
+ * publishable content type here.
+ */
+export type BlogPostStatus = "draft" | "published";
+
+export type BlogPost = {
+  id: string;
+  title: string;
+  /** URL segment (/blog/<slug>) — kept separate from title so a later title edit never breaks an already-shared link. */
+  slug: string;
+  excerpt: string;
+  /** Sanitized HTML from the admin rich text editor. */
+  content: string;
+  /** Display URL (public Storage URL, or a fresh data URL while editing — uploaded on save). */
+  coverImage?: string;
+  /** Where the saved cover image lives in the blog-photos bucket. */
+  coverImagePath?: string;
+  authorName: string;
+  category?: string;
+  status: BlogPostStatus;
+  /** Set once, the first time this post is published — never reset by a later edit. */
+  publishedAt?: string;
+  createdById?: string;
+  createdAt: string;
+  updatedAt: string;
+};

@@ -13,6 +13,7 @@ import { getReviewStatus } from "@/lib/admin/staleness";
 import { getNavGroups, type NavItem } from "@/lib/admin/nav";
 import { useAdditionalServices } from "@/components/admin/providers/AdditionalServicesProvider";
 import { useOnboardingSubmissions } from "@/components/admin/providers/OnboardingProvider";
+import { useBlogPosts } from "@/components/admin/providers/BlogPostsProvider";
 
 function NavRow({ item, active }: { item: NavItem; active: boolean }) {
   const rowClasses =
@@ -76,7 +77,8 @@ export function AdminSidebar({ open, onClose }: { open: boolean; onClose: () => 
   const servicePagesNeedingReviewCount = servicePages.filter((page) => getReviewStatus(page) !== "on-track").length;
   const additionalServices = useAdditionalServices();
   const onboardingSubmissions = useOnboardingSubmissions();
-  const navGroups = getNavGroups(leads.length, jobPostings.length, servicePagesNeedingReviewCount, additionalServices.length, onboardingSubmissions.submissions.length);
+  const blogPosts = useBlogPosts();
+  const navGroups = getNavGroups(leads.length, jobPostings.length, servicePagesNeedingReviewCount, additionalServices.length, onboardingSubmissions.submissions.length, blogPosts.posts.length);
 
   const content = (
     <div className="flex h-full flex-col bg-navy-950">

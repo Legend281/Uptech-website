@@ -14,6 +14,8 @@ export const AVATAR_SIZE: ResizeOptions = { width: 320, height: 320 };
 export const PORTRAIT_SIZE: ResizeOptions = { width: 480, height: 600 };
 /** Additional-service cards: 4:3, matching the existing 5 services' hub-page card image. */
 export const SERVICE_CARD_SIZE: ResizeOptions = { width: 800, height: 600 };
+/** Blog cover images: 1200x630 — the same 1.91:1 ratio as app/opengraph-image.tsx, so a post's own cover doubles as a sane social-share image. */
+export const BLOG_COVER_SIZE: ResizeOptions = { width: 1200, height: 630 };
 
 export async function resizeImageToDataUrl(file: File, { width, height, quality = 0.82 }: ResizeOptions = AVATAR_SIZE): Promise<string> {
   if (!file.type.startsWith("image/")) throw new Error("That file isn't an image.");

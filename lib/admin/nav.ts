@@ -25,6 +25,7 @@ export function getNavGroups(
   servicePagesNeedingReviewCount: number,
   additionalServicesCount: number,
   onboardingCount: number,
+  blogPostsCount: number,
 ): NavGroup[] {
   return [
     { label: "Overview", items: [{ label: "Dashboard", icon: "dashboard", href: "/admin" }] },
@@ -48,6 +49,7 @@ export function getNavGroups(
         { label: "Service Pages", icon: "description", href: "/admin/service-pages", badge: servicePagesNeedingReviewCount },
         { label: "Additional Services", icon: "storefront", href: "/admin/additional-services", badge: additionalServicesCount },
         { label: "Case Studies", icon: "auto_stories", soon: true },
+        { label: "Blog", icon: "article", href: "/admin/blog", badge: blogPostsCount },
         { label: "Testimonials", icon: "format_quote", href: "/admin/testimonials" },
         { label: "Team Members", icon: "groups", href: "/admin/team" },
         { label: "FAQ Items", icon: "quiz", href: "/admin/faqs" },
@@ -71,8 +73,9 @@ export function getStaticPageLabel(
   servicePagesNeedingReviewCount: number,
   additionalServicesCount: number,
   onboardingCount: number,
+  blogPostsCount: number,
 ): string | undefined {
-  for (const group of getNavGroups(leadsCount, jobPostingsCount, servicePagesNeedingReviewCount, additionalServicesCount, onboardingCount)) {
+  for (const group of getNavGroups(leadsCount, jobPostingsCount, servicePagesNeedingReviewCount, additionalServicesCount, onboardingCount, blogPostsCount)) {
     for (const item of group.items) {
       if (item.href === pathname) return item.label;
     }

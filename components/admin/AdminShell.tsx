@@ -19,6 +19,7 @@ import { TeamMembersProvider } from "@/components/admin/providers/TeamMembersPro
 import { FaqItemsProvider } from "@/components/admin/providers/FaqItemsProvider";
 import { AdditionalServicesProvider } from "@/components/admin/providers/AdditionalServicesProvider";
 import { OnboardingProvider } from "@/components/admin/providers/OnboardingProvider";
+import { BlogPostsProvider } from "@/components/admin/providers/BlogPostsProvider";
 
 function FullPageSpinner() {
   return (
@@ -81,17 +82,19 @@ function AuthenticatedShell({ children }: { children: ReactNode }) {
                     <FaqItemsProvider>
                       <AdditionalServicesProvider>
                         <OnboardingProvider>
-                          {/* reducedMotion="user" makes every motion.* / AnimatePresence animation in this section defer to the OS-level prefers-reduced-motion setting automatically. */}
-                          <MotionConfig reducedMotion="user">
-                            <div className="min-h-screen bg-[#F7F8FA]">
-                              <AdminSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-                              <div className="lg:pl-72">
-                                {/* Reads its own urgent count from ServicePagesProvider now, live — a server-computed prop here would freeze at build time and never reflect a Resolve action. */}
-                                <AdminTopbar onOpenSidebar={() => setSidebarOpen(true)} />
-                                <main className="px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+                          <BlogPostsProvider>
+                            {/* reducedMotion="user" makes every motion.* / AnimatePresence animation in this section defer to the OS-level prefers-reduced-motion setting automatically. */}
+                            <MotionConfig reducedMotion="user">
+                              <div className="min-h-screen bg-[#F7F8FA]">
+                                <AdminSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+                                <div className="lg:pl-72">
+                                  {/* Reads its own urgent count from ServicePagesProvider now, live — a server-computed prop here would freeze at build time and never reflect a Resolve action. */}
+                                  <AdminTopbar onOpenSidebar={() => setSidebarOpen(true)} />
+                                  <main className="px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+                                </div>
                               </div>
-                            </div>
-                          </MotionConfig>
+                            </MotionConfig>
+                          </BlogPostsProvider>
                         </OnboardingProvider>
                       </AdditionalServicesProvider>
                     </FaqItemsProvider>

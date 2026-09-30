@@ -16,6 +16,7 @@ import { useServicePages } from "@/components/admin/providers/ServicePagesProvid
 import { useJobPostings } from "@/components/admin/providers/JobPostingsProvider";
 import { useAdditionalServices } from "@/components/admin/providers/AdditionalServicesProvider";
 import { useOnboardingSubmissions } from "@/components/admin/providers/OnboardingProvider";
+import { useBlogPosts } from "@/components/admin/providers/BlogPostsProvider";
 import { getReviewStatus } from "@/lib/admin/staleness";
 
 type Crumb = { label: string; href?: string };
@@ -29,13 +30,14 @@ function useBreadcrumb(): Crumb[] {
   const servicePagesNeedingReviewCount = servicePages.filter((page) => getReviewStatus(page) !== "on-track").length;
   const additionalServicesCount = useAdditionalServices().length;
   const onboardingCount = useOnboardingSubmissions().submissions.length;
+  const blogPostsCount = useBlogPosts().posts.length;
   const leadIdMatch = pathname.match(/^\/admin\/leads\/(.+)$/);
   const lead = useLead(leadIdMatch?.[1] ?? "");
 
   if (leadIdMatch) {
     return [{ label: "Leads", href: "/admin/leads" }, { label: lead?.name ?? "Lead" }];
   }
-  return [{ label: getStaticPageLabel(pathname, leadsCount, jobPostingsCount, servicePagesNeedingReviewCount, additionalServicesCount, onboardingCount) ?? "Dashboard" }];
+  return [{ label: getStaticPageLabel(pathname, leadsCount, jobPostingsCount, servicePagesNeedingReviewCount, additionalServicesCount, onboardingCount, blogPostsCount) ?? "Dashboard" }];
 }
 
 function Breadcrumb({ segments }: { segments: Crumb[] }) {

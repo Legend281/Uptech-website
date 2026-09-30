@@ -122,3 +122,31 @@ export function jobPostingJsonLd(posting: {
         }),
   };
 }
+
+export function blogPostingJsonLd(post: {
+  title: string;
+  excerpt: string;
+  slug: string;
+  authorName: string;
+  coverImage?: string;
+  publishedAt: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    url: `${SITE_URL}/blog/${post.slug}`,
+    datePublished: post.publishedAt,
+    // A real staff name by default (the admin form pre-fills the signed-in
+    // author), so Person is the correct schema.org type here — not
+    // Organization, which would misrepresent an individual byline.
+    author: { "@type": "Person", name: post.authorName },
+    publisher: {
+      "@type": "Organization",
+      name: "Uptech Consulting & Outsourcing",
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/UPTECH_LOG.png` },
+    },
+    ...(post.coverImage ? { image: post.coverImage } : {}),
+  };
+}

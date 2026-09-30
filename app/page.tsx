@@ -6,10 +6,8 @@ import {
   ArrowUpRight,
   Check,
   FileCheck2,
-  Layers,
   Lock,
   Plus,
-  Quote,
 } from "lucide-react";
 
 import { Header } from "@/components/Header";
@@ -29,7 +27,6 @@ import { FaqAccordion } from "@/components/FaqAccordion";
 import { getFaqs } from "@/lib/faqs";
 import { BridgeSection } from "@/components/home/BridgeSection";
 import { Reveal } from "@/components/Reveal";
-import { RotatingPromise, type PromiseStatement } from "@/components/home/RotatingPromise";
 import { TestimonialCarousel } from "@/components/home/TestimonialCarousel";
 import { images } from "@/lib/images";
 import { getPublishedTestimonials } from "@/lib/testimonials";
@@ -78,49 +75,6 @@ const startingPoints = [
       "Licensing, accreditation and regulatory compliance",
       "Tax, payroll and managed business processes",
     ],
-  },
-];
-
-/*
- * The statements that rotate through the dark band mid-page. Each is anchored
- * to a real service line, and every sentence is either Uptech Consulting's own
- * wording or copy already approved elsewhere on this page — nothing invented to
- * fill a slot (CLAUDE.md Section 6.4).
- *
- * IT Consulting's slide was removed when leadership paused that pillar — a
- * promotional CTA driving traffic to an unlinked page would undo the point of
- * unlinking it. Restore the slide (see git history) if the pillar is unpaused.
- */
-const promises: PromiseStatement[] = [
-  {
-    tag: "Career Placement",
-    accent: "teal",
-    lead: "We dedicate a full-time worker to your account whose job is to make sure you never miss a relevant posting, and",
-    emphasis: "follow up with recruiters until you are placed.",
-    support:
-      "Not a shared inbox and not an automated alert. A named person carries your file — the same principle that runs through every compliance engagement we take on.",
-    ctaLabel: "Start your career campaign",
-    ctaHref: "/services/career-marketing-placement",
-  },
-  {
-    tag: "Compliance",
-    accent: "sky",
-    lead: "Business legalisation, tax and social insurance compliance, ministry licensing and accreditation,",
-    emphasis: "managed as one accountable process.",
-    support:
-      "Every engagement ends the same way: you hold the documents, and you know what happens next.",
-    ctaLabel: "See how compliance runs",
-    ctaHref: "/services/business-formalisation-compliance",
-  },
-  {
-    tag: "How We Operate",
-    accent: "emerald",
-    lead: "Individual effort only succeeds when it runs through the",
-    emphasis: "repeatable, documented systems the organisation has already built.",
-    support:
-      "A stated internal expectation, not a marketing line. It is the reason your outcome does not depend on which staff member happens to be available that week.",
-    ctaLabel: "How we operate",
-    ctaHref: "/who-we-are",
   },
 ];
 
@@ -481,72 +435,6 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* ---------------- Meet your dedicated person ---------------- */}
-        <section className="relative overflow-hidden border-y border-slate-200/80 bg-navy-950 py-24 text-white lg:py-28">
-          <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-            <div className="float-a absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-teal-400/10 blur-3xl" />
-            {/* A large, faint editorial quote mark behind the copy — the mark
-                stays put while the statements change in front of it. */}
-            <Quote
-              className="absolute left-1/2 top-6 h-40 w-40 -translate-x-1/2 text-teal-400/[0.06] sm:h-48 sm:w-48"
-              strokeWidth={1}
-            />
-          </div>
-          <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-            <RotatingPromise items={promises} />
-          </div>
-        </section>
-
-        {/* ---------------- How We Work (teaser) ----------------
-            Was two full sections (a 3-step process spine, then all 4 core
-            values in full). Who We Are's Philosophy and Core Values sections
-            already cover this in full depth — this duplicated it rather than
-            teasing it. Shrunk to one paragraph + a link, not removed: the
-            homepage still needs to establish tone fast for a zero-context
-            visitor, just without re-explaining what Who We Are already owns. */}
-        <section className="border-y border-slate-200/80 bg-slate-100/70 py-20 lg:py-24">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <Reveal effect="stagger" className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-16">
-              <div className="lg:col-span-5">
-                <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-navy-900">
-                  <Layers className="h-5 w-5 text-teal-400" strokeWidth={2} />
-                </div>
-                <h2 className="text-3xl font-extrabold leading-tight tracking-tight text-navy-950 sm:text-4xl">
-                  <TextReveal text="Documented systems, not individual heroics." />
-                </h2>
-              </div>
-
-              <div className="lg:col-span-7">
-                <p className="mb-7 max-w-xl text-sm leading-relaxed text-slate-600 sm:text-base">
-                  A clear operating rhythm — not individual heroics — keeps every engagement
-                  accountable, built on the same four values our whole team is held to.
-                </p>
-
-                <div className="mb-8 grid grid-cols-2 gap-x-8 gap-y-5 border-t border-slate-300/70 pt-6 sm:grid-cols-4">
-                  {["Integrity", "Professionalism", "Commitment", "Innovation"].map((value, index) => (
-                    <div key={value}>
-                      <span className="mb-1 block text-[11px] font-extrabold tracking-tight text-teal-600">
-                        0{index + 1}
-                      </span>
-                      <span className="text-xs font-bold uppercase tracking-wide text-navy-950">
-                        {value}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                <Link
-                  href="/who-we-are"
-                  className="inline-flex items-center gap-2 text-sm font-bold text-blue-accent transition-colors hover:text-blue-700"
-                >
-                  <span>Learn more about how we work</span>
-                  <ArrowRight className="h-4 w-4" strokeWidth={2} />
-                </Link>
-              </div>
-            </Reveal>
-          </div>
-        </section>
-
         <BridgeSection />
 
         {/* ---------------- Real Results ---------------- */}
@@ -663,63 +551,6 @@ export default async function HomePage() {
             </h2>
             <Reveal effect="fade">
               <FaqAccordion items={faqItems} />
-            </Reveal>
-          </div>
-        </section>
-
-        {/* ---------------- Careers ---------------- */}
-        <section id="careers" className="scroll-mt-24 bg-white py-24">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <Reveal effect="stagger" className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
-              <div className="lg:order-2 lg:col-span-6">
-                <TiltCard max={5} className="relative overflow-hidden rounded-2xl border border-slate-200/90 shadow-2xl ring-1 ring-black/5">
-                  <Image
-                    src={images["career-review"].src}
-                    alt={images["career-review"].alt}
-                    width={images["career-review"].width}
-                    height={images["career-review"].height}
-                    sizes="(min-width: 1024px) 50vw, 100vw"
-                    placeholder="blur"
-                    blurDataURL={images["career-review"].blurDataURL}
-                    className="h-[460px] w-full object-cover"
-                  />
-                </TiltCard>
-              </div>
-
-              <div className="lg:order-1 lg:col-span-6">
-                <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-navy-950 sm:text-4xl">
-                  <TextReveal text="Work where the standard is written down." />
-                </h2>
-                <p className="mb-8 text-sm leading-relaxed text-slate-600 sm:text-base">
-                  We look for people who bring integrity, professionalism,
-                  commitment and innovation to client-facing work.
-                </p>
-
-                <ul className="mb-8 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2">
-                  {["IT & data roles", "Compliance & formalisation", "Recruitment & payroll", "Client support & BPO"].map((area) => (
-                    <li key={area} className="flex items-center gap-3 border-b border-slate-200/80 pb-3 text-sm font-medium text-slate-700">
-                      <Check className="h-4 w-4 shrink-0 text-teal-600" strokeWidth={2.5} />
-                      <span>{area}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="flex flex-wrap items-center gap-4">
-                  <Link
-                    href="/careers"
-                    className="flex items-center gap-2 rounded-lg bg-blue-accent px-6 py-3.5 text-xs font-bold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow active:scale-[0.98]"
-                  >
-                    <span>Send your application</span>
-                    <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} />
-                  </Link>
-                  <a
-                    href="tel:+237678597593"
-                    className="rounded-lg border border-slate-300 bg-white px-6 py-3.5 text-xs font-bold text-slate-800 transition-all hover:border-slate-400 active:scale-[0.98]"
-                  >
-                    Talk to our team
-                  </a>
-                </div>
-              </div>
             </Reveal>
           </div>
         </section>

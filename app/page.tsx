@@ -28,6 +28,7 @@ import { Reveal } from "@/components/Reveal";
 import { TestimonialCarousel } from "@/components/home/TestimonialCarousel";
 import { images } from "@/lib/images";
 import { getPublishedTestimonials } from "@/lib/testimonials";
+import { getGoogleReviews, googleWriteReviewUrl } from "@/lib/googleReviews";
 import { getPublishedAdditionalServices } from "@/lib/additionalServices";
 
 export const metadata: Metadata = {
@@ -139,7 +140,14 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 export default async function HomePage() {
   // Dashboard-published FAQs when there are any, else the built-in list (lib/faqs.ts).
   const faqItems = await getFaqs("general");
-  const testimonials = await getPublishedTestimonials("homepage");
+  // Two real sources, shown side by side: staff-curated testimonials
+  // (WhatsApp/email, entered through the admin dashboard) first, then live
+  // Google reviews after — per leadership's decision that this section
+  // should draw from both channels, not just one.
+  const curatedTestimonials = await getPublishedTestimonials("homepage");
+  const googleReviews = await getGoogleReviews();
+  const testimonials = [...curatedTestimonials, ...googleReviews];
+  const reviewUrl = googleWriteReviewUrl();
   // Anything Uptech has added beyond the 5 core services below — see
   // lib/additionalServices.ts. Empty today is the normal, expected case.
   const additionalServices = await getPublishedAdditionalServices();
@@ -439,14 +447,27 @@ export default async function HomePage() {
             </div>
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/70 to-transparent" />
             <Reveal effect="rise" className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <div className="max-w-3xl">
-                <div className="mb-4 inline-flex items-center gap-2">
-                  <span className="inline-block h-[2px] w-7 bg-teal-400" />
-                  <span className="text-xs font-bold uppercase tracking-wider text-teal-400">IN OUR CLIENTS&apos; WORDS</span>
+              <div className="mb-8 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
+                <div className="max-w-3xl">
+                  <div className="mb-4 inline-flex items-center gap-2">
+                    <span className="inline-block h-[2px] w-7 bg-teal-400" />
+                    <span className="text-xs font-bold uppercase tracking-wider text-teal-400">IN OUR CLIENTS&apos; WORDS</span>
+                  </div>
+                  <h2 className="text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl">
+                    <TextReveal text="What working with us is like." />
+                  </h2>
                 </div>
-                <h2 className="mb-8 text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl">
-                  <TextReveal text="What working with us is like." />
-                </h2>
+                {reviewUrl && (
+                  <a
+                    href={reviewUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex w-fit shrink-0 items-center gap-2 rounded-lg border border-slate-700 bg-navy-950/80 px-5 py-3 text-xs font-bold text-white backdrop-blur-sm transition-all hover:border-slate-500 active:scale-[0.98]"
+                  >
+                    <span>Leave us a review on Google</span>
+                    <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2} />
+                  </a>
+                )}
               </div>
               {/* Side by side and paged, with the same controls as RotatingPromise above. */}
               <TestimonialCarousel items={testimonials} />

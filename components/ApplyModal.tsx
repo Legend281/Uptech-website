@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
 
-const CONTACT_EMAIL = "infos@uptechconsulting.com";
+const CONTACT_EMAIL = "infos@uptechoutsourcing.com";
 
 function mailtoFallback(roleTitle?: string): string {
   const subject = roleTitle ? `Application — ${roleTitle}` : "General Interest — Future Opportunities";

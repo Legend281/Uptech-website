@@ -18,7 +18,7 @@ export type JobPosting = {
 };
 
 // Exported so the admin's Job Postings module can use the exact same default rather than redefining it and risking drift.
-export const GENERAL_INTEREST_EMAIL = "infos@uptechconsulting.com";
+export const GENERAL_INTEREST_EMAIL = "infos@uptechoutsourcing.com";
 
 /*
  * "Send Us Your CV" / "Apply for This Role" now open ApplyModal, a real

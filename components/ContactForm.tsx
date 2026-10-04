@@ -6,7 +6,7 @@ import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
 import { serviceOptions, isServiceValue, type ServiceValue } from "@/lib/serviceOptions";
 
-const CONTACT_EMAIL = "infos@uptechconsulting.com";
+const CONTACT_EMAIL = "infos@uptechoutsourcing.com";
 
 /*
  * Re-exported for anything already importing these from this file —

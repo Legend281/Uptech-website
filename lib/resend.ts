@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 import type { Department } from "@/lib/admin/types";
 
-const NOTIFY_TO_FALLBACK = "infos@uptechconsulting.com";
+const NOTIFY_TO_FALLBACK = "infos@uptechoutsourcing.com";
 const NOTIFY_FROM = "Uptech Consulting Website <onboarding@resend.dev>";
 
 /*
@@ -36,7 +36,7 @@ export function getNotifyRecipient(department?: Department | null): string {
  *
  * NOTIFY_FROM uses Resend's own shared onboarding@resend.dev sender,
  * which works with zero setup — swap this for a verified
- * @uptechconsulting.com address once that domain is verified in Resend.
+ * @uptechoutsourcing.com address once that domain is verified in Resend.
  */
 export async function notifyNewLead(params: {
   name: string;

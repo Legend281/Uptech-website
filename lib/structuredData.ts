@@ -3,7 +3,7 @@ import { SITE_URL } from "@/lib/siteUrl";
 /*
  * schema.org JSON-LD builders — plain data, no JSX. Every field here is
  * either a fact already published elsewhere on the site (the real WhatsApp
- * number used sitewide, infos@uptechconsulting.com, the real logo) or
+ * number used sitewide, infos@uptechoutsourcing.com, the real logo) or
  * standard schema.org boilerplate. Nothing invented: no street address
  * (never confirmed beyond city/country), no social profiles (none exist
  * yet — CLAUDE.md's "never fabricate" rule applies to structured data
@@ -12,7 +12,7 @@ import { SITE_URL } from "@/lib/siteUrl";
  */
 
 const WHATSAPP_PHONE = "+237678597593";
-const CONTACT_EMAIL = "infos@uptechconsulting.com";
+const CONTACT_EMAIL = "infos@uptechoutsourcing.com";
 
 export function organizationJsonLd() {
   return {

@@ -224,8 +224,8 @@ export default function PrivacyPolicyPage() {
                 <h2 className="text-lg font-bold text-navy-950 mb-3">Contact Us</h2>
                 <p>
                   Questions about this policy, or requests about your personal data, can be sent to{" "}
-                  <a href="mailto:infos@uptechconsulting.com" className="text-blue-accent underline hover:text-blue-700">
-                    infos@uptechconsulting.com
+                  <a href="mailto:infos@uptechoutsourcing.com" className="text-blue-accent underline hover:text-blue-700">
+                    infos@uptechoutsourcing.com
                   </a>
                   .
                 </p>

@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { describeDbError, getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { JobPosting, JobPostingStatus } from "@/lib/admin/types";
 
 /*
@@ -62,6 +62,7 @@ export type NewJobPostingInput = Pick<
 
 type JobPostingsContextValue = {
   postings: JobPosting[];
+  loadError: string | null;
   addPosting: (input: NewJobPostingInput, postedById: string) => Promise<JobPosting>;
   editPosting: (id: string, input: NewJobPostingInput) => void;
   deletePosting: (id: string) => void;
@@ -74,6 +75,7 @@ const JobPostingsContext = createContext<JobPostingsContextValue | null>(null);
 
 export function JobPostingsProvider({ children }: { children: ReactNode }) {
   const [postings, setPostings] = useState<JobPosting[]>([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     const supabase = getSupabaseBrowserClient();
@@ -87,9 +89,11 @@ export function JobPostingsProvider({ children }: { children: ReactNode }) {
         if (cancelled) return;
         if (error) {
           console.error("[job-postings] Failed to load postings:", error);
+          setLoadError(describeDbError(error));
           return;
         }
         setPostings((data as JobPostingRow[]).map(fromRow));
+        setLoadError(null);
       });
 
     return () => {
@@ -200,7 +204,7 @@ export function JobPostingsProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <JobPostingsContext.Provider value={{ postings, addPosting, editPosting, deletePosting, setStatus, clonePosting, updateApplications }}>
+    <JobPostingsContext.Provider value={{ postings, loadError, addPosting, editPosting, deletePosting, setStatus, clonePosting, updateApplications }}>
       {children}
     </JobPostingsContext.Provider>
   );
@@ -212,9 +216,15 @@ export function useJobPostings(): JobPosting[] {
   return ctx.postings;
 }
 
-export function useJobPostingActions(): Omit<JobPostingsContextValue, "postings"> {
+export function useJobPostingActions(): Omit<JobPostingsContextValue, "postings" | "loadError"> {
   const ctx = useContext(JobPostingsContext);
   if (!ctx) throw new Error("useJobPostingActions must be used within JobPostingsProvider");
   const { addPosting, editPosting, deletePosting, setStatus, clonePosting, updateApplications } = ctx;
   return { addPosting, editPosting, deletePosting, setStatus, clonePosting, updateApplications };
+}
+
+export function useJobPostingsLoadError(): string | null {
+  const ctx = useContext(JobPostingsContext);
+  if (!ctx) throw new Error("useJobPostingsLoadError must be used within JobPostingsProvider");
+  return ctx.loadError;
 }

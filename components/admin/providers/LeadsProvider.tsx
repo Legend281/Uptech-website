@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { describeDbError, getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { deriveLeadType } from "@/lib/admin/leads";
 import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
 import { useStaff } from "@/components/admin/providers/StaffProvider";
@@ -100,6 +100,7 @@ type LeadsContextValue = {
   leads: Lead[];
   /** False once the initial fetch settles (success or error) — lets a detail route distinguish "still loading" from "this id genuinely doesn't exist" instead of flashing the not-found state first. */
   loading: boolean;
+  loadError: string | null;
   addLead: (input: NewLeadInput) => Promise<Lead>;
   editLead: (id: string, input: EditableLeadFields) => void;
   deleteLead: (id: string) => void;
@@ -114,6 +115,7 @@ const LeadsContext = createContext<LeadsContextValue | null>(null);
 export function LeadsProvider({ children }: { children: ReactNode }) {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const logActivity = useLogActivity();
   const staff = useStaff();
   const { settings } = useSettings();
@@ -130,10 +132,12 @@ export function LeadsProvider({ children }: { children: ReactNode }) {
         if (cancelled) return;
         if (error) {
           console.error("[leads] Failed to load leads:", error);
+          setLoadError(describeDbError(error));
           setLoading(false);
           return;
         }
         setLeads((data as LeadRow[]).map(fromRow));
+        setLoadError(null);
         setLoading(false);
       });
 
@@ -281,7 +285,7 @@ export function LeadsProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <LeadsContext.Provider value={{ leads, loading, addLead, editLead, deleteLead, claimLead, reassignLead, updateStatus, resolveTriage }}>
+    <LeadsContext.Provider value={{ leads, loading, loadError, addLead, editLead, deleteLead, claimLead, reassignLead, updateStatus, resolveTriage }}>
       {children}
     </LeadsContext.Provider>
   );
@@ -297,6 +301,12 @@ export function useLeadsLoading(): boolean {
   const ctx = useContext(LeadsContext);
   if (!ctx) throw new Error("useLeadsLoading must be used within LeadsProvider");
   return ctx.loading;
+}
+
+export function useLeadsLoadError(): string | null {
+  const ctx = useContext(LeadsContext);
+  if (!ctx) throw new Error("useLeadsLoadError must be used within LeadsProvider");
+  return ctx.loadError;
 }
 
 export function useLead(id: string): Lead | undefined {

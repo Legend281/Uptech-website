@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { describeDbError, getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { revalidatePublicPages } from "@/lib/admin/revalidate";
 import type { AdditionalService, AdditionalServiceStatus } from "@/lib/admin/types";
 
@@ -65,6 +65,7 @@ export type EditableAdditionalServiceFields = {
 
 type AdditionalServicesContextValue = {
   services: AdditionalService[];
+  loadError: string | null;
   addService: (input: NewAdditionalServiceInput, createdById: string) => Promise<AdditionalService>;
   editService: (id: string, input: EditableAdditionalServiceFields) => void;
   setStatus: (id: string, status: AdditionalServiceStatus) => void;
@@ -77,6 +78,7 @@ const AdditionalServicesContext = createContext<AdditionalServicesContextValue |
 
 export function AdditionalServicesProvider({ children }: { children: ReactNode }) {
   const [services, setServices] = useState<AdditionalService[]>([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     const supabase = getSupabaseBrowserClient();
@@ -90,9 +92,11 @@ export function AdditionalServicesProvider({ children }: { children: ReactNode }
         if (cancelled) return;
         if (error) {
           console.error("[additional-services] Failed to load services:", error);
+          setLoadError(describeDbError(error));
           return;
         }
         setServices((data as ServiceRow[]).map(fromRow));
+        setLoadError(null);
       });
 
     return () => {
@@ -195,7 +199,7 @@ export function AdditionalServicesProvider({ children }: { children: ReactNode }
   }
 
   return (
-    <AdditionalServicesContext.Provider value={{ services, addService, editService, setStatus, deleteService, move }}>
+    <AdditionalServicesContext.Provider value={{ services, loadError, addService, editService, setStatus, deleteService, move }}>
       {children}
     </AdditionalServicesContext.Provider>
   );
@@ -207,9 +211,15 @@ export function useAdditionalServices(): AdditionalService[] {
   return ctx.services;
 }
 
-export function useAdditionalServiceActions(): Omit<AdditionalServicesContextValue, "services"> {
+export function useAdditionalServiceActions(): Omit<AdditionalServicesContextValue, "services" | "loadError"> {
   const ctx = useContext(AdditionalServicesContext);
   if (!ctx) throw new Error("useAdditionalServiceActions must be used within AdditionalServicesProvider");
   const { addService, editService, setStatus, deleteService, move } = ctx;
   return { addService, editService, setStatus, deleteService, move };
+}
+
+export function useAdditionalServicesLoadError(): string | null {
+  const ctx = useContext(AdditionalServicesContext);
+  if (!ctx) throw new Error("useAdditionalServicesLoadError must be used within AdditionalServicesProvider");
+  return ctx.loadError;
 }

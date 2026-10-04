@@ -178,6 +178,23 @@ export function InfoNotice({ children }: { children: ReactNode }) {
   );
 }
 
+/*
+ * Every module provider used to fail its initial load silently — an error
+ * fetching from Supabase just left the list empty with nothing but a
+ * console.error no staff member will ever see, indistinguishable from
+ * "there's genuinely nothing here yet." This is the fix: a page-level
+ * provider exposes `loadError`, and every list page renders this at the top
+ * instead of silently showing an empty state when something actually broke.
+ */
+export function ErrorNotice({ children }: { children: ReactNode }) {
+  return (
+    <div className="mb-4 flex gap-2.5 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900">
+      <MaterialIcon name="error" className="mt-px text-[18px] text-rose-600" />
+      <p>{children}</p>
+    </div>
+  );
+}
+
 /** Top-of-page title row: heading, one-line summary, and the module's primary action. */
 export function ModuleHeader({ title, summary, action }: { title: string; summary: ReactNode; action?: ReactNode }) {
   return (

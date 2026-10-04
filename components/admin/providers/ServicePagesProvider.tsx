@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { describeDbError, getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { ServicePageMeta } from "@/lib/admin/types";
 
 /*
@@ -48,6 +48,7 @@ export type NewServicePageInput = Pick<ServicePageMeta, "title" | "url" | "depar
 
 type ServicePagesContextValue = {
   pages: ServicePageMeta[];
+  loadError: string | null;
   resolveReview: (pageId: string, input: ResolveReviewInput, resolvedByName: string) => void;
   escalateReview: (pageId: string, toUserId: string) => void;
   addServicePage: (input: NewServicePageInput) => Promise<ServicePageMeta>;
@@ -67,6 +68,7 @@ const ServicePagesContext = createContext<ServicePagesContextValue | null>(null)
 
 export function ServicePagesProvider({ children }: { children: ReactNode }) {
   const [pages, setPages] = useState<ServicePageMeta[]>([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     const supabase = getSupabaseBrowserClient();
@@ -80,9 +82,11 @@ export function ServicePagesProvider({ children }: { children: ReactNode }) {
         if (cancelled) return;
         if (error) {
           console.error("[service-pages] Failed to load service pages:", error);
+          setLoadError(describeDbError(error));
           return;
         }
         setPages((data as ServicePageRow[]).map(fromRow));
+        setLoadError(null);
       });
 
     return () => {
@@ -165,7 +169,7 @@ export function ServicePagesProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <ServicePagesContext.Provider value={{ pages, resolveReview, escalateReview, addServicePage, updateReviewCadence }}>
+    <ServicePagesContext.Provider value={{ pages, loadError, resolveReview, escalateReview, addServicePage, updateReviewCadence }}>
       {children}
     </ServicePagesContext.Provider>
   );
@@ -177,9 +181,15 @@ export function useServicePages(): ServicePageMeta[] {
   return ctx.pages;
 }
 
-export function useServicePageActions(): Omit<ServicePagesContextValue, "pages"> {
+export function useServicePageActions(): Omit<ServicePagesContextValue, "pages" | "loadError"> {
   const ctx = useContext(ServicePagesContext);
   if (!ctx) throw new Error("useServicePageActions must be used within ServicePagesProvider");
   const { resolveReview, escalateReview, addServicePage, updateReviewCadence } = ctx;
   return { resolveReview, escalateReview, addServicePage, updateReviewCadence };
+}
+
+export function useServicePagesLoadError(): string | null {
+  const ctx = useContext(ServicePagesContext);
+  if (!ctx) throw new Error("useServicePagesLoadError must be used within ServicePagesProvider");
+  return ctx.loadError;
 }

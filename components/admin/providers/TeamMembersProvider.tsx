@@ -75,6 +75,7 @@ function inputToColumns(input: TeamMemberInput, photoPath: string | null) {
 type TeamContextValue = {
   members: TeamMemberRecord[];
   loading: boolean;
+  loadError: string | null;
   addMember: (input: TeamMemberInput, user: AdminUser) => Promise<ActionResult>;
   updateMember: (id: string, input: TeamMemberInput, user: AdminUser) => Promise<ActionResult>;
   setStatus: (id: string, status: TeamMemberStatus, user: AdminUser) => Promise<ActionResult>;
@@ -90,6 +91,7 @@ const denied: ActionResult = { ok: false, reasons: ["Only an Administrator can c
 export function TeamMembersProvider({ children }: { children: ReactNode }) {
   const [members, setMembers] = useState<TeamMemberRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const logActivity = useLogActivity();
 
   async function revalidate() {
@@ -99,7 +101,13 @@ export function TeamMembersProvider({ children }: { children: ReactNode }) {
 
   const refresh = useCallback(async () => {
     const { data, error } = await getSupabaseBrowserClient().from("team_members").select("*").order("display_order", { ascending: true });
-    if (!error && data) setMembers((data as Row[]).map(rowToMember));
+    if (error) {
+      console.error("[team] Failed to load team members:", error);
+      setLoadError(describeDbError(error));
+    } else if (data) {
+      setMembers((data as Row[]).map(rowToMember));
+      setLoadError(null);
+    }
     setLoading(false);
   }, []);
 
@@ -109,6 +117,7 @@ export function TeamMembersProvider({ children }: { children: ReactNode }) {
       if (hasSession) void refresh();
       else {
         setMembers([]);
+        setLoadError(null);
         setLoading(false);
       }
     }
@@ -241,7 +250,7 @@ export function TeamMembersProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <TeamContext.Provider value={{ members, loading, addMember, updateMember, setStatus, move, deleteMember }}>{children}</TeamContext.Provider>
+    <TeamContext.Provider value={{ members, loading, loadError, addMember, updateMember, setStatus, move, deleteMember }}>{children}</TeamContext.Provider>
   );
 }
 

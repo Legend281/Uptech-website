@@ -8,7 +8,8 @@ import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { AdditionalServiceFormDialog } from "@/components/admin/AdditionalServiceFormDialog";
 import { AdditionalServiceRowActions } from "@/components/admin/AdditionalServiceRowActions";
 import { AnimatedNumber } from "@/components/admin/AnimatedNumber";
-import { useAdditionalServices, useAdditionalServiceActions } from "@/components/admin/providers/AdditionalServicesProvider";
+import { useAdditionalServices, useAdditionalServiceActions, useAdditionalServicesLoadError } from "@/components/admin/providers/AdditionalServicesProvider";
+import { ErrorNotice } from "@/components/admin/FormParts";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
 import { canManageContent } from "@/lib/admin/permissions";
@@ -76,6 +77,7 @@ function ServiceRow({
 
 export default function AdditionalServicesPage() {
   const services = useAdditionalServices();
+  const loadError = useAdditionalServicesLoadError();
   const { deleteService } = useAdditionalServiceActions();
   const currentUser = useCurrentUser();
   const canManage = canManageContent(currentUser);
@@ -124,6 +126,12 @@ export default function AdditionalServicesPage() {
             </motion.button>
           )}
         </motion.div>
+
+        {loadError && (
+          <motion.div variants={itemVariants}>
+            <ErrorNotice>{loadError}</ErrorNotice>
+          </motion.div>
+        )}
 
         <motion.section variants={itemVariants} className={`rounded-xl border border-slate-200 bg-white ${CARD_ELEVATION}`}>
           {ordered.length === 0 ? (

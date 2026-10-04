@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
-import { InfoNotice, ModuleHeader } from "@/components/admin/FormParts";
+import { ModuleHeader } from "@/components/admin/FormParts";
 import { AssignmentSettings } from "@/components/admin/settings/AssignmentSettings";
 import { CompanySettings, NotificationSettings, ReviewCycleSettings } from "@/components/admin/settings/OtherSettings";
 import { UsersSettings } from "@/components/admin/settings/UsersSettings";
@@ -41,8 +41,6 @@ export default function SettingsPage() {
         title="Settings"
         summary={isAdmin ? "System configuration. Changes here affect everyone, so each one is recorded in the Activity feed." : "Your personal preferences. The rest of Settings is for Administrators."}
       />
-      <InfoNotice>Settings are saved in this browser only for now.</InfoNotice>
-
       <div className="flex flex-col gap-6 lg:flex-row">
         <nav aria-label="Settings sections" className="flex gap-1 overflow-x-auto lg:w-56 lg:shrink-0 lg:flex-col">
           {visibleTabs.map((t) => (

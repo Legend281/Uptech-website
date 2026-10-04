@@ -8,7 +8,7 @@ import { useLeads } from "@/components/admin/providers/LeadsProvider";
 import { useJobPostings } from "@/components/admin/providers/JobPostingsProvider";
 import { useOnboardingSubmissions } from "@/components/admin/providers/OnboardingProvider";
 import { useStaff } from "@/components/admin/providers/StaffProvider";
-import { getNavGroups } from "@/lib/admin/nav";
+import { canSeeNavItem, getNavGroups } from "@/lib/admin/nav";
 
 type ResultItem = {
   id: string;
@@ -65,8 +65,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
     for (const group of getNavGroups(0, 0, 0, 0, 0, 0)) {
       for (const item of group.items) {
         if (item.soon || !item.href) continue;
-        if (item.adminOnly && currentUser.role !== "administrator") continue;
-        if (item.restrictedToDepartment && currentUser.role !== "administrator" && currentUser.department !== item.restrictedToDepartment) continue;
+        if (!canSeeNavItem(item, currentUser)) continue;
         items.push({ id: `nav-${item.href}`, group: "Go to", icon: item.icon, label: item.label, onSelect: () => go(item.href as string) });
       }
     }

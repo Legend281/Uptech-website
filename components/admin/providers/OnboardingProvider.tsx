@@ -105,6 +105,7 @@ function rowToSubmission(row: Row): OnboardingSubmission {
 type OnboardingContextValue = {
   submissions: OnboardingSubmission[];
   loading: boolean;
+  loadError: string | null;
   assignAccountManager: (id: string, accountManagerId: string | undefined, user: AdminUser) => Promise<ActionResult>;
   setApplicationPassword: (id: string, applicationPassword: string, user: AdminUser) => Promise<ActionResult>;
   deleteSubmission: (id: string, user: AdminUser) => Promise<ActionResult>;
@@ -115,6 +116,7 @@ const OnboardingContext = createContext<OnboardingContextValue | null>(null);
 export function OnboardingProvider({ children }: { children: ReactNode }) {
   const [submissions, setSubmissions] = useState<OnboardingSubmission[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const logActivity = useLogActivity();
 
   const refresh = useCallback(async () => {
@@ -122,7 +124,13 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       .from("onboarding_submissions")
       .select("*")
       .order("submitted_at", { ascending: false });
-    if (!error && data) setSubmissions((data as Row[]).map(rowToSubmission));
+    if (error) {
+      console.error("[onboarding] Failed to load submissions:", error);
+      setLoadError(describeDbError(error));
+    } else if (data) {
+      setSubmissions((data as Row[]).map(rowToSubmission));
+      setLoadError(null);
+    }
     setLoading(false);
   }, []);
 
@@ -132,6 +140,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       if (hasSession) void refresh();
       else {
         setSubmissions([]);
+        setLoadError(null);
         setLoading(false);
       }
     }
@@ -189,7 +198,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <OnboardingContext.Provider value={{ submissions, loading, assignAccountManager, setApplicationPassword, deleteSubmission }}>
+    <OnboardingContext.Provider value={{ submissions, loading, loadError, assignAccountManager, setApplicationPassword, deleteSubmission }}>
       {children}
     </OnboardingContext.Provider>
   );

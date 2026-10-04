@@ -52,7 +52,27 @@ not filename order:
 024_testimonial_single_consent.sql
 025_service_pages_service_role_grant.sql
 026_blog_posts.sql
+027_onboarding_service_role_grant.sql
+028_blog_author_bio.sql
+029_blog_featured.sql
+030_close_authenticated_gaps.sql
+031_remove_viewer_role.sql
 ```
 
-Every new migration from here on should just get the next number after `026`
+Every new migration from here on should just get the next number after `031`
+
+**Rule for every new policy:** check access with `public.current_staff_role()`
+/ `public.current_staff_department()`, never `to authenticated using (true)`
+and never an ad hoc `exists (select 1 from public.profiles ...)`. Public
+sign-ups make "authenticated" mean "anyone with an email address", and the
+ad hoc check ignores deactivated accounts. `030` exists because `008`, `019`
+(its leads null-department branch), and `026` each missed one of these.
 — the duplicates are a closed, historical problem, not an ongoing one.
+
+**As of 2026-10-03, a live check against the database confirmed `025`, `026`,
+and `027` have never actually been run** — they exist as files, written and
+committed, but the database itself still doesn't have the table (`026`) or
+the permissions (`025`, `027`) they describe. This is why Blog can't save
+anything, the daily digest email fails entirely, and the Client Onboarding
+webhook silently fails every real submission. Run all four (`025`–`028`), in
+that order, before relying on any of Blog, the daily digest, or Onboarding.

@@ -38,6 +38,9 @@ export function describeDbError(error: { message?: string; code?: string } | nul
   if (error.code === "23505" && /blog_posts_slug_key/.test(error.message ?? "")) {
     return "That URL slug is already used by another post. Pick a different one.";
   }
+  if (error.code === "42P01") {
+    return "This feature's database table hasn't been set up yet. Ask whoever manages the database to run the matching setup script in supabase/ against the real database, then refresh.";
+  }
   // Our own trigger messages (e.g. the review gate) are already written for people.
   return error.message || "Something went wrong.";
 }

@@ -136,6 +136,7 @@ function pathsFor(...placementLists: TestimonialPlacement[][]): string[] {
 type TestimonialsContextValue = {
   testimonials: Testimonial[];
   loading: boolean;
+  loadError: string | null;
   /** Whether a Supabase staff session exists in this browser. Nothing can be read or published without one. */
   signedIn: boolean;
   /** Saves as a draft, then publishes if asked and allowed. */
@@ -158,6 +159,7 @@ function nameFor(t: Pick<Testimonial, "attributionMode" | "fullName" | "firstNam
 export function TestimonialsProvider({ children }: { children: ReactNode }) {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [signedIn, setSignedIn] = useState(false);
   const logActivity = useLogActivity();
   const db = getSupabaseBrowserClient();
@@ -169,7 +171,13 @@ export function TestimonialsProvider({ children }: { children: ReactNode }) {
 
   const refresh = useCallback(async () => {
     const { data, error } = await getSupabaseBrowserClient().from("testimonials").select(SELECT).order("updated_at", { ascending: false });
-    if (!error && data) setTestimonials((data as Row[]).map(rowToTestimonial));
+    if (error) {
+      console.error("[testimonials] Failed to load testimonials:", error);
+      setLoadError(describeDbError(error));
+    } else if (data) {
+      setTestimonials((data as Row[]).map(rowToTestimonial));
+      setLoadError(null);
+    }
     setLoading(false);
   }, []);
 
@@ -181,6 +189,7 @@ export function TestimonialsProvider({ children }: { children: ReactNode }) {
       if (hasSession) void refresh();
       else {
         setTestimonials([]);
+        setLoadError(null);
         setLoading(false);
       }
     }
@@ -377,6 +386,7 @@ export function TestimonialsProvider({ children }: { children: ReactNode }) {
       value={{
         testimonials,
         loading,
+        loadError,
         signedIn,
         addTestimonial,
         updateTestimonial,

@@ -5,7 +5,8 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
-import { useLeads, useLeadActions } from "@/components/admin/providers/LeadsProvider";
+import { useLeads, useLeadActions, useLeadsLoadError } from "@/components/admin/providers/LeadsProvider";
+import { ErrorNotice } from "@/components/admin/FormParts";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
 import { canManageContent } from "@/lib/admin/permissions";
@@ -140,6 +141,7 @@ function LeadCard({ lead, isDuplicate }: { lead: Lead; isDuplicate?: boolean }) 
 
 export default function LeadsPage() {
   const leads = useLeads();
+  const loadError = useLeadsLoadError();
   const { claimLead, deleteLead } = useLeadActions();
   const currentUser = useCurrentUser();
   const canManage = canManageContent(currentUser);
@@ -262,6 +264,12 @@ export default function LeadsPage() {
             </motion.button>
           )}
         </motion.div>
+
+        {loadError && (
+          <motion.div variants={itemVariants}>
+            <ErrorNotice>{loadError}</ErrorNotice>
+          </motion.div>
+        )}
 
         {/* Same chart language as the Dashboard's Pipeline Breakdown — clicking a segment or legend entry filters the table below exactly like the old status pills did, just sharing one visual system across both pages instead of two. */}
         <motion.div variants={itemVariants} className={`mb-4 rounded-xl border border-slate-200 bg-white p-4 sm:p-5 ${CARD_ELEVATION}`}>

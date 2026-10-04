@@ -6,7 +6,7 @@ import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { RowActionsMenu, type RowAction } from "@/components/admin/RowActionsMenu";
-import { ModuleHeader, PrimaryActionButton, SearchInput, CARD_SURFACE, inputClasses, labelClasses } from "@/components/admin/FormParts";
+import { ModuleHeader, PrimaryActionButton, SearchInput, CARD_SURFACE, inputClasses, labelClasses, ErrorNotice } from "@/components/admin/FormParts";
 import { AnimatedNumber } from "@/components/admin/AnimatedNumber";
 import { useOnboardingSubmissions } from "@/components/admin/providers/OnboardingProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
@@ -75,7 +75,7 @@ function DetailModal({ submission, onClose }: { submission: OnboardingSubmission
   const { assignAccountManager, setApplicationPassword } = useOnboardingSubmissions();
   const [applicationPasswordDraft, setApplicationPasswordDraft] = useState(submission.applicationPassword ?? "");
   const [savingPassword, setSavingPassword] = useState(false);
-  const eligibleManagers = staff.filter((u) => u.department === "career-services-operations" && u.role !== "viewer");
+  const eligibleManagers = staff.filter((u) => u.department === "career-services-operations");
 
   async function handleAssign(id: string) {
     const result = await assignAccountManager(submission.id, id || undefined, currentUser);
@@ -203,7 +203,7 @@ function DetailModal({ submission, onClose }: { submission: OnboardingSubmission
 }
 
 export default function OnboardingPage() {
-  const { submissions, deleteSubmission } = useOnboardingSubmissions();
+  const { submissions, loadError, deleteSubmission } = useOnboardingSubmissions();
   const currentUser = useCurrentUser();
   const staff = useStaff();
   const [query, setQuery] = useState("");
@@ -255,6 +255,12 @@ export default function OnboardingPage() {
             }
           />
         </motion.div>
+
+        {loadError && (
+          <motion.div variants={itemVariants}>
+            <ErrorNotice>{loadError}</ErrorNotice>
+          </motion.div>
+        )}
 
         <motion.div variants={itemVariants} className="mb-4">
           <SearchInput id="onboarding-search" value={query} onChange={setQuery} label="Search by name, email, case #, or job title…" />
@@ -336,7 +342,7 @@ export default function OnboardingPage() {
   );
 }
 
-/** Mirrors supabase/022_onboarding_submissions.sql's own RLS exactly — Viewers get nothing here regardless of department, unlike everywhere else in this dashboard. The database would refuse the read either way; this just tells someone why the page looks empty instead of leaving them guessing. */
+/** Mirrors supabase/022_onboarding_submissions.sql's own RLS exactly — only Administrators and Career Services Editors. The database would refuse the read either way; this just tells someone why the page looks empty instead of leaving them guessing. */
 function canAccessOnboarding(user: { role: string; department: string }): boolean {
   return user.role === "administrator" || (user.role === "editor" && user.department === "career-services-operations");
 }

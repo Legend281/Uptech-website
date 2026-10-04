@@ -10,7 +10,7 @@ import { useLeads } from "@/components/admin/providers/LeadsProvider";
 import { useJobPostings } from "@/components/admin/providers/JobPostingsProvider";
 import { useServicePages } from "@/components/admin/providers/ServicePagesProvider";
 import { getReviewStatus } from "@/lib/admin/staleness";
-import { getNavGroups, type NavItem } from "@/lib/admin/nav";
+import { canSeeNavItem, getNavGroups, type NavItem } from "@/lib/admin/nav";
 import { useAdditionalServices } from "@/components/admin/providers/AdditionalServicesProvider";
 import { useOnboardingSubmissions } from "@/components/admin/providers/OnboardingProvider";
 import { useBlogPosts } from "@/components/admin/providers/BlogPostsProvider";
@@ -102,14 +102,7 @@ export function AdminSidebar({ open, onClose }: { open: boolean; onClose: () => 
         className="scrollbar-dark min-h-0 flex-1 space-y-8 overflow-y-auto px-3 py-8"
       >
         {navGroups.map((group) => {
-          const items = group.items.filter((item) => {
-            if (item.adminOnly && currentUser.role !== "administrator") return false;
-            if (item.restrictedToDepartment) {
-              if (currentUser.role === "viewer") return false;
-              if (currentUser.role !== "administrator" && currentUser.department !== item.restrictedToDepartment) return false;
-            }
-            return true;
-          });
+          const items = group.items.filter((item) => canSeeNavItem(item, currentUser));
           if (items.length === 0) return null;
           return (
             <div key={group.label}>

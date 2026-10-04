@@ -38,7 +38,7 @@ function DepartmentCard({ department }: { department: Department }) {
   }, [loaded]);
 
   const eligible = users.filter((u) => isPoolEligible(u, department));
-  // People saved in the pool who no longer qualify (moved, deactivated, made a Viewer): shown so nobody wonders why they get no leads.
+  // People saved in the pool who no longer qualify (moved or deactivated): shown so nobody wonders why they get no leads.
   const stale = draft.poolUserIds.map((id) => users.find((u) => u.id === id)).filter((u) => u && !isPoolEligible(u, department));
   const dirty = JSON.stringify(draft) !== JSON.stringify(saved);
   const errors = validateAssignment(draft, users, department);
@@ -114,7 +114,7 @@ function DepartmentCard({ department }: { department: Department }) {
       {roundRobin && (
         <div className="mt-4">
           <p className={labelClasses}>Pool</p>
-          <p className={`${hintClasses} mb-2`}>Active Editors and Administrators in this department. Viewers can&apos;t work leads.</p>
+          <p className={`${hintClasses} mb-2`}>Active Editors and Administrators in this department.</p>
           {eligible.length === 0 ? (
             <p className="rounded-lg border border-dashed border-slate-300 px-3 py-3 text-sm text-slate-500">
               Nobody in this department can take leads yet. Add an Editor under Users &amp; roles.

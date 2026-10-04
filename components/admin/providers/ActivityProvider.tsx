@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { describeDbError, getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { ActivityEntry } from "@/lib/admin/types";
 
 /*
@@ -37,6 +37,7 @@ function fromRow(row: ActivityRow): ActivityEntry {
 
 type ActivityContextValue = {
   activity: ActivityEntry[];
+  loadError: string | null;
   logActivity: (entry: { icon: string; description: string; relatedHref?: string }) => void;
   deleteActivityEntry: (id: string) => void;
   clearAllActivity: () => void;
@@ -46,6 +47,7 @@ const ActivityContext = createContext<ActivityContextValue | null>(null);
 
 export function ActivityProvider({ children }: { children: ReactNode }) {
   const [activity, setActivity] = useState<ActivityEntry[]>([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     const supabase = getSupabaseBrowserClient();
@@ -60,9 +62,11 @@ export function ActivityProvider({ children }: { children: ReactNode }) {
         if (cancelled) return;
         if (error) {
           console.error("[activity] Failed to load activity log:", error);
+          setLoadError(describeDbError(error));
           return;
         }
         setActivity((data as ActivityRow[]).map(fromRow));
+        setLoadError(null);
       });
 
     return () => {
@@ -118,7 +122,7 @@ export function ActivityProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <ActivityContext.Provider value={{ activity, logActivity, deleteActivityEntry, clearAllActivity }}>{children}</ActivityContext.Provider>
+    <ActivityContext.Provider value={{ activity, loadError, logActivity, deleteActivityEntry, clearAllActivity }}>{children}</ActivityContext.Provider>
   );
 }
 
@@ -126,6 +130,12 @@ export function useActivity(): ActivityEntry[] {
   const ctx = useContext(ActivityContext);
   if (!ctx) throw new Error("useActivity must be used within ActivityProvider");
   return ctx.activity;
+}
+
+export function useActivityLoadError(): string | null {
+  const ctx = useContext(ActivityContext);
+  if (!ctx) throw new Error("useActivityLoadError must be used within ActivityProvider");
+  return ctx.loadError;
 }
 
 export function useLogActivity(): ActivityContextValue["logActivity"] {

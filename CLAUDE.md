@@ -145,7 +145,7 @@ Sits between the Services nav and the 4 Template C pages. Contains a **guided 2-
 - Server-side input validation on all forms, not just client-side
 - Rate limiting on the lead-capture API route
 - Bot protection (Turnstile/hCaptcha) on all public forms
-- Principle of least privilege in the admin dashboard's role system (Administrator / Editor / Viewer)
+- Principle of least privilege in the admin dashboard's role system (Administrator / Editor — the Viewer role was removed by leadership decision on 2026-10-04, see `supabase/031_remove_viewer_role.sql`)
 - A visible Privacy Policy and Terms of Service are required before collecting any personal data (resumes, business registration details) — this is a real legal requirement given cross-border data collection (US + Cameroon), not decoration
 
 If the Claude Code `security-guidance` plugin is installed, keep it enabled throughout this build.
@@ -229,3 +229,4 @@ A broader pass covering the admin dashboard (which the two rounds above don't to
 - Client Onboarding's `case_number` sequence needs its real starting value from the real current highest case number on Uptech's existing manual sheet — currently a placeholder, and the migration that sets it has already been run, so this needs a follow-up `ALTER TABLE ... RESTART WITH` once the real number is known, not a re-run of the migration.
 - The Onboarding pipeline (Google Form → webhook → dashboard) has not been confirmed working end-to-end with a real test submission yet.
 - No automated tests exist anywhere in the project.
+- **Google Reviews on the homepage testimonials section — decision pending with leadership.** `lib/googleReviews.ts` (live Places API pull, built and working) ships dormant since `GOOGLE_PLACES_API_KEY`/`GOOGLE_PLACE_ID` are unset. Leadership was told the Places API requires a Google Cloud billing account (card on file) even at near-zero usage, and was given a rough cost estimate (~$17/1,000 "Enterprise"-tier calls for review data; this site's 24h cache means ~30 calls/month, so well under $1/month, possibly $0 under Google's free monthly allowance) — that estimate has NOT been verified against Google's live current pricing page, so treat it as directional, not final, if revisited. Current working plan instead: set up Google My Business, and staff copy real reviews manually into the existing Testimonials admin tool (no API, no billing). Do not build the manual-entry "Google Review" source tag into Testimonials, and do not activate the live API, until leadership confirms which direction to take.

@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 
 const MAX_TEXT_LENGTH = 200;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const VALID_ROLES = ["administrator", "editor", "viewer"];
+const VALID_ROLES = ["administrator", "editor"];
 const VALID_DEPARTMENTS = ["career-services-operations", "business-formalisation-compliance"];
 
 /*

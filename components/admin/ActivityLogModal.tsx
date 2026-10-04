@@ -6,9 +6,10 @@ import { toast } from "sonner";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { dotColor } from "@/components/admin/ActivityLog";
-import { useActivity, useActivityActions } from "@/components/admin/providers/ActivityProvider";
+import { useActivity, useActivityActions, useActivityLoadError } from "@/components/admin/providers/ActivityProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
+import { ErrorNotice } from "@/components/admin/FormParts";
 
 const PAGE_SIZE = 20;
 
@@ -22,6 +23,7 @@ const PAGE_SIZE = 20;
  */
 export function ActivityLogModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const activity = useActivity();
+  const loadError = useActivityLoadError();
   const { deleteActivityEntry, clearAllActivity } = useActivityActions();
   const currentUser = useCurrentUser();
   const isAdmin = currentUser.role === "administrator";
@@ -86,6 +88,12 @@ export function ActivityLogModal({ open, onClose }: { open: boolean; onClose: ()
             </button>
           </div>
         </div>
+
+        {loadError && (
+          <div className="px-5 pt-3">
+            <ErrorNotice>{loadError}</ErrorNotice>
+          </div>
+        )}
 
         <div className="border-b border-slate-100 px-5 py-3">
           <label htmlFor={searchId} className="relative block">

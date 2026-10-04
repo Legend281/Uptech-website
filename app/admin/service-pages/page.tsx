@@ -11,7 +11,8 @@ import { EscalateServicePageDialog } from "@/components/admin/EscalateServicePag
 import { CompletionModal } from "@/components/admin/CompletionModal";
 import { AnimatedNumber } from "@/components/admin/AnimatedNumber";
 import { SegmentedBar, BarLegend, type BarSegment } from "@/components/admin/SegmentedBar";
-import { useServicePages, useServicePageActions } from "@/components/admin/providers/ServicePagesProvider";
+import { useServicePages, useServicePageActions, useServicePagesLoadError } from "@/components/admin/providers/ServicePagesProvider";
+import { ErrorNotice } from "@/components/admin/FormParts";
 import { useStaff } from "@/components/admin/providers/StaffProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
@@ -96,6 +97,7 @@ function ServicePageCard({
 
 export default function ServicePagesPage() {
   const pages = useServicePages();
+  const loadError = useServicePagesLoadError();
   const { resolveReview, escalateReview } = useServicePageActions();
   const staff = useStaff();
   const currentUser = useCurrentUser();
@@ -206,6 +208,12 @@ export default function ServicePagesPage() {
             </motion.button>
           )}
         </motion.div>
+
+        {loadError && (
+          <motion.div variants={itemVariants}>
+            <ErrorNotice>{loadError}</ErrorNotice>
+          </motion.div>
+        )}
 
         <motion.div variants={itemVariants} className={`mb-4 rounded-xl border border-slate-200 bg-white p-4 sm:p-5 ${CARD_ELEVATION}`}>
           <div className="flex items-center justify-between gap-2">

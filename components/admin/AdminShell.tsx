@@ -30,12 +30,11 @@ function FullPageSpinner() {
 }
 
 /**
- * Hit the moment a real Supabase Auth user exists but has no matching
- * profiles row (e.g. an account created in the dashboard before someone
- * remembered to insert the row — see supabase/003_staff_auth.sql's own
- * comment on how a new staff account is provisioned). Without this, that
- * account would sit on FullPageSpinner forever with no way to tell why or
- * get out.
+ * Hit when a real Supabase Auth user can't read their own profiles row.
+ * RLS makes two different cases look identical from here: no row exists
+ * (account created outside the invite flow), or the row exists but is
+ * deactivated (current_staff_role() returns null, so even reading your own
+ * profile is refused). The copy covers both rather than guessing.
  */
 function NoProfileState() {
   const { signOut } = useCurrentUserStatus();
@@ -43,8 +42,8 @@ function NoProfileState() {
     <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-[#F7F8FA] px-4 text-center">
       <MaterialIcon name="person_off" className="text-[28px] text-slate-400" />
       <p className="max-w-sm text-sm text-slate-600">
-        You&apos;re signed in, but no staff profile is set up for this account yet. Ask an Administrator to add one
-        (Supabase dashboard → profiles table).
+        You&apos;re signed in, but this account doesn&apos;t have dashboard access. It may have been deactivated, or never set
+        up as a staff account. Ask an Administrator to check it under Staff.
       </p>
       <button type="button" onClick={() => void signOut()} className="text-sm font-semibold text-teal-700 hover:text-teal-800">
         Sign out

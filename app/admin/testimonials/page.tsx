@@ -4,7 +4,7 @@ import { useEffect, useId, useState } from "react";
 import { toast } from "sonner";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { TestimonialCard } from "@/components/TestimonialCard";
-import { CARD_SURFACE, InfoNotice } from "@/components/admin/FormParts";
+import { CARD_SURFACE, InfoNotice, ErrorNotice } from "@/components/admin/FormParts";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { RowActionsMenu, type RowAction } from "@/components/admin/RowActionsMenu";
 import { TestimonialFormDialog, type TestimonialPrefill } from "@/components/admin/TestimonialFormDialog";
@@ -133,6 +133,7 @@ export default function TestimonialsPage() {
   const {
     testimonials,
     loading,
+    loadError,
     signedIn,
     publishTestimonial,
     unpublishTestimonial,
@@ -283,6 +284,8 @@ export default function TestimonialsPage() {
           </button>
         )}
       </div>
+
+      {loadError && <ErrorNotice>{loadError}</ErrorNotice>}
 
       {!signedIn ? (
         /* Publishing writes to the live database, so it needs a staff Supabase session (staff sign-in lives elsewhere). */

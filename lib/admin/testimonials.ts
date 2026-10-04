@@ -229,7 +229,7 @@ export function isFrenchMissing(t: Pick<Testimonial, "quoteFr">): boolean {
 // Enforced again by RLS once staff auth exists (see the migration's RLS note).
 
 export function canCreateTestimonials(user: AdminUser): boolean {
-  return user.role !== "viewer";
+  return user.role === "administrator" || user.role === "editor";
 }
 
 export function canManageTestimonial(user: AdminUser, t: Pick<Testimonial, "department">): boolean {

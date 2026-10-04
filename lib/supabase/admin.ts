@@ -13,7 +13,7 @@ export function getSupabaseServiceClient(): SupabaseClient {
   return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
 }
 
-export type StaffCaller = { id: string; name: string; role: "administrator" | "editor" | "viewer"; department: string };
+export type StaffCaller = { id: string; name: string; role: "administrator" | "editor"; department: string };
 
 /**
  * Who is calling: checks the bearer token with Supabase Auth, then requires
@@ -33,6 +33,7 @@ export async function requireStaff(request: NextRequest): Promise<StaffCaller | 
     .eq("id", userData.user.id)
     .maybeSingle();
   if (!profile || profile.active === false) return NextResponse.json({ error: "This isn't an active staff account." }, { status: 403 });
+  if (profile.role !== "administrator" && profile.role !== "editor") return NextResponse.json({ error: "This account's role can't make changes." }, { status: 403 });
 
   return { id: profile.id, name: profile.name, role: profile.role, department: profile.department };
 }

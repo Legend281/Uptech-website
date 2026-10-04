@@ -10,7 +10,8 @@ import { JobPostingApplicationsModal } from "@/components/admin/JobPostingApplic
 import { JobPostingRowActions } from "@/components/admin/JobPostingRowActions";
 import { AnimatedNumber } from "@/components/admin/AnimatedNumber";
 import { SegmentedBar, BarLegend, type BarSegment } from "@/components/admin/SegmentedBar";
-import { useJobPostings, useJobPostingActions } from "@/components/admin/providers/JobPostingsProvider";
+import { useJobPostings, useJobPostingActions, useJobPostingsLoadError } from "@/components/admin/providers/JobPostingsProvider";
+import { ErrorNotice } from "@/components/admin/FormParts";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useLogActivity } from "@/components/admin/providers/ActivityProvider";
 import { canManageContent } from "@/lib/admin/permissions";
@@ -120,6 +121,7 @@ function JobPostingCard({
 
 export default function JobPostingsPage() {
   const postings = useJobPostings();
+  const loadError = useJobPostingsLoadError();
   const { deletePosting } = useJobPostingActions();
   const currentUser = useCurrentUser();
   const canManage = canManageContent(currentUser);
@@ -225,6 +227,12 @@ export default function JobPostingsPage() {
             </div>
           )}
         </motion.div>
+
+        {loadError && (
+          <motion.div variants={itemVariants}>
+            <ErrorNotice>{loadError}</ErrorNotice>
+          </motion.div>
+        )}
 
         <motion.div variants={itemVariants} className={`mb-4 rounded-xl border border-slate-200 bg-white p-4 sm:p-5 ${CARD_ELEVATION}`}>
           <div className="flex items-center justify-between gap-2">

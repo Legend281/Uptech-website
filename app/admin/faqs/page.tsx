@@ -5,7 +5,7 @@ import { useId, useState } from "react";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { FaqFormDialog } from "@/components/admin/FaqFormDialog";
-import { InfoNotice, CARD_SURFACE, ModuleHeader, PrimaryActionButton, SearchInput, selectClasses } from "@/components/admin/FormParts";
+import { InfoNotice, CARD_SURFACE, ModuleHeader, PrimaryActionButton, SearchInput, selectClasses, ErrorNotice } from "@/components/admin/FormParts";
 import { RowActionsMenu, type RowAction } from "@/components/admin/RowActionsMenu";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useFaqItems } from "@/components/admin/providers/FaqItemsProvider";
@@ -45,7 +45,7 @@ function ReviewBadge({ item }: { item: FaqItemRecord }) {
 
 export default function FaqItemsPage() {
   const currentUser = useCurrentUser();
-  const { items, publishFaq, unpublishFaq, reviewFaq, reorder, deleteFaq } = useFaqItems();
+  const { items, loadError, publishFaq, unpublishFaq, reviewFaq, reorder, deleteFaq } = useFaqItems();
 
   const [creating, setCreating] = useState<{ category?: FaqCategory } | null>(null);
   const [editing, setEditing] = useState<FaqItemRecord | null>(null);
@@ -154,9 +154,11 @@ export default function FaqItemsPage() {
         action={canAdd ? <PrimaryActionButton label="Add FAQ" onClick={() => setCreating({})} /> : undefined}
       />
 
+      {loadError && <ErrorNotice>{loadError}</ErrorNotice>}
+
       <InfoNotice>
-        These start from the FAQs the site shows today. Edits here are saved in this browser only and don&apos;t change the
-        public pages yet.
+        Published FAQs go live on their page automatically. Once a page has at least one published FAQ here, it shows only
+        these — the built-in FAQs for that page stop showing.
       </InfoNotice>
 
       <div className={`mb-4 flex flex-col gap-3 px-4 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:px-5 ${CARD_SURFACE}`}>

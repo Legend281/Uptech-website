@@ -87,7 +87,7 @@ export const DEFAULT_SETTINGS: Settings = {
   },
   notifications: {},
   company: {
-    contactEmail: "infos@uptechconsulting.com",
+    contactEmail: "infos@uptechoutsourcing.com",
     whatsappNumber: "+237 678 597 593",
     phoneNumber: "+237 678 597 593",
     cameroonEntity: "Cameroon S.A., Buea",
@@ -105,9 +105,9 @@ export function canEditSystemSettings(user: AdminUser): boolean {
   return user.role === "administrator";
 }
 
-/** Who may sit in a department's assignment pool: active, not a Viewer (Viewers can't work leads), same department. */
+/** Who may sit in a department's assignment pool: active, same department. */
 export function isPoolEligible(user: AdminUser, department: Department): boolean {
-  return user.active !== false && user.role !== "viewer" && user.department === department;
+  return user.active !== false && user.department === department;
 }
 
 export function validateAssignment(value: DepartmentAssignment, users: AdminUser[], department: Department): string[] {
@@ -159,9 +159,8 @@ export function validateCompany(details: CompanyDetails): string[] {
  * Round-robin: the next eligible pool member after whoever went last
  * (lastAssignedUserId — the owner of the department's most recent assigned
  * lead, worked out from the leads themselves, so no pointer has to be
- * stored where only Administrators can write), wrapping around. Skips people who have since been deactivated, moved
- * department or become Viewers — they stay in the saved pool list, but
- * never receive a lead.
+ * stored where only Administrators can write), wrapping around. Skips people who have since been deactivated or moved
+ * department — they stay in the saved pool list, but never receive a lead.
  */
 export function nextAssignee(
   config: DepartmentAssignment,

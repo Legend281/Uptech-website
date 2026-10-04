@@ -5,13 +5,20 @@ export type NavItem = {
   /** Not built yet this pass — renders as a muted, non-interactive row with a "Soon" tag instead of a dead link. */
   soon?: boolean;
   adminOnly?: boolean;
-  /** Hidden from anyone but an Administrator or an Editor in exactly this department — Viewers never see it regardless of their department. Client Onboarding's the first user (real credentials, DOB, ethnicity, immigration status — see supabase/022_onboarding_submissions.sql), which is why this exists as its own flag rather than reusing adminOnly. */
+  /** Hidden from anyone but an Administrator or an Editor in exactly this department. Client Onboarding's the first user (real credentials, DOB, ethnicity, immigration status — see supabase/022_onboarding_submissions.sql), which is why this exists as its own flag rather than reusing adminOnly. */
   restrictedToDepartment?: "career-services-operations" | "business-formalisation-compliance";
   /** Only shown where real data backs it (Leads) — no invented count for modules with no data yet. */
   badge?: number;
 };
 
 export type NavGroup = { label: string; items: NavItem[] };
+
+/** The one visibility rule for nav items — the sidebar and the command palette both call this, so they can't drift apart. */
+export function canSeeNavItem(item: NavItem, user: { role: string; department: string }): boolean {
+  if (item.adminOnly && user.role !== "administrator") return false;
+  if (item.restrictedToDepartment) return user.role === "administrator" || user.department === item.restrictedToDepartment;
+  return true;
+}
 
 /**
  * Single source of truth for admin section labels — AdminSidebar renders
@@ -59,7 +66,8 @@ export function getNavGroups(
       label: "System",
       items: [
         { label: "Staff", icon: "badge", href: "/admin/staff", adminOnly: true },
-        { label: "Settings", icon: "settings", href: "/admin/settings", adminOnly: true },
+        // Not adminOnly: Editors need it for their own notification preferences — app/admin/settings/page.tsx already limits them to that one tab.
+        { label: "Settings", icon: "settings", href: "/admin/settings" },
       ],
     },
   ];

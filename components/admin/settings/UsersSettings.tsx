@@ -15,7 +15,6 @@ import type { AccessRole, AdminUser, Department } from "@/lib/admin/types";
 const roleDescriptions: Record<AccessRole, string> = {
   administrator: "Everything: all content, all departments, Settings, accounts, and Homepage testimonials.",
   editor: "Leads and content for their own department only.",
-  viewer: "Read-only, within their own department.",
 };
 
 const LOCATIONS = ["Buea, Cameroon", "Stafford, TX"];

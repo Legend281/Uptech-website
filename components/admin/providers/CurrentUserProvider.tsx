@@ -21,11 +21,9 @@ import type { AdminUser } from "@/lib/admin/types";
  * navigate straight to /admin and skip the code entirely if this were only
  * enforced on the login form.
  *
- * Editing an existing staff member's role/department or deactivating them
- * (UserPatch below) isn't wired to real Supabase writes yet — see
- * components/admin/settings/UsersSettings.tsx's own note. Creating a new
- * account for real goes through StaffInviteDialog.tsx instead (a real
- * emailed invite, not this file).
+ * Role/department edits and deactivation (UserPatch below) are written by
+ * StaffProvider.updateUser; new accounts come from StaffInviteDialog.tsx's
+ * emailed invite. Neither goes through this file.
  */
 
 export type UserPatch = Partial<Pick<AdminUser, "role" | "department" | "location" | "active">>;

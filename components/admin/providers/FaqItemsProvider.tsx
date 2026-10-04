@@ -73,6 +73,7 @@ type UpdateResult = ActionResult & { unpublished?: boolean };
 type FaqContextValue = {
   items: FaqItemRecord[];
   loading: boolean;
+  loadError: string | null;
   addFaq: (input: FaqInput, user: AdminUser, publish: boolean) => Promise<ActionResult>;
   updateFaq: (id: string, input: FaqInput, user: AdminUser) => Promise<UpdateResult>;
   publishFaq: (id: string, user: AdminUser) => Promise<ActionResult>;
@@ -97,6 +98,7 @@ function short(question: string): string {
 export function FaqItemsProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<FaqItemRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const logActivity = useLogActivity();
 
   async function revalidate(category: FaqCategory) {
@@ -106,7 +108,13 @@ export function FaqItemsProvider({ children }: { children: ReactNode }) {
 
   const refresh = useCallback(async () => {
     const { data, error } = await getSupabaseBrowserClient().from("faq_items").select("*").order("category").order("display_order", { ascending: true });
-    if (!error && data) setItems((data as Row[]).map(rowToFaq));
+    if (error) {
+      console.error("[faq] Failed to load FAQ items:", error);
+      setLoadError(describeDbError(error));
+    } else if (data) {
+      setItems((data as Row[]).map(rowToFaq));
+      setLoadError(null);
+    }
     setLoading(false);
   }, []);
 
@@ -116,6 +124,7 @@ export function FaqItemsProvider({ children }: { children: ReactNode }) {
       if (hasSession) void refresh();
       else {
         setItems([]);
+        setLoadError(null);
         setLoading(false);
       }
     }
@@ -284,7 +293,7 @@ export function FaqItemsProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <FaqContext.Provider value={{ items, loading, addFaq, updateFaq, publishFaq, unpublishFaq, reviewFaq, reorder, deleteFaq }}>
+    <FaqContext.Provider value={{ items, loading, loadError, addFaq, updateFaq, publishFaq, unpublishFaq, reviewFaq, reorder, deleteFaq }}>
       {children}
     </FaqContext.Provider>
   );

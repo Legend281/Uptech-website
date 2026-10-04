@@ -14,11 +14,12 @@ import { LeadQuickViewModal } from "@/components/admin/LeadQuickViewModal";
 import { AnimatedNumber } from "@/components/admin/AnimatedNumber";
 import { Sparkline } from "@/components/admin/Sparkline";
 import { SegmentedBar, BarLegend, type BarSegment } from "@/components/admin/SegmentedBar";
-import { useLeads } from "@/components/admin/providers/LeadsProvider";
+import { useLeads, useLeadsLoadError } from "@/components/admin/providers/LeadsProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useActivity, useLogActivity } from "@/components/admin/providers/ActivityProvider";
-import { useServicePages, useServicePageActions } from "@/components/admin/providers/ServicePagesProvider";
+import { useServicePages, useServicePageActions, useServicePagesLoadError } from "@/components/admin/providers/ServicePagesProvider";
 import { useStaff } from "@/components/admin/providers/StaffProvider";
+import { ErrorNotice } from "@/components/admin/FormParts";
 import { getReviewStatus, type ReviewStatus } from "@/lib/admin/staleness";
 import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
 import {
@@ -153,12 +154,15 @@ function StatCard({
 
 export default function AdminDashboardPage() {
   const leads = useLeads();
+  const leadsLoadError = useLeadsLoadError();
   const currentUser = useCurrentUser();
   const staff = useStaff();
   const activity = useActivity();
   const logActivity = useLogActivity();
   const servicePages = useServicePages();
+  const servicePagesLoadError = useServicePagesLoadError();
   const { resolveReview, escalateReview } = useServicePageActions();
+  const dashboardLoadError = leadsLoadError ?? servicePagesLoadError;
   const [scope, setScope] = useState<Scope>("mine");
   const [createLeadOpen, setCreateLeadOpen] = useState(false);
   const [severityFilter, setSeverityFilter] = useState<Severity | null>(null);
@@ -347,6 +351,8 @@ export default function AdminDashboardPage() {
           </button>
         </div>
       </div>
+
+      {dashboardLoadError && <ErrorNotice>{dashboardLoadError}</ErrorNotice>}
 
       <motion.div variants={statGridVariants} initial="hidden" animate="show" className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard

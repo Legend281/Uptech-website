@@ -3,7 +3,7 @@
 import { useId, useState } from "react";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
-import { InfoNotice, CARD_SURFACE, ModuleHeader, PrimaryActionButton, SearchInput, selectClasses } from "@/components/admin/FormParts";
+import { InfoNotice, CARD_SURFACE, ModuleHeader, PrimaryActionButton, SearchInput, selectClasses, ErrorNotice } from "@/components/admin/FormParts";
 import { RowActionsMenu, type RowAction } from "@/components/admin/RowActionsMenu";
 import { TeamMemberFormDialog } from "@/components/admin/TeamMemberFormDialog";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
@@ -58,7 +58,7 @@ function MemberCard({ member, actions, onOpen }: { member: TeamMemberRecord; act
 
 export default function TeamMembersPage() {
   const currentUser = useCurrentUser();
-  const { members, setStatus, move, deleteMember } = useTeamMembers();
+  const { members, loadError, setStatus, move, deleteMember } = useTeamMembers();
   const canManage = canManageTeam(currentUser);
 
   const [creating, setCreating] = useState(false);
@@ -129,6 +129,8 @@ export default function TeamMembersPage() {
         }
         action={canManage ? <PrimaryActionButton label="Add Team Member" onClick={() => setCreating(true)} /> : undefined}
       />
+
+      {loadError && <ErrorNotice>{loadError}</ErrorNotice>}
 
       <InfoNotice>
         Marking someone Visible puts them on the public Who We Are page immediately — no separate publish step.

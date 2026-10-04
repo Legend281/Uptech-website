@@ -37,7 +37,6 @@ function isAllowedPath(path: string): boolean {
 export async function POST(request: NextRequest) {
   const caller = await requireStaff(request);
   if (caller instanceof NextResponse) return caller;
-  if (caller.role === "viewer") return NextResponse.json({ error: "Viewers can't change the site." }, { status: 403 });
 
   const body = (await request.json().catch(() => null)) as { paths?: unknown } | null;
   const paths = Array.isArray(body?.paths) ? body.paths.filter((p): p is string => typeof p === "string" && isAllowedPath(p)) : [];

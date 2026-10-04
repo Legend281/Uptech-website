@@ -10,7 +10,7 @@ const inputClasses =
   "rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-navy-950 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-500";
 const labelClasses = "text-xs font-bold uppercase tracking-wider text-slate-500";
 
-const ROLE_OPTIONS: AccessRole[] = ["administrator", "editor", "viewer"];
+const ROLE_OPTIONS: AccessRole[] = ["administrator", "editor"];
 const DEPARTMENT_OPTIONS: Department[] = ["career-services-operations", "business-formalisation-compliance"];
 
 /**
@@ -117,7 +117,7 @@ export function StaffInviteDialog({ open, onClose }: { open: boolean; onClose: (
               <span className={labelClasses}>
                 Email <span className="text-rose-500">*</span>
               </span>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className={inputClasses} placeholder="name@uptechconsulting.com" />
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className={inputClasses} placeholder="name@uptechoutsourcing.com" />
             </label>
 
             <label className="flex flex-col gap-1.5">

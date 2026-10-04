@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { describeDbError, getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { AdminUser } from "@/lib/admin/types";
 import type { UserPatch } from "@/components/admin/providers/CurrentUserProvider";
 
@@ -30,6 +30,7 @@ export type UserUpdateResult = { ok: true; changed: string[] } | { ok: false; re
 
 type StaffContextValue = {
   staff: AdminUser[];
+  loadError: string | null;
   updateUser: (id: string, patch: UserPatch, actor: AdminUser) => Promise<UserUpdateResult>;
   resendInvite: (id: string) => Promise<UserUpdateResult>;
   deleteUser: (id: string, actor: AdminUser) => Promise<UserUpdateResult>;
@@ -81,6 +82,7 @@ function checkUserChange(staff: AdminUser[], target: AdminUser, patch: UserPatch
 
 export function StaffProvider({ children }: { children: ReactNode }) {
   const [staff, setStaff] = useState<AdminUser[]>([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     const supabase = getSupabaseBrowserClient();
@@ -93,9 +95,11 @@ export function StaffProvider({ children }: { children: ReactNode }) {
         if (cancelled) return;
         if (error || !data) {
           console.error("[staff] Failed to load staff profiles:", error);
+          setLoadError(describeDbError(error));
           return;
         }
         setStaff((data as ProfileRow[]).map(fromRow));
+        setLoadError(null);
       });
 
     return () => {
@@ -154,13 +158,19 @@ export function StaffProvider({ children }: { children: ReactNode }) {
     return { ok: true, changed: ["deleted"] };
   }
 
-  return <StaffContext.Provider value={{ staff, updateUser, resendInvite, deleteUser }}>{children}</StaffContext.Provider>;
+  return <StaffContext.Provider value={{ staff, loadError, updateUser, resendInvite, deleteUser }}>{children}</StaffContext.Provider>;
 }
 
 export function useStaff(): AdminUser[] {
   const ctx = useContext(StaffContext);
   if (!ctx) throw new Error("useStaff must be used within StaffProvider");
   return ctx.staff;
+}
+
+export function useStaffLoadError(): string | null {
+  const ctx = useContext(StaffContext);
+  if (!ctx) throw new Error("useStaffLoadError must be used within StaffProvider");
+  return ctx.loadError;
 }
 
 export function useStaffActions(): { updateUser: StaffContextValue["updateUser"]; resendInvite: StaffContextValue["resendInvite"]; deleteUser: StaffContextValue["deleteUser"] } {

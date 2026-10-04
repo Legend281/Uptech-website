@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { StaffInviteDialog } from "@/components/admin/StaffInviteDialog";
-import { useStaff } from "@/components/admin/providers/StaffProvider";
+import { useStaff, useStaffLoadError } from "@/components/admin/providers/StaffProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { departmentLabels, roleLabels } from "@/lib/admin/labels";
+import { ErrorNotice } from "@/components/admin/FormParts";
 
 const CARD = "rounded-xl border border-slate-200 bg-white shadow-[0_1px_2px_rgba(7,14,27,0.04),0_10px_24px_-16px_rgba(7,14,27,0.14)]";
 
@@ -18,6 +19,7 @@ const CARD = "rounded-xl border border-slate-200 bg-white shadow-[0_1px_2px_rgba
 export default function StaffPage() {
   const currentUser = useCurrentUser();
   const staff = useStaff();
+  const loadError = useStaffLoadError();
   const [inviteOpen, setInviteOpen] = useState(false);
 
   if (currentUser.role !== "administrator") {
@@ -45,6 +47,8 @@ export default function StaffPage() {
           Invite Staff Member
         </button>
       </div>
+
+      {loadError && <ErrorNotice>{loadError}</ErrorNotice>}
 
       <div className={CARD}>
         <table className="w-full">

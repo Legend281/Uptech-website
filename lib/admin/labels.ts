@@ -8,5 +8,4 @@ export const departmentLabels: Record<Department, string> = {
 export const roleLabels: Record<AccessRole, string> = {
   administrator: "Administrator",
   editor: "Editor",
-  viewer: "Viewer",
 };

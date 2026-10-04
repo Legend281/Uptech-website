@@ -7,7 +7,7 @@ import { MaterialIcon } from "@/components/icons/MaterialIcon";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { RowActionsMenu, type RowAction } from "@/components/admin/RowActionsMenu";
 import { BlogPostFormDialog } from "@/components/admin/BlogPostFormDialog";
-import { ModuleHeader, PrimaryActionButton, SearchInput, CARD_SURFACE } from "@/components/admin/FormParts";
+import { ModuleHeader, PrimaryActionButton, SearchInput, CARD_SURFACE, ErrorNotice } from "@/components/admin/FormParts";
 import { AnimatedNumber } from "@/components/admin/AnimatedNumber";
 import { SegmentedBar, BarLegend, type BarSegment } from "@/components/admin/SegmentedBar";
 import { useBlogPosts } from "@/components/admin/providers/BlogPostsProvider";
@@ -39,7 +39,10 @@ function PostCard({ post, onEdit, onDelete }: { post: BlogPost; onEdit: () => vo
         )}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="truncate font-sans text-sm font-semibold text-navy-950">{post.title}</p>
+        <p className="flex items-center gap-1 truncate font-sans text-sm font-semibold text-navy-950">
+          {post.isFeatured && <MaterialIcon name="star" className="shrink-0 text-[14px] text-amber-500" />}
+          <span className="truncate">{post.title}</span>
+        </p>
         <p className="truncate text-xs text-slate-500">{post.authorName}{post.category ? ` · ${post.category}` : ""}</p>
         <div className="mt-1.5 flex flex-wrap items-center gap-2">
           <span className={`shrink-0 truncate rounded-full border px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide ${meta.badge}`}>{meta.label}</span>
@@ -58,7 +61,7 @@ function PostCard({ post, onEdit, onDelete }: { post: BlogPost; onEdit: () => vo
 }
 
 export default function BlogPostsPage() {
-  const { posts, deletePost } = useBlogPosts();
+  const { posts, loadError, deletePost } = useBlogPosts();
   const currentUser = useCurrentUser();
   const canManage = canManageBlog(currentUser);
 
@@ -130,6 +133,12 @@ export default function BlogPostsPage() {
           />
         </motion.div>
 
+        {loadError && (
+          <motion.div variants={itemVariants}>
+            <ErrorNotice>{loadError}</ErrorNotice>
+          </motion.div>
+        )}
+
         <motion.div variants={itemVariants} className={`mb-4 rounded-xl border border-slate-200 bg-white p-4 sm:p-5 ${CARD_SURFACE}`}>
           <div className="flex items-center justify-between gap-2">
             <h2 className="font-sans text-sm font-bold text-navy-950">Status</h2>
@@ -197,7 +206,10 @@ export default function BlogPostsPage() {
                                 )}
                               </span>
                               <div className="min-w-0">
-                                <p className="truncate font-sans text-sm font-semibold text-navy-950">{post.title}</p>
+                                <p className="flex items-center gap-1 truncate font-sans text-sm font-semibold text-navy-950">
+                                  {post.isFeatured && <MaterialIcon name="star" className="shrink-0 text-[14px] text-amber-500" />}
+                                  <span className="truncate">{post.title}</span>
+                                </p>
                                 {post.category && <p className="truncate text-xs text-slate-400">{post.category}</p>}
                               </div>
                             </div>

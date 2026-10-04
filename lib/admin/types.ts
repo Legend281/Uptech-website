@@ -8,7 +8,7 @@ import type { serviceOptions } from "@/lib/serviceOptions";
 import type { FaqCategory } from "@/lib/faqContent";
 
 export type Department = "career-services-operations" | "business-formalisation-compliance";
-export type AccessRole = "administrator" | "editor" | "viewer";
+export type AccessRole = "administrator" | "editor";
 
 export type AdminUser = {
   id: string;
@@ -367,7 +367,7 @@ export type OnboardingReference = {
  *
  * Deliberately more sensitive than anything else this dashboard holds —
  * see that migration's own comment for why access here is stricter than
- * every other table (no Viewer access at all, regardless of department).
+ * every other table (Editors outside Career Services get nothing).
  */
 export type OnboardingSubmission = {
   id: string;
@@ -427,7 +427,11 @@ export type BlogPost = {
   /** Where the saved cover image lives in the blog-photos bucket. */
   coverImagePath?: string;
   authorName: string;
+  /** Short "about the author" blurb shown at the end of the published post. Optional — no placeholder text when it's empty. */
+  authorBio?: string;
   category?: string;
+  /** At most one post is featured at a time — setting this on one post clears it on every other (BlogPostsProvider). Drives which post shows in the public hero slot, overriding the "most recent" default. */
+  isFeatured?: boolean;
   status: BlogPostStatus;
   /** Set once, the first time this post is published — never reset by a later edit. */
   publishedAt?: string;

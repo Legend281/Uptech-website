@@ -24,7 +24,9 @@ type Row = {
   content: string;
   cover_image_path: string | null;
   author_name: string;
+  author_bio: string | null;
   category: string | null;
+  is_featured: boolean;
   status: BlogPostStatus;
   published_at: string | null;
   created_by: string | null;
@@ -42,7 +44,9 @@ function rowToPost(row: Row): BlogPost {
     coverImagePath: row.cover_image_path ?? undefined,
     coverImage: publicPhotoUrl("blog-photos", row.cover_image_path),
     authorName: row.author_name,
+    authorBio: row.author_bio ?? undefined,
     category: row.category ?? undefined,
+    isFeatured: row.is_featured,
     status: row.status,
     publishedAt: row.published_at ?? undefined,
     createdById: row.created_by ?? undefined,
@@ -59,7 +63,9 @@ function inputToColumns(input: BlogPostInput, coverImagePath: string | null) {
     content: input.content,
     cover_image_path: coverImagePath,
     author_name: input.authorName,
+    author_bio: input.authorBio ?? null,
     category: input.category ?? null,
+    is_featured: input.isFeatured ?? false,
     status: input.status,
   };
 }
@@ -67,6 +73,7 @@ function inputToColumns(input: BlogPostInput, coverImagePath: string | null) {
 type BlogPostsContextValue = {
   posts: BlogPost[];
   loading: boolean;
+  loadError: string | null;
   addPost: (input: BlogPostInput, user: AdminUser) => Promise<ActionResult>;
   updatePost: (id: string, input: BlogPostInput, user: AdminUser) => Promise<ActionResult>;
   deletePost: (id: string, user: AdminUser) => Promise<ActionResult>;
@@ -79,6 +86,7 @@ const denied: ActionResult = { ok: false, reasons: ["Only an Administrator or Ed
 export function BlogPostsProvider({ children }: { children: ReactNode }) {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const logActivity = useLogActivity();
 
   async function revalidate(paths: string[]) {
@@ -88,7 +96,13 @@ export function BlogPostsProvider({ children }: { children: ReactNode }) {
 
   const refresh = useCallback(async () => {
     const { data, error } = await getSupabaseBrowserClient().from("blog_posts").select("*").order("created_at", { ascending: false });
-    if (!error && data) setPosts((data as Row[]).map(rowToPost));
+    if (error) {
+      console.error("[blog] Failed to load posts:", error);
+      setLoadError(describeDbError(error));
+    } else if (data) {
+      setPosts((data as Row[]).map(rowToPost));
+      setLoadError(null);
+    }
     setLoading(false);
   }, []);
 
@@ -98,6 +112,7 @@ export function BlogPostsProvider({ children }: { children: ReactNode }) {
       if (hasSession) void refresh();
       else {
         setPosts([]);
+        setLoadError(null);
         setLoading(false);
       }
     }
@@ -110,6 +125,12 @@ export function BlogPostsProvider({ children }: { children: ReactNode }) {
 
   function log(icon: string, description: string) {
     logActivity({ icon, description, relatedHref: "/admin/blog" });
+  }
+
+  /** At most one featured post at a time — marking this one clears every other, rather than requiring staff to remember to un-feature the old one themselves. */
+  async function unfeatureOthers(exceptId: string) {
+    const { error } = await getSupabaseBrowserClient().from("blog_posts").update({ is_featured: false }).neq("id", exceptId).eq("is_featured", true);
+    if (error) console.error("[blog] Failed to clear previous featured post:", error);
   }
 
   async function saveCoverImage(input: BlogPostInput, currentPath?: string): Promise<string | null> {
@@ -141,6 +162,7 @@ export function BlogPostsProvider({ children }: { children: ReactNode }) {
       .select()
       .single();
     if (error || !data) return { ok: false, reasons: [describeDbError(error)] };
+    if (clean.isFeatured) await unfeatureOthers(data.id);
 
     await refresh();
     if (clean.status === "published") void revalidate(["/blog", `/blog/${clean.slug}`]);
@@ -174,6 +196,7 @@ export function BlogPostsProvider({ children }: { children: ReactNode }) {
 
     const { error } = await getSupabaseBrowserClient().from("blog_posts").update(columns).eq("id", id);
     if (error) return { ok: false, reasons: [describeDbError(error)] };
+    if (clean.isFeatured) await unfeatureOthers(id);
 
     await refresh();
     if (existing.coverImagePath && existing.coverImagePath !== coverImagePath) {
@@ -207,7 +230,7 @@ export function BlogPostsProvider({ children }: { children: ReactNode }) {
     return { ok: true };
   }
 
-  return <BlogPostsContext.Provider value={{ posts, loading, addPost, updatePost, deletePost }}>{children}</BlogPostsContext.Provider>;
+  return <BlogPostsContext.Provider value={{ posts, loading, loadError, addPost, updatePost, deletePost }}>{children}</BlogPostsContext.Provider>;
 }
 
 export function useBlogPosts() {

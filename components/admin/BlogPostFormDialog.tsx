@@ -35,6 +35,7 @@ export function BlogPostFormDialog(props: Props) {
           content: props.post.content,
           coverImage: props.post.coverImage,
           authorName: props.post.authorName,
+          authorBio: props.post.authorBio ?? "",
           category: props.post.category ?? "",
           status: props.post.status,
         }
@@ -45,6 +46,7 @@ export function BlogPostFormDialog(props: Props) {
           content: "",
           coverImage: undefined,
           authorName: currentUser.name,
+          authorBio: "",
           category: "",
           // New posts always start as Draft — publishing is a deliberate,
           // separate choice made in this same form, not an accident of
@@ -116,7 +118,7 @@ export function BlogPostFormDialog(props: Props) {
             <Field label="Title" required>
               <input type="text" value={input.title} onChange={(e) => setTitle(e.target.value)} className={inputClasses} />
             </Field>
-            <Field label="URL slug" required hint={`uptechconsulting.com/blog/${normalized.slug || "…"}`}>
+            <Field label="URL slug" required hint={`uptechoutsourcing.com/blog/${normalized.slug || "…"}`}>
               <input
                 type="text"
                 value={input.slug}
@@ -145,6 +147,9 @@ export function BlogPostFormDialog(props: Props) {
                 <input type="text" value={input.category ?? ""} onChange={(e) => set("category", e.target.value)} className={inputClasses} />
               </Field>
             </div>
+            <Field label="Author bio" hint="Optional — shown at the end of the published post. Leave blank to show no bio block at all.">
+              <textarea value={input.authorBio ?? ""} onChange={(e) => set("authorBio", e.target.value)} rows={2} className={`${inputClasses} resize-y leading-relaxed`} />
+            </Field>
             <div className="flex items-center gap-3">
               {input.coverImage ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -203,6 +208,13 @@ export function BlogPostFormDialog(props: Props) {
                 </label>
               ))}
             </fieldset>
+            <label className="flex cursor-pointer items-start gap-2.5 rounded-lg border border-slate-200 px-3 py-2.5 hover:border-slate-300">
+              <input type="checkbox" checked={input.isFeatured ?? false} onChange={(e) => set("isFeatured", e.target.checked)} className="mt-0.5" />
+              <span>
+                <span className="block text-sm font-semibold text-slate-700">Feature this post</span>
+                <span className="block text-[11px] text-slate-500">Shows in the hero slot on the public blog, in place of whatever&apos;s most recently published. Only one post can be featured — marking this one un-features any other.</span>
+              </span>
+            </label>
           </Section>
         </form>
 
@@ -217,6 +229,12 @@ export function BlogPostFormDialog(props: Props) {
                 ) : (
                   <span className="absolute inset-0 flex items-center justify-center text-slate-300">
                     <MaterialIcon name="image" className="text-[28px]" />
+                  </span>
+                )}
+                {normalized.isFeatured && (
+                  <span className="absolute left-2 top-2 flex items-center gap-1 rounded-full bg-navy-950/85 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-300 backdrop-blur-md">
+                    <MaterialIcon name="star" className="text-[11px]" />
+                    Featured
                   </span>
                 )}
               </div>

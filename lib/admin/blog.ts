@@ -6,7 +6,7 @@ import type { AdminUser, BlogPost } from "./types";
  * canManageContent gate Job Postings and Additional Services already use.
  */
 
-export type BlogPostInput = Pick<BlogPost, "title" | "slug" | "excerpt" | "content" | "coverImage" | "authorName" | "category" | "status">;
+export type BlogPostInput = Pick<BlogPost, "title" | "slug" | "excerpt" | "content" | "coverImage" | "authorName" | "authorBio" | "category" | "isFeatured" | "status">;
 
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
@@ -53,7 +53,9 @@ export function normalizeBlogInput(input: BlogPostInput): BlogPostInput {
     slug: slugify(input.slug),
     excerpt: input.excerpt.trim(),
     authorName: input.authorName.trim() || "Uptech Consulting",
+    authorBio: input.authorBio?.trim() || undefined,
     category: input.category?.trim() || undefined,
+    isFeatured: input.isFeatured ?? false,
   };
 }
 

@@ -21,7 +21,10 @@ export type PublicBlogPost = {
   content: string;
   coverImage?: string;
   authorName: string;
+  authorBio?: string;
   category?: string;
+  /** At most one published post has this set — see BlogPostsProvider for the "only one at a time" enforcement. */
+  isFeatured: boolean;
   publishedAt: string;
 };
 
@@ -33,7 +36,9 @@ type Row = {
   content: string;
   cover_image_path: string | null;
   author_name: string;
+  author_bio: string | null;
   category: string | null;
+  is_featured: boolean;
   published_at: string | null;
   created_at: string;
 };
@@ -52,7 +57,9 @@ function rowToPost(row: Row): PublicBlogPost {
     content: row.content,
     coverImage: coverImageUrl(row.cover_image_path),
     authorName: row.author_name,
+    authorBio: row.author_bio ?? undefined,
     category: row.category ?? undefined,
+    isFeatured: row.is_featured,
     // Every row this function ever sees is already published (RLS-filtered
     // below), so published_at is always set by the time it gets here —
     // created_at is only a defensive fallback for a row written before
@@ -68,7 +75,7 @@ export async function getPublishedBlogPosts(): Promise<PublicBlogPost[]> {
     const supabase = getSupabaseServerClient();
     const { data, error } = await supabase
       .from("blog_posts")
-      .select("id, title, slug, excerpt, content, cover_image_path, author_name, category, published_at, created_at")
+      .select("id, title, slug, excerpt, content, cover_image_path, author_name, author_bio, category, is_featured, published_at, created_at")
       .eq("status", "published")
       .order("published_at", { ascending: false });
 
@@ -90,7 +97,7 @@ export async function getPublishedBlogPost(slug: string): Promise<PublicBlogPost
     const supabase = getSupabaseServerClient();
     const { data, error } = await supabase
       .from("blog_posts")
-      .select("id, title, slug, excerpt, content, cover_image_path, author_name, category, published_at, created_at")
+      .select("id, title, slug, excerpt, content, cover_image_path, author_name, author_bio, category, is_featured, published_at, created_at")
       .eq("status", "published")
       .eq("slug", slug)
       .maybeSingle();

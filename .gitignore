@@ -8,9 +8,9 @@
 # production
 /build
 
-# env
-.env
-.env*.local
+# env — every variant (.env, .env.local, .env.production, ...), except the names-only template
+.env*
+!.env.example
 
 # misc
 .DS_Store

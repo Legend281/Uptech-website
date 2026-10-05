@@ -230,3 +230,24 @@ A broader pass covering the admin dashboard (which the two rounds above don't to
 - The Onboarding pipeline (Google Form → webhook → dashboard) has not been confirmed working end-to-end with a real test submission yet.
 - No automated tests exist anywhere in the project.
 - **Google Reviews on the homepage testimonials section — decision pending with leadership.** `lib/googleReviews.ts` (live Places API pull, built and working) ships dormant since `GOOGLE_PLACES_API_KEY`/`GOOGLE_PLACE_ID` are unset. Leadership was told the Places API requires a Google Cloud billing account (card on file) even at near-zero usage, and was given a rough cost estimate (~$17/1,000 "Enterprise"-tier calls for review data; this site's 24h cache means ~30 calls/month, so well under $1/month, possibly $0 under Google's free monthly allowance) — that estimate has NOT been verified against Google's live current pricing page, so treat it as directional, not final, if revisited. Current working plan instead: set up Google My Business, and staff copy real reviews manually into the existing Testimonials admin tool (no API, no billing). Do not build the manual-entry "Google Review" source tag into Testimonials, and do not activate the live API, until leadership confirms which direction to take.
+
+---
+
+## 12. Repository & Deployment
+
+**Repository.** `github.com/uptech-consulting-outsourcing/Uptech-website`, owned by the company account "Uptech-CO" through the `uptech-consulting-outsourcing` organization. Transferred on 2026-10-05 from the personal repo `Legend281/Uptech-website`; commit history and branches were preserved. Intended to be **private** — as of 2026-10-05 GitHub still reports it as **public**, so check *Settings → General → Danger Zone → Change visibility* until that's resolved. No secret has ever been committed (full-history scan, 2026-10-05).
+
+**Deployment model.** Hostinger Node.js hosting, connected once by the Hostinger account owner (not a shared-access user — only the owner can create the first Node.js web app) through the Hostinger GitHub App, signed in with an organization-owner GitHub login. After that, **every push to `main` deploys to production automatically**: Hostinger pulls the code, runs `npm install`, runs `npm run build`, and restarts with `npm run start`. A broken commit on `main` is a broken live site.
+- Runs as a Node server (API routes, Supabase auth, admin dashboard, middleware) — never as a static export. `output: "export"` in `next.config.mjs` is only switched on when `STATIC_EXPORT=true`, which only the GitHub Pages preview workflow sets.
+- Node versions Hostinger supports: 18, 20, 22, 24. **Chosen: 22** (Hostinger's default), pinned as `"engines": { "node": "22.x" }` in `package.json`.
+- Environment variables live in **Hostinger hPanel** (they apply to both the build and the running server, and persist across deployments) and, locally, in git-ignored `.env.local`. `.env.example` lists every name with a description and marks which are `NEXT_PUBLIC_*` (baked into the browser bundle at build time — changing one needs a redeploy) versus server-only.
+- `.github/workflows/ci.yml` runs install, lint, typecheck and build on every pull request to `main`. It never deploys and uses no secrets.
+- `.github/workflows/github-pages-preview.yml` is the older "boss preview" (a static copy on GitHub Pages, deployed on every push to `main`). It predates real hosting; GitHub Pages on a private repository needs a paid GitHub plan, so expect it to stop working once the repo is private. Retire it once the Hostinger site is live.
+
+**Team rules.**
+1. Never push directly to `main`. Work on a branch (`feature/...`, `fix/...`, `chore/...`), open a pull request into `main`, and merge only when the CI check is green.
+2. Never commit secrets or real environment values. `.env*` is git-ignored except `.env.example`, which holds names only.
+3. A new environment variable means: add its name and a comment to `.env.example`, and set the real value in hPanel *before* merging code that needs it.
+4. Database changes are `supabase/NNN_*.sql` files run by hand in the Supabase SQL editor, in the order listed in `supabase/README.md`. Run a migration **before** merging code that depends on it, or production will hit the missing column/table.
+
+**Open decision — domain and contact email.** The registered domain is `uptechoutsourcing.com`. On 2026-10-03, after confirmation in a working session, the code was changed from the earlier placeholder `uptechconsulting.com` / `infos@uptechconsulting.com` to `uptechoutsourcing.com` / `infos@uptechoutsourcing.com` (commit 9e65d41). A later brief (2026-10-05) treats this as still open for the team. Confirm with leadership which domain and which inbox are final before launch, and that `infos@uptechoutsourcing.com` actually exists and receives mail.

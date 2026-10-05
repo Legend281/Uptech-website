@@ -1,0 +1,52 @@
+# Pull-request gate for main. main deploys straight to production on Hostinger,
+# so a PR must prove it installs, lints, typechecks and builds before merging.
+# No deployment, no secrets.
+name: CI
+
+on:
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      # The build reads Supabase while prerendering /careers, /blog, etc. and
+      # refuses to start without these. Fake values on the reserved .invalid
+      # domain can never resolve, so every read fails fast and each page uses
+      # its built-in fallback — the same thing it does during a real outage.
+      SUPABASE_URL: https://ci-placeholder.invalid
+      SUPABASE_ANON_KEY: ci-placeholder-not-a-real-key
+      NEXT_PUBLIC_SUPABASE_URL: https://ci-placeholder.invalid
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder-not-a-real-key
+      NEXT_PUBLIC_SITE_URL: https://ci-placeholder.invalid
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # Keep in step with "engines" in package.json and the version chosen in hPanel.
+          node-version: "22"
+          cache: npm
+
+      - name: Install
+        run: npm ci --no-audit --no-fund
+
+      - name: Lint
+        run: npm run lint
+
+      # next typegen writes next-env.d.ts and the route types that tsc needs on a fresh checkout.
+      - name: Typecheck
+        run: npx next typegen && npx tsc --noEmit
+
+      - name: Build
+        run: npm run build

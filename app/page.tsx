@@ -30,6 +30,9 @@ import { images } from "@/lib/images";
 import { getPublishedTestimonials } from "@/lib/testimonials";
 import { getGoogleReviews, googleWriteReviewUrl } from "@/lib/googleReviews";
 import { getPublishedAdditionalServices } from "@/lib/additionalServices";
+import { getPublishedPartnerLogos } from "@/lib/partners";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: {
@@ -151,6 +154,7 @@ export default async function HomePage() {
   // Anything Uptech has added beyond the 5 core services below — see
   // lib/additionalServices.ts. Empty today is the normal, expected case.
   const additionalServices = await getPublishedAdditionalServices();
+  const partnerLogos = await getPublishedPartnerLogos();
   const totalServiceCount = pillars.length + additionalServices.length;
 
   return (
@@ -186,7 +190,7 @@ export default async function HomePage() {
 
         <TrustStrip items={trustItems} variant="light" />
 
-        <PartnersStrip />
+        <PartnersStrip partners={partnerLogos} />
 
         {/* ---------------- Who We Are ---------------- */}
         <section className="relative bg-white py-24">

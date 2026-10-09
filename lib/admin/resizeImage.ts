@@ -44,3 +44,41 @@ export async function resizeImageToDataUrl(file: File, { width, height, quality 
     bitmap.close();
   }
 }
+
+/**
+ * Brand/partner logos: preserves original aspect ratio and transparent background (PNG/WebP),
+ * scaling down cleanly so it fits within maxWidth x maxHeight without clipping the logo.
+ */
+export async function resizeLogoToDataUrl(file: File, maxW = 400, maxH = 160): Promise<string> {
+  if (!file.type.startsWith("image/")) throw new Error("That file isn't an image.");
+  if (file.size > MAX_INPUT_BYTES) throw new Error("That image is over 10MB. Please choose a smaller one.");
+
+  if (file.type === "image/svg+xml") {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(new Error("Failed to read SVG file."));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  const bitmap = await createImageBitmap(file);
+  try {
+    const scale = Math.min(1, maxW / bitmap.width, maxH / bitmap.height);
+    const width = Math.max(1, Math.round(bitmap.width * scale));
+    const height = Math.max(1, Math.round(bitmap.height * scale));
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("This browser couldn't process the image.");
+    ctx.drawImage(bitmap, 0, 0, width, height);
+
+    const isPng = file.type.includes("png");
+    const isWebp = file.type.includes("webp");
+    const mime = isPng ? "image/png" : isWebp ? "image/webp" : "image/jpeg";
+    return canvas.toDataURL(mime, 0.9);
+  } finally {
+    bitmap.close();
+  }
+}

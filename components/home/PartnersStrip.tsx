@@ -1,42 +1,64 @@
 import Image from "next/image";
 import { Reveal } from "@/components/Reveal";
+import { DEFAULT_PARTNERS, type PublicPartner } from "@/lib/partners";
 
-/** Real Uptech Consulting partners, confirmed by the team. */
-const partners = [
-  { name: "Capital One", src: "/images/s1.webp", width: 199, height: 74 },
-  { name: "CenturyLink", src: "/images/s2.webp", width: 156, height: 78 },
-  { name: "HMS", src: "/images/s3.webp", width: 182, height: 64 },
-  { name: "Accenture", src: "/images/s4.webp", width: 223, height: 62 },
-  { name: "GVEC", src: "/images/s5.webp", width: 165, height: 62 },
-  { name: "KiawiTech IT Academy", src: "/images/header-logo.webp", width: 248, height: 71 },
-];
+type Props = {
+  partners?: PublicPartner[];
+};
 
 /**
  * Two back-to-back copies of the same logo row inside one `marquee-track`
  * (app/globals.css) — animating the track left by exactly 50% loops the
  * second copy in seamlessly, so the strip reads as one continuous ribbon of
- * logos rather than a row that snaps back. Full colour, no dimming: an
- * earlier grayscale/opacity treatment was exactly why these stopped
- * reading as the partners' real logos.
+ * logos rather than a row that snaps back. Full colour, no dimming.
  */
-function LogoRow({ ariaHidden }: { ariaHidden?: boolean }) {
+function LogoRow({ items, ariaHidden }: { items: PublicPartner[]; ariaHidden?: boolean }) {
+  // If fewer than 6 items, repeat to guarantee continuous flow across wide monitors
+  const displayItems = items.length > 0 && items.length < 6 ? [...items, ...items] : items;
+
   return (
     <div className="flex shrink-0 items-center gap-16 sm:gap-20" aria-hidden={ariaHidden}>
-      {partners.map((partner) => (
-        <Image
-          key={partner.name}
-          src={partner.src}
-          alt={partner.name}
-          width={partner.width}
-          height={partner.height}
-          className="h-9 w-auto shrink-0 object-contain sm:h-11"
-        />
-      ))}
+      {displayItems.map((partner, index) => {
+        const isExternal = partner.src.startsWith("http://") || partner.src.startsWith("https://") || partner.src.startsWith("data:");
+        const img = (
+          <Image
+            src={partner.src}
+            alt={partner.name}
+            width={partner.width ?? 200}
+            height={partner.height ?? 70}
+            unoptimized={isExternal}
+            className="h-9 w-auto shrink-0 object-contain sm:h-11 transition-transform duration-200 hover:scale-105"
+          />
+        );
+
+        if (partner.websiteUrl) {
+          return (
+            <a
+              key={`${partner.name}-${index}`}
+              href={partner.websiteUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={partner.name}
+              className="inline-flex shrink-0 items-center focus:outline-none focus:ring-2 focus:ring-teal-500 rounded transition-opacity hover:opacity-85"
+            >
+              {img}
+            </a>
+          );
+        }
+
+        return (
+          <div key={`${partner.name}-${index}`} className="inline-flex shrink-0 items-center" title={partner.name}>
+            {img}
+          </div>
+        );
+      })}
     </div>
   );
 }
 
-export function PartnersStrip() {
+export function PartnersStrip({ partners }: Props) {
+  const activePartners = partners && partners.length > 0 ? partners : DEFAULT_PARTNERS;
+
   return (
     <section className="border-y border-slate-200/80 bg-slate-50/60 py-14">
       <Reveal effect="fade">
@@ -57,8 +79,8 @@ export function PartnersStrip() {
           className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"
         >
           <div className="marquee-track flex w-max items-center gap-16 sm:gap-20">
-            <LogoRow />
-            <LogoRow ariaHidden />
+            <LogoRow items={activePartners} />
+            <LogoRow items={activePartners} ariaHidden />
           </div>
         </div>
       </Reveal>

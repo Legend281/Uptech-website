@@ -46,19 +46,31 @@ export function describeDbError(error: { message?: string; code?: string } | nul
 }
 
 /** Public URL for a file in one of the public photo buckets. */
-export function publicPhotoUrl(bucket: "testimonial-photos" | "team-photos" | "service-photos" | "blog-photos", path: string | null | undefined): string | undefined {
+export function publicPhotoUrl(
+  bucket: "testimonial-photos" | "team-photos" | "service-photos" | "blog-photos" | "partner-logos",
+  path: string | null | undefined,
+): string | undefined {
   if (!path) return undefined;
+  if (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("/") || path.startsWith("data:")) {
+    return path;
+  }
   return getSupabaseBrowserClient().storage.from(bucket).getPublicUrl(path).data.publicUrl;
 }
 
 /** Uploads a resized data-URL image and returns its storage path. */
-export async function uploadDataUrl(bucket: "testimonial-photos" | "team-photos" | "service-photos" | "blog-photos", dataUrl: string, prefix: string): Promise<string> {
+export async function uploadDataUrl(
+  bucket: "testimonial-photos" | "team-photos" | "service-photos" | "blog-photos" | "partner-logos",
+  dataUrl: string,
+  prefix: string,
+): Promise<string> {
   // Decoded by hand rather than fetch(dataUrl), which the CSP's connect-src would block.
   const [header, base64] = dataUrl.split(",");
   const bytes = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
-  const blob = new Blob([bytes], { type: header.match(/data:([^;]+)/)?.[1] ?? "image/jpeg" });
-  const path = `${prefix}/${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}.jpg`;
-  const { error } = await getSupabaseBrowserClient().storage.from(bucket).upload(path, blob, { contentType: "image/jpeg", upsert: false });
+  const detectedMime = header.match(/data:([^;]+)/)?.[1] ?? "image/jpeg";
+  const ext = detectedMime.includes("png") ? "png" : detectedMime.includes("webp") ? "webp" : detectedMime.includes("svg") ? "svg" : "jpg";
+  const blob = new Blob([bytes], { type: detectedMime });
+  const path = `${prefix}/${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const { error } = await getSupabaseBrowserClient().storage.from(bucket).upload(path, blob, { contentType: detectedMime, upsert: false });
   if (error) throw new Error(describeDbError(error));
   return path;
 }

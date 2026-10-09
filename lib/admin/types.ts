@@ -439,3 +439,39 @@ export type BlogPost = {
   createdAt: string;
   updatedAt: string;
 };
+
+/*
+ * Partner Logos — displayed in the "Our Partners" marquee strip on the public homepage.
+ * Managed from Admin Settings.
+ */
+export type PartnerStatus = "draft" | "published";
+
+export type PartnerLogo = {
+  id: string;
+  name: string;
+  /** Storage path in partner-logos bucket, or static image path e.g. /images/s1.webp, or full URL */
+  logoUrl: string;
+  websiteUrl?: string;
+  displayOrder: number;
+  status: PartnerStatus;
+  createdById?: string;
+  createdAt: string;
+  updatedAt?: string;
+};
+
+export type NewPartnerLogoInput = {
+  name: string;
+  logoUrl: string;
+  websiteUrl?: string;
+  displayOrder?: number;
+  status?: PartnerStatus;
+};
+
+export type EditablePartnerLogoFields = {
+  name: string;
+  logoUrl: string;
+  websiteUrl?: string;
+  displayOrder?: number;
+  status?: PartnerStatus;
+};
+

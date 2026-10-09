@@ -6,11 +6,12 @@ import { ModuleHeader } from "@/components/admin/FormParts";
 import { AssignmentSettings } from "@/components/admin/settings/AssignmentSettings";
 import { CompanySettings, NotificationSettings, ReviewCycleSettings } from "@/components/admin/settings/OtherSettings";
 import { UsersSettings } from "@/components/admin/settings/UsersSettings";
+import { PartnerLogosSettings } from "@/components/admin/settings/PartnerLogosSettings";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useSettings } from "@/components/admin/providers/SettingsProvider";
 import { canEditSystemSettings } from "@/lib/admin/settings";
 
-type Tab = "assignment" | "users" | "notifications" | "reviews" | "company";
+type Tab = "assignment" | "users" | "notifications" | "reviews" | "company" | "partners";
 
 const tabs: { value: Tab; label: string; icon: string; adminOnly: boolean }[] = [
   { value: "assignment", label: "Lead assignment", icon: "alt_route", adminOnly: true },
@@ -18,6 +19,7 @@ const tabs: { value: Tab; label: string; icon: string; adminOnly: boolean }[] = 
   { value: "notifications", label: "Your notifications", icon: "notifications", adminOnly: false },
   { value: "reviews", label: "Compliance review cycles", icon: "event_repeat", adminOnly: true },
   { value: "company", label: "Company details", icon: "apartment", adminOnly: true },
+  { value: "partners", label: "Partner logos", icon: "handshake", adminOnly: false },
 ];
 
 /*
@@ -70,6 +72,7 @@ export default function SettingsPage() {
               {active === "notifications" && <NotificationSettings key={currentUser.id} />}
               {active === "reviews" && <ReviewCycleSettings />}
               {active === "company" && <CompanySettings />}
+              {active === "partners" && <PartnerLogosSettings />}
             </>
           )}
         </div>

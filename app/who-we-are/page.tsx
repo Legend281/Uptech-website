@@ -23,6 +23,13 @@ import { getVisibleTeamMembers } from "@/lib/team";
 
 const WHATSAPP = "https://wa.me/237678597593";
 
+/*
+ * Force dynamic rendering so newly published team members appear immediately
+ * without waiting for a revalidation or redeploy. The rest of the page
+ * content is static copy so this has no meaningful performance cost.
+ */
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Who We Are",
   description:

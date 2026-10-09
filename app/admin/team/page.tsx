@@ -107,8 +107,7 @@ export default function TeamMembersPage() {
     }
     if (index > 0) actions.push({ label: "Move earlier", icon: "arrow_back", onSelect: () => void toastResult(move(member.id, -1, currentUser), "Order updated", "Not moved") });
     if (index < ordered.length - 1) actions.push({ label: "Move later", icon: "arrow_forward", onSelect: () => void toastResult(move(member.id, 1, currentUser), "Order updated", "Not moved") });
-    // Anyone who has ever been public is hidden, never deleted (spec 2.3).
-    if (!member.everVisible) actions.push({ label: "Delete", icon: "delete", tone: "danger", onSelect: () => setDeleting(member) });
+    actions.push({ label: "Delete", icon: "delete", tone: "danger", onSelect: () => setDeleting(member) });
     return actions;
   }
 
@@ -203,8 +202,9 @@ export default function TeamMembersPage() {
       />
       <ConfirmDialog
         open={Boolean(deleting)}
+        tone="danger"
         title="Delete this profile?"
-        description={deleting ? `${deleting.name} has never been on the public site, so their draft profile can be removed for good.` : ""}
+        description={deleting ? `Are you sure you want to delete ${deleting.name}? This will permanently remove them from the roster and the website.` : ""}
         confirmLabel="Delete Profile"
         onCancel={() => setDeleting(null)}
         onConfirm={() => {

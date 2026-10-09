@@ -176,7 +176,7 @@ export default async function CareerMarketingPlacementPage() {
     <>
       <JsonLd data={breadcrumbJsonLd(breadcrumbItems)} />
       <JsonLd data={faqPageJsonLd(faqItems)} />
-      <Header activeService="career-marketing" ctaLabel="Start Campaign" ctaHref="#start-campaign" />
+      <Header activeService="career-marketing" ctaLabel="Register Now" ctaHref="https://forms.gle/2KGSzVk4B3jrXMZu5" />
       <Breadcrumb
         items={breadcrumbItems}
         tag="INDIVIDUAL CAREER ADVANCEMENT"
@@ -212,8 +212,8 @@ export default async function CareerMarketingPlacementPage() {
               lead="A dedicated Consultant/Account manager takes over your CV, your LinkedIn, your daily applications, and your recruiter follow-up — so you can take your evenings back and focus solely on showing up to interview."
               buttons={
                 <>
-                  <Button href="#start-campaign" icon={arrowRightIcon}>
-                    Start Your Career Campaign
+                  <Button href="https://forms.gle/2KGSzVk4B3jrXMZu5" icon={arrowRightIcon}>
+                    Register Now
                   </Button>
                   <WhatsAppButton phone="237678597593" />
                 </>
@@ -335,8 +335,8 @@ export default async function CareerMarketingPlacementPage() {
                   </p>
                 </div>
               </div>
-              <Button href="#start-campaign" size="sm" className="shrink-0">
-                Claim Your Account Manager
+              <Button href="https://forms.gle/2KGSzVk4B3jrXMZu5" size="sm" className="shrink-0">
+                Register Now
               </Button>
             </Reveal>
           </div>
@@ -532,15 +532,15 @@ export default async function CareerMarketingPlacementPage() {
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight max-w-3xl mx-auto leading-tight mb-4">
               <TextReveal text="Ready to stop job hunting alone?" /> <br />
-              <span className="shimmer-text text-teal-400">One conversation will tell us.</span>
+              <span className="shimmer-text text-teal-400">Register your profile today.</span>
             </h2>
             <p className="mt-4 text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
-              Book a strategic consultation with a senior placement specialist to review your
-              background and scope your active campaign.
+              Complete the intake registration form so your dedicated placement manager can review your
+              background and launch your active campaign.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-              <Button href="/contact?service=career-marketing" icon={arrowRightIcon}>
-                Start Your Career Campaign
+              <Button href="https://forms.gle/2KGSzVk4B3jrXMZu5" icon={arrowRightIcon}>
+                Register Now
               </Button>
               <WhatsAppButton phone="237678597593" />
             </div>

@@ -57,7 +57,9 @@ export function Button({
         transition: { type: "spring" as const, stiffness: 400, damping: 25 },
       };
 
-  if (external) {
+  const isExternal = external || href.startsWith("http://") || href.startsWith("https://");
+
+  if (isExternal) {
     return (
       <motion.a
         href={href}

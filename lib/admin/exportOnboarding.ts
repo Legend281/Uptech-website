@@ -87,3 +87,19 @@ export function downloadOnboardingCSV(submissions: OnboardingSubmission[], staff
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 }
+
+/** Download an individual client onboarding record as an Excel-ready CSV file. */
+export function downloadSingleSubmissionCSV(submission: OnboardingSubmission, staff: { id: string; name: string }[]): void {
+  const csv = onboardingToCSV([submission], staff);
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  const safeName = `${submission.firstName}-${submission.lastName}`.toLowerCase().replace(/[^a-z0-9]/g, "-");
+  link.download = `case-${submission.caseNumber}-${safeName}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+

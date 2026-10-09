@@ -16,6 +16,7 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/client";
  * data providers.
  */
 export default function SetPasswordPage() {
+  const [checking, setChecking] = useState(true);
   const [ready, setReady] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -24,10 +25,76 @@ export default function SetPasswordPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    let active = true;
     const supabase = getSupabaseBrowserClient();
-    supabase.auth.getUser().then(({ data }) => {
-      setReady(Boolean(data.user));
-    });
+
+    async function verifyAndExchange() {
+      // 1. Check if Supabase passed an auth code or error via URL query params
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("code");
+      const errorParam = params.get("error_description") || params.get("error");
+
+      if (errorParam) {
+        if (active) {
+          setErrorMessage(decodeURIComponent(errorParam));
+          setChecking(false);
+          setReady(false);
+        }
+        return;
+      }
+
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (error) {
+          if (active) {
+            setErrorMessage(error.message);
+            setChecking(false);
+            setReady(false);
+          }
+          return;
+        }
+        // Clean URL to remove sensitive code parameter
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+
+      // 2. Check if a valid session exists
+      const { data } = await supabase.auth.getUser();
+      if (data?.user) {
+        if (active) {
+          setReady(true);
+          setChecking(false);
+        }
+        return;
+      }
+
+      // 3. Fallback listener in case hash-based token is being resolved
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange((event, session) => {
+        if (!active) return;
+        if (session?.user && (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN")) {
+          setReady(true);
+          setChecking(false);
+        }
+      });
+
+      const timer = setTimeout(() => {
+        if (active) {
+          setChecking(false);
+        }
+      }, 2500);
+
+      return () => {
+        subscription.unsubscribe();
+        clearTimeout(timer);
+      };
+    }
+
+    verifyAndExchange();
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   async function handleSubmit(event: FormEvent) {
@@ -65,11 +132,21 @@ export default function SetPasswordPage() {
         <h1 className="mt-6 text-center font-sans text-lg font-bold text-navy-950">Set Your Password</h1>
         <p className="mt-1 text-center text-sm text-slate-500">Choose a password to finish signing in.</p>
 
-        {!ready ? (
+        {checking ? (
+          <div className="mt-6 flex flex-col items-center gap-3 py-6 text-center text-sm text-slate-500">
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-200 border-t-teal-600" />
+            <span>Verifying your secure link…</span>
+          </div>
+        ) : !ready ? (
           <div className="mt-6 flex flex-col items-center gap-2 py-4 text-center text-sm text-slate-500">
             <MaterialIcon name="error" className="text-[24px] text-slate-300" />
-            This link has expired or already been used. Request a new one — an invite from an Administrator, or
-            &quot;Forgot password?&quot; on the sign-in page — and try again.
+            <span>
+              {errorMessage ||
+                "This link has expired or already been used. Request a new one — an invite from an Administrator, or \"Forgot password?\" on the sign-in page — and try again."}
+            </span>
+            <a href="/admin/login" className="mt-3 text-xs font-semibold text-teal-600 hover:text-teal-700">
+              Back to Sign In
+            </a>
           </div>
         ) : status === "success" ? (
           <div className="mt-6 flex flex-col items-center gap-2 py-4 text-center text-sm text-slate-600">

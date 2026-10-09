@@ -22,6 +22,17 @@ const MAX_TEXT_LENGTH = 2000;
  * wrong would mean anyone could post fake, or read back real, client data.
  * Keep ONBOARDING_WEBHOOK_SECRET out of git, same as every other key.
  */
+function normalizeDate(raw: unknown): string {
+  if (typeof raw !== "string") return "";
+  const trimmed = raw.trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) return trimmed;
+  const parsed = new Date(trimmed);
+  if (!isNaN(parsed.getTime())) {
+    return parsed.toISOString().split("T")[0];
+  }
+  return trimmed;
+}
+
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request);
   if (isRateLimited(ip, RATE_LIMIT_WINDOW_MS, RATE_LIMIT_MAX)) {
@@ -100,7 +111,7 @@ export async function POST(request: NextRequest) {
     linkedin_email: (linkedinEmail as string).trim(),
     linkedin_password: linkedinPassword as string,
     address: (address as string).trim(),
-    date_of_birth: (dateOfBirth as string).trim(),
+    date_of_birth: normalizeDate(dateOfBirth),
     nationality: (nationality as string).trim(),
     ethnicity: (ethnicity as string).trim(),
     residency_status: (residencyStatus as string).trim(),

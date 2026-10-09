@@ -11,7 +11,7 @@ import { AnimatedNumber } from "@/components/admin/AnimatedNumber";
 import { useOnboardingSubmissions } from "@/components/admin/providers/OnboardingProvider";
 import { useCurrentUser } from "@/components/admin/providers/CurrentUserProvider";
 import { useStaff } from "@/components/admin/providers/StaffProvider";
-import { downloadOnboardingCSV } from "@/lib/admin/exportOnboarding";
+import { downloadOnboardingCSV, downloadSingleSubmissionCSV } from "@/lib/admin/exportOnboarding";
 import { formatRelativeTime } from "@/lib/admin/formatRelativeTime";
 import type { OnboardingSubmission } from "@/lib/admin/types";
 
@@ -102,9 +102,19 @@ function DetailModal({ submission, onClose }: { submission: OnboardingSubmission
               {submission.firstName} {submission.lastName}
             </h2>
           </div>
-          <button type="button" onClick={onClose} aria-label="Close" className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100">
-            <MaterialIcon name="close" className="text-[20px]" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => downloadSingleSubmissionCSV(submission, staff)}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-navy-950 transition-colors"
+            >
+              <MaterialIcon name="download" className="text-[16px] text-teal-600" />
+              Download Excel
+            </button>
+            <button type="button" onClick={onClose} aria-label="Close" className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100">
+              <MaterialIcon name="close" className="text-[20px]" />
+            </button>
+          </div>
         </div>
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5">
           <div className="mb-4">
@@ -232,6 +242,7 @@ export default function OnboardingPage() {
   function actionsFor(submission: OnboardingSubmission): RowAction[] {
     return [
       { label: "View details", icon: "visibility", onSelect: () => setViewing(submission) },
+      { label: "Download as Excel", icon: "download", onSelect: () => downloadSingleSubmissionCSV(submission, staff) },
       { label: "Delete", icon: "delete", tone: "danger", onSelect: () => setDeleting(submission) },
     ];
   }

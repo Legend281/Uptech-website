@@ -42,7 +42,7 @@ export function HeroIntro({
   return (
     <motion.div
       className="mx-auto max-w-2xl text-center lg:max-w-3xl"
-      initial={reducedMotion ? "shown" : "hidden"}
+      initial={false}
       animate="shown"
       variants={container}
     >

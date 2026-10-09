@@ -438,15 +438,29 @@ export function Header({
 
         {/* Right actions */}
         <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
-          <Link
-            href={resolvedCtaHref}
-            className="hidden sm:flex gradient-teal-blue text-white text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2.5 rounded-lg hover:brightness-105 active:scale-[0.98] transition-all shadow-sm shadow-teal-950/40 items-center gap-2"
-          >
-            <span>{ctaLabel}</span>
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
+          {resolvedCtaHref.startsWith("http") ? (
+            <a
+              href={resolvedCtaHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:flex gradient-teal-blue text-white text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2.5 rounded-lg hover:brightness-105 active:scale-[0.98] transition-all shadow-sm shadow-teal-950/40 items-center gap-2"
+            >
+              <span>{ctaLabel}</span>
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
+          ) : (
+            <Link
+              href={resolvedCtaHref}
+              className="hidden sm:flex gradient-teal-blue text-white text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2.5 rounded-lg hover:brightness-105 active:scale-[0.98] transition-all shadow-sm shadow-teal-950/40 items-center gap-2"
+            >
+              <span>{ctaLabel}</span>
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </Link>
+          )}
 
           {/* Mobile menu toggle */}
           <button
@@ -601,16 +615,31 @@ export function Header({
               Blog
             </Link>
 
-            <Link
-              href={resolvedCtaHref}
-              onClick={closeMobileMenu}
-              className="gradient-teal-blue flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-teal-950/40 active:scale-[0.98] transition-transform"
-            >
-              {ctaLabel}
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </Link>
+            {resolvedCtaHref.startsWith("http") ? (
+              <a
+                href={resolvedCtaHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={closeMobileMenu}
+                className="gradient-teal-blue flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-teal-950/40 active:scale-[0.98] transition-transform"
+              >
+                {ctaLabel}
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </a>
+            ) : (
+              <Link
+                href={resolvedCtaHref}
+                onClick={closeMobileMenu}
+                className="gradient-teal-blue flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-teal-950/40 active:scale-[0.98] transition-transform"
+              >
+                {ctaLabel}
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </Link>
+            )}
           </div>
         </div>
       </div>

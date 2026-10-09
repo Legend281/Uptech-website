@@ -432,7 +432,7 @@ export default async function HomePage() {
             consented testimonial is published to the Homepage from the admin
             dashboard (lib/testimonials.ts). No placeholder here: the Homepage
             never shows an illustrative quote. */}
-        {testimonials.length > 0 && (
+        {testimonials.length >= 2 && (
           <section className="relative overflow-hidden border-b border-slate-800/80 bg-navy-950 py-24 text-white">
             <div className="pointer-events-none absolute right-0 top-0 h-full w-full opacity-60 lg:w-3/4 lg:opacity-75">
               <Image

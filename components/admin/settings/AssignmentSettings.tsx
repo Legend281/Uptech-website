@@ -10,7 +10,7 @@ import { useLeads } from "@/components/admin/providers/LeadsProvider";
 import { toastResult } from "@/lib/admin/toastResult";
 import { departmentLabels, roleLabels } from "@/lib/admin/labels";
 import { RESPONSE_SLA_HOURS } from "@/lib/admin/leadStaleness";
-import { canEditSystemSettings, isPoolEligible, nextAssignee, validateAssignment, type DepartmentAssignment } from "@/lib/admin/settings";
+import { DEFAULT_SETTINGS, canEditSystemSettings, isPoolEligible, nextAssignee, validateAssignment, type DepartmentAssignment } from "@/lib/admin/settings";
 import type { Department } from "@/lib/admin/types";
 
 const departments: Department[] = ["career-services-operations", "business-formalisation-compliance"];
@@ -20,7 +20,8 @@ function DepartmentCard({ department }: { department: Department }) {
   const users = useAdminUsers();
   const { settings, saveAssignment, loaded } = useSettings();
   const leads = useLeads();
-  const saved = settings.assignment[department];
+  const fallback = DEFAULT_SETTINGS.assignment[department];
+  const saved: DepartmentAssignment = settings.assignment?.[department] ?? fallback;
   const [draft, setDraft] = useState<DepartmentAssignment>(saved);
   const editable = canEditSystemSettings(currentUser);
 
@@ -33,17 +34,19 @@ function DepartmentCard({ department }: { department: Department }) {
   // in-progress edit here — just because a save somewhere else replaced the
   // shared settings object.
   useEffect(() => {
-    if (loaded) setDraft(saved);
+    if (loaded) setDraft(settings.assignment?.[department] ?? fallback);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loaded]);
 
+  const poolUserIds = draft.poolUserIds ?? [];
+  const savedPool = saved.poolUserIds ?? [];
   const eligible = users.filter((u) => isPoolEligible(u, department));
   // People saved in the pool who no longer qualify (moved or deactivated): shown so nobody wonders why they get no leads.
-  const stale = draft.poolUserIds.map((id) => users.find((u) => u.id === id)).filter((u) => u && !isPoolEligible(u, department));
+  const stale = poolUserIds.map((id) => users.find((u) => u.id === id)).filter((u) => u && !isPoolEligible(u, department));
   const dirty = JSON.stringify(draft) !== JSON.stringify(saved);
   const errors = validateAssignment(draft, users, department);
   // Whose turn is next: after the owner of this department's most recent auto-assignable lead.
-  const lastAssigned = leads.find((l) => l.department === department && l.assignedToId && draft.poolUserIds.includes(l.assignedToId))?.assignedToId;
+  const lastAssigned = leads.find((l) => l.department === department && l.assignedToId && poolUserIds.includes(l.assignedToId))?.assignedToId;
   const upNext = nextAssignee(draft, users, department, lastAssigned);
   const roundRobin = draft.mode === "round-robin";
 
@@ -52,7 +55,10 @@ function DepartmentCard({ department }: { department: Department }) {
   }
 
   function togglePool(id: string, on: boolean) {
-    setDraft((prev) => ({ ...prev, poolUserIds: on ? [...prev.poolUserIds, id] : prev.poolUserIds.filter((p) => p !== id) }));
+    setDraft((prev) => {
+      const prevPool = prev.poolUserIds ?? [];
+      return { ...prev, poolUserIds: on ? [...prevPool, id] : prevPool.filter((p) => p !== id) };
+    });
   }
 
   function save() {
@@ -67,7 +73,7 @@ function DepartmentCard({ department }: { department: Department }) {
           <p className={hintClasses}>
             {!saved.enabled || saved.mode === "manual"
               ? "Now: new leads wait in the list for someone to claim them."
-              : `Now: round-robin across ${saved.poolUserIds.length} ${saved.poolUserIds.length === 1 ? "person" : "people"}.`}
+              : `Now: round-robin across ${savedPool.length} ${savedPool.length === 1 ? "person" : "people"}.`}
           </p>
         </div>
         {roundRobin && (

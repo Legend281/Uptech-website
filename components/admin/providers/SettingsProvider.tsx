@@ -53,33 +53,54 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const logActivity = useLogActivity();
 
   const refresh = useCallback(async () => {
-    const supabase = getSupabaseBrowserClient();
-    const { data: sessionData } = await supabase.auth.getSession();
-    const userId = sessionData.session?.user.id;
-    if (!userId) {
+    try {
+      const supabase = getSupabaseBrowserClient();
+      const { data: sessionData } = await supabase.auth.getSession();
+      const userId = sessionData.session?.user.id;
+      if (!userId) {
+        setSettings(DEFAULT_SETTINGS);
+        return;
+      }
+
+      const [{ data: appRows, error: appError }, { data: prefRow, error: prefError }] = await Promise.all([
+        supabase.from("app_settings").select("key, value"),
+        supabase.from("notification_prefs").select("prefs").eq("staff_id", userId).maybeSingle(),
+      ]);
+
+      if (appError) console.warn("[settings] Note loading app_settings:", appError.message);
+      if (prefError) console.warn("[settings] Note loading notification_prefs:", prefError.message);
+
+      const rows = (appRows ?? []) as { key: string; value: unknown }[];
+      const assignmentRow = rows.find((r) => r.key === "assignment")?.value as Record<string, unknown> | undefined;
+      const companyRow = rows.find((r) => r.key === "company")?.value as Partial<CompanyDetails> | undefined;
+
+      setSettings({
+        assignment: {
+          "career-services-operations": {
+            ...DEFAULT_SETTINGS.assignment["career-services-operations"],
+            ...((assignmentRow?.["career-services-operations"] as Partial<DepartmentAssignment>) ?? {}),
+          },
+          "business-formalisation-compliance": {
+            ...DEFAULT_SETTINGS.assignment["business-formalisation-compliance"],
+            ...((assignmentRow?.["business-formalisation-compliance"] as Partial<DepartmentAssignment>) ?? {}),
+          },
+        },
+        notifications: prefRow?.prefs
+          ? {
+              [userId]: {
+                ...DEFAULT_NOTIFICATION_PREFS,
+                ...(prefRow.prefs as NotificationPrefs),
+              },
+            }
+          : {},
+        company: { ...DEFAULT_SETTINGS.company, ...(companyRow ?? {}) },
+      });
+    } catch (err) {
+      console.warn("[settings] Failed to load settings from Supabase, using defaults:", err);
       setSettings(DEFAULT_SETTINGS);
+    } finally {
       setLoaded(true);
-      return;
     }
-
-    const [{ data: appRows, error: appError }, { data: prefRow, error: prefError }] = await Promise.all([
-      supabase.from("app_settings").select("key, value"),
-      supabase.from("notification_prefs").select("prefs").eq("staff_id", userId).maybeSingle(),
-    ]);
-
-    if (appError) console.error("[settings] Failed to load app_settings:", appError.message);
-    if (prefError) console.error("[settings] Failed to load notification_prefs:", prefError.message);
-
-    const rows = (appRows ?? []) as { key: string; value: unknown }[];
-    const assignmentRow = rows.find((r) => r.key === "assignment")?.value as Settings["assignment"] | undefined;
-    const companyRow = rows.find((r) => r.key === "company")?.value as CompanyDetails | undefined;
-
-    setSettings({
-      assignment: { ...DEFAULT_SETTINGS.assignment, ...assignmentRow },
-      notifications: prefRow ? { [userId]: prefRow.prefs as NotificationPrefs } : {},
-      company: { ...DEFAULT_SETTINGS.company, ...companyRow },
-    });
-    setLoaded(true);
   }, []);
 
   useEffect(() => {
@@ -96,10 +117,15 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   }
 
   async function upsertAppSetting(key: "assignment" | "company", value: unknown, actorId: string): Promise<string | null> {
-    const { error } = await getSupabaseBrowserClient()
-      .from("app_settings")
-      .upsert({ key, value, updated_by: actorId, updated_at: new Date().toISOString() });
-    return error?.message ?? null;
+    try {
+      const { error } = await getSupabaseBrowserClient()
+        .from("app_settings")
+        .upsert({ key, value, updated_by: actorId, updated_at: new Date().toISOString() });
+      return error?.message ?? null;
+    } catch (err) {
+      console.error("[settings] Upsert failed:", err);
+      return err instanceof Error ? err.message : "Failed to save settings. Check database connection.";
+    }
   }
 
   async function saveAssignment(department: Department, value: DepartmentAssignment, actor: AdminUser): Promise<ActionResult> {
@@ -134,11 +160,16 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   async function saveNotifications(userId: string, prefs: NotificationPrefs, actor: AdminUser): Promise<ActionResult> {
     if (actor.id !== userId) return { ok: false, reasons: ["You can only change your own notification preferences."] };
     setSettings((prev) => ({ ...prev, notifications: { ...prev.notifications, [userId]: prefs } }));
-    const { error } = await getSupabaseBrowserClient()
-      .from("notification_prefs")
-      .upsert({ staff_id: userId, prefs, updated_at: new Date().toISOString() });
-    if (error) return { ok: false, reasons: [error.message] };
-    return { ok: true };
+    try {
+      const { error } = await getSupabaseBrowserClient()
+        .from("notification_prefs")
+        .upsert({ staff_id: userId, prefs, updated_at: new Date().toISOString() });
+      if (error) return { ok: false, reasons: [error.message] };
+      return { ok: true };
+    } catch (err) {
+      console.error("[settings] Notification prefs save failed:", err);
+      return { ok: false, reasons: [err instanceof Error ? err.message : "Failed to save preferences. Check database connection."] };
+    }
   }
 
   return (

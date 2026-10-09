@@ -62,17 +62,16 @@ export default function SettingsPage() {
         </nav>
 
         <div className="min-w-0 flex-1">
-          {/* Forms start from saved values, so wait until they're read. */}
-          {!loaded ? (
+          {active === "partners" && <PartnerLogosSettings />}
+          {active === "users" && <UsersSettings />}
+          {active === "reviews" && <ReviewCycleSettings />}
+          {!loaded && (active === "assignment" || active === "company" || active === "notifications") ? (
             <p className="text-sm text-slate-500">Loading settings…</p>
           ) : (
             <>
               {active === "assignment" && <AssignmentSettings />}
-              {active === "users" && <UsersSettings />}
               {active === "notifications" && <NotificationSettings key={currentUser.id} />}
-              {active === "reviews" && <ReviewCycleSettings />}
               {active === "company" && <CompanySettings />}
-              {active === "partners" && <PartnerLogosSettings />}
             </>
           )}
         </div>

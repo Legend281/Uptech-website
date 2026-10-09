@@ -12,6 +12,7 @@ import { getReviewStatus, DEFAULT_DUE_SOON_DAYS } from "@/lib/admin/staleness";
 import {
   COMPANY_DISPLAY_NAME,
   COMPANY_LEGAL_NAME,
+  DEFAULT_NOTIFICATION_PREFS,
   canEditSystemSettings,
   notificationEventLabels,
   validateCompany,
@@ -64,7 +65,10 @@ export function NotificationSettings() {
   }, [loaded]);
 
   function toggle(event: NotificationEvent, channel: NotificationChannel, on: boolean) {
-    setDraft((prev) => ({ ...prev, [event]: { ...prev[event], [channel]: on } }));
+    setDraft((prev) => {
+      const eventPrefs = prev[event] ?? DEFAULT_NOTIFICATION_PREFS[event];
+      return { ...prev, [event]: { ...eventPrefs, [channel]: on } };
+    });
   }
 
   return (
@@ -96,7 +100,7 @@ export function NotificationSettings() {
                   <input
                     type="checkbox"
                     aria-label={`${notificationEventLabels[event].label}: ${channel === "email" ? "email" : "in-app"}`}
-                    checked={draft[event][channel]}
+                    checked={draft[event]?.[channel] ?? DEFAULT_NOTIFICATION_PREFS[event][channel]}
                     onChange={(e) => toggle(event, channel, e.target.checked)}
                     className="h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500/40"
                   />
@@ -258,7 +262,7 @@ export function CompanySettings() {
                 <Field key={f.key} label={f.label} hint={f.hint ?? (group === "Social links" ? "Full https:// link, or leave blank." : undefined)}>
                   <input
                     type={f.type ?? (group === "Social links" ? "url" : "text")}
-                    value={draft[f.key]}
+                    value={draft[f.key] ?? ""}
                     onChange={(e) => setDraft((prev) => ({ ...prev, [f.key]: e.target.value }))}
                     className={inputClasses}
                   />

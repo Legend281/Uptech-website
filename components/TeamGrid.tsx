@@ -32,7 +32,7 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
   return (
     <TiltCard
       max={4}
-      className="flex flex-col overflow-hidden rounded-b-lg border-x border-b border-slate-200 bg-white shadow-[0_20px_30px_-10px_rgba(11,25,44,0.14),0_10px_15px_-5px_rgba(11,25,44,0.06)]"
+      className="flex min-w-0 flex-col overflow-hidden rounded-b-lg border-x border-b border-slate-200 bg-white shadow-[0_20px_30px_-10px_rgba(11,25,44,0.14),0_10px_15px_-5px_rgba(11,25,44,0.06)]"
     >
       <span aria-hidden="true" className="h-1.5 w-full bg-teal-400" />
       <div className="relative aspect-[4/5] w-full bg-slate-100">
@@ -58,10 +58,10 @@ export function TeamMemberCard({ member }: { member: TeamMember }) {
         )}
       </div>
 
-      <div className="flex flex-col bg-gradient-to-b from-teal-50/40 to-white p-6">
-        <h3 className="text-[20px] font-bold leading-[28px] tracking-[-0.015em] text-navy-950">{member.name}</h3>
-        <p className="mt-0.5 text-[14px] font-semibold leading-[20px] text-teal-700">{member.role}</p>
-        {member.bio ? <p className="mt-3.5 text-[14px] leading-[21px] text-slate-600">{member.bio}</p> : null}
+      <div className="flex min-w-0 flex-col bg-gradient-to-b from-teal-50/40 to-white p-6">
+        <h3 className="break-words text-[20px] font-bold leading-[28px] tracking-[-0.015em] text-navy-950">{member.name}</h3>
+        <p className="mt-0.5 break-words text-[14px] font-semibold leading-[20px] text-teal-700">{member.role}</p>
+        {member.bio ? <p className="mt-3.5 break-words text-[14px] leading-[21px] text-slate-600">{member.bio}</p> : null}
         {member.linkedinUrl ? (
           <a
             href={member.linkedinUrl}

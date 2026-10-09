@@ -243,16 +243,14 @@ export function TeamMembersProvider({ children }: { children: ReactNode }) {
     if (!canManageTeam(user)) return denied;
     const existing = members.find((m) => m.id === id);
     if (!existing) return { ok: true };
-    if (existing.everVisible) {
-      return { ok: false, reasons: ["They've been on the public site, so hide them instead. Other pages may still refer to them."] };
-    }
 
     const { error } = await getSupabaseBrowserClient().from("team_members").delete().eq("id", id);
     if (error) return { ok: false, reasons: [describeDbError(error)] };
 
     if (existing.photoPath) void getSupabaseBrowserClient().storage.from("team-photos").remove([existing.photoPath]);
     await refresh();
-    log("delete", `${user.name} deleted ${existing.name}'s draft team profile.`);
+    if (existing.status === "visible") void revalidate();
+    log("delete", `${user.name} deleted ${existing.name}'s team profile.`);
     return { ok: true };
   }
 

@@ -236,10 +236,9 @@ export function CompanySettings() {
 
   return (
     <section className={`${CARD_SURFACE} p-5`}>
-      <NotYetConnected>
-        The public site doesn&apos;t read these yet. Pages still carry their own copies of the email and WhatsApp number, and
-        the footer&apos;s social icons point nowhere. Connecting the site to this one source is a separate step.
-      </NotYetConnected>
+      <p className="text-xs text-slate-500">
+        Changes saved here update the public footer, contact inquiries, office locations, and official legal information sitewide.
+      </p>
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5">
           <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Name used on the site</p>

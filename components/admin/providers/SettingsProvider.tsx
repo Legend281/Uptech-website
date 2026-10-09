@@ -6,6 +6,7 @@ import { useStaff as useAdminUsers } from "@/components/admin/providers/StaffPro
 import { departmentLabels } from "@/lib/admin/labels";
 import { RESPONSE_SLA_HOURS } from "@/lib/admin/leadStaleness";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { revalidatePublicPages } from "@/lib/admin/revalidate";
 import {
   DEFAULT_NOTIFICATION_PREFS,
   DEFAULT_SETTINGS,
@@ -152,6 +153,15 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     setSettings((prev) => ({ ...prev, company: trimmed }));
     const saveError = await upsertAppSetting("company", trimmed, actor.id);
     if (saveError) return { ok: false, reasons: [saveError] };
+
+    // Trigger instant revalidation of public pages showing contact & company details
+    const { data: sessionData } = await getSupabaseBrowserClient().auth.getSession();
+    if (sessionData.session) {
+      void revalidatePublicPages(
+        ["/", "/contact", "/careers", "/services", "/who-we-are", "/who-we-serve", "/privacy-policy", "/terms-of-service"],
+        sessionData.session.access_token
+      );
+    }
 
     log("edit_note", `${actor.name} updated the company details.`);
     return { ok: true };

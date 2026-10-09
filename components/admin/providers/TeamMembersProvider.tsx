@@ -134,7 +134,14 @@ export function TeamMembersProvider({ children }: { children: ReactNode }) {
 
   async function savePhoto(input: TeamMemberInput, currentPath?: string): Promise<string | null> {
     if (!input.photo) return null;
-    if (input.photo.startsWith("data:")) return uploadDataUrl("team-photos", input.photo, "team");
+    if (input.photo.startsWith("data:")) {
+      try {
+        return await uploadDataUrl("team-photos", input.photo, "team");
+      } catch (err) {
+        console.warn("[team-photos] Storage upload failed, saving optimized photo directly:", err);
+        return input.photo;
+      }
+    }
     return currentPath ?? null;
   }
 

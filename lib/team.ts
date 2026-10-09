@@ -41,7 +41,12 @@ export async function getVisibleTeamMembers(): Promise<TeamMember[]> {
       bio: row.bio ?? undefined,
       linkedinUrl: row.profile_url ?? undefined,
       photo: row.photo_path
-        ? `${process.env.SUPABASE_URL}/storage/v1/object/public/team-photos/${encodeURI(row.photo_path)}`
+        ? row.photo_path.startsWith("http://") ||
+          row.photo_path.startsWith("https://") ||
+          row.photo_path.startsWith("/") ||
+          row.photo_path.startsWith("data:")
+          ? row.photo_path
+          : `${process.env.SUPABASE_URL}/storage/v1/object/public/team-photos/${encodeURI(row.photo_path)}`
         : undefined,
     }));
   } catch (error) {

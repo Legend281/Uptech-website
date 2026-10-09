@@ -243,6 +243,30 @@ export default async function WhoWeArePage() {
           </div>
         </section>
 
+        {/* ---------------- Meet the Team ---------------- */}
+        {/* Placed prominently in the middle of the page — connecting What We Do
+            directly to the actual leaders and specialists executing the work. */}
+        {team.length > 0 ? (
+          <section id="team" className="scroll-mt-24 border-b border-slate-200 bg-white">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <Reveal className={`${SPINE_LIGHT} py-16 sm:py-20 lg:py-24`}>
+                <SpineNode />
+                <h2 className="max-w-3xl text-[26px] font-extrabold leading-[34px] tracking-[-0.02em] text-navy-950 sm:text-[34px] sm:leading-[42px] sm:tracking-[-0.025em]">
+                  <TextReveal text="Meet the team" />
+                </h2>
+                <Reveal effect="fade" delay={100}>
+                  <p className="mt-5 max-w-2xl text-[18px] leading-[28px] tracking-[-0.01em] text-slate-600">
+                    The people actually doing the work described above — real names, real roles, not a stock photo.
+                  </p>
+                </Reveal>
+                <Reveal effect="fade" delay={200} className="mt-11 lg:mt-12">
+                  <TeamGrid members={team} />
+                </Reveal>
+              </Reveal>
+            </div>
+          </section>
+        ) : null}
+
         {/* ---------------- Our Philosophy ---------------- */}
         {/* Stacked heading and lead, rather than the split used above — the
             section structure varies so the page has rhythm instead of one
@@ -490,40 +514,6 @@ export default async function WhoWeArePage() {
             </Reveal>
           </div>
         </section>
-
-        {/* ---------------- Meet the Team ---------------- */}
-        {/* Renders only once real profiles exist. While the array is empty a
-            whole section here would be 300px of page saying nothing, directly
-            where the page should be accelerating into its closing statement —
-            so the pending note lives as one quiet line in that statement
-            instead. */}
-        {team.length > 0 ? (
-          <section className="border-b border-slate-200 bg-[#F8FAFC]">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <Reveal className={`${SPINE_LIGHT} py-16 sm:py-20 lg:py-24`}>
-                <SpineNode />
-                <h2 className="max-w-3xl text-[26px] font-extrabold leading-[34px] tracking-[-0.02em] text-navy-950 sm:text-[34px] sm:leading-[42px] sm:tracking-[-0.025em]">
-                  <TextReveal text="Meet the team" />
-                </h2>
-                <Reveal effect="fade" delay={100}>
-                  <p className="mt-5 max-w-2xl text-[18px] leading-[28px] tracking-[-0.01em] text-slate-600">
-                    The people actually doing the work described above — real names, real roles, not a stock photo.
-                  </p>
-                </Reveal>
-                {/* Not effect="stagger" here — that animates direct children in
-                    sequence, but TeamGrid is a separate component rendering
-                    its own grid div, so "direct child" would just be that one
-                    div, not each card. TeamGrid stays a simple, reusable
-                    "give it members, get a grid" component rather than
-                    entangling it with this page's specific scroll-reveal
-                    system. */}
-                <Reveal effect="fade" delay={200} className="mt-11 lg:mt-12">
-                  <TeamGrid members={team} />
-                </Reveal>
-              </Reveal>
-            </div>
-          </section>
-        ) : null}
 
         {/* ---------------- Mission & Vision ---------------- */}
         {/* The page's conclusion, so it is set as a statement rather than a

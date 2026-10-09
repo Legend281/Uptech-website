@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   alternates: { canonical: `${SITE_URL}/privacy-policy` },
 };
 
+import { getCompanyDetails } from "@/lib/company";
+
 const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Privacy Policy" }];
 
 // Content below was last substantively rewritten on this date — kept
@@ -20,7 +22,8 @@ const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Privacy Policy"
 // different questions.
 const LAST_UPDATED = "September 29, 2026";
 
-export default function PrivacyPolicyPage() {
+export default async function PrivacyPolicyPage() {
+  const company = await getCompanyDetails();
   return (
     <>
       <JsonLd data={breadcrumbJsonLd(breadcrumbItems)} />
@@ -224,8 +227,8 @@ export default function PrivacyPolicyPage() {
                 <h2 className="text-lg font-bold text-navy-950 mb-3">Contact Us</h2>
                 <p>
                   Questions about this policy, or requests about your personal data, can be sent to{" "}
-                  <a href="mailto:infos@uptechoutsourcing.com" className="text-blue-accent underline hover:text-blue-700">
-                    infos@uptechoutsourcing.com
+                  <a href={`mailto:${company.contactEmail}`} className="text-blue-accent underline hover:text-blue-700">
+                    {company.contactEmail}
                   </a>
                   .
                 </p>

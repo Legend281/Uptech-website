@@ -124,7 +124,10 @@ export function RichTextEditor({ value, onChange }: { value: string; onChange: (
     // until it mounts, which throws a hydration warning without this.
     immediatelyRender: false,
     extensions: [
-      StarterKit.configure({ heading: { levels: [2, 3] } }),
+      StarterKit.configure({
+        heading: { levels: [2, 3] },
+        link: false,
+      }),
       Link.configure({ openOnClick: false, autolink: true }),
       Image,
       Placeholder.configure({ placeholder: "Write the post…" }),
